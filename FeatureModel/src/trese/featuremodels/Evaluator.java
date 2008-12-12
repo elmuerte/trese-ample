@@ -36,7 +36,7 @@ import trese.featuremodels.model.FeatureRequirement;
 import trese.featuremodels.modelImpl.FeatureImpl;
 
 /**
- * Evaluates a feature model
+ * Evaluates a feature model.
  * 
  * @author Michiel Hendriks
  */
@@ -58,7 +58,8 @@ public class Evaluator
 	protected DefaultGrammarView grammar;
 
 	/**
-	 * Create an evaluator.
+	 * Create an evaluator. This does not do anything, it just makes sure you
+	 * can reuse some standard resources.
 	 */
 	public Evaluator()
 	{}
@@ -200,6 +201,8 @@ public class Evaluator
 	}
 
 	/**
+	 * For debugging
+	 * 
 	 * @param args
 	 */
 	public static void main(String[] args)
@@ -235,6 +238,7 @@ public class Evaluator
 			long startTime = System.nanoTime();
 			Collection<EvaluationResult> result = eval.eval(myProduct);
 			System.out.println(String.format("Required %d ms", (System.nanoTime() - startTime) / 1000000));
+
 			for (EvaluationResult res : result)
 			{
 				System.out.print("Valid product configuration: ");
