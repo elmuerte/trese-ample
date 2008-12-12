@@ -1,0 +1,57 @@
+# Layout information for C:\local\mhendrik_ample\featuremodel.gps\startgraphs\huge.gst
+# Each line contains layout information about a node or edge
+# Version info: v <version number>; 1 = pre-jgraph 5.9, 2 = jgraph 5.9
+#     v 1: label position = (x-permillage, y-permillage)
+#     v 2: label position = (vector permillage, perpendicular distance)
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+v 2
+n n17384 1095 494 15 15 
+n n17408 1110 305 52 15 
+n n17376 92 167 48 15 
+n n17391 473 593 52 15 
+n n17381 350 701 48 15 
+n n17383 645 449 50 15 
+n n17397 236 347 15 15 
+n n17386 839 116 50 15 
+n n17398 1086 368 15 15 
+n n17368 215 179 15 15 
+n n17372 822 332 50 15 
+n n17378 5 560 47 15 
+n n17362 918 371 15 15 
+n n17406 549 509 15 15 
+n n17367 471 461 49 15 
+n n17394 1149 449 49 15 
+n n17377 125 566 15 15 
+n n17380 834 512 15 15 
+n n17365 624 512 15 15 
+n n17363 401 593 15 15 
+n n17396 981 497 48 15 
+n n17364 347 461 44 15 
+n n17389 930 437 48 15 
+n n17361 585 386 15 15 
+n n17395 275 605 15 15 
+n n17390 914 278 15 15 
+n n17366 809 248 48 15 
+n n17360 146 278 15 15 
+n n17387 563 227 49 15 
+n n17385 645 566 50 15 
+n n17407 680 257 15 15 
+n n17373 272 476 15 15 
+n n17399 762 401 15 15 
+n n17401 761 272 15 15 
+n n17388 909 509 15 15 
+n n17393 179 476 15 15 
+n n17392 167 608 49 15 
+n n17400 741 515 15 15 
+n n17370 1002 371 15 15 
+n n17379 65 461 50 15 
+n n17375 989 209 50 15 
+n n17405 47 314 49 15 
+n n17369 329 62 52 15 
+n n17403 86 395 49 15 
+n n17374 740 146 15 15 
+n n17371 341 596 15 15 
+n n17402 489 332 50 15 
+n n17404 651 371 50 15 
+n n17382 774 572 49 15 

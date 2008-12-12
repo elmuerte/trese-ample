@@ -1,0 +1,15 @@
+# Layout information for C:\local\mhendrik_ample\featuremodel.gps\require-Transitive.gpr
+# Each line contains layout information about a node or edge
+# Version info: v <version number>; 1 = pre-jgraph 5.9, 2 = jgraph 5.9
+#     v 1: label position = (x-permillage, y-permillage)
+#     v 2: label position = (vector permillage, perpendicular distance)
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+v 2
+n n26605 170 134 15 15 
+n n26607 284 134 15 15 
+n n26606 560 26 47 30 
+e n26607 n26607 "new:?s" 500 0 292 142 325 99 294 88 292 142 12
+e n26605 n26605 "?s[featureIncluded,featureExcluded]" 500 0 178 142 194 89 159 90 178 142 12
+e n26605 n26607 "new:required" 500 0 178 142 235 175 292 142 12
+e n26607 n26607 "not:{featureIncluded|featureExcluded}" 500 0 292 142 384 222 413 161 292 142 12

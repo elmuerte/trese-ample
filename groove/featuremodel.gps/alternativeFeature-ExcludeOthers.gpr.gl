@@ -1,0 +1,14 @@
+# Layout information for C:\local\mhendrik_ample\featuremodel.gps\alternativeFeature-ExcludeOthers.gpr
+# Each line contains layout information about a node or edge
+# Version info: v <version number>; 1 = pre-jgraph 5.9, 2 = jgraph 5.9
+#     v 1: label position = (x-permillage, y-permillage)
+#     v 2: label position = (vector permillage, perpendicular distance)
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+v 2
+n n25635 218 65 85 15 
+n n25633 395 65 85 15 
+n n25632 614 28 27 15 
+n n25634 260 197 15 15 
+e n25634 n25634 "not:{featureIncluded|featureExcluded}" 500 0 268 205 385 243 388 176 268 205 12
+e n25634 n25634 "new:featureExcluded" 500 0 268 205 191 183 192 230 268 205 12

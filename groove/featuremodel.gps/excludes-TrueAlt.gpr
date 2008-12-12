@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="excludes-TrueAlt" role="rule" edgeids="false" edgemode="directed">
+        <attr name="priority">
+            <string>100</string>
+        </attr>
+        <attr name="remark">
+            <string>When the other feature is already excluded this feature could still be included or excluded</string>
+        </attr>
+        <attr name="$version">
+            <string>curly</string>
+        </attr>
+        <node id="n26763"/>
+        <node id="n26764"/>
+        <node id="n26765"/>
+        <edge from="n26765" to="n26765">
+            <attr name="label">
+                <string>not:</string>
+            </attr>
+        </edge>
+        <edge from="n26763" to="n26763">
+            <attr name="label">
+                <string>new:featureIncluded</string>
+            </attr>
+        </edge>
+        <edge from="n26763" to="n26764">
+            <attr name="label">
+                <string>del:excludes</string>
+            </attr>
+        </edge>
+        <edge from="n26765" to="n26765">
+            <attr name="label">
+                <string>not:Error</string>
+            </attr>
+        </edge>
+        <edge from="n26764" to="n26764">
+            <attr name="label">
+                <string>featureExcluded</string>
+            </attr>
+        </edge>
+        <edge from="n26763" to="n26763">
+            <attr name="label">
+                <string>not:{featureIncluded|featureExcluded}</string>
+            </attr>
+        </edge>
+        <edge from="n26763" to="n26764">
+            <attr name="label">
+                <string>new:excluded</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

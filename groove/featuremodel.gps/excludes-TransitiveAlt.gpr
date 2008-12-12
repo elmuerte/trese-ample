@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="excludes-TransitiveAlt" role="rule" edgeids="false" edgemode="directed">
+        <attr name="priority">
+            <string>101</string>
+        </attr>
+        <attr name="$version">
+            <string>curly</string>
+        </attr>
+        <node id="n26567"/>
+        <node id="n26568"/>
+        <node id="n26569"/>
+        <edge from="n26569" to="n26569">
+            <attr name="label">
+                <string>not:</string>
+            </attr>
+        </edge>
+        <edge from="n26568" to="n26568">
+            <attr name="label">
+                <string>featureIncluded</string>
+            </attr>
+        </edge>
+        <edge from="n26569" to="n26569">
+            <attr name="label">
+                <string>not:Error</string>
+            </attr>
+        </edge>
+        <edge from="n26568" to="n26567">
+            <attr name="label">
+                <string>del:excludes</string>
+            </attr>
+        </edge>
+        <edge from="n26567" to="n26567">
+            <attr name="label">
+                <string>new:featureExcluded</string>
+            </attr>
+        </edge>
+        <edge from="n26567" to="n26567">
+            <attr name="label">
+                <string>not:featureIncluded</string>
+            </attr>
+        </edge>
+        <edge from="n26568" to="n26567">
+            <attr name="label">
+                <string>new:excluded</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

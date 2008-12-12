@@ -1,0 +1,12 @@
+# Layout information for C:\local\mhendrik_ample\featuremodel.gps\excludes-Transitive.gpr
+# Each line contains layout information about a node or edge
+# Version info: v <version number>; 1 = pre-jgraph 5.9, 2 = jgraph 5.9
+#     v 1: label position = (x-permillage, y-permillage)
+#     v 2: label position = (vector permillage, perpendicular distance)
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+v 2
+n n26528 386 26 47 30 
+n n26526 248 68 15 15 
+n n26527 44 65 89 15 
+e n26527 n26526 "new:excluded" 500 0 93 75 189 110 256 76 12

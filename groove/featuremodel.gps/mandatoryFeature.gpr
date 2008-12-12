@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="mandatoryFeature" role="rule" edgeids="false" edgemode="directed">
+        <attr name="priority">
+            <string>30</string>
+        </attr>
+        <attr name="$version">
+            <string>curly</string>
+        </attr>
+        <node id="n23094"/>
+        <node id="n23095"/>
+        <node id="n23096"/>
+        <edge from="n23095" to="n23095">
+            <attr name="label">
+                <string>not:</string>
+            </attr>
+        </edge>
+        <edge from="n23096" to="n23096">
+            <attr name="label">
+                <string>featureIncluded</string>
+            </attr>
+        </edge>
+        <edge from="n23094" to="n23094">
+            <attr name="label">
+                <string>not:{featureIncluded|featureExcluded}</string>
+            </attr>
+        </edge>
+        <edge from="n23094" to="n23094">
+            <attr name="label">
+                <string>new:featureIncluded</string>
+            </attr>
+        </edge>
+        <edge from="n23095" to="n23095">
+            <attr name="label">
+                <string>not:Error</string>
+            </attr>
+        </edge>
+        <edge from="n23096" to="n23094">
+            <attr name="label">
+                <string>mandatory</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

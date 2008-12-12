@@ -1,0 +1,25 @@
+# Layout information for C:\local\mhendrik_ample\featuremodel.gps\startgraphs\twoRequireConstraint.gst
+# Each line contains layout information about a node or edge
+# Version info: v <version number>; 1 = pre-jgraph 5.9, 2 = jgraph 5.9
+#     v 1: label position = (x-permillage, y-permillage)
+#     v 2: label position = (vector permillage, perpendicular distance)
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+v 2
+n n20092 572 389 15 15 
+n n20099 275 80 52 15 
+n n20096 92 209 48 15 
+n n20094 368 413 15 15 
+n n20091 377 518 49 15 
+n n20100 56 473 49 15 
+n n20101 662 482 50 15 
+n n20089 374 242 15 15 
+n n20097 224 512 49 15 
+n n20098 236 413 15 15 
+n n20102 215 245 15 15 
+n n20088 137 416 15 15 
+n n20095 485 236 50 15 
+n n20093 467 410 15 15 
+n n20090 512 506 48 15 
+e n20088 n20093 "requires" 500 0 154 428 408 546 471 427 13
+e n20088 n20094 "requires" 500 0 151 433 240 555 368 429 13

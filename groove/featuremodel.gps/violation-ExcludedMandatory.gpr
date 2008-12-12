@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="violation-ExcludedMandatory" role="rule" edgeids="false" edgemode="directed">
+        <attr name="priority">
+            <string>200</string>
+        </attr>
+        <attr name="$version">
+            <string>curly</string>
+        </attr>
+        <node id="n25786"/>
+        <node id="n25787"/>
+        <node id="n25788"/>
+        <node id="n25789"/>
+        <edge from="n25788" to="n25788">
+            <attr name="label">
+                <string>not:</string>
+            </attr>
+        </edge>
+        <edge from="n25787" to="n25787">
+            <attr name="label">
+                <string>string:"Mandatory Feature Excluded"</string>
+            </attr>
+        </edge>
+        <edge from="n25789" to="n25789">
+            <attr name="label">
+                <string>featureIncluded</string>
+            </attr>
+        </edge>
+        <edge from="n25786" to="n25786">
+            <attr name="label">
+                <string>new:Error</string>
+            </attr>
+        </edge>
+        <edge from="n25788" to="n25788">
+            <attr name="label">
+                <string>not:Error</string>
+            </attr>
+        </edge>
+        <edge from="n25786" to="n25786">
+            <attr name="label">
+                <string>featureExcluded</string>
+            </attr>
+        </edge>
+        <edge from="n25786" to="n25787">
+            <attr name="label">
+                <string>new:ErrorMessage</string>
+            </attr>
+        </edge>
+        <edge from="n25789" to="n25786">
+            <attr name="label">
+                <string>mandatory</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>

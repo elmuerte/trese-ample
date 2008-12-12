@@ -1,0 +1,13 @@
+# Layout information for C:\local\mhendrik_ample\featuremodel.gps\updateParentInclusions.gpr
+# Each line contains layout information about a node or edge
+# Version info: v <version number>; 1 = pre-jgraph 5.9, 2 = jgraph 5.9
+#     v 1: label position = (x-permillage, y-permillage)
+#     v 2: label position = (vector permillage, perpendicular distance)
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+v 2
+n n26494 284 194 15 15 
+n n26493 518 32 47 30 
+n n26495 242 293 85 15 
+e n26494 n26494 "new:featureIncluded" 500 0 292 202 401 248 408 183 292 202 12
+e n26494 n26494 "not:{featureIncluded|featureExcluded|BaseLine|Frame}" 619 0 292 202 302 141 257 156 292 202 12

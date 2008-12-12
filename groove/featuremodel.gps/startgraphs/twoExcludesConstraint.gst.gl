@@ -1,0 +1,25 @@
+# Layout information for C:\local\mhendrik_ample\featuremodel.gps\startgraphs\twoExcludesConstraint.gst
+# Each line contains layout information about a node or edge
+# Version info: v <version number>; 1 = pre-jgraph 5.9, 2 = jgraph 5.9
+#     v 1: label position = (x-permillage, y-permillage)
+#     v 2: label position = (vector permillage, perpendicular distance)
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+v 2
+n n19887 662 482 50 15 
+n n19881 236 413 15 15 
+n n19889 272 80 52 15 
+n n19885 137 416 15 15 
+n n19880 92 209 48 15 
+n n19888 374 242 15 15 
+n n19883 377 518 49 15 
+n n19891 56 473 49 15 
+n n19892 368 413 15 15 
+n n19879 467 410 15 15 
+n n19882 215 245 15 15 
+n n19893 572 389 15 15 
+n n19890 485 236 50 15 
+n n19884 224 512 49 15 
+n n19886 512 506 48 15 
+e n19892 n19893 "excludes" 500 0 384 430 477 534 574 406 13
+e n19885 n19892 "excludes" 500 0 151 433 240 555 368 429 13

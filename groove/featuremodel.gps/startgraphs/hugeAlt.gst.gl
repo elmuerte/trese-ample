@@ -1,0 +1,57 @@
+# Layout information for C:\local\mhendrik_ample\featuremodel.gps\startgraphs\hugeAlt.gst
+# Each line contains layout information about a node or edge
+# Version info: v <version number>; 1 = pre-jgraph 5.9, 2 = jgraph 5.9
+#     v 1: label position = (x-permillage, y-permillage)
+#     v 2: label position = (vector permillage, perpendicular distance)
+# Node Format: n <node id> <bounds>
+# Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
+v 2
+n n26322 1110 305 52 15 
+n n26332 146 278 15 15 
+n n26296 149 473 15 15 
+n n26303 215 179 15 15 
+n n26325 822 332 50 15 
+n n26304 680 257 15 15 
+n n26323 645 449 50 15 
+n n26302 918 371 15 15 
+n n26306 383 584 15 15 
+n n26326 65 461 50 15 
+n n26341 549 509 15 15 
+n n26327 329 62 52 15 
+n n26316 233 605 15 15 
+n n26299 839 116 50 15 
+n n26339 47 314 49 15 
+n n26340 326 650 15 15 
+n n26311 809 248 48 15 
+n n26319 1095 494 15 15 
+n n26315 473 593 52 15 
+n n26342 741 515 15 15 
+n n26314 5 560 47 15 
+n n26338 920 278 15 15 
+n n26300 471 461 49 15 
+n n26301 981 497 48 15 
+n n26321 347 461 44 15 
+n n26337 740 146 15 15 
+n n26329 489 332 50 15 
+n n26324 272 476 15 15 
+n n26295 167 608 49 15 
+n n26305 563 227 49 15 
+n n26330 645 566 50 15 
+n n26320 86 395 49 15 
+n n26307 624 512 15 15 
+n n26298 1002 371 15 15 
+n n26297 236 347 15 15 
+n n26335 810 542 15 15 
+n n26310 989 209 50 15 
+n n26334 774 572 49 15 
+n n26333 651 371 50 15 
+n n26336 92 167 48 15 
+n n26294 350 701 48 15 
+n n26308 761 272 15 15 
+n n26313 1086 368 15 15 
+n n26331 762 401 15 15 
+n n26328 930 437 48 15 
+n n26318 137 563 15 15 
+n n26317 585 386 15 15 
+n n26312 1149 449 49 15 
+n n26309 909 509 15 15 

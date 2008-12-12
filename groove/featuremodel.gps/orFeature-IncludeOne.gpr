@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
+    <graph id="orFeature-IncludeOne" role="rule" edgeids="false" edgemode="directed">
+        <attr name="priority">
+            <string>6</string>
+        </attr>
+        <attr name="remark">
+            <string>Select at least one feature</string>
+        </attr>
+        <attr name="$version">
+            <string>curly</string>
+        </attr>
+        <node id="n23317"/>
+        <node id="n23318"/>
+        <node id="n23319"/>
+        <node id="n23320"/>
+        <node id="n23321"/>
+        <edge from="n23319" to="n23319">
+            <attr name="label">
+                <string>not:</string>
+            </attr>
+        </edge>
+        <edge from="n23321" to="n23321">
+            <attr name="label">
+                <string>not:</string>
+            </attr>
+        </edge>
+        <edge from="n23321" to="n23321">
+            <attr name="label">
+                <string>featureIncluded</string>
+            </attr>
+        </edge>
+        <edge from="n23317" to="n23317">
+            <attr name="label">
+                <string>new:featureIncluded</string>
+            </attr>
+        </edge>
+        <edge from="n23318" to="n23320">
+            <attr name="label">
+                <string>or</string>
+            </attr>
+        </edge>
+        <edge from="n23320" to="n23320">
+            <attr name="label">
+                <string>featureExcluded</string>
+            </attr>
+        </edge>
+        <edge from="n23318" to="n23318">
+            <attr name="label">
+                <string>featureIncluded</string>
+            </attr>
+        </edge>
+        <edge from="n23317" to="n23317">
+            <attr name="label">
+                <string>not:{featureIncluded|featureExcluded}</string>
+            </attr>
+        </edge>
+        <edge from="n23318" to="n23317">
+            <attr name="label">
+                <string>or</string>
+            </attr>
+        </edge>
+        <edge from="n23319" to="n23319">
+            <attr name="label">
+                <string>not:Error</string>
+            </attr>
+        </edge>
+        <edge from="n23318" to="n23321">
+            <attr name="label">
+                <string>not:or</string>
+            </attr>
+        </edge>
+    </graph>
+</gxl>
