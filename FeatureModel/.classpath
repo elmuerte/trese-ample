@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/groove/groove-3_2_0.jar" sourcepath="C:/local/mhendrik_ample/groove-3_2_0/groove-3_2_0-src.zip"/>
+	<classpathentry kind="lib" path="lib/groove/castor-0_9_5_2.jar"/>
+	<classpathentry kind="lib" path="lib/groove/groove-gxl-1_0.jar"/>
+	<classpathentry kind="lib" path="lib/groove/xerces-2_6_0-xercesImpl.jar"/>
+	<classpathentry kind="output" path="build"/>
+</classpath>
