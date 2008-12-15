@@ -1,4 +1,4 @@
-# Layout information for C:\local\mhendrik_ample\groove-3_2_0\bin\..\featuremodel.gps\updateParentInclusions.gpr
+# Layout information for C:\local\mhendrik_ample\groove-3_2_0\bin\..\featuremodel.gps\errorTrap.gpr
 # Each line contains layout information about a node or edge
 # Version info: v <version number>; 1 = pre-jgraph 5.9, 2 = jgraph 5.9
 #     v 1: label position = (x-permillage, y-permillage)
@@ -6,8 +6,4 @@
 # Node Format: n <node id> <bounds>
 # Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
 v 2
-n n27406 242 293 85 15 
-n n27407 518 32 47 30 
-n n27408 284 194 15 15 
-e n27408 n27408 "new:featureIncluded" 500 0 292 202 401 248 408 183 292 202 12
-e n27408 n27408 "not:{featureIncluded|featureExcluded|BaseLine|Frame}" 619 0 292 202 302 141 257 156 292 202 12
+n n27419 33 32 27 15 
