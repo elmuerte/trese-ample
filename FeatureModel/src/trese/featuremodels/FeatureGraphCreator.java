@@ -29,6 +29,11 @@ import trese.featuremodels.model.FeatureModelException;
 public final class FeatureGraphCreator
 {
 	/**
+	 * Used to identify the baseline of the product
+	 */
+	public static final String LABEL_BASE_LINE = "BaseLine";
+
+	/**
 	 * Label text used for features which are excluded
 	 */
 	public static final String LABEL_FEATURE_EXCLUDED = "featureExcluded";
@@ -112,7 +117,7 @@ public final class FeatureGraphCreator
 							"Detected root feature \"%s\" is not the base line \"%s\"", feature.getName(), fromResult
 									.getBaseLine().getName()));
 				}
-				graph.addEdge(entry.getValue(), DefaultLabel.createLabel("BaseLine"), entry.getValue());
+				graph.addEdge(entry.getValue(), DefaultLabel.createLabel(LABEL_BASE_LINE), entry.getValue());
 				continue;
 			}
 
@@ -185,4 +190,5 @@ public final class FeatureGraphCreator
 	{
 		return DefaultLabel.createLabel(String.format("string:\"%s\"", feature.getName()));
 	}
+
 }

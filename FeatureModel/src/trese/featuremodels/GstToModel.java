@@ -24,7 +24,7 @@ import trese.featuremodels.modelImpl.FeatureConstraintImpl;
 import trese.featuremodels.modelImpl.FeatureImpl;
 
 /**
- * 
+ * Covert a groove start graph (gst) to a feature model.
  * 
  * @author Michiel Hendriks
  */
@@ -63,20 +63,11 @@ public final class GstToModel
 				}
 			}
 
-			// if (false)
-			// {
-			// featureName = (String) ((ValueNode) nameNode).getValue();
-			// }
-			// else
-			// {
-			// // not a valid name
-			// continue;
-			// }
 			FeatureImpl feature = new FeatureImpl(featureName);
 			featureNodes.put(featureNode, feature);
 		}
 
-		edges = graph.labelEdgeSet(2, DefaultLabel.createLabel("BaseLine"));
+		edges = graph.labelEdgeSet(2, DefaultLabel.createLabel(FeatureGraphCreator.LABEL_BASE_LINE));
 		for (Edge edge : edges)
 		{
 			Node featureNode = edge.source();
@@ -94,7 +85,7 @@ public final class GstToModel
 			FeatureImpl thisFeature = entry.getValue();
 			for (Edge edge : graph.outEdgeSet(entry.getKey()))
 			{
-				if (edge.label().text().equals("BaseLine"))
+				if (edge.label().text().equals(FeatureGraphCreator.LABEL_BASE_LINE))
 				{
 					if (baseLine == null)
 					{

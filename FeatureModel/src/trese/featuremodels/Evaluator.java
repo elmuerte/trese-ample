@@ -23,6 +23,7 @@ import groove.view.aspect.AspectGraph;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -72,7 +73,23 @@ public class Evaluator
 	 * @throws FeatureModelException
 	 *             Thrown when the feature model is incomplete
 	 */
-	public Collection<EvaluationResult> eval(Feature baseLine) throws FeatureModelException
+	public Collection<EvaluationResult> evaluate(Feature baseLine) throws FeatureModelException
+	{
+		return evaluate(baseLine, false);
+	}
+
+	/**
+	 * Evaluate the feature model from the baseline
+	 * 
+	 * @param baseLine
+	 * @param findFirst
+	 *            If true only find the first valid product configuration.
+	 *            Useful for checking if the configuration is valid.
+	 * @return
+	 * @throws FeatureModelException
+	 *             Thrown when the feature model is incomplete
+	 */
+	public Collection<EvaluationResult> evaluate(Feature baseLine, boolean findFirst) throws FeatureModelException
 	{
 		if (!initialized)
 		{
@@ -95,20 +112,32 @@ public class Evaluator
 			}
 		}
 
-		Collection<GraphState> finalStates = executeRules(graph);
+		Collection<GraphState> finalStates = executeRules(graph, findFirst);
 		return extractResults(finalStates, base);
 	}
 
 	/**
 	 * @param graph
+	 * @param findFirst
+	 *            If true stop after getting a single result;
 	 * @throws FeatureModelException
 	 */
-	protected Collection<GraphState> executeRules(AspectGraph graph) throws FeatureModelException
+	protected Collection<GraphState> executeRules(AspectGraph graph, boolean findFirst) throws FeatureModelException
 	{
 		grammar.setStartGraph(new AspectualGraphView(graph, null));
 		try
 		{
 			DefaultGraphCalculator calc = new DefaultGraphCalculator(grammar.toGrammar());
+			if (findFirst)
+			{
+				Collection<GraphState> result = new ArrayList<GraphState>();
+				GraphState state = calc.getMax();
+				if (state != null)
+				{
+					result.add(state);
+				}
+				return result;
+			}
 			return calc.getAllMax();
 		}
 		catch (FormatException e)
@@ -255,7 +284,7 @@ public class Evaluator
 			}
 
 			long startTime = System.nanoTime();
-			Collection<EvaluationResult> result = eval.eval(baseline);
+			Collection<EvaluationResult> result = eval.evaluate(baseline, true);
 			startTime = System.nanoTime() - startTime;
 
 			for (EvaluationResult res : result)
@@ -270,7 +299,7 @@ public class Evaluator
 			}
 
 			System.out.println(String.format("Required %d ms", startTime / 1000000));
-			System.out.println(String.format("Discovered %d product configurations", result.size()));
+			System.out.println(String.format("Discovered %d valid product configurations", result.size()));
 		}
 		catch (FeatureModelException e)
 		{
