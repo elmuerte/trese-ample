@@ -5,7 +5,6 @@
  */
 package trese.featuremodels;
 
-import groove.calc.DefaultGraphCalculator;
 import groove.graph.DefaultLabel;
 import groove.graph.Edge;
 import groove.graph.Graph;
@@ -23,7 +22,6 @@ import groove.view.aspect.AspectGraph;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -127,18 +125,12 @@ public class Evaluator
 		grammar.setStartGraph(new AspectualGraphView(graph, null));
 		try
 		{
-			DefaultGraphCalculator calc = new DefaultGraphCalculator(grammar.toGrammar());
+			FinalGraphCalc calc = new FinalGraphCalc(grammar.toGrammar());
 			if (findFirst)
 			{
-				Collection<GraphState> result = new ArrayList<GraphState>();
-				GraphState state = calc.getMax();
-				if (state != null)
-				{
-					result.add(state);
-				}
-				return result;
+				return calc.getFinal();
 			}
-			return calc.getAllMax();
+			return calc.getAllFinal();
 		}
 		catch (FormatException e)
 		{
@@ -166,6 +158,7 @@ public class Evaluator
 			if (!edges.isEmpty())
 			{
 				// contains errors
+				System.out.println("Received an error result");
 				continue;
 			}
 
