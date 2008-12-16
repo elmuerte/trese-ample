@@ -7,64 +7,53 @@
         <attr name="$version">
             <string>curly</string>
         </attr>
-        <node id="n27340"/>
-        <node id="n27341"/>
-        <node id="n27342"/>
-        <node id="n27343"/>
-        <node id="n27344"/>
-        <edge from="n27342" to="n27342">
-            <attr name="label">
-                <string>not:</string>
-            </attr>
-        </edge>
-        <edge from="n27343" to="n27343">
+        <node id="n27568"/>
+        <node id="n27569"/>
+        <node id="n27570"/>
+        <node id="n27571"/>
+        <edge from="n27568" to="n27568">
             <attr name="label">
                 <string>string:"Multiple Included Alternatives"</string>
             </attr>
         </edge>
-        <edge from="n27341" to="n27341">
-            <attr name="label">
-                <string>featureIncluded</string>
-            </attr>
-        </edge>
-        <edge from="n27340" to="n27344">
-            <attr name="label">
-                <string>not:=</string>
-            </attr>
-        </edge>
-        <edge from="n27341" to="n27344">
+        <edge from="n27571" to="n27569">
             <attr name="label">
                 <string>alt</string>
             </attr>
         </edge>
-        <edge from="n27340" to="n27340">
+        <edge from="n27570" to="n27570">
             <attr name="label">
                 <string>featureIncluded</string>
             </attr>
         </edge>
-        <edge from="n27341" to="n27343">
+        <edge from="n27571" to="n27568">
             <attr name="label">
                 <string>new:ErrorMessage</string>
             </attr>
         </edge>
-        <edge from="n27341" to="n27340">
-            <attr name="label">
-                <string>alt</string>
-            </attr>
-        </edge>
-        <edge from="n27341" to="n27341">
-            <attr name="label">
-                <string>new:Error</string>
-            </attr>
-        </edge>
-        <edge from="n27344" to="n27344">
+        <edge from="n27569" to="n27569">
             <attr name="label">
                 <string>featureIncluded</string>
             </attr>
         </edge>
-        <edge from="n27342" to="n27342">
+        <edge from="n27571" to="n27571">
             <attr name="label">
-                <string>not:Error</string>
+                <string>new:Error</string>
+            </attr>
+        </edge>
+        <edge from="n27570" to="n27569">
+            <attr name="label">
+                <string>not:=</string>
+            </attr>
+        </edge>
+        <edge from="n27571" to="n27570">
+            <attr name="label">
+                <string>alt</string>
+            </attr>
+        </edge>
+        <edge from="n27571" to="n27571">
+            <attr name="label">
+                <string>featureIncluded</string>
             </attr>
         </edge>
     </graph>

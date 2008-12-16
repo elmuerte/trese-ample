@@ -1,4 +1,4 @@
-# Layout information for C:\local\mhendrik_ample\featuremodel.gps\updateParentExclusions.gpr
+# Layout information for C:\local\mhendrik_ample\groove-3_2_0\featuremodel.gps\updateParentExclusions.gpr
 # Each line contains layout information about a node or edge
 # Version info: v <version number>; 1 = pre-jgraph 5.9, 2 = jgraph 5.9
 #     v 1: label position = (x-permillage, y-permillage)
@@ -6,8 +6,7 @@
 # Node Format: n <node id> <bounds>
 # Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
 v 2
-n n26456 242 293 89 15 
-n n26455 284 194 15 15 
-n n26457 515 26 47 30 
-e n26455 n26455 "new:featureExcluded" 500 0 292 202 401 248 408 183 292 202 12
-e n26455 n26455 "not:{featureIncluded|featureExcluded|BaseLine|Frame}" 619 0 292 202 302 141 257 156 292 202 12
+n n28290 200 128 15 15 
+n n28289 158 227 89 15 
+e n28290 n28290 "not:{featureIncluded|featureExcluded|BaseLine|Frame}" 619 0 208 136 218 75 173 90 208 136 12
+e n28290 n28290 "new:featureExcluded" 500 0 208 136 317 182 324 117 208 136 12

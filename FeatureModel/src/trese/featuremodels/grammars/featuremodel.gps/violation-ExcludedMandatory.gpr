@@ -7,48 +7,37 @@
         <attr name="$version">
             <string>curly</string>
         </attr>
-        <node id="n25786"/>
-        <node id="n25787"/>
-        <node id="n25788"/>
-        <node id="n25789"/>
-        <edge from="n25788" to="n25788">
-            <attr name="label">
-                <string>not:</string>
-            </attr>
-        </edge>
-        <edge from="n25787" to="n25787">
+        <node id="n27519"/>
+        <node id="n27520"/>
+        <node id="n27521"/>
+        <edge from="n27520" to="n27520">
             <attr name="label">
                 <string>string:"Mandatory Feature Excluded"</string>
             </attr>
         </edge>
-        <edge from="n25789" to="n25789">
-            <attr name="label">
-                <string>featureIncluded</string>
-            </attr>
-        </edge>
-        <edge from="n25786" to="n25786">
+        <edge from="n27521" to="n27521">
             <attr name="label">
                 <string>new:Error</string>
             </attr>
         </edge>
-        <edge from="n25788" to="n25788">
+        <edge from="n27519" to="n27521">
             <attr name="label">
-                <string>not:Error</string>
+                <string>mandatory</string>
             </attr>
         </edge>
-        <edge from="n25786" to="n25786">
-            <attr name="label">
-                <string>featureExcluded</string>
-            </attr>
-        </edge>
-        <edge from="n25786" to="n25787">
+        <edge from="n27521" to="n27520">
             <attr name="label">
                 <string>new:ErrorMessage</string>
             </attr>
         </edge>
-        <edge from="n25789" to="n25786">
+        <edge from="n27521" to="n27521">
             <attr name="label">
-                <string>mandatory</string>
+                <string>featureExcluded</string>
+            </attr>
+        </edge>
+        <edge from="n27519" to="n27519">
+            <attr name="label">
+                <string>featureIncluded</string>
             </attr>
         </edge>
     </graph>

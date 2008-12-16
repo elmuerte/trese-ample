@@ -1,4 +1,4 @@
-# Layout information for C:\local\mhendrik_ample\featuremodel.gps\orFeature-Include.gpr
+# Layout information for C:\local\mhendrik_ample\groove-3_2_0\featuremodel.gps\orFeature-Include.gpr
 # Each line contains layout information about a node or edge
 # Version info: v <version number>; 1 = pre-jgraph 5.9, 2 = jgraph 5.9
 #     v 1: label position = (x-permillage, y-permillage)
@@ -6,8 +6,7 @@
 # Node Format: n <node id> <bounds>
 # Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
 v 2
-n n23397 161 98 85 15 
-n n23396 458 32 47 30 
-n n23395 200 209 15 15 
-e n23395 n23395 "new:featureIncluded" 500 0 208 217 135 190 132 235 208 217 12
-e n23395 n23395 "not:{featureIncluded|featureExcluded}" 500 0 208 217 243 269 266 240 208 217 12
+n n28183 161 98 85 15 
+n n28182 200 209 15 15 
+e n28182 n28182 "not:{featureIncluded|featureExcluded}" 500 0 208 217 243 269 266 240 208 217 12
+e n28182 n28182 "new:featureIncluded" 500 0 208 217 135 190 132 235 208 217 12

@@ -7,37 +7,26 @@
         <attr name="$version">
             <string>curly</string>
         </attr>
-        <node id="n23170"/>
-        <node id="n23171"/>
-        <node id="n23172"/>
-        <edge from="n23172" to="n23172">
-            <attr name="label">
-                <string>not:</string>
-            </attr>
-        </edge>
-        <edge from="n23170" to="n23171">
-            <attr name="label">
-                <string>optional</string>
-            </attr>
-        </edge>
-        <edge from="n23170" to="n23170">
-            <attr name="label">
-                <string>featureIncluded</string>
-            </attr>
-        </edge>
-        <edge from="n23171" to="n23171">
-            <attr name="label">
-                <string>not:{featureIncluded|featureExcluded}</string>
-            </attr>
-        </edge>
-        <edge from="n23171" to="n23171">
+        <node id="n28071"/>
+        <node id="n28072"/>
+        <edge from="n28072" to="n28072">
             <attr name="label">
                 <string>new:featureIncluded</string>
             </attr>
         </edge>
-        <edge from="n23172" to="n23172">
+        <edge from="n28071" to="n28071">
             <attr name="label">
-                <string>not:Error</string>
+                <string>featureIncluded</string>
+            </attr>
+        </edge>
+        <edge from="n28072" to="n28072">
+            <attr name="label">
+                <string>not:{featureIncluded|featureExcluded}</string>
+            </attr>
+        </edge>
+        <edge from="n28071" to="n28072">
+            <attr name="label">
+                <string>optional</string>
             </attr>
         </edge>
     </graph>

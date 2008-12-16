@@ -4,57 +4,46 @@
         <attr name="$version">
             <string>curly</string>
         </attr>
-        <node id="n25691"/>
-        <node id="n25692"/>
-        <node id="n25693"/>
-        <node id="n25694"/>
-        <node id="n25695"/>
-        <edge from="n25692" to="n25692">
+        <node id="n28226"/>
+        <node id="n28227"/>
+        <node id="n28228"/>
+        <node id="n28229"/>
+        <edge from="n28229" to="n28229">
             <attr name="label">
                 <string>not:</string>
             </attr>
         </edge>
-        <edge from="n25694" to="n25694">
-            <attr name="label">
-                <string>not:</string>
-            </attr>
-        </edge>
-        <edge from="n25691" to="n25695">
-            <attr name="label">
-                <string>?r[alt,or]</string>
-            </attr>
-        </edge>
-        <edge from="n25692" to="n25692">
-            <attr name="label">
-                <string>featureIncluded</string>
-            </attr>
-        </edge>
-        <edge from="n25693" to="n25693">
-            <attr name="label">
-                <string>string:"No Included Alternatives"</string>
-            </attr>
-        </edge>
-        <edge from="n25691" to="n25693">
-            <attr name="label">
-                <string>new:ErrorMessage</string>
-            </attr>
-        </edge>
-        <edge from="n25691" to="n25691">
+        <edge from="n28227" to="n28227">
             <attr name="label">
                 <string>new:Error</string>
             </attr>
         </edge>
-        <edge from="n25694" to="n25694">
+        <edge from="n28227" to="n28227">
             <attr name="label">
-                <string>not:Error</string>
+                <string>featureIncluded</string>
             </attr>
         </edge>
-        <edge from="n25691" to="n25692">
+        <edge from="n28227" to="n28229">
             <attr name="label">
                 <string>not:?r</string>
             </attr>
         </edge>
-        <edge from="n25691" to="n25691">
+        <edge from="n28227" to="n28228">
+            <attr name="label">
+                <string>?r[alt,or]</string>
+            </attr>
+        </edge>
+        <edge from="n28226" to="n28226">
+            <attr name="label">
+                <string>string:"No Included Alternatives"</string>
+            </attr>
+        </edge>
+        <edge from="n28227" to="n28226">
+            <attr name="label">
+                <string>new:ErrorMessage</string>
+            </attr>
+        </edge>
+        <edge from="n28229" to="n28229">
             <attr name="label">
                 <string>featureIncluded</string>
             </attr>

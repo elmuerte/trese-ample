@@ -7,47 +7,36 @@
         <attr name="$version">
             <string>curly</string>
         </attr>
-        <node id="n26724"/>
-        <node id="n26725"/>
-        <node id="n26726"/>
-        <edge from="n26726" to="n26726">
-            <attr name="label">
-                <string>not:</string>
-            </attr>
-        </edge>
-        <edge from="n26725" to="n26725">
-            <attr name="label">
-                <string>not:{featureIncluded|featureExcluded}</string>
-            </attr>
-        </edge>
-        <edge from="n26724" to="n26724">
+        <node id="n27809"/>
+        <node id="n27810"/>
+        <edge from="n27810" to="n27810">
             <attr name="label">
                 <string>new:featureIncluded</string>
             </attr>
         </edge>
-        <edge from="n26724" to="n26724">
-            <attr name="label">
-                <string>not:{featureIncluded|featureExcluded}</string>
-            </attr>
-        </edge>
-        <edge from="n26724" to="n26725">
+        <edge from="n27810" to="n27809">
             <attr name="label">
                 <string>new:excluded</string>
             </attr>
         </edge>
-        <edge from="n26725" to="n26725">
+        <edge from="n27810" to="n27810">
             <attr name="label">
-                <string>new:featureExcluded</string>
+                <string>not:{featureIncluded|featureExcluded}</string>
             </attr>
         </edge>
-        <edge from="n26726" to="n26726">
+        <edge from="n27809" to="n27809">
             <attr name="label">
-                <string>not:Error</string>
+                <string>not:{featureIncluded|featureExcluded}</string>
             </attr>
         </edge>
-        <edge from="n26724" to="n26725">
+        <edge from="n27810" to="n27809">
             <attr name="label">
                 <string>del:excludes</string>
+            </attr>
+        </edge>
+        <edge from="n27809" to="n27809">
+            <attr name="label">
+                <string>new:featureExcluded</string>
             </attr>
         </edge>
     </graph>

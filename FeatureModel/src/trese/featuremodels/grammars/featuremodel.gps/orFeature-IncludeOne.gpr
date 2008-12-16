@@ -10,64 +10,53 @@
         <attr name="$version">
             <string>curly</string>
         </attr>
-        <node id="n23317"/>
-        <node id="n23318"/>
-        <node id="n23319"/>
-        <node id="n23320"/>
-        <node id="n23321"/>
-        <edge from="n23319" to="n23319">
+        <node id="n28120"/>
+        <node id="n28121"/>
+        <node id="n28122"/>
+        <node id="n28123"/>
+        <edge from="n28120" to="n28120">
             <attr name="label">
                 <string>not:</string>
             </attr>
         </edge>
-        <edge from="n23321" to="n23321">
+        <edge from="n28121" to="n28120">
             <attr name="label">
-                <string>not:</string>
+                <string>not:or</string>
             </attr>
         </edge>
-        <edge from="n23321" to="n23321">
-            <attr name="label">
-                <string>featureIncluded</string>
-            </attr>
-        </edge>
-        <edge from="n23317" to="n23317">
+        <edge from="n28123" to="n28123">
             <attr name="label">
                 <string>new:featureIncluded</string>
             </attr>
         </edge>
-        <edge from="n23318" to="n23320">
-            <attr name="label">
-                <string>or</string>
-            </attr>
-        </edge>
-        <edge from="n23320" to="n23320">
-            <attr name="label">
-                <string>featureExcluded</string>
-            </attr>
-        </edge>
-        <edge from="n23318" to="n23318">
-            <attr name="label">
-                <string>featureIncluded</string>
-            </attr>
-        </edge>
-        <edge from="n23317" to="n23317">
+        <edge from="n28123" to="n28123">
             <attr name="label">
                 <string>not:{featureIncluded|featureExcluded}</string>
             </attr>
         </edge>
-        <edge from="n23318" to="n23317">
+        <edge from="n28122" to="n28122">
+            <attr name="label">
+                <string>featureExcluded</string>
+            </attr>
+        </edge>
+        <edge from="n28120" to="n28120">
+            <attr name="label">
+                <string>featureIncluded</string>
+            </attr>
+        </edge>
+        <edge from="n28121" to="n28122">
             <attr name="label">
                 <string>or</string>
             </attr>
         </edge>
-        <edge from="n23319" to="n23319">
+        <edge from="n28121" to="n28121">
             <attr name="label">
-                <string>not:Error</string>
+                <string>featureIncluded</string>
             </attr>
         </edge>
-        <edge from="n23318" to="n23321">
+        <edge from="n28121" to="n28123">
             <attr name="label">
-                <string>not:or</string>
+                <string>or</string>
             </attr>
         </edge>
     </graph>

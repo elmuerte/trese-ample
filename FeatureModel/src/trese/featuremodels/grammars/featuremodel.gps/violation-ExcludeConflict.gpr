@@ -7,46 +7,35 @@
         <attr name="$version">
             <string>curly</string>
         </attr>
-        <node id="n25739"/>
-        <node id="n25740"/>
-        <node id="n25741"/>
-        <node id="n25742"/>
-        <edge from="n25742" to="n25742">
-            <attr name="label">
-                <string>not:</string>
-            </attr>
-        </edge>
-        <edge from="n25740" to="n25740">
-            <attr name="label">
-                <string>featureIncluded</string>
-            </attr>
-        </edge>
-        <edge from="n25740" to="n25740">
-            <attr name="label">
-                <string>new:Error</string>
-            </attr>
-        </edge>
-        <edge from="n25739" to="n25739">
+        <node id="n27484"/>
+        <node id="n27485"/>
+        <node id="n27486"/>
+        <edge from="n27485" to="n27485">
             <attr name="label">
                 <string>string:"Mutual Exclusion Violation"</string>
             </attr>
         </edge>
-        <edge from="n25740" to="n25739">
+        <edge from="n27486" to="n27485">
             <attr name="label">
                 <string>new:ErrorMessage</string>
             </attr>
         </edge>
-        <edge from="n25742" to="n25742">
+        <edge from="n27484" to="n27484">
             <attr name="label">
-                <string>not:Error</string>
+                <string>featureIncluded</string>
             </attr>
         </edge>
-        <edge from="n25740" to="n25741">
+        <edge from="n27486" to="n27486">
+            <attr name="label">
+                <string>new:Error</string>
+            </attr>
+        </edge>
+        <edge from="n27486" to="n27484">
             <attr name="label">
                 <string>{excludes|excluded}</string>
             </attr>
         </edge>
-        <edge from="n25741" to="n25741">
+        <edge from="n27486" to="n27486">
             <attr name="label">
                 <string>featureIncluded</string>
             </attr>

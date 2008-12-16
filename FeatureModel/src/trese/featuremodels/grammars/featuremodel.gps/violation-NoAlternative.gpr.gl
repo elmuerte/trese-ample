@@ -1,4 +1,4 @@
-# Layout information for C:\local\mhendrik_ample\featuremodel.gps\violation-NoAlternative.gpr
+# Layout information for C:\local\mhendrik_ample\groove-3_2_0\featuremodel.gps\violation-NoAlternative.gpr
 # Each line contains layout information about a node or edge
 # Version info: v <version number>; 1 = pre-jgraph 5.9, 2 = jgraph 5.9
 #     v 1: label position = (x-permillage, y-permillage)
@@ -6,9 +6,8 @@
 # Node Format: n <node id> <bounds>
 # Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
 v 2
-n n25693 98 32 172 15 
-n n25691 149 128 85 15 
-n n25692 95 221 85 30 
-n n25694 410 32 47 30 
-n n25695 245 226 15 15 
-e n25691 n25691 "new:Error" 500 0 225 149 279 168 276 117 235 128 12
+n n28228 245 226 15 15 
+n n28226 98 32 172 15 
+n n28227 149 128 85 15 
+n n28229 95 221 85 30 
+e n28227 n28227 "new:Error" 500 0 225 149 279 168 276 117 235 128 12

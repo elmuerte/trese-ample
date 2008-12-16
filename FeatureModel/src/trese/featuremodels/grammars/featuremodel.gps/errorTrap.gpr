@@ -4,16 +4,27 @@
         <attr name="priority">
             <string>201</string>
         </attr>
-        <attr name="$version">
-            <string>curly</string>
-        </attr>
         <attr name="remark">
             <string>Traps simulation into an non-final error state</string>
         </attr>
-        <node id="n27419"/>
-        <edge from="n27419" to="n27419">
+        <attr name="$version">
+            <string>curly</string>
+        </attr>
+        <node id="n28258"/>
+        <node id="n28259"/>
+        <edge from="n28259" to="n28259">
+            <attr name="label">
+                <string>rem:</string>
+            </attr>
+        </edge>
+        <edge from="n28258" to="n28258">
             <attr name="label">
                 <string>Error</string>
+            </attr>
+        </edge>
+        <edge from="n28259" to="n28259">
+            <attr name="label">
+                <string>This will stop simulation when an error node is created</string>
             </attr>
         </edge>
     </graph>

@@ -1,4 +1,4 @@
-# Layout information for C:\local\mhendrik_ample\groove-3_2_0\bin\..\featuremodel.gps\errorTrap.gpr
+# Layout information for C:\local\mhendrik_ample\groove-3_2_0\featuremodel.gps\errorTrap.gpr
 # Each line contains layout information about a node or edge
 # Version info: v <version number>; 1 = pre-jgraph 5.9, 2 = jgraph 5.9
 #     v 1: label position = (x-permillage, y-permillage)
@@ -6,4 +6,5 @@
 # Node Format: n <node id> <bounds>
 # Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
 v 2
-n n27419 33 32 27 15 
+n n28258 15 17 27 15 
+n n28259 15 60 296 30 

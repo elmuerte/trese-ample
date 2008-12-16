@@ -7,45 +7,34 @@
         <attr name="$version">
             <string>curly</string>
         </attr>
-        <node id="n26806"/>
-        <node id="n26807"/>
-        <node id="n26808"/>
-        <edge from="n26808" to="n26808">
-            <attr name="label">
-                <string>not:</string>
-            </attr>
-        </edge>
-        <edge from="n26806" to="n26807">
-            <attr name="label">
-                <string>new:required</string>
-            </attr>
-        </edge>
-        <edge from="n26808" to="n26808">
-            <attr name="label">
-                <string>not:Error</string>
-            </attr>
-        </edge>
-        <edge from="n26807" to="n26807">
-            <attr name="label">
-                <string>not:{featureIncluded|featureExcluded}</string>
-            </attr>
-        </edge>
-        <edge from="n26806" to="n26806">
+        <node id="n27874"/>
+        <node id="n27875"/>
+        <edge from="n27874" to="n27874">
             <attr name="label">
                 <string>new:featureExcluded</string>
             </attr>
         </edge>
-        <edge from="n26806" to="n26806">
+        <edge from="n27875" to="n27875">
             <attr name="label">
                 <string>not:{featureIncluded|featureExcluded}</string>
             </attr>
         </edge>
-        <edge from="n26806" to="n26807">
+        <edge from="n27874" to="n27874">
+            <attr name="label">
+                <string>not:{featureIncluded|featureExcluded}</string>
+            </attr>
+        </edge>
+        <edge from="n27875" to="n27874">
             <attr name="label">
                 <string>del:requires</string>
             </attr>
         </edge>
-        <edge from="n26807" to="n26807">
+        <edge from="n27875" to="n27874">
+            <attr name="label">
+                <string>new:required</string>
+            </attr>
+        </edge>
+        <edge from="n27875" to="n27875">
             <attr name="label">
                 <string>new:featureExcluded</string>
             </attr>
