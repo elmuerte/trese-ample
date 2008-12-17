@@ -43,7 +43,7 @@ public final class CmdLineEvaluator
 		options.addOption("1", "first", false, "Stop when the first valid production configuration has been found.");
 		options.addOption("v", false, "Produce more output");
 		options.addOption("d", "debug", false, "Produce debug output");
-		// options.addOption(null, "dir", true, "Produce debug output");
+		options.addOption(null, "dir", true, "Process all files in the given directory");
 
 		boolean showUsage = false;
 		boolean verbose = false;
