@@ -9,6 +9,7 @@ import groove.graph.Graph;
 import groove.io.AspectGxl;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.SortedSet;
@@ -31,11 +32,6 @@ import trese.featuremodels.model.FeatureModelException;
  */
 public final class CmdLineEvaluator
 {
-	/**
-	 * For debugging
-	 * 
-	 * @param args
-	 */
 	public static void main(String[] args)
 	{
 		Options options = new Options();
@@ -64,6 +60,32 @@ public final class CmdLineEvaluator
 		{
 			System.out.println(e.toString());
 			showUsage = true;
+		}
+
+		if (cmd.hasOption("dir"))
+		{
+			if (files.length != 0)
+			{
+				System.err.println("Files ignored when using the --dir option");
+			}
+
+			File scanDir = new File(cmd.getOptionValue("dir"));
+			if (!scanDir.exists() || !scanDir.isDirectory())
+			{
+				System.err.println(String.format("'%s' is not am existing directory", scanDir.toString()));
+				return;
+			}
+			files = scanDir.list(new FilenameFilter() {
+				@Override
+				public boolean accept(File arg0, String arg1)
+				{
+					return arg1.endsWith(".gst");
+				}
+			});
+			for (int i = 0; i < files.length; i++)
+			{
+				files[i] = scanDir.toString() + File.separator + files[i];
+			}
 		}
 
 		if (showUsage || cmd == null || files.length == 0)
