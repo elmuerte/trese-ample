@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2008 University of Twente.
  */
-package trese.featuremodels;
+package trese.featuremodels.grooveext;
 
 import groove.explore.DefaultScenario;
 import groove.explore.Scenario;

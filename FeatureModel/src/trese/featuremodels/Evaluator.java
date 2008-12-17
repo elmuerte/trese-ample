@@ -25,14 +25,10 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
+import trese.featuremodels.grooveext.FinalGraphCalc;
 import trese.featuremodels.model.Feature;
-import trese.featuremodels.model.FeatureGroupRelation;
 import trese.featuremodels.model.FeatureModelException;
-import trese.featuremodels.model.FeatureRequirement;
-import trese.featuremodels.modelImpl.FeatureImpl;
 
 /**
  * Evaluates a feature model.
@@ -222,81 +218,4 @@ public class Evaluator
 		initialized = true;
 	}
 
-	/**
-	 * For debugging
-	 * 
-	 * @param args
-	 */
-	public static void main(String[] args)
-	{
-		Evaluator eval = new Evaluator();
-		eval.initialize();
-		try
-		{
-			Feature baseline = null;
-			if (args.length == 1)
-			{
-				AspectGxl gxl = new AspectGxl();
-				try
-				{
-					Graph graph = gxl.unmarshalGraph(new File(args[0]));
-					baseline = GstToModel.convertGraph(graph);
-				}
-				catch (IOException e)
-				{
-					e.printStackTrace();
-					return;
-				}
-			}
-			else
-			{
-				FeatureImpl myProduct = new FeatureImpl("_");
-				baseline = myProduct;
-
-				FeatureImpl fA = new FeatureImpl("A");
-				fA.setRequirement(FeatureRequirement.MANDATORY);
-				fA.setGroupRelation(FeatureGroupRelation.ALTERNATIVE);
-				myProduct.addSubFeature(fA);
-
-				FeatureImpl fB = new FeatureImpl("B");
-				fA.addSubFeature(fB);
-
-				FeatureImpl fC = new FeatureImpl("C");
-				fA.addSubFeature(fC);
-
-				FeatureImpl fD = new FeatureImpl("D");
-				fD.setRequirement(FeatureRequirement.OPTIONAL);
-				fD.setGroupRelation(FeatureGroupRelation.OR);
-				myProduct.addSubFeature(fD);
-
-				FeatureImpl fE = new FeatureImpl("E");
-				fD.addSubFeature(fE);
-
-				FeatureImpl fF = new FeatureImpl("F");
-				fD.addSubFeature(fF);
-			}
-
-			long startTime = System.nanoTime();
-			Collection<EvaluationResult> result = eval.evaluate(baseline, true);
-			startTime = System.nanoTime() - startTime;
-
-			for (EvaluationResult res : result)
-			{
-				System.out.print("Valid product configuration: ");
-				SortedSet<String> features = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
-				for (Feature f : res.getIncludedFeatures())
-				{
-					features.add(f.getName());
-				}
-				System.out.println(features.toString());
-			}
-
-			System.out.println(String.format("Required %d ms", startTime / 1000000));
-			System.out.println(String.format("Discovered %d valid product configurations", result.size()));
-		}
-		catch (FeatureModelException e)
-		{
-			e.printStackTrace();
-		}
-	}
 }
