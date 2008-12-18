@@ -6,6 +6,8 @@ package trese.arch.tracing.conversion;
 
 import edu.uci.isr.xarch.IXArch;
 import edu.uci.isr.xarch.instance.IDescription;
+import edu.uci.isr.xarch.instance.IDirection;
+import edu.uci.isr.xarch.instance.IDirectionSimpleType;
 import edu.uci.isr.xarch.instance.IPoint;
 import edu.uci.isr.xarch.instance.IXMLLink;
 import edu.uci.isr.xarch.types.IArchStructure;
@@ -18,6 +20,8 @@ import edu.uci.isr.xarch.types.IInterface;
 import edu.uci.isr.xarch.types.IInterfaceType;
 import edu.uci.isr.xarch.types.ILink;
 import edu.uci.isr.xarch.types.ISignature;
+import edu.uci.isr.xarch.types.ISignatureServiceSimpleType;
+import edu.uci.isr.xarch.types.ISignatureServiceType;
 import groove.graph.DefaultGraph;
 import groove.graph.DefaultLabel;
 import groove.graph.Label;
@@ -226,8 +230,49 @@ public class XADL2Graph
 			graph.addEdge(node, GraphConstants.EDGE_TYPE, typeNode);
 		}
 
-		// TODO direction
-		// TODO service type
+		setDirection(node, sign.getDirection());
+
+		ISignatureServiceType servType = sign.getServiceType();
+		if (servType != null)
+		{
+			if (ISignatureServiceSimpleType.ENUM_PROVIDES.equalsIgnoreCase(servType.getValue()))
+			{
+				graph.addEdge(node, GraphConstants.SERVICE_PROVIDES, node);
+			}
+			else if (ISignatureServiceSimpleType.ENUM_REQUIRES.equalsIgnoreCase(servType.getValue()))
+			{
+				graph.addEdge(node, GraphConstants.SERVICE_REQUIRES, node);
+			}
+		}
+	}
+
+	/**
+	 * @param node
+	 * @param direction
+	 */
+	protected void setDirection(Node node, IDirection direction)
+	{
+		if (direction == null)
+		{
+			return;
+		}
+		String dir = direction.getValue();
+		if (IDirectionSimpleType.ENUM_INOUT.equalsIgnoreCase(dir))
+		{
+			graph.addEdge(node, GraphConstants.DIRECTION_INOUT, node);
+		}
+		else if (IDirectionSimpleType.ENUM_OUT.equalsIgnoreCase(dir))
+		{
+			graph.addEdge(node, GraphConstants.DIRECTION_OUT, node);
+		}
+		else if (IDirectionSimpleType.ENUM_IN.equalsIgnoreCase(dir))
+		{
+			graph.addEdge(node, GraphConstants.DIRECTION_IN, node);
+		}
+		else if (IDirectionSimpleType.ENUM_NONE.equalsIgnoreCase(dir))
+		{
+			graph.addEdge(node, GraphConstants.DIRECTION_NONE, node);
+		}
 	}
 
 	/**
@@ -366,7 +411,7 @@ public class XADL2Graph
 			graph.addEdge(node, GraphConstants.EDGE_SIGNATURE, typeNode);
 		}
 
-		// TODO direction
+		setDirection(node, iface.getDirection());
 	}
 
 	/**

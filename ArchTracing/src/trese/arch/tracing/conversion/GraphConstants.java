@@ -32,4 +32,12 @@ public final class GraphConstants
 	public static final Label EDGE_ELEMENT = DefaultLabel.createLabel("element");
 	public static final Label EDGE_INTERFACE = DefaultLabel.createLabel("interface");
 	public static final Label EDGE_LINK = DefaultLabel.createLabel("link");
+
+	public static final Label DIRECTION_INOUT = DefaultLabel.createLabel("Direction_INOUT");
+	public static final Label DIRECTION_OUT = DefaultLabel.createLabel("Direction_OUT");
+	public static final Label DIRECTION_IN = DefaultLabel.createLabel("Direction_IN");
+	public static final Label DIRECTION_NONE = DefaultLabel.createLabel("Direction_NONE");
+
+	public static final Label SERVICE_PROVIDES = DefaultLabel.createLabel("Provides");
+	public static final Label SERVICE_REQUIRES = DefaultLabel.createLabel("Requires");
 }
