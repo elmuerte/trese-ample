@@ -7,5 +7,9 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/ArchTracing/lib/xarchlibs/docs.zip!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/groove/castor-0_9_5_2.jar"/>
+	<classpathentry kind="lib" path="lib/groove/groove-3_2_0.jar"/>
+	<classpathentry kind="lib" path="lib/groove/groove-gxl-1_0.jar"/>
+	<classpathentry kind="lib" path="lib/groove/xerces-2_6_0-xercesImpl.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>
