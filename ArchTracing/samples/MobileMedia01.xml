@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<instance:xArch xmlns:instance="http://www.ics.uci.edu/pub/arch/xArch/instance.xsd" xmlns:analysis="http://www.ics.uci.edu/pub/arch/xArch/analysis.xsd" xmlns:hints3="http://www.ics.uci.edu/pub/arch/xArch/hints3.xsd" xmlns:tronanalysis="http://www.ics.uci.edu/pub/arch/xArch/tronanalysis.xsd" xmlns:types="http://www.ics.uci.edu/pub/arch/xArch/types.xsd" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ics.uci.edu/pub/arch/xArch/tronanalysis.xsd http://www.isr.uci.edu/projects/xarchuci/ext/tronanalysis.xsd http://www.ics.uci.edu/pub/arch/xArch/analysis.xsd http://www.isr.uci.edu/projects/xarchuci/ext/analysis.xsd http://www.ics.uci.edu/pub/arch/xArch/hints3.xsd http://www.isr.uci.edu/projects/xarchuci/ext/hints3.xsd http://www.ics.uci.edu/pub/arch/xArch/instance.xsd http://www.isr.uci.edu/projects/xarchuci/core/instance.xsd http://www.ics.uci.edu/pub/arch/xArch/statecharts.xsd http://www.isr.uci.edu/projects/xarchuci/ext/statecharts.xsd http://www.ics.uci.edu/pub/arch/xArch/activitydiagrams.xsd http://www.isr.uci.edu/projects/xarchuci/ext/activitydiagrams.xsd http://www.ics.uci.edu/pub/arch/xArch/types.xsd http://www.isr.uci.edu/projects/xarchuci/ext/types.xsd http://www.ics.uci.edu/pub/arch/xArch/changesets.xsd http://www.isr.uci.edu/projects/xarchuci/ext/changesets.xsd">
+    <types:archTypes xsi:type="types:ArchTypes">
+        <types:componentType types:id="componentType_BaseController" xsi:type="types:ComponentType">
+            <types:description xsi:type="instance:Description">BaseController</types:description>
+            <types:signature types:id="signatureffffffa1-43f6a979-314b2e5d-4a49005c" xsi:type="types:Signature">
+                <types:description xsi:type="instance:Description">ControlPhoto</types:description>
+                <types:direction xsi:type="instance:Direction">in</types:direction>
+                <types:type xlink:href="#interfaceType_ControlPhoto" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                <types:serviceType xsi:type="types:SignatureServiceType">provides</types:serviceType>
+                
+                
+                
+            </types:signature>
+            <types:signature types:id="signatureffffffa1-49370c4d-fe8ac94e-254700bd" xsi:type="types:Signature">
+                <types:description xsi:type="instance:Description">ManageAlbumList</types:description>
+                <types:direction xsi:type="instance:Direction">out</types:direction>
+                <types:type xlink:href="#interfaceType_ManageAlbumList" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                <types:serviceType xsi:type="types:SignatureServiceType">requires</types:serviceType>
+            </types:signature>
+            
+            
+        </types:componentType>
+        <types:componentType types:id="componentType_AlbumListScreen" xsi:type="types:ComponentType">
+            <types:description xsi:type="instance:Description">AlbumListScreen</types:description>
+            <types:signature types:id="signatureffffffa1-493445a4-0790a1f0-25470051" xsi:type="types:Signature">
+                <types:description xsi:type="instance:Description">ManageAlbumList</types:description>
+                <types:direction xsi:type="instance:Direction">in</types:direction>
+                <types:type xlink:href="#interfaceType_ManageAlbumList" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                <types:serviceType xsi:type="types:SignatureServiceType">provides</types:serviceType>
+            </types:signature>
+            <types:signature types:id="signatureffffffa1-4934a113-b1df816e-2547008b" xsi:type="types:Signature">
+                <types:description xsi:type="instance:Description">ControlPhoto</types:description>
+                <types:direction xsi:type="instance:Direction">out</types:direction>
+                <types:type xlink:href="#interfaceType_ControlPhoto" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                <types:serviceType xsi:type="types:SignatureServiceType">requires</types:serviceType>
+            </types:signature>
+        </types:componentType>
+        <types:interfaceType types:id="interfaceType_ControlPhoto" xsi:type="types:InterfaceType">
+            <types:description xsi:type="instance:Description">ControlPhoto</types:description>
+        </types:interfaceType>
+        <types:interfaceType types:id="interfaceType_ManageAlbumList" xsi:type="types:InterfaceType">
+            <types:description xsi:type="instance:Description">ManageAlbumList</types:description>
+        </types:interfaceType>
+        
+        
+    </types:archTypes>
+<hints3:renderingHints3 xsi:type="hints3:RenderingHints3">
+        <hints3:hintedElement hints3:maintainer="edu.uci.isr.archstudio4.comp.archipelago" hints3:version="4.1.0" xsi:type="hints3:HintBundle">
+            <hints3:hintedElement xsi:type="hints3:HintedElement">
+                <hints3:target xlink:href="#componentTypeffffffa1-43f620a2-1282568d-4a490003" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#componentTypeffffffa1-43f620a2-1282568d-4a490003" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                    <hints3:property hints3:name="glass/boundingBox" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10025,10025,100,100" hints3:type="org.eclipse.swt.graphics.Rectangle" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#signatureffffffa1-43f6a979-314b2e5d-4a49005c" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                    <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10075,10025" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/anchorPoint-StuckInfo" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="{EDGE,{0.5,0.0}}" hints3:type="{[Ljava.lang.Object;,2,enum:edu.uci.isr.bna4.logics.coordinating.MaintainStickyPointLogic$StickyMode,{[F,2,java.lang.Float,java.lang.Float}}" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#signatureffffffa1-49370c4d-fe8ac94e-254700bd" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10025,10075" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/anchorPoint-StuckInfo" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="{EDGE,{0.0,0.5}}" hints3:type="{[Ljava.lang.Object;,2,enum:edu.uci.isr.bna4.logics.coordinating.MaintainStickyPointLogic$StickyMode,{[F,2,java.lang.Float,java.lang.Float}}" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+                
+                
+                
+            </hints3:hintedElement>
+            <hints3:hintedElement xsi:type="hints3:HintedElement">
+                <hints3:target xlink:href="#interfaceTypeffffffa1-43f6de79-5795076d-4a490062" xlink:type="simple" xsi:type="instance:XMLLink"/>
+            </hints3:hintedElement>
+            <hints3:hintedElement xsi:type="hints3:HintedElement">
+                <hints3:target xlink:href="#componentTypeffffffa1-49333ccc-8c57b41b-2547002d" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#componentTypeffffffa1-49333ccc-8c57b41b-2547002d" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:property hints3:name="glass/boundingBox" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10025,10025,100,100" hints3:type="org.eclipse.swt.graphics.Rectangle" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#signatureffffffa1-493445a4-0790a1f0-25470051" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10075,10125" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/anchorPoint-StuckInfo" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="{EDGE,{0.5,1.0}}" hints3:type="{[Ljava.lang.Object;,2,enum:edu.uci.isr.bna4.logics.coordinating.MaintainStickyPointLogic$StickyMode,{[F,2,java.lang.Float,java.lang.Float}}" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#signatureffffffa1-4934a113-b1df816e-2547008b" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10125,10075" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/anchorPoint-StuckInfo" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="{EDGE,{1.0,0.5}}" hints3:type="{[Ljava.lang.Object;,2,enum:edu.uci.isr.bna4.logics.coordinating.MaintainStickyPointLogic$StickyMode,{[F,2,java.lang.Float,java.lang.Float}}" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+            </hints3:hintedElement>
+            <hints3:hintedElement xsi:type="hints3:HintedElement">
+                <hints3:target xlink:href="#interfaceTypeffffffa1-4933f9b6-245f4b50-2547002e" xsi:type="instance:XMLLink" xlink:type="simple"/>
+            </hints3:hintedElement>
+            <hints3:hintedElement xsi:type="hints3:HintedElement">
+                <hints3:target xlink:href="#archStructureffffffa1-4938b7ff-9d0e6008-254700c5" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#componentffffffa1-4938f42e-35f746e5-254700c8" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:property hints3:name="glass/boundingBox" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10200,10200,100,100" hints3:type="org.eclipse.swt.graphics.Rectangle" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="background/color" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="197,203,255" hints3:type="org.eclipse.swt.graphics.RGB" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#interfaceffffffa1-4938f43e-11b4eaf3-254700ca" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10200,10250" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/anchorPoint-StuckInfo" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="{EDGE,{0.0,0.5}}" hints3:type="{[Ljava.lang.Object;,2,enum:edu.uci.isr.bna4.logics.coordinating.MaintainStickyPointLogic$StickyMode,{[F,2,java.lang.Float,java.lang.Float}}" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#interfaceffffffa1-4938f43e-03501ee2-254700c9" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10250,10200" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/anchorPoint-StuckInfo" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="{EDGE,{0.5,0.0}}" hints3:type="{[Ljava.lang.Object;,2,enum:edu.uci.isr.bna4.logics.coordinating.MaintainStickyPointLogic$StickyMode,{[F,2,java.lang.Float,java.lang.Float}}" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#componentffffffa1-49394e17-aa01d2bc-2547012c" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:property hints3:name="glass/boundingBox" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10050,10075,100,100" hints3:type="org.eclipse.swt.graphics.Rectangle" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="background/color" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="197,203,255" hints3:type="org.eclipse.swt.graphics.RGB" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#interfaceffffffa1-49394e17-a8f48e74-2547012d" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10100,10175" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/anchorPoint-StuckInfo" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="{EDGE,{0.5,1.0}}" hints3:type="{[Ljava.lang.Object;,2,enum:edu.uci.isr.bna4.logics.coordinating.MaintainStickyPointLogic$StickyMode,{[F,2,java.lang.Float,java.lang.Float}}" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#interfaceffffffa1-49394e17-7dbe321f-2547012e" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10150,10125" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/anchorPoint-StuckInfo" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="{EDGE,{1.0,0.5}}" hints3:type="{[Ljava.lang.Object;,2,enum:edu.uci.isr.bna4.logics.coordinating.MaintainStickyPointLogic$StickyMode,{[F,2,java.lang.Float,java.lang.Float}}" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#linkffffffa1-4939991b-008fd7b0-2547015d" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:property hints3:name="glass/midpoints" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="{}" hints3:type="{[Lorg.eclipse.swt.graphics.Point;,0}" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/endpoint1" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10155,10129" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/endpoint2" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10245,10196" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/endpoint1-StuckInfo" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="{EDGE_FROM_CENTER}" hints3:type="{[Ljava.lang.Object;,1,enum:edu.uci.isr.bna4.logics.coordinating.MaintainStickyPointLogic$StickyMode}" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/endpoint2-StuckInfo" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="{EDGE_FROM_CENTER}" hints3:type="{[Ljava.lang.Object;,1,enum:edu.uci.isr.bna4.logics.coordinating.MaintainStickyPointLogic$StickyMode}" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#linkffffffa1-4939cb38-32a24a45-2547016a" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:property hints3:name="glass/midpoints" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="{}" hints3:type="{[Lorg.eclipse.swt.graphics.Point;,0}" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/endpoint1" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10105,10179" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/endpoint2" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10195,10246" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/endpoint1-StuckInfo" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="{EDGE_FROM_CENTER}" hints3:type="{[Ljava.lang.Object;,1,enum:edu.uci.isr.bna4.logics.coordinating.MaintainStickyPointLogic$StickyMode}" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/endpoint2-StuckInfo" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="{EDGE_FROM_CENTER}" hints3:type="{[Ljava.lang.Object;,1,enum:edu.uci.isr.bna4.logics.coordinating.MaintainStickyPointLogic$StickyMode}" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+            </hints3:hintedElement>
+            
+            
+            
+        </hints3:hintedElement>
+        <hints3:hintedElement hints3:maintainer="edu.uci.isr.archstudio4.comp.archipelago" hints3:version="4.0.0" xsi:type="hints3:HintBundle"/>
+    </hints3:renderingHints3>
+<types:archStructure types:id="archStructureffffffa1-4938b7ff-9d0e6008-254700c5" xsi:type="types:ArchStructure">
+        <types:description xsi:type="instance:Description">MobileMedia</types:description>
+        <types:component types:id="componentffffffa1-4938f42e-35f746e5-254700c8" xsi:type="types:Component">
+            <types:description xsi:type="instance:Description">BaseController</types:description>
+            <types:interface types:id="interfaceffffffa1-4938f43e-03501ee2-254700c9" xsi:type="types:Interface">
+                <types:description xsi:type="instance:Description">ControlPhoto</types:description>
+                <types:direction xsi:type="instance:Direction">in</types:direction>
+                <types:type xlink:href="#interfaceType_ControlPhoto" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <types:signature xlink:href="#signatureffffffa1-43f6a979-314b2e5d-4a49005c" xsi:type="instance:XMLLink" xlink:type="simple"/>
+            </types:interface>
+            <types:interface types:id="interfaceffffffa1-4938f43e-11b4eaf3-254700ca" xsi:type="types:Interface">
+                <types:description xsi:type="instance:Description">ManageAlbumList</types:description>
+                <types:direction xsi:type="instance:Direction">out</types:direction>
+                <types:type xlink:href="#interfaceType_ManageAlbumList" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <types:signature xlink:href="#signatureffffffa1-49370c4d-fe8ac94e-254700bd" xsi:type="instance:XMLLink" xlink:type="simple"/>
+            </types:interface>
+            <types:type xlink:href="#componentType_BaseController" xsi:type="instance:XMLLink" xlink:type="simple"/>
+        </types:component>
+        <types:component types:id="componentffffffa1-49394e17-aa01d2bc-2547012c" xsi:type="types:Component">
+            <types:description xsi:type="instance:Description">AlbumListScreen</types:description>
+            <types:interface types:id="interfaceffffffa1-49394e17-a8f48e74-2547012d" xsi:type="types:Interface">
+                <types:description xsi:type="instance:Description">ManageAlbumList</types:description>
+                <types:direction xsi:type="instance:Direction">in</types:direction>
+                <types:type xlink:href="#interfaceType_ManageAlbumList" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <types:signature xlink:href="#signatureffffffa1-493445a4-0790a1f0-25470051" xsi:type="instance:XMLLink" xlink:type="simple"/>
+            </types:interface>
+            <types:interface types:id="interfaceffffffa1-49394e17-7dbe321f-2547012e" xsi:type="types:Interface">
+                <types:description xsi:type="instance:Description">ControlPhoto</types:description>
+                <types:direction xsi:type="instance:Direction">out</types:direction>
+                <types:type xlink:href="#interfaceType_ControlPhoto" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <types:signature xlink:href="#signatureffffffa1-4934a113-b1df816e-2547008b" xsi:type="instance:XMLLink" xlink:type="simple"/>
+            </types:interface>
+            <types:type xlink:href="#componentType_AlbumListScreen" xsi:type="instance:XMLLink" xlink:type="simple"/>
+        </types:component>
+        <types:link types:id="linkffffffa1-4939991b-008fd7b0-2547015d" xsi:type="types:Link">
+            <types:description xsi:type="instance:Description">[New Link]</types:description>
+            <types:point xsi:type="instance:Point">
+                <instance:anchorOnInterface xlink:href="#interfaceffffffa1-49394e17-7dbe321f-2547012e" xsi:type="instance:XMLLink" xlink:type="simple"/>
+            </types:point>
+            <types:point xsi:type="instance:Point">
+                <instance:anchorOnInterface xlink:href="#interfaceffffffa1-4938f43e-03501ee2-254700c9" xsi:type="instance:XMLLink" xlink:type="simple"/>
+            </types:point>
+        </types:link>
+        <types:link types:id="linkffffffa1-4939cb38-32a24a45-2547016a" xsi:type="types:Link">
+            <types:description xsi:type="instance:Description">[New Link]</types:description>
+            <types:point xsi:type="instance:Point">
+                <instance:anchorOnInterface xlink:href="#interfaceffffffa1-49394e17-a8f48e74-2547012d" xsi:type="instance:XMLLink" xlink:type="simple"/>
+            </types:point>
+            <types:point xsi:type="instance:Point">
+                <instance:anchorOnInterface xlink:href="#interfaceffffffa1-4938f43e-11b4eaf3-254700ca" xsi:type="instance:XMLLink" xlink:type="simple"/>
+            </types:point>
+        </types:link>
+    </types:archStructure>
+    <analysis:archAnalysis xsi:type="analysis:ArchAnalysis">
+        <analysis:analysis tronanalysis:id="ffffffa1-493a40b8-00ac91ef-2547017a" xsi:type="tronanalysis:TronAnalysis">
+            <tronanalysis:description xsi:type="instance:Description">Archlight Analysis Tests</tronanalysis:description>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102b3c70dfa.2576389267ac4a8a.10id2" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/No Duplicate IDs</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102b3c70dfa.2576389267ac4a8a.10e" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Structure/ArchStructures/ID Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102b3c8d04f.6da6c6b508aeb61d.10f" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Structure/ArchStructures/Description Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102b3c8e01d.562cc2871d077a3.110" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Structure/ArchStructures/Description Non-Empty</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.10285474143.ad9c42b14784eb5d.0" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Structure/Components/ID Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.1028548ab08.860591990d819f77.0" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Structure/Components/Description Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.1028548ab08.860591990d819f78.1" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Structure/Components/Description Non-Empty</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102b211d999.7ff5df43c1573f3b.22" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Structure/Components/Interfaces/ID Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102b217399a.fce08258bb50fd89.23" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Structure/Components/Interfaces/Description Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102b2174e0f.d11c6eb2887d55f1.24" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Structure/Components/Interfaces/Description Non-Empty</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102b21d5505.55d0461685980f25.25" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Structure/Components/Interfaces/Direction Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102b21d66e6.5b517931e3875c49.26" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Structure/Components/Interfaces/Direction Non-Empty</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102b21d7fe5.f442f989102bb66a.27" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Structure/Components/Interfaces/Direction Valid</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147e.10285474143.ad9c42b14784eb5d.0" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Structure/Connectors/ID Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147e.1028548ab08.860591990d819f77.0" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Structure/Connectors/Description Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147e.1028548ab08.860591990d819f78.1" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Structure/Connectors/Description Non-Empty</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147e.102b211d999.7ff5df43c1573f3b.22" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Structure/Connectors/Interfaces/ID Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147e.102b217399a.fce08258bb50fd89.23" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Structure/Connectors/Interfaces/Description Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147e.102b2174e0f.d11c6eb2887d55f1.24" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Structure/Connectors/Interfaces/Description Non-Empty</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147e.102b21d5505.55d0461685980f25.25" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Structure/Connectors/Interfaces/Direction Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147e.102b21d66e6.5b517931e3875c49.26" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Structure/Connectors/Interfaces/Direction Non-Empty</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147e.102b21d7fe5.f442f989102bb66a.27" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Structure/Connectors/Interfaces/Direction Valid</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102b27ad91c.a674a634512e584.11a" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Structure/Links/ID Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102b27aed37.ce56ed05264c62d5.11b" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Structure/Links/Description Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102b27afce7.1725b1c2a18cc9a8.11c" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Structure/Links/Description Non-Empty</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102b27afce7.1725b1c2a18cc9a8.11d" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Structure/Links/Two Points</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102b27aed37.ce56ed05264c62d5.11f" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Structure/Links/Anchors Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102b32c629a.8bedb9e05f903208.22" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Structure/Links/Anchors Valid</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102b3307532.81b7ae1f46af1059.23" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Structure/Links/Anchors connect to Interfaces</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102b33a6502.c581b5587f597235.fb" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Structure/Links/Interface Directions Compatible</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102b33a6502.c581b5587f597235.fb2" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Structure/Links/Signature Service Types Compatible</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102b33a6502.c581b5587f597235.fb-1" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Structure/Links/Interface Types Identical</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102b3c70dfa.2576389267ac4a8a.10f" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/ArchTypes/ArchTypes Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102b3c70dfa.2576389267ac4a8a.11a" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/ArchTypes/No Multiple ArchTypes</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3148f.10285474143.ad9c42b14784eb5d.0" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Component Types/ID Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3148f.1028548ab08.860591990d819f77.0" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Component Types/Description Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3148f.1028548ab08.860591990d819f78.1" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Component Types/Description Non-Empty</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3148f.102b211d999.7ff5df43c1573f3b.22" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Component Types/Signatures/ID Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3148f.102b217399a.fce08258bb50fd89.23" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Component Types/Signatures/Description Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3148f.102b2174e0f.d11c6eb2887d55f1.24" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Component Types/Signatures/Description Non-Empty</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3148f.102b21d5505.55d0461685980f25.25" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Component Types/Signatures/Direction Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3148f.102b21d66e6.5b517931e3875c49.26" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Component Types/Signatures/Direction Non-Empty</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3148f.102b21d7fe5.f442f989102bb66a.27" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Component Types/Signatures/Direction Valid</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3148f.102b211d999.7ff5df43c1573f3b.22a" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Component Types/Signatures/Service Type Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3148f.102b21d66e6.5b517931e3875c49.26a" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Component Types/Signatures/Service Type Non-Empty</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3148f.102b21d7fe5.f442f989102bb66a.27a" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Component Types/Signatures/Service Type Valid</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102d2330cbc.b88091d54bd1c705.63" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Component Types/Subarchitectures/ArchStructure Link Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102d23320a5.6e97fc7f5dbca4b7.64" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Component Types/Subarchitectures/ArchStructure Link Valid</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102d233343e.3855e34cb21c47fa.65" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Component Types/Subarchitectures/ArchStructure link -&gt; ArchStructure</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102d2461bdc.aa7267d23ffe6dec.67" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Component Types/Subarchitectures/Signature-Interface Mappings/ID Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102d2462df8.50dd2e4239074a3d.68" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Component Types/Subarchitectures/Signature-Interface Mappings/Description Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102d2463cf4.46c7ea64d817aea1.69" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Component Types/Subarchitectures/Signature-Interface Mappings/Description Non-Empty</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102d25464ae.a11b236470590525.6d" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Component Types/Subarchitectures/Signature-Interface Mappings/OuterSignature Link Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102d2548056.27bd577e0865f6ef.6e" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Component Types/Subarchitectures/Signature-Interface Mappings/OuterSignature Link Valid</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102d2549c30.9d678610a8fe1fcb.6f" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Component Types/Subarchitectures/Signature-Interface Mappings/OuterSignature Link -&gt; Signature</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102d27f6e8e.19606b6364f14a06.2ae" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Component Types/Subarchitectures/Signature-Interface Mappings/InnerInterface Link Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102d27f80fa.14fcbe1a7a64f491.2af" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Component Types/Subarchitectures/Signature-Interface Mappings/InnerInterface Link Valid</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102d27f9cdf.d5760acda180fdc5.2b0" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Component Types/Subarchitectures/Signature-Interface Mappings/InnerInterface Link -&gt; Interface</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3148e.10285474143.ad9c42b14784eb5d.0" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Connector Types/ID Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3148e.1028548ab08.860591990d819f77.0" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Connector Types/Description Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3148e.1028548ab08.860591990d819f78.1" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Connector Types/Description Non-Empty</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3148e.102b211d999.7ff5df43c1573f3b.22" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Connector Types/Signatures/ID Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3148e.102b217399a.fce08258bb50fd89.23" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Connector Types/Signatures/Description Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3148e.102b2174e0f.d11c6eb2887d55f1.24" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Connector Types/Signatures/Description Non-Empty</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3148e.102b21d5505.55d0461685980f25.25" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Connector Types/Signatures/Direction Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3148e.102b21d66e6.5b517931e3875c49.26" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Connector Types/Signatures/Direction Non-Empty</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3148e.102b21d7fe5.f442f989102bb66a.27" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Connector Types/Signatures/Direction Valid</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3148f.102b211d999.7ff5df43c1573f3b.22b" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Connector Types/Signatures/Service Type Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3148f.102b21d66e6.5b517931e3875c49.26b" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Connector Types/Signatures/Service Type Non-Empty</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3148f.102b21d7fe5.f442f989102bb66a.27b" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Connector Types/Signatures/Service Type Valid</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.91c3147f.102d2330cbc.b88091d54bd1c705.63" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Connector Types/Subarchitectures/ArchStructure Link Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.91c3147f.102d23320a5.6e97fc7f5dbca4b7.64" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Connector Types/Subarchitectures/ArchStructure Link Valid</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.91c3147f.102d233343e.3855e34cb21c47fa.65" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Connector Types/Subarchitectures/ArchStructure link -&gt; ArchStructure</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.91c3147f.102d2461bdc.aa7267d23ffe6dec.67" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Connector Types/Subarchitectures/Signature-Interface Mappings/ID Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.91c3147f.102d2462df8.50dd2e4239074a3d.68" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Connector Types/Subarchitectures/Signature-Interface Mappings/Description Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.91c3147f.102d2463cf4.46c7ea64d817aea1.69" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Connector Types/Subarchitectures/Signature-Interface Mappings/Description Non-Empty</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.91c3147f.102d25464ae.a11b236470590525.6d" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Connector Types/Subarchitectures/Signature-Interface Mappings/OuterSignature Link Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.91c3147f.102d2548056.27bd577e0865f6ef.6e" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Connector Types/Subarchitectures/Signature-Interface Mappings/OuterSignature Link Valid</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.91c3147f.102d2549c30.9d678610a8fe1fcb.6f" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Connector Types/Subarchitectures/Signature-Interface Mappings/OuterSignature Link -&gt; Signature</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.91c3147f.102d27f6e8e.19606b6364f14a06.2ae" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Connector Types/Subarchitectures/Signature-Interface Mappings/InnerInterface Link Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.91c3147f.102d27f80fa.14fcbe1a7a64f491.2af" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Connector Types/Subarchitectures/Signature-Interface Mappings/InnerInterface Link Valid</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.91c3147f.102d27f9cdf.d5760acda180fdc5.2b0" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Connector Types/Subarchitectures/Signature-Interface Mappings/InnerInterface Link -&gt; Interface</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102d1dc8116.ece17366a4a52d1e.56" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Components/Type Link Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102d1db4ebf.72e29631d7c1132d.55" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Components/Type Link Valid</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102d1e180d1.6a33fa59ea1cb12.57" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Components/Type link -&gt; ComponentType</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102d21cf3d9.ce7bb0a435fa1927.59" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Components/Interfaces/Signature Link Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102d21fc439.7c927fba704208cf.5a" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Components/Interfaces/Signature Link Valid</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102d2265559.cc933d4995c90295.5b" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Components/Interfaces/Signature link -&gt; Signature</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102d2871711.ff3a20b004329533.2b2" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Components/Interfaces/Interface Type = Signature Type</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102d22c4dd6.4084ec4646a1f3c0.5c" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Connectors/Type Link Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102d22c6906.172c1f889f291964.5d" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Connectors/Type Link Valid</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102d22c7ef8.aede0aa856fdff66.5e" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Connectors/Type link -&gt; ConnectorType</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102d22c9711.ffd6982ba46f2330.5f" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Connectors/Interfaces/Signature Link Present</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102d22caaaa.b4e1d1e0cac6cda5.60" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Connectors/Interfaces/Signature Link Valid</tronanalysis:description>
+            </tronanalysis:test>
+            <tronanalysis:test tronanalysis:enabled="true" tronanalysis:id="test.80c3147f.102d22cc074.2fc69c1825fff71b.61" xsi:type="tronanalysis:Test">
+                <tronanalysis:description xsi:type="instance:Description">Tool: Schematron; Category: xADL 2.0/Structure and Types/Types/Connectors/Interfaces/Signature link -&gt; Signature</tronanalysis:description>
+            </tronanalysis:test>
+        </analysis:analysis>
+    </analysis:archAnalysis>
+</instance:xArch>
