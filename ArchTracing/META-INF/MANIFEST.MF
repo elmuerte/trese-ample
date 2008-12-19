@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: ArchTracing
-Bundle-SymbolicName: ArchTracing;singleton:=true
+Bundle-SymbolicName: trese.arch.tracing;singleton:=true
 Bundle-Version: 0.1.0
 Bundle-ClassPath: ArchTracing.jar,
  lib/groove/castor-0_9_5_2.jar,
