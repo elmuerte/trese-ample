@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: ArchTracing
+Bundle-SymbolicName: ArchTracing;singleton:=true
+Bundle-Version: 0.1.0
+Bundle-ClassPath: ArchTracing.jar,
+ lib/groove/castor-0_9_5_2.jar,
+ lib/groove/groove-3_2_0.jar,
+ lib/groove/groove-gxl-1_0.jar,
+ lib/groove/xerces-2_6_0-xercesImpl.jar
+Bundle-Vendor: University of Twente
+Require-Bundle: edu.uci.isr.xarchlibs.apigen;bundle-version="4.1.50"
+Export-Package: trese.arch.tracing.conversion
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
