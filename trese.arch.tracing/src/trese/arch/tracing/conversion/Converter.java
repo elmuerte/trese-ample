@@ -7,6 +7,7 @@ package trese.arch.tracing.conversion;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 
 import edu.uci.isr.xarch.IXArch;
 import edu.uci.isr.xarch.IXArchImplementation;
@@ -33,13 +34,42 @@ public class Converter
 	 * @param dest
 	 *            The output .gst
 	 * @throws ConversionException
-	 * @throws XArchParseException
 	 * @throws IOException
 	 */
-	public void convert(File source, File dest) throws ConversionException, XArchParseException, IOException
+	public void convert(File source, File dest) throws ConversionException, IOException
+	{
+		convert(new FileReader(source), dest);
+	}
+
+	/**
+	 * @param source
+	 * @param dest
+	 * @throws ConversionException
+	 * @throws IOException
+	 */
+	public void convert(Reader source, File dest) throws ConversionException, IOException
 	{
 		IXArchImplementation impl = XArchUtils.getDefaultXArchImplementation();
-		IXArch arch = impl.parse(new FileReader(source));
+		try
+		{
+			convert(impl.parse(source), dest);
+		}
+		catch (XArchParseException e)
+		{
+			throw new ConversionException(e);
+		}
+	}
+
+	/**
+	 * Convert the given architecture to the file
+	 * 
+	 * @param arch
+	 * @param dest
+	 * @throws ConversionException
+	 * @throws IOException
+	 */
+	public void convert(IXArch arch, File dest) throws ConversionException, IOException
+	{
 		AspectGraph graph = XADL2Graph.convert(arch);
 		AspectGxl gxl = new AspectGxl();
 		gxl.marshalGraph(graph, dest);
