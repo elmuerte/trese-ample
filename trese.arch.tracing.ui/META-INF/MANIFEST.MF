@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: ArchTracing UI
+Bundle-SymbolicName: trese.arch.tracing.ui
+Bundle-Version: 0.1.0
+Bundle-Vendor: University of Twente
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Require-Bundle: trese.arch.tracing;bundle-version="0.1.0"
