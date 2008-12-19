@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="trese.arch.tracing.ui.xadl2gst"
+            objectClass="org.eclipse.core.resources.IFile">
+         <menu
+               id="trese.arch.tracing.ui.archstudio"
+               label="ArchStudio"
+               path="additions">
+            <separator
+                  name="group1">
+            </separator>
+         </menu>
+         <action
+               class="trese.arch.tracing.ui.popup.actions.ExportGST"
+               enablesFor="+"
+               id="trese.arch.tracing.ui.newAction"
+               label="Export to Groove GST"
+               menubarPath="trese.arch.tracing.ui.archstudio/group1">
+         </action>
+         <visibility>
+            <objectState
+                  name="contentTypeId"
+                  value="edu.uci.isr.archstudio4.xadlContentBinding">
+            </objectState>
+         </visibility>
+      </objectContribution>
+   </extension>
+
+</plugin>
