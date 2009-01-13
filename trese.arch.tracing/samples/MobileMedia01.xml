@@ -18,6 +18,22 @@
                 <types:type xlink:href="#interfaceType_ManageAlbumList" xlink:type="simple" xsi:type="instance:XMLLink"/>
                 <types:serviceType xsi:type="types:SignatureServiceType">requires</types:serviceType>
             </types:signature>
+            <types:subArchitecture xsi:type="types:SubArchitecture">
+                <types:archStructure xlink:href="#archStructureffffffa1-cf6e0f25-57e1aeda-41360033" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <types:signatureInterfaceMapping types:id="sigmap_AlbumCtrl" xsi:type="types:SignatureInterfaceMapping">
+                    <types:description xsi:type="instance:Description">Album List Controler Link</types:description>
+                    <types:outerSignature xlink:href="#signatureffffffa1-43f6a979-314b2e5d-4a49005c" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                    <types:innerInterface xlink:href="#interfaceffffffa1-cf6ec4d3-a6557192-41360095" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                </types:signatureInterfaceMapping>
+                <types:signatureInterfaceMapping types:id="sigmap_PhotoCtrl" xsi:type="types:SignatureInterfaceMapping">
+                    <types:description xsi:type="instance:Description">Photo Controller Link</types:description>
+                    <types:outerSignature xlink:href="#signatureffffffa1-49370c4d-fe8ac94e-254700bd" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                    <types:innerInterface xlink:href="#interfaceffffffa1-cf6ecdd8-312dc687-413600b4" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                </types:signatureInterfaceMapping>
+            </types:subArchitecture>
+            
+            
+            
             
             
         </types:componentType>
@@ -36,12 +52,34 @@
                 <types:serviceType xsi:type="types:SignatureServiceType">requires</types:serviceType>
             </types:signature>
         </types:componentType>
+        <types:componentType types:id="componentTypeffffffa1-cf96574b-0bc86565-4136024a" xsi:type="types:ComponentType">
+            <types:description xsi:type="instance:Description">PhotoController</types:description>
+            <types:signature types:id="signatureffffffa1-cf96f198-a05fef53-413602d6" xsi:type="types:Signature">
+                <types:description xsi:type="instance:Description">ControlPhoto</types:description>
+                <types:direction xsi:type="instance:Direction">in</types:direction>
+                <types:type xlink:href="#interfaceType_ControlPhoto" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                <types:serviceType xsi:type="types:SignatureServiceType">provides</types:serviceType>
+            </types:signature>
+        </types:componentType>
+        <types:componentType types:id="componentTypeffffffa1-cf979245-1be8a806-413602e2" xsi:type="types:ComponentType">
+            <types:description xsi:type="instance:Description">AlbumListController</types:description>
+            <types:signature types:id="signatureffffffa1-cf97b8f3-704b9dc4-41360306" xsi:type="types:Signature">
+                <types:description xsi:type="instance:Description">ManageAlbumList</types:description>
+                <types:direction xsi:type="instance:Direction">out</types:direction>
+                <types:type xlink:href="#interfaceType_ManageAlbumList" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                <types:serviceType xsi:type="types:SignatureServiceType">requires</types:serviceType>
+            </types:signature>
+        </types:componentType>
         <types:interfaceType types:id="interfaceType_ControlPhoto" xsi:type="types:InterfaceType">
             <types:description xsi:type="instance:Description">ControlPhoto</types:description>
         </types:interfaceType>
         <types:interfaceType types:id="interfaceType_ManageAlbumList" xsi:type="types:InterfaceType">
             <types:description xsi:type="instance:Description">ManageAlbumList</types:description>
         </types:interfaceType>
+        
+        
+        
+        
         
         
     </types:archTypes>
@@ -65,7 +103,7 @@
                     </hints3:property>
                 </hints3:hintedElement>
                 <hints3:hintedElement xsi:type="hints3:HintedElement">
-                    <hints3:target xlink:href="#signatureffffffa1-49370c4d-fe8ac94e-254700bd" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:target xlink:href="#signatureffffffa1-49370c4d-fe8ac94e-254700bd" xlink:type="simple" xsi:type="instance:XMLLink"/>
                     <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
                         <hints3:value hints3:data="10025,10075" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
                     </hints3:property>
@@ -81,15 +119,15 @@
                 <hints3:target xlink:href="#interfaceTypeffffffa1-43f6de79-5795076d-4a490062" xlink:type="simple" xsi:type="instance:XMLLink"/>
             </hints3:hintedElement>
             <hints3:hintedElement xsi:type="hints3:HintedElement">
-                <hints3:target xlink:href="#componentTypeffffffa1-49333ccc-8c57b41b-2547002d" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <hints3:target xlink:href="#componentTypeffffffa1-49333ccc-8c57b41b-2547002d" xlink:type="simple" xsi:type="instance:XMLLink"/>
                 <hints3:hintedElement xsi:type="hints3:HintedElement">
-                    <hints3:target xlink:href="#componentTypeffffffa1-49333ccc-8c57b41b-2547002d" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:target xlink:href="#componentTypeffffffa1-49333ccc-8c57b41b-2547002d" xlink:type="simple" xsi:type="instance:XMLLink"/>
                     <hints3:property hints3:name="glass/boundingBox" xsi:type="hints3:Property">
                         <hints3:value hints3:data="10025,10025,100,100" hints3:type="org.eclipse.swt.graphics.Rectangle" xsi:type="hints3:PropertyValue"/>
                     </hints3:property>
                 </hints3:hintedElement>
                 <hints3:hintedElement xsi:type="hints3:HintedElement">
-                    <hints3:target xlink:href="#signatureffffffa1-493445a4-0790a1f0-25470051" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:target xlink:href="#signatureffffffa1-493445a4-0790a1f0-25470051" xlink:type="simple" xsi:type="instance:XMLLink"/>
                     <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
                         <hints3:value hints3:data="10075,10125" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
                     </hints3:property>
@@ -98,7 +136,7 @@
                     </hints3:property>
                 </hints3:hintedElement>
                 <hints3:hintedElement xsi:type="hints3:HintedElement">
-                    <hints3:target xlink:href="#signatureffffffa1-4934a113-b1df816e-2547008b" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:target xlink:href="#signatureffffffa1-4934a113-b1df816e-2547008b" xlink:type="simple" xsi:type="instance:XMLLink"/>
                     <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
                         <hints3:value hints3:data="10125,10075" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
                     </hints3:property>
@@ -108,12 +146,12 @@
                 </hints3:hintedElement>
             </hints3:hintedElement>
             <hints3:hintedElement xsi:type="hints3:HintedElement">
-                <hints3:target xlink:href="#interfaceTypeffffffa1-4933f9b6-245f4b50-2547002e" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <hints3:target xlink:href="#interfaceTypeffffffa1-4933f9b6-245f4b50-2547002e" xlink:type="simple" xsi:type="instance:XMLLink"/>
             </hints3:hintedElement>
             <hints3:hintedElement xsi:type="hints3:HintedElement">
-                <hints3:target xlink:href="#archStructureffffffa1-4938b7ff-9d0e6008-254700c5" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <hints3:target xlink:href="#archStructureffffffa1-4938b7ff-9d0e6008-254700c5" xlink:type="simple" xsi:type="instance:XMLLink"/>
                 <hints3:hintedElement xsi:type="hints3:HintedElement">
-                    <hints3:target xlink:href="#componentffffffa1-4938f42e-35f746e5-254700c8" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:target xlink:href="#componentffffffa1-4938f42e-35f746e5-254700c8" xlink:type="simple" xsi:type="instance:XMLLink"/>
                     <hints3:property hints3:name="glass/boundingBox" xsi:type="hints3:Property">
                         <hints3:value hints3:data="10200,10200,100,100" hints3:type="org.eclipse.swt.graphics.Rectangle" xsi:type="hints3:PropertyValue"/>
                     </hints3:property>
@@ -122,7 +160,7 @@
                     </hints3:property>
                 </hints3:hintedElement>
                 <hints3:hintedElement xsi:type="hints3:HintedElement">
-                    <hints3:target xlink:href="#interfaceffffffa1-4938f43e-11b4eaf3-254700ca" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:target xlink:href="#interfaceffffffa1-4938f43e-11b4eaf3-254700ca" xlink:type="simple" xsi:type="instance:XMLLink"/>
                     <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
                         <hints3:value hints3:data="10200,10250" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
                     </hints3:property>
@@ -131,7 +169,7 @@
                     </hints3:property>
                 </hints3:hintedElement>
                 <hints3:hintedElement xsi:type="hints3:HintedElement">
-                    <hints3:target xlink:href="#interfaceffffffa1-4938f43e-03501ee2-254700c9" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:target xlink:href="#interfaceffffffa1-4938f43e-03501ee2-254700c9" xlink:type="simple" xsi:type="instance:XMLLink"/>
                     <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
                         <hints3:value hints3:data="10250,10200" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
                     </hints3:property>
@@ -140,7 +178,7 @@
                     </hints3:property>
                 </hints3:hintedElement>
                 <hints3:hintedElement xsi:type="hints3:HintedElement">
-                    <hints3:target xlink:href="#componentffffffa1-49394e17-aa01d2bc-2547012c" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:target xlink:href="#componentffffffa1-49394e17-aa01d2bc-2547012c" xlink:type="simple" xsi:type="instance:XMLLink"/>
                     <hints3:property hints3:name="glass/boundingBox" xsi:type="hints3:Property">
                         <hints3:value hints3:data="10050,10075,100,100" hints3:type="org.eclipse.swt.graphics.Rectangle" xsi:type="hints3:PropertyValue"/>
                     </hints3:property>
@@ -149,7 +187,7 @@
                     </hints3:property>
                 </hints3:hintedElement>
                 <hints3:hintedElement xsi:type="hints3:HintedElement">
-                    <hints3:target xlink:href="#interfaceffffffa1-49394e17-a8f48e74-2547012d" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:target xlink:href="#interfaceffffffa1-49394e17-a8f48e74-2547012d" xlink:type="simple" xsi:type="instance:XMLLink"/>
                     <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
                         <hints3:value hints3:data="10100,10175" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
                     </hints3:property>
@@ -158,7 +196,7 @@
                     </hints3:property>
                 </hints3:hintedElement>
                 <hints3:hintedElement xsi:type="hints3:HintedElement">
-                    <hints3:target xlink:href="#interfaceffffffa1-49394e17-7dbe321f-2547012e" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:target xlink:href="#interfaceffffffa1-49394e17-7dbe321f-2547012e" xlink:type="simple" xsi:type="instance:XMLLink"/>
                     <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
                         <hints3:value hints3:data="10150,10125" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
                     </hints3:property>
@@ -167,7 +205,7 @@
                     </hints3:property>
                 </hints3:hintedElement>
                 <hints3:hintedElement xsi:type="hints3:HintedElement">
-                    <hints3:target xlink:href="#linkffffffa1-4939991b-008fd7b0-2547015d" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:target xlink:href="#linkffffffa1-4939991b-008fd7b0-2547015d" xlink:type="simple" xsi:type="instance:XMLLink"/>
                     <hints3:property hints3:name="glass/midpoints" xsi:type="hints3:Property">
                         <hints3:value hints3:data="{}" hints3:type="{[Lorg.eclipse.swt.graphics.Point;,0}" xsi:type="hints3:PropertyValue"/>
                     </hints3:property>
@@ -185,7 +223,7 @@
                     </hints3:property>
                 </hints3:hintedElement>
                 <hints3:hintedElement xsi:type="hints3:HintedElement">
-                    <hints3:target xlink:href="#linkffffffa1-4939cb38-32a24a45-2547016a" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:target xlink:href="#linkffffffa1-4939cb38-32a24a45-2547016a" xlink:type="simple" xsi:type="instance:XMLLink"/>
                     <hints3:property hints3:name="glass/midpoints" xsi:type="hints3:Property">
                         <hints3:value hints3:data="{}" hints3:type="{[Lorg.eclipse.swt.graphics.Point;,0}" xsi:type="hints3:PropertyValue"/>
                     </hints3:property>
@@ -203,6 +241,158 @@
                     </hints3:property>
                 </hints3:hintedElement>
             </hints3:hintedElement>
+            <hints3:hintedElement xsi:type="hints3:HintedElement">
+                <hints3:target xlink:href="#archStructureffffffa1-cf6e0f25-57e1aeda-41360033" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#componentffffffa1-cf6e5e60-ed5d1ad3-4136003f" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:property hints3:name="glass/boundingBox" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10350,10175,100,100" hints3:type="org.eclipse.swt.graphics.Rectangle" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="background/color" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="197,203,255" hints3:type="org.eclipse.swt.graphics.RGB" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#componentffffffa1-cf6e5664-bc981f63-41360036" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:property hints3:name="glass/boundingBox" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10171,10174,100,100" hints3:type="org.eclipse.swt.graphics.Rectangle" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#interfaceffffffa1-cf6ecdd8-312dc687-413600b4" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10450,10225" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/anchorPoint-StuckInfo" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="{EDGE,{1.0,0.5}}" hints3:type="{[Ljava.lang.Object;,2,enum:edu.uci.isr.bna4.logics.coordinating.MaintainStickyPointLogic$StickyMode,{[F,2,java.lang.Float,java.lang.Float}}" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#interfaceffffffa1-cf6ec4d3-a6557192-41360095" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10171,10225" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/anchorPoint-StuckInfo" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="{EDGE,{0.0,0.51}}" hints3:type="{[Ljava.lang.Object;,2,enum:edu.uci.isr.bna4.logics.coordinating.MaintainStickyPointLogic$StickyMode,{[F,2,java.lang.Float,java.lang.Float}}" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#linkffffffa1-cf716816-ac2201a8-41360158" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:property hints3:name="glass/midpoints" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="{}" hints3:type="{[Lorg.eclipse.swt.graphics.Point;,0}" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/endpoint1" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10455,10224" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/endpoint2" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10625,10200" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/endpoint1-StuckInfo" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="{EDGE_FROM_CENTER}" hints3:type="{[Ljava.lang.Object;,1,enum:edu.uci.isr.bna4.logics.coordinating.MaintainStickyPointLogic$StickyMode}" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+            </hints3:hintedElement>
+            <hints3:hintedElement xsi:type="hints3:HintedElement">
+                <hints3:target xlink:href="#componentType_BaseController" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#componentType_BaseController" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:property hints3:name="glass/boundingBox" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10010,10010,390,140" hints3:type="org.eclipse.swt.graphics.Rectangle" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#signatureffffffa1-49370c4d-fe8ac94e-254700bd" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10400,10075" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/anchorPoint-StuckInfo" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="{EDGE,{1.0,0.4642857}}" hints3:type="{[Ljava.lang.Object;,2,enum:edu.uci.isr.bna4.logics.coordinating.MaintainStickyPointLogic$StickyMode,{[F,2,java.lang.Float,java.lang.Float}}" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#signatureffffffa1-43f6a979-314b2e5d-4a49005c" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10010,10075" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/anchorPoint-StuckInfo" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="{EDGE,{0.0,0.4642857}}" hints3:type="{[Ljava.lang.Object;,2,enum:edu.uci.isr.bna4.logics.coordinating.MaintainStickyPointLogic$StickyMode,{[F,2,java.lang.Float,java.lang.Float}}" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+            </hints3:hintedElement>
+            <hints3:hintedElement xsi:type="hints3:HintedElement">
+                <hints3:target xlink:href="#componentType_AlbumListScreen" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#signatureffffffa1-4934a113-b1df816e-2547008b" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10110,10050" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/anchorPoint-StuckInfo" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="{EDGE,{1.0,0.4}}" hints3:type="{[Ljava.lang.Object;,2,enum:edu.uci.isr.bna4.logics.coordinating.MaintainStickyPointLogic$StickyMode,{[F,2,java.lang.Float,java.lang.Float}}" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#signatureffffffa1-493445a4-0790a1f0-25470051" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10010,10050" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/anchorPoint-StuckInfo" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="{EDGE,{0.0,0.4}}" hints3:type="{[Ljava.lang.Object;,2,enum:edu.uci.isr.bna4.logics.coordinating.MaintainStickyPointLogic$StickyMode,{[F,2,java.lang.Float,java.lang.Float}}" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#componentType_AlbumListScreen" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:property hints3:name="glass/boundingBox" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10010,10010,100,100" hints3:type="org.eclipse.swt.graphics.Rectangle" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+            </hints3:hintedElement>
+            <hints3:hintedElement xsi:type="hints3:HintedElement">
+                <hints3:target xlink:href="#interfaceType_ControlPhoto" xsi:type="instance:XMLLink" xlink:type="simple"/>
+            </hints3:hintedElement>
+            <hints3:hintedElement xsi:type="hints3:HintedElement">
+                <hints3:target xlink:href="#interfaceType_ManageAlbumList" xsi:type="instance:XMLLink" xlink:type="simple"/>
+            </hints3:hintedElement>
+            <hints3:hintedElement xsi:type="hints3:HintedElement">
+                <hints3:target xlink:href="#componentTypeffffffa1-cf96574b-0bc86565-4136024a" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#componentTypeffffffa1-cf96574b-0bc86565-4136024a" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:property hints3:name="glass/boundingBox" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10050,10050,100,100" hints3:type="org.eclipse.swt.graphics.Rectangle" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#signatureffffffa1-cf96f198-a05fef53-413602d6" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10050,10100" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/anchorPoint-StuckInfo" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="{EDGE,{0.0,0.5}}" hints3:type="{[Ljava.lang.Object;,2,enum:edu.uci.isr.bna4.logics.coordinating.MaintainStickyPointLogic$StickyMode,{[F,2,java.lang.Float,java.lang.Float}}" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+            </hints3:hintedElement>
+            <hints3:hintedElement xsi:type="hints3:HintedElement">
+                <hints3:target xlink:href="#componentTypeffffffa1-cf979245-1be8a806-413602e2" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#componentTypeffffffa1-cf979245-1be8a806-413602e2" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:property hints3:name="glass/boundingBox" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10010,10010,100,100" hints3:type="org.eclipse.swt.graphics.Rectangle" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+                <hints3:hintedElement xsi:type="hints3:HintedElement">
+                    <hints3:target xlink:href="#signatureffffffa1-cf97b8f3-704b9dc4-41360306" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                    <hints3:property hints3:name="glass/anchorPoint" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="10110,10050" hints3:type="org.eclipse.swt.graphics.Point" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                    <hints3:property hints3:name="glass/anchorPoint-StuckInfo" xsi:type="hints3:Property">
+                        <hints3:value hints3:data="{EDGE,{1.0,0.4}}" hints3:type="{[Ljava.lang.Object;,2,enum:edu.uci.isr.bna4.logics.coordinating.MaintainStickyPointLogic$StickyMode,{[F,2,java.lang.Float,java.lang.Float}}" xsi:type="hints3:PropertyValue"/>
+                    </hints3:property>
+                </hints3:hintedElement>
+            </hints3:hintedElement>
+            
+            
+            
+            
+            
             
             
             
@@ -216,49 +406,49 @@
             <types:interface types:id="interfaceffffffa1-4938f43e-03501ee2-254700c9" xsi:type="types:Interface">
                 <types:description xsi:type="instance:Description">ControlPhoto</types:description>
                 <types:direction xsi:type="instance:Direction">in</types:direction>
-                <types:type xlink:href="#interfaceType_ControlPhoto" xsi:type="instance:XMLLink" xlink:type="simple"/>
-                <types:signature xlink:href="#signatureffffffa1-43f6a979-314b2e5d-4a49005c" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <types:type xlink:href="#interfaceType_ControlPhoto" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                <types:signature xlink:href="#signatureffffffa1-43f6a979-314b2e5d-4a49005c" xlink:type="simple" xsi:type="instance:XMLLink"/>
             </types:interface>
             <types:interface types:id="interfaceffffffa1-4938f43e-11b4eaf3-254700ca" xsi:type="types:Interface">
                 <types:description xsi:type="instance:Description">ManageAlbumList</types:description>
                 <types:direction xsi:type="instance:Direction">out</types:direction>
-                <types:type xlink:href="#interfaceType_ManageAlbumList" xsi:type="instance:XMLLink" xlink:type="simple"/>
-                <types:signature xlink:href="#signatureffffffa1-49370c4d-fe8ac94e-254700bd" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <types:type xlink:href="#interfaceType_ManageAlbumList" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                <types:signature xlink:href="#signatureffffffa1-49370c4d-fe8ac94e-254700bd" xlink:type="simple" xsi:type="instance:XMLLink"/>
             </types:interface>
-            <types:type xlink:href="#componentType_BaseController" xsi:type="instance:XMLLink" xlink:type="simple"/>
+            <types:type xlink:href="#componentType_BaseController" xlink:type="simple" xsi:type="instance:XMLLink"/>
         </types:component>
         <types:component types:id="componentffffffa1-49394e17-aa01d2bc-2547012c" xsi:type="types:Component">
             <types:description xsi:type="instance:Description">AlbumListScreen</types:description>
             <types:interface types:id="interfaceffffffa1-49394e17-a8f48e74-2547012d" xsi:type="types:Interface">
                 <types:description xsi:type="instance:Description">ManageAlbumList</types:description>
                 <types:direction xsi:type="instance:Direction">in</types:direction>
-                <types:type xlink:href="#interfaceType_ManageAlbumList" xsi:type="instance:XMLLink" xlink:type="simple"/>
-                <types:signature xlink:href="#signatureffffffa1-493445a4-0790a1f0-25470051" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <types:type xlink:href="#interfaceType_ManageAlbumList" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                <types:signature xlink:href="#signatureffffffa1-493445a4-0790a1f0-25470051" xlink:type="simple" xsi:type="instance:XMLLink"/>
             </types:interface>
             <types:interface types:id="interfaceffffffa1-49394e17-7dbe321f-2547012e" xsi:type="types:Interface">
                 <types:description xsi:type="instance:Description">ControlPhoto</types:description>
                 <types:direction xsi:type="instance:Direction">out</types:direction>
-                <types:type xlink:href="#interfaceType_ControlPhoto" xsi:type="instance:XMLLink" xlink:type="simple"/>
-                <types:signature xlink:href="#signatureffffffa1-4934a113-b1df816e-2547008b" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <types:type xlink:href="#interfaceType_ControlPhoto" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                <types:signature xlink:href="#signatureffffffa1-4934a113-b1df816e-2547008b" xlink:type="simple" xsi:type="instance:XMLLink"/>
             </types:interface>
-            <types:type xlink:href="#componentType_AlbumListScreen" xsi:type="instance:XMLLink" xlink:type="simple"/>
+            <types:type xlink:href="#componentType_AlbumListScreen" xlink:type="simple" xsi:type="instance:XMLLink"/>
         </types:component>
         <types:link types:id="linkffffffa1-4939991b-008fd7b0-2547015d" xsi:type="types:Link">
             <types:description xsi:type="instance:Description">[New Link]</types:description>
             <types:point xsi:type="instance:Point">
-                <instance:anchorOnInterface xlink:href="#interfaceffffffa1-49394e17-7dbe321f-2547012e" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <instance:anchorOnInterface xlink:href="#interfaceffffffa1-49394e17-7dbe321f-2547012e" xlink:type="simple" xsi:type="instance:XMLLink"/>
             </types:point>
             <types:point xsi:type="instance:Point">
-                <instance:anchorOnInterface xlink:href="#interfaceffffffa1-4938f43e-03501ee2-254700c9" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <instance:anchorOnInterface xlink:href="#interfaceffffffa1-4938f43e-03501ee2-254700c9" xlink:type="simple" xsi:type="instance:XMLLink"/>
             </types:point>
         </types:link>
         <types:link types:id="linkffffffa1-4939cb38-32a24a45-2547016a" xsi:type="types:Link">
             <types:description xsi:type="instance:Description">[New Link]</types:description>
             <types:point xsi:type="instance:Point">
-                <instance:anchorOnInterface xlink:href="#interfaceffffffa1-49394e17-a8f48e74-2547012d" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <instance:anchorOnInterface xlink:href="#interfaceffffffa1-49394e17-a8f48e74-2547012d" xlink:type="simple" xsi:type="instance:XMLLink"/>
             </types:point>
             <types:point xsi:type="instance:Point">
-                <instance:anchorOnInterface xlink:href="#interfaceffffffa1-4938f43e-11b4eaf3-254700ca" xsi:type="instance:XMLLink" xlink:type="simple"/>
+                <instance:anchorOnInterface xlink:href="#interfaceffffffa1-4938f43e-11b4eaf3-254700ca" xlink:type="simple" xsi:type="instance:XMLLink"/>
             </types:point>
         </types:link>
     </types:archStructure>
@@ -552,4 +742,27 @@
             </tronanalysis:test>
         </analysis:analysis>
     </analysis:archAnalysis>
+<types:archStructure types:id="archStructureffffffa1-cf6e0f25-57e1aeda-41360033" xsi:type="types:ArchStructure">
+        <types:description xsi:type="instance:Description">BaseControllerImpl</types:description>
+        <types:component types:id="componentffffffa1-cf6e5664-bc981f63-41360036" xsi:type="types:Component">
+            <types:description xsi:type="instance:Description">PhotoController</types:description>
+            <types:interface types:id="interfaceffffffa1-cf6ec4d3-a6557192-41360095" xsi:type="types:Interface">
+                <types:description xsi:type="instance:Description">ControlPhoto</types:description>
+                <types:direction xsi:type="instance:Direction">in</types:direction>
+                <types:type xlink:href="#interfaceType_ControlPhoto" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                <types:signature xlink:href="#signatureffffffa1-43f6a979-314b2e5d-4a49005c" xlink:type="simple" xsi:type="instance:XMLLink"/>
+            </types:interface>
+            <types:type xlink:href="#componentTypeffffffa1-cf96574b-0bc86565-4136024a" xsi:type="instance:XMLLink" xlink:type="simple"/>
+        </types:component>
+        <types:component types:id="componentffffffa1-cf6e5e60-ed5d1ad3-4136003f" xsi:type="types:Component">
+            <types:description xsi:type="instance:Description">AlbumListCtrl</types:description>
+            <types:interface types:id="interfaceffffffa1-cf6ecdd8-312dc687-413600b4" xsi:type="types:Interface">
+                <types:description xsi:type="instance:Description">ManageAlbumList</types:description>
+                <types:direction xsi:type="instance:Direction">out</types:direction>
+                <types:type xlink:href="#interfaceType_ManageAlbumList" xlink:type="simple" xsi:type="instance:XMLLink"/>
+                <types:signature xlink:href="#signatureffffffa1-49370c4d-fe8ac94e-254700bd" xlink:type="simple" xsi:type="instance:XMLLink"/>
+            </types:interface>
+            <types:type xlink:href="#componentTypeffffffa1-cf979245-1be8a806-413602e2" xsi:type="instance:XMLLink" xlink:type="simple"/>
+        </types:component>
+    </types:archStructure>
 </instance:xArch>

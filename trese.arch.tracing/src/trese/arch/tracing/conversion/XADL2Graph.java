@@ -20,8 +20,10 @@ import edu.uci.isr.xarch.types.IInterface;
 import edu.uci.isr.xarch.types.IInterfaceType;
 import edu.uci.isr.xarch.types.ILink;
 import edu.uci.isr.xarch.types.ISignature;
+import edu.uci.isr.xarch.types.ISignatureInterfaceMapping;
 import edu.uci.isr.xarch.types.ISignatureServiceSimpleType;
 import edu.uci.isr.xarch.types.ISignatureServiceType;
+import edu.uci.isr.xarch.types.ISubArchitecture;
 import groove.graph.DefaultGraph;
 import groove.graph.DefaultLabel;
 import groove.graph.Label;
@@ -62,6 +64,7 @@ public class XADL2Graph
 	 */
 	public static final Label createStringLabel(String value)
 	{
+		// FIXME doesn't handle quotes in the strings
 		return DefaultLabel.createLabel(String.format("string:\"%s\"", value));
 	}
 
@@ -82,6 +85,12 @@ public class XADL2Graph
 	protected Map<String, Node> idMap;
 
 	/**
+	 * List of nodes who's full construction is pending (these have been created
+	 * by {@link #getNodeById(String)} and are not yet in the {@link #idMap}
+	 */
+	protected Map<String, Node> pendingNodes;
+
+	/**
 	 * @param architecture
 	 */
 	protected XADL2Graph(IXArch architecture)
@@ -89,6 +98,7 @@ public class XADL2Graph
 		arch = architecture;
 		graph = new DefaultGraph();
 		idMap = new HashMap<String, Node>();
+		pendingNodes = new HashMap<String, Node>();
 	}
 
 	/**
@@ -130,22 +140,44 @@ public class XADL2Graph
 	 */
 	protected Node createDefaultNode(String id, IDescription description)
 	{
-		Node node = graph.addNode();
+		Node node = getNodeById(id);
 		idMap.put(id, node);
-
-		// the "id" value
-		Node valueNode = graph.addNode();
-		graph.addEdge(valueNode, createStringLabel(id), valueNode);
-		graph.addEdge(node, GraphConstants.ATTR_ID, valueNode);
+		pendingNodes.remove(id);
 
 		if (description != null && description.getValue() != null && !description.getValue().isEmpty())
 		{
 			// the "description" value
-			valueNode = graph.addNode();
+			Node valueNode = graph.addNode();
 			graph.addEdge(valueNode, createStringLabel(description.getValue()), valueNode);
 			graph.addEdge(node, GraphConstants.ATTR_DESCRIPTION, valueNode);
 		}
 		return node;
+	}
+
+	/**
+	 * Get the node by a given id.
+	 * 
+	 * @param id
+	 * @return
+	 */
+	protected Node getNodeById(String id)
+	{
+		Node result = idMap.get(id);
+		if (result == null)
+		{
+			result = pendingNodes.get(id);
+		}
+		if (result == null)
+		{
+			result = graph.addNode();
+
+			Node valueNode = graph.addNode();
+			graph.addEdge(valueNode, createStringLabel(id), valueNode);
+			graph.addEdge(result, GraphConstants.ATTR_ID, valueNode);
+
+			pendingNodes.put(id, result);
+		}
+		return result;
 	}
 
 	/**
@@ -209,7 +241,11 @@ public class XADL2Graph
 			}
 		}
 
-		// TODO subarch
+		ISubArchitecture subArch = compType.getSubArchitecture();
+		if (subArch != null)
+		{
+			createSubArchitecture(subArch, node);
+		}
 	}
 
 	/**
@@ -276,6 +312,56 @@ public class XADL2Graph
 	}
 
 	/**
+	 * @param subArch
+	 * @param node
+	 * @throws ConversionException
+	 */
+	protected void createSubArchitecture(ISubArchitecture subArch, Node parentNode) throws ConversionException
+	{
+		Node node = graph.addNode();
+		graph.addEdge(node, GraphConstants.NODE_SUBARCHITECTURE, node);
+		graph.addEdge(parentNode, GraphConstants.EDGE_SUBARCHITECTURE, node);
+
+		Node archNode = resolveXMLinkToNode(subArch.getArchStructure());
+		if (archNode != null)
+		{
+			graph.addEdge(node, GraphConstants.EDGE_ARCHITECTURE, archNode);
+		}
+		for (Object o : subArch.getAllSignatureInterfaceMappings())
+		{
+			if (o instanceof ISignatureInterfaceMapping)
+			{
+				createSignatureInterfaceMapping((ISignatureInterfaceMapping) o, node);
+			}
+		}
+	}
+
+	/**
+	 * @param o
+	 * @param node
+	 * @throws ConversionException
+	 */
+	protected void createSignatureInterfaceMapping(ISignatureInterfaceMapping mapping, Node parentNode)
+			throws ConversionException
+	{
+		Node node = createDefaultNode(mapping.getId(), mapping.getDescription());
+		graph.addEdge(node, GraphConstants.NODE_INTERFACEMAPPING, node);
+		graph.addEdge(parentNode, GraphConstants.EDGE_MAPPING, node);
+
+		Node iface = resolveXMLinkToNode(mapping.getInnerInterface());
+		if (iface != null)
+		{
+			graph.addEdge(node, GraphConstants.EDGE_INTERFACE, iface);
+		}
+
+		iface = resolveXMLinkToNode(mapping.getOuterSignature());
+		if (iface != null)
+		{
+			graph.addEdge(node, GraphConstants.EDGE_SIGNATURE, iface);
+		}
+	}
+
+	/**
 	 * Create all nodes for the connector types declared in the IArchtTypes
 	 * structure
 	 * 
@@ -308,7 +394,11 @@ public class XADL2Graph
 			}
 		}
 
-		// TODO subarch
+		ISubArchitecture subArch = compType.getSubArchitecture();
+		if (subArch != null)
+		{
+			createSubArchitecture(subArch, node);
+		}
 	}
 
 	/**
@@ -481,7 +571,7 @@ public class XADL2Graph
 				throw new ConversionException(String.format("Can not handle cross document references (%s)", uri
 						.toString()));
 			}
-			Node result = idMap.get(uri.getFragment());
+			Node result = getNodeById(uri.getFragment());
 			if (result == null)
 			{
 				throw new ConversionException(String.format("Unable to find a node for id '%s'", uri.toString()));
