@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.core.runtime.contentTypes">
+      <content-type
+            file-extensions="gst"
+            id="groove.file.gst"
+            name="Groove Start Graph"
+            priority="normal">
+      </content-type>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="groove.gui.EclipseGraphViewer"
+            default="true"
+            extensions="gst"
+            id="groove.eclipse.ui.editor.graph"
+            name="Graph Viewer">
+         <contentTypeBinding
+               contentTypeId="groove.file.gst">
+         </contentTypeBinding>
+      </editor>
+   </extension>
+
+</plugin>
