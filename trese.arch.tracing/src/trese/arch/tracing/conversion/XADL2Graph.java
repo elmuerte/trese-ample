@@ -445,7 +445,9 @@ public class XADL2Graph
 				createLinkNode((ILink) o, node);
 			}
 		}
-		// TODO groups
+		// Groups?
+		// Groups do not appear to be use in terms of the graph, they are just
+		// an arbitrary grouping of elements, they do not contain any semantics.
 	}
 
 	/**
