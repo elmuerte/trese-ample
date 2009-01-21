@@ -5,13 +5,12 @@
  */
 package trese.featuremodels;
 
-import groove.graph.Graph;
-import groove.io.AspectGxl;
-
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -22,6 +21,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.Parser;
 import org.apache.commons.cli.PosixParser;
 
+import trese.featuremodels.loaders.BaseLoader;
 import trese.featuremodels.model.Feature;
 import trese.featuremodels.model.FeatureModelException;
 
@@ -72,14 +72,21 @@ public final class CmdLineEvaluator
 			File scanDir = new File(cmd.getOptionValue("dir"));
 			if (!scanDir.exists() || !scanDir.isDirectory())
 			{
-				System.err.println(String.format("'%s' is not am existing directory", scanDir.toString()));
+				System.err.println(String.format("'%s' is not an existing directory", scanDir.toString()));
 				return;
 			}
+			final Set<String> exts = BaseLoader.supportedExtensions();
 			files = scanDir.list(new FilenameFilter() {
 				@Override
 				public boolean accept(File arg0, String arg1)
 				{
-					return arg1.endsWith(".gst");
+					String ext = arg1.toString();
+					if (ext.indexOf('.') > -1)
+					{
+						ext = ext.substring(ext.lastIndexOf('.') + 1).toLowerCase();
+						return exts.contains(ext);
+					}
+					return false;
 				}
 			});
 			for (int i = 0; i < files.length; i++)
@@ -108,20 +115,22 @@ public final class CmdLineEvaluator
 					continue;
 				}
 				Feature baseline = null;
-
-				AspectGxl gxl = new AspectGxl();
 				try
 				{
-					Graph graph = gxl.unmarshalGraph(file);
-					baseline = GstToModel.convertGraph(graph);
+					baseline = BaseLoader.loadFeatureModel(file.toURI().toURL());
 				}
-				catch (IOException e)
+				catch (MalformedURLException e)
 				{
 					System.err.println(e);
 					if (debug)
 					{
 						e.printStackTrace(System.err);
 					}
+					continue;
+				}
+				if (baseline == null)
+				{
+					System.err.println(String.format("Unsupported file format: %s", filename));
 					continue;
 				}
 
@@ -132,13 +141,23 @@ public final class CmdLineEvaluator
 
 				System.out.println(String.format("Products:\t\t%d", result.size()));
 
+				Collection<Feature> deadFeatures = null;
+
 				if (verbose)
 				{
 					for (EvaluationResult res : result)
 					{
+						if (deadFeatures == null)
+						{
+							deadFeatures = new HashSet<Feature>(res.getAllFeatures());
+						}
+
+						Collection<Feature> incFeatures = res.getIncludedFeatures();
+						deadFeatures.removeAll(incFeatures);
+
 						System.out.print("Configuration:\t\t");
 						SortedSet<String> features = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
-						for (Feature f : res.getIncludedFeatures())
+						for (Feature f : incFeatures)
 						{
 							// ingore empty baseline
 							if (f.getName().length() == 0)
@@ -149,6 +168,22 @@ public final class CmdLineEvaluator
 						}
 						System.out.println(features.toString());
 					}
+				}
+
+				if (deadFeatures != null && !deadFeatures.isEmpty())
+				{
+					System.out.print("Dead Features:\t\t");
+					SortedSet<String> features = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+					for (Feature f : deadFeatures)
+					{
+						// ingore empty baseline
+						if (f.getName().length() == 0)
+						{
+							continue;
+						}
+						features.add(f.getName());
+					}
+					System.out.println(features.toString());
 				}
 
 				if (debug)

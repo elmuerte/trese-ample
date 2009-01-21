@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gxl xmlns="http://www.gupro.de/GXL/gxl-1.0.dtd">
-    <graph id="require-Transitive" role="rule" edgeids="false" edgemode="directed">
+    <graph id="require-TrueAlt" role="rule" edgeids="false" edgemode="directed">
         <attr name="priority">
-            <string>101</string>
+            <string>100</string>
         </attr>
         <attr name="$version">
             <string>curly</string>
         </attr>
-        <node id="n29770"/>
-        <node id="n29771"/>
-        <edge from="n29771" to="n29771">
-            <attr name="label">
-                <string>not:featureExcluded</string>
-            </attr>
-        </edge>
-        <edge from="n29770" to="n29771">
-            <attr name="label">
-                <string>new:required</string>
-            </attr>
-        </edge>
-        <edge from="n29770" to="n29771">
-            <attr name="label">
-                <string>del:requires</string>
-            </attr>
-        </edge>
-        <edge from="n29770" to="n29770">
+        <node id="n29716"/>
+        <node id="n29717"/>
+        <edge from="n29716" to="n29716">
             <attr name="label">
                 <string>featureIncluded</string>
             </attr>
         </edge>
-        <edge from="n29771" to="n29771">
+        <edge from="n29717" to="n29716">
+            <attr name="label">
+                <string>new:required</string>
+            </attr>
+        </edge>
+        <edge from="n29717" to="n29716">
+            <attr name="label">
+                <string>del:requires</string>
+            </attr>
+        </edge>
+        <edge from="n29717" to="n29717">
+            <attr name="label">
+                <string>not:{featureIncluded|featureExcluded}</string>
+            </attr>
+        </edge>
+        <edge from="n29717" to="n29717">
             <attr name="label">
                 <string>new:featureIncluded</string>
             </attr>

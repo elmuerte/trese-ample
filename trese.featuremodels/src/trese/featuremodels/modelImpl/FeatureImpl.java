@@ -204,4 +204,14 @@ public class FeatureImpl implements Feature
 			constraints.add(value);
 		}
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		return getName();
+	}
 }

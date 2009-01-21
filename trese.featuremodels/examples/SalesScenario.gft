@@ -1,0 +1,21 @@
+f_tree = MandOpt "SalesScenario" 
+         [n2,n3] [n1] 
+n1 = Xor "Payment" [n4,n5] 
+n2 = MandOpt "AccountManagement"
+     [] [n6,n7] 
+n3 = MandOpt "CustomerOrderManagement"
+     [n9] [n8] 
+n4 = MandOpt "PaymentCard" [] [] 
+n5 = MandOpt "CashOnDelivery" [] [] 
+n6 = Xor "CustomerGroups" [n10,n11] 
+n7 = MandOpt "CustomerRating" [] [] 
+n8 = MandOpt "CreditCheck" [] [] 
+n9 = MandOpt "SalesProcessing" [] [n12] 
+n10 = MandOpt "Enterprise" [] [] 
+n11 = MandOpt "Consumer" [] [] 
+n12 = MandOpt "Delivery" [] [] 
+
+constraints = [c1,c2] 
+c1 = Excludes "CashOnDelivery" "Consumer" 
+c2 = Requires "Enterprise" "Consumer"
+c3 = Requires "SalesProcessing" "Enterprise" 

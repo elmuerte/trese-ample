@@ -11,5 +11,6 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/FeatureModel/lib/commons-cli-1.1/docs.zip!/docs/apidocs"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/antlr-3.1/antlr-3.1.1-runtime.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>
