@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Groove
 Bundle-SymbolicName: groove
-Bundle-Version: 3.2.0
+Bundle-Version: 3.2.1
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: groove,
  groove.abs;
@@ -190,7 +190,7 @@ Bundle-ClassPath: lib/antlr_3.1/antlr-2.7.7.jar,
  lib/antlr_3.1/stringtemplate-3.1.jar,
  lib/castor-0_9_5_2.jar,
  lib/epsgraphics-1.0.0.jar,
- lib/groove-3_2_0.jar,
+ lib/groove-3_2_1.jar,
  lib/groove-gxl-1_0.jar,
  lib/jgraph-5_10_1.jar,
  lib/jgraphaddons-1_0_4.jar,
