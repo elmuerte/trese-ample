@@ -10,6 +10,13 @@ import edu.uci.isr.xarch.instance.IDirection;
 import edu.uci.isr.xarch.instance.IDirectionSimpleType;
 import edu.uci.isr.xarch.instance.IPoint;
 import edu.uci.isr.xarch.instance.IXMLLink;
+import edu.uci.isr.xarch.options.IOptional;
+import edu.uci.isr.xarch.options.IOptionalComponent;
+import edu.uci.isr.xarch.options.IOptionalConnector;
+import edu.uci.isr.xarch.options.IOptionalInterface;
+import edu.uci.isr.xarch.options.IOptionalLink;
+import edu.uci.isr.xarch.options.IOptionalSignature;
+import edu.uci.isr.xarch.options.IOptionalSignatureInterfaceMapping;
 import edu.uci.isr.xarch.types.IArchStructure;
 import edu.uci.isr.xarch.types.IArchTypes;
 import edu.uci.isr.xarch.types.IComponent;
@@ -24,6 +31,9 @@ import edu.uci.isr.xarch.types.ISignatureInterfaceMapping;
 import edu.uci.isr.xarch.types.ISignatureServiceSimpleType;
 import edu.uci.isr.xarch.types.ISignatureServiceType;
 import edu.uci.isr.xarch.types.ISubArchitecture;
+import edu.uci.isr.xarch.variants.IVariant;
+import edu.uci.isr.xarch.variants.IVariantComponentType;
+import edu.uci.isr.xarch.variants.IVariantConnectorType;
 import groove.graph.DefaultGraph;
 import groove.graph.DefaultLabel;
 import groove.graph.Label;
@@ -241,10 +251,52 @@ public class XADL2Graph
 			}
 		}
 
+		if (compType instanceof IVariantComponentType)
+		{
+			updateVariantComponentTypeNode((IVariantComponentType) compType, node);
+		}
+
 		ISubArchitecture subArch = compType.getSubArchitecture();
 		if (subArch != null)
 		{
 			createSubArchitecture(subArch, node);
+		}
+	}
+
+	/**
+	 * @param compType
+	 * @param node
+	 * @throws ConversionException
+	 */
+	protected void updateVariantComponentTypeNode(IVariantComponentType compType, Node node) throws ConversionException
+	{
+		graph.addEdge(node, GraphConstants.NODE_VARIANT_COMPONENT_TYPE, node);
+
+		for (Object o : compType.getAllVariants())
+		{
+			if (o instanceof IVariant)
+			{
+				createVariantNode((IVariant) o, node);
+			}
+		}
+	}
+
+	/**
+	 * @param o
+	 * @param node
+	 * @throws ConversionException
+	 */
+	protected void createVariantNode(IVariant var, Node parentNode) throws ConversionException
+	{
+		Node node = graph.addNode();
+		graph.addEdge(node, GraphConstants.NODE_VARIANT, node);
+		graph.addEdge(parentNode, GraphConstants.EDGE_VARIANT, node);
+
+		// TODO: guard
+		Node typeNode = resolveXMLinkToNode(var.getVariantType());
+		if (typeNode != null)
+		{
+			graph.addEdge(node, GraphConstants.EDGE_TYPE, typeNode);
 		}
 	}
 
@@ -279,6 +331,11 @@ public class XADL2Graph
 			{
 				graph.addEdge(node, GraphConstants.SERVICE_REQUIRES, node);
 			}
+		}
+
+		if (sign instanceof IOptionalSignature)
+		{
+			makeOptional(((IOptionalSignature) sign).getOptional(), node);
 		}
 	}
 
@@ -359,6 +416,11 @@ public class XADL2Graph
 		{
 			graph.addEdge(node, GraphConstants.EDGE_SIGNATURE, iface);
 		}
+
+		if (mapping instanceof IOptionalSignatureInterfaceMapping)
+		{
+			makeOptional(((IOptionalSignatureInterfaceMapping) mapping).getOptional(), node);
+		}
 	}
 
 	/**
@@ -394,10 +456,33 @@ public class XADL2Graph
 			}
 		}
 
+		if (compType instanceof IVariantConnectorType)
+		{
+			updateVariantConnectorTypeNode((IVariantConnectorType) compType, node);
+		}
+
 		ISubArchitecture subArch = compType.getSubArchitecture();
 		if (subArch != null)
 		{
 			createSubArchitecture(subArch, node);
+		}
+	}
+
+	/**
+	 * @param compType
+	 * @param node
+	 * @throws ConversionException
+	 */
+	protected void updateVariantConnectorTypeNode(IVariantConnectorType compType, Node node) throws ConversionException
+	{
+		graph.addEdge(node, GraphConstants.NODE_VARIANT_CONNECTOR_TYPE, node);
+
+		for (Object o : compType.getAllVariants())
+		{
+			if (o instanceof IVariant)
+			{
+				createVariantNode((IVariant) o, node);
+			}
 		}
 	}
 
@@ -468,6 +553,11 @@ public class XADL2Graph
 			graph.addEdge(node, GraphConstants.EDGE_TYPE, typeNode);
 		}
 
+		if (comp instanceof IOptionalComponent)
+		{
+			makeOptional(((IOptionalComponent) comp).getOptional(), node);
+		}
+
 		for (Object o : comp.getAllInterfaces())
 		{
 			if (o instanceof IInterface)
@@ -494,6 +584,11 @@ public class XADL2Graph
 		if (typeNode != null)
 		{
 			graph.addEdge(node, GraphConstants.EDGE_TYPE, typeNode);
+		}
+
+		if (iface instanceof IOptionalInterface)
+		{
+			makeOptional(((IOptionalInterface) iface).getOptional(), node);
 		}
 
 		// signature
@@ -524,6 +619,11 @@ public class XADL2Graph
 			graph.addEdge(node, GraphConstants.EDGE_TYPE, typeNode);
 		}
 
+		if (conn instanceof IOptionalConnector)
+		{
+			makeOptional(((IOptionalConnector) conn).getOptional(), node);
+		}
+
 		for (Object o : conn.getAllInterfaces())
 		{
 			if (o instanceof IInterface)
@@ -544,6 +644,11 @@ public class XADL2Graph
 
 		graph.addEdge(parentNode, GraphConstants.EDGE_ELEMENT, node);
 
+		if (link instanceof IOptionalLink)
+		{
+			makeOptional(((IOptionalLink) link).getOptional(), node);
+		}
+
 		for (Object o : link.getAllPoints())
 		{
 			if (o instanceof IPoint)
@@ -553,6 +658,21 @@ public class XADL2Graph
 				graph.addEdge(node, GraphConstants.EDGE_LINK, linkTo);
 			}
 		}
+	}
+
+	/**
+	 * Makes the node an optional node
+	 * 
+	 * @param node
+	 * @throws ConversionException
+	 */
+	protected void makeOptional(IOptional optional, Node node) throws ConversionException
+	{
+		if (optional == null)
+		{
+			return;
+		}
+		graph.addEdge(node, GraphConstants.NODE_OPTIONAL, node);
 	}
 
 	/**

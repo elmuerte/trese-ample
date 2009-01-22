@@ -45,4 +45,11 @@ public final class GraphConstants
 
 	public static final Label SERVICE_PROVIDES = DefaultLabel.createLabel("Provides");
 	public static final Label SERVICE_REQUIRES = DefaultLabel.createLabel("Requires");
+
+	public static final Label NODE_VARIANT_COMPONENT_TYPE = DefaultLabel.createLabel("VariantComponentType");
+	public static final Label NODE_VARIANT_CONNECTOR_TYPE = DefaultLabel.createLabel("VariantConnectorType");
+	public static final Label NODE_VARIANT = DefaultLabel.createLabel("Variant");
+	public static final Label EDGE_VARIANT = DefaultLabel.createLabel("variant");
+
+	public static final Label NODE_OPTIONAL = DefaultLabel.createLabel("Optional");
 }
