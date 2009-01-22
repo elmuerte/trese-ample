@@ -17,6 +17,10 @@
       !!!LICENSE PENDING!!!
    </license>
 
+   <url>
+      <update label="TRESE AMPLE Dev Update Site" url="http://wwwhome.cs.utwente.nl/~mhendrik/ample/"/>
+   </url>
+
    <requires>
       <import plugin="edu.uci.isr.xarchlibs.apigen" version="4.1.50" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui"/>
