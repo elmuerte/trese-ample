@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="trese.arch.tracing.feature"
+      label="ArchTracing"
+      version="0.1.0"
+      provider-name="University of Twente">
+
+   <description>
+      [Enter Feature Description here.]
+   </description>
+
+   <copyright>
+      Copyright 2009 University of Twente
+   </copyright>
+
+   <license>
+      !!!LICENSE PENDING!!!
+   </license>
+
+   <requires>
+      <import plugin="edu.uci.isr.xarchlibs.apigen" version="4.1.50" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.core.runtime"/>
+   </requires>
+
+   <plugin
+         id="groove"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="trese.arch.tracing"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="trese.arch.tracing.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+</feature>
