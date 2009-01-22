@@ -673,6 +673,8 @@ public class XADL2Graph
 			return;
 		}
 		graph.addEdge(node, GraphConstants.NODE_OPTIONAL, node);
+
+		// TODO guard
 	}
 
 	/**
