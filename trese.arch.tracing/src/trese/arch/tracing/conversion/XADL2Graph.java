@@ -43,7 +43,9 @@ import groove.view.aspect.AspectGraph;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Convert a xADL(2.0) model to a Graph used by the groove transformation rules
@@ -62,7 +64,21 @@ public class XADL2Graph
 	 */
 	public static final AspectGraph convert(IXArch arch) throws ConversionException
 	{
-		XADL2Graph converter = new XADL2Graph(arch);
+		return convert(arch, null);
+	}
+
+	/**
+	 * Convert the provided xADL structure to a Groove Graph
+	 * 
+	 * @param arch
+	 * @param restrictTo
+	 * @return A groove graph
+	 * @throws ConversionException
+	 *             thrown when an error was encountered during conversion
+	 */
+	public static final AspectGraph convert(IXArch arch, String restrictTo) throws ConversionException
+	{
+		XADL2Graph converter = new XADL2Graph(arch, restrictTo);
 		return converter.internalConvert();
 	}
 
@@ -74,14 +90,23 @@ public class XADL2Graph
 	 */
 	public static final Label createStringLabel(String value)
 	{
-		// FIXME doesn't handle quotes in the strings
-		return DefaultLabel.createLabel(String.format("string:\"%s\"", value));
+		return DefaultLabel.createLabel(String.format("string:\"%s\"", value.replace("\"", "")));
 	}
 
 	/**
 	 * The architecture to convert
 	 */
 	protected IXArch arch;
+
+	/**
+	 * If set restrict the output to just the structure with this ID
+	 */
+	protected String restrictToStructure;
+
+	/**
+	 * Mapping from ID to an IArchTypes element, used for lookup
+	 */
+	protected Map<String, Object> typeMap;
 
 	/**
 	 * The graph going to be constructed. This will be converted to an
@@ -102,13 +127,16 @@ public class XADL2Graph
 
 	/**
 	 * @param architecture
+	 * @param restrictTo
 	 */
-	protected XADL2Graph(IXArch architecture)
+	protected XADL2Graph(IXArch architecture, String restrictTo)
 	{
 		arch = architecture;
+		restrictToStructure = restrictTo;
 		graph = new DefaultGraph();
 		idMap = new HashMap<String, Node>();
 		pendingNodes = new HashMap<String, Node>();
+		typeMap = new HashMap<String, Object>();
 	}
 
 	/**
@@ -120,9 +148,46 @@ public class XADL2Graph
 	 */
 	protected AspectGraph internalConvert() throws ConversionException
 	{
-		createTypeNodes();
+		createTypeMapping();
+		// createTypeNodes();
 		createStructureNodes();
+		createTypeNodesEx();
 		return AspectGraph.getFactory().fromPlainGraph(graph);
+	}
+
+	/**
+	 * Collect all types and adds them to the type mapping
+	 */
+	private void createTypeMapping()
+	{
+		for (Object o : arch.getAllObjects())
+		{
+			if (o instanceof IArchTypes)
+			{
+				IArchTypes at = (IArchTypes) o;
+				for (Object elm : at.getAllComponentTypes())
+				{
+					if (elm instanceof IComponentType)
+					{
+						typeMap.put(((IComponentType) elm).getId(), elm);
+					}
+				}
+				for (Object elm : at.getAllConnectorTypes())
+				{
+					if (elm instanceof IConnectorType)
+					{
+						typeMap.put(((IConnectorType) elm).getId(), elm);
+					}
+				}
+				for (Object elm : at.getAllInterfaceTypes())
+				{
+					if (elm instanceof IInterfaceType)
+					{
+						typeMap.put(((IInterfaceType) elm).getId(), elm);
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -137,6 +202,44 @@ public class XADL2Graph
 				createInterfaceTypeNodes((IArchTypes) o);
 				createComponentTypeNodes((IArchTypes) o);
 				createConnectorTypeNodes((IArchTypes) o);
+			}
+		}
+	}
+
+	/**
+	 * Creates only pending type nodes
+	 * 
+	 * @throws ConversionException
+	 */
+	protected void createTypeNodesEx() throws ConversionException
+	{
+		// loop while there are pending type nodes
+		while (true)
+		{
+			Set<String> todo = new HashSet<String>(pendingNodes.keySet());
+			todo.retainAll(typeMap.keySet());
+			if (todo.isEmpty())
+			{
+				break;
+			}
+			for (String id : todo)
+			{
+				if (typeMap.containsKey(id))
+				{
+					Object elm = typeMap.get(id);
+					if (elm instanceof IInterfaceType)
+					{
+						createInterfaceTypeNode((IInterfaceType) elm);
+					}
+					else if (elm instanceof IConnectorType)
+					{
+						createConnectorTypeNode((IConnectorType) elm);
+					}
+					else if (elm instanceof IComponentType)
+					{
+						createComponentTypeNode((IComponentType) elm);
+					}
+				}
 			}
 		}
 	}
@@ -375,6 +478,12 @@ public class XADL2Graph
 	 */
 	protected void createSubArchitecture(ISubArchitecture subArch, Node parentNode) throws ConversionException
 	{
+		if (restrictToStructure != null)
+		{
+			graph.addEdge(parentNode, GraphConstants.NODE_HAS_SUBARCHITECTURE, parentNode);
+			return;
+		}
+
 		Node node = graph.addNode();
 		graph.addEdge(node, GraphConstants.NODE_SUBARCHITECTURE, node);
 		graph.addEdge(parentNode, GraphConstants.EDGE_SUBARCHITECTURE, node);
@@ -495,7 +604,10 @@ public class XADL2Graph
 		{
 			if (o instanceof IArchStructure)
 			{
-				createStructureNode((IArchStructure) o);
+				if (restrictToStructure == null || ((IArchStructure) o).getId().equals(restrictToStructure))
+				{
+					createStructureNode((IArchStructure) o);
+				}
 			}
 		}
 	}

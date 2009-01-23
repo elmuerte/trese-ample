@@ -23,6 +23,7 @@ public final class GraphConstants
 	public static final Label NODE_SIGNATURE = DefaultLabel.createLabel("Signature");
 	public static final Label NODE_SUBARCHITECTURE = DefaultLabel.createLabel("SubArchitecture");
 	public static final Label NODE_ARCH_STRUCTURE = DefaultLabel.createLabel("ArchStructure");
+	public static final Label NODE_HAS_SUBARCHITECTURE = DefaultLabel.createLabel("HasSubArchitecture");
 	public static final Label NODE_COMPONENT = DefaultLabel.createLabel("Component");
 	public static final Label NODE_CONNECTOR = DefaultLabel.createLabel("Connector");
 	public static final Label NODE_LINK = DefaultLabel.createLabel("Link");

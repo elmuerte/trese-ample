@@ -70,7 +70,21 @@ public class Converter
 	 */
 	public void convert(IXArch arch, File dest) throws ConversionException, IOException
 	{
-		AspectGraph graph = XADL2Graph.convert(arch);
+		convert(arch, null, dest);
+	}
+
+	/**
+	 * Convert the given architecture to the file
+	 * 
+	 * @param arch
+	 * @param restrictToArchId
+	 * @param dest
+	 * @throws ConversionException
+	 * @throws IOException
+	 */
+	public void convert(IXArch arch, String restrictToArchId, File dest) throws ConversionException, IOException
+	{
+		AspectGraph graph = XADL2Graph.convert(arch, restrictToArchId);
 		AspectGxl gxl = new AspectGxl();
 		gxl.marshalGraph(graph, dest);
 	}
