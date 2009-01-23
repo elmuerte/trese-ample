@@ -17,8 +17,15 @@
          <action
                class="trese.arch.tracing.ui.popup.actions.ExportGST"
                enablesFor="+"
-               id="trese.arch.tracing.ui.newAction"
+               id="trese.arch.tracing.ui.export.gst"
                label="Export to Groove GST"
+               menubarPath="trese.arch.tracing.ui.archstudio/group1">
+         </action>
+         <action
+               class="trese.arch.tracing.ui.popup.actions.ExportGSTRestrict"
+               enablesFor="+"
+               id="trese.arch.tracing.ui.export.gst.restrict"
+               label="Export to Groove GST (Single ArchStructure)"
                menubarPath="trese.arch.tracing.ui.archstudio/group1">
          </action>
          <visibility>
