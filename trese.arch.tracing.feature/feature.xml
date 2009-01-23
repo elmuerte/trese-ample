@@ -2,7 +2,7 @@
 <feature
       id="trese.arch.tracing.feature"
       label="ArchTracing"
-      version="0.1.0"
+      version="0.1.1"
       provider-name="University of Twente">
 
    <description>
@@ -14,11 +14,11 @@
    </copyright>
 
    <license>
-      !!!LICENSE PENDING!!!
+      LICENSE PENDING
    </license>
 
    <url>
-      <update label="TRESE AMPLE Dev Update Site" url="http://wwwhome.cs.utwente.nl/~mhendrik/ample/"/>
+      <update label="TRESE AMPLE Dev Update Site" url="http://eclipse.elmuerte.com/trese.ample.updatesite"/>
    </url>
 
    <requires>
