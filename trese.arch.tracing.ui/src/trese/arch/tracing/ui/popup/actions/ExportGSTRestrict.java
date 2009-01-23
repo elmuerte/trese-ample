@@ -71,7 +71,6 @@ public class ExportGSTRestrict implements IObjectActionDelegate
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException
 				{
 					SubMonitor progress = SubMonitor.convert(monitor);
-					// IProgressMonitor progress = new NullProgressMonitor();
 					Converter converter = new Converter();
 					progress.beginTask("Exporting xADL models to Groove GST",
 							((IStructuredSelection) selection).size() * 3);
