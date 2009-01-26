@@ -15,10 +15,12 @@ import org.antlr.runtime.Parser;
 import org.antlr.runtime.RecognizerSharedState;
 import org.antlr.runtime.TokenStream;
 
+import trese.featuremodels.model.Feature;
 import trese.featuremodels.model.FeatureConstraintType;
 import trese.featuremodels.model.FeatureGroupRelation;
 import trese.featuremodels.model.FeatureRequirement;
 import trese.featuremodels.modelImpl.FeatureConstraintImpl;
+import trese.featuremodels.modelImpl.FeatureImpl;
 
 /**
  * 
@@ -30,12 +32,12 @@ public class GftParserBase extends Parser
 	/**
 	 * Node id to feature mapping;
 	 */
-	protected Map<String, GftFeature> nodeFeatureMap;
+	protected Map<String, FeatureImpl> nodeFeatureMap;
 
 	/**
 	 * Mapping from the feature name (i.e. description) to the feature
 	 */
-	protected Map<String, GftFeature> nameFeatureMap;
+	protected Map<String, FeatureImpl> nameFeatureMap;
 
 	/**
 	 * Constraints that should be included
@@ -45,7 +47,7 @@ public class GftParserBase extends Parser
 	/**
 	 * The root feature
 	 */
-	protected GftFeature rootFeature;
+	protected FeatureImpl rootFeature;
 
 	/**
 	 * @param arg0
@@ -62,15 +64,15 @@ public class GftParserBase extends Parser
 	public GftParserBase(TokenStream arg0, RecognizerSharedState arg1)
 	{
 		super(arg0, arg1);
-		nodeFeatureMap = new HashMap<String, GftFeature>();
-		nameFeatureMap = new HashMap<String, GftFeature>();
+		nodeFeatureMap = new HashMap<String, FeatureImpl>();
+		nameFeatureMap = new HashMap<String, FeatureImpl>();
 		useConstraints = new HashSet<String>();
 	}
 
 	/**
 	 * @return the rootFeature
 	 */
-	public GftFeature getRootFeature()
+	public Feature getRootFeature()
 	{
 		return rootFeature;
 	}
@@ -81,11 +83,11 @@ public class GftParserBase extends Parser
 	 * @param id
 	 * @return
 	 */
-	protected GftFeature getFeatureById(String id)
+	protected FeatureImpl getFeatureById(String id)
 	{
 		if (!nodeFeatureMap.containsKey(id))
 		{
-			GftFeature item = new GftFeature(id);
+			FeatureImpl item = new FeatureImpl(id);
 			nodeFeatureMap.put(id, item);
 			if (rootFeature == null)
 			{
@@ -106,18 +108,18 @@ public class GftParserBase extends Parser
 	 */
 	protected void mandOptFeature(String id, String name, List<String> mand, List<String> op)
 	{
-		GftFeature feature = getFeatureById(id);
+		FeatureImpl feature = getFeatureById(id);
 		feature.setDescription(name);
 		nameFeatureMap.put(name, feature);
 		for (String childId : mand)
 		{
-			GftFeature child = getFeatureById(childId);
+			FeatureImpl child = getFeatureById(childId);
 			feature.addSubFeature(child);
 			child.setRequirement(FeatureRequirement.MANDATORY);
 		}
 		for (String childId : op)
 		{
-			GftFeature child = getFeatureById(childId);
+			FeatureImpl child = getFeatureById(childId);
 			feature.addSubFeature(child);
 			child.setRequirement(FeatureRequirement.OPTIONAL);
 		}
@@ -132,13 +134,13 @@ public class GftParserBase extends Parser
 	 */
 	protected void orFeature(String id, String name, List<String> children)
 	{
-		GftFeature feature = getFeatureById(id);
+		FeatureImpl feature = getFeatureById(id);
 		feature.setDescription(name);
 		nameFeatureMap.put(name, feature);
 		feature.setGroupRelation(FeatureGroupRelation.OR);
 		for (String childId : children)
 		{
-			GftFeature child = getFeatureById(childId);
+			FeatureImpl child = getFeatureById(childId);
 			feature.addSubFeature(child);
 			child.setRequirement(FeatureRequirement.GROUP);
 		}
@@ -153,13 +155,13 @@ public class GftParserBase extends Parser
 	 */
 	protected void xorFeature(String id, String name, List<String> children)
 	{
-		GftFeature feature = getFeatureById(id);
+		FeatureImpl feature = getFeatureById(id);
 		feature.setDescription(name);
 		nameFeatureMap.put(name, feature);
 		feature.setGroupRelation(FeatureGroupRelation.ALTERNATIVE);
 		for (String childId : children)
 		{
-			GftFeature child = getFeatureById(childId);
+			FeatureImpl child = getFeatureById(childId);
 			feature.addSubFeature(child);
 			child.setRequirement(FeatureRequirement.GROUP);
 		}
@@ -189,8 +191,8 @@ public class GftParserBase extends Parser
 		{
 			return;
 		}
-		GftFeature f1 = nameFeatureMap.get(feature1);
-		GftFeature f2 = nameFeatureMap.get(feature2);
+		FeatureImpl f1 = nameFeatureMap.get(feature1);
+		FeatureImpl f2 = nameFeatureMap.get(feature2);
 		FeatureConstraintType ctype = null;
 		if (FeatureConstraintType.EXCLUDES.toString().equalsIgnoreCase(type))
 		{

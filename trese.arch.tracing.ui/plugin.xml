@@ -30,6 +30,14 @@
                menubarPath="trese.arch.tracing.ui.archstudio/group1"
                tooltip="Export a subset of the architectures to a Groove GST">
          </action>
+         <action
+               class="trese.arch.tracing.ui.popup.actions.ExportGFTRestrict"
+               enablesFor="+"
+               id="trese.arch.tracing.ui.export.gft.restrict"
+               label="Export selected feature trees..."
+               menubarPath="trese.arch.tracing.ui.archstudio/group1"
+               tooltip="Export a subset of the architectures to a generalized feature tree">
+         </action>
          <visibility>
             <objectState
                   name="contentTypeId"

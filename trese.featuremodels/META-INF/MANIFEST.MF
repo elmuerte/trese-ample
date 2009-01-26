@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Feature Models
+Bundle-SymbolicName: trese.featuremodels;singleton:=true
+Bundle-Version: 0.1.1
+Bundle-ClassPath: lib/commons-cli-1.1/commons-cli-1.1.jar,
+ lib/antlr-3.1/antlr-3.1.1-runtime.jar,
+ trese.featuremodels.jar
+Export-Package: trese.featuremodels,
+ trese.featuremodels.gft,
+ trese.featuremodels.grooveext,
+ trese.featuremodels.loaders,
+ trese.featuremodels.model,
+ trese.featuremodels.modelImpl
+Bundle-Vendor: University of Twente
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Require-Bundle: groove;bundle-version="3.2.0"

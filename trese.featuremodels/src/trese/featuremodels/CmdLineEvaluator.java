@@ -159,12 +159,17 @@ public final class CmdLineEvaluator
 						SortedSet<String> features = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
 						for (Feature f : incFeatures)
 						{
+							String fname = f.getDescription();
+							if (fname == null || fname.isEmpty())
+							{
+								fname = f.getId();
+							}
 							// ingore empty baseline
-							if (f.getName().length() == 0)
+							if (fname == null || fname.isEmpty())
 							{
 								continue;
 							}
-							features.add(f.getName());
+							features.add(fname);
 						}
 						System.out.println(features.toString());
 					}
@@ -176,12 +181,17 @@ public final class CmdLineEvaluator
 					SortedSet<String> features = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
 					for (Feature f : deadFeatures)
 					{
+						String fname = f.getDescription();
+						if (fname == null || fname.isEmpty())
+						{
+							fname = f.getId();
+						}
 						// ingore empty baseline
-						if (f.getName().length() == 0)
+						if (fname == null || fname.isEmpty())
 						{
 							continue;
 						}
-						features.add(f.getName());
+						features.add(fname);
 					}
 					System.out.println(features.toString());
 				}

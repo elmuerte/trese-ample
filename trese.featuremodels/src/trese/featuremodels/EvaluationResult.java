@@ -80,16 +80,16 @@ public class EvaluationResult
 		while (!todo.isEmpty())
 		{
 			Feature feat = todo.poll();
-			featureLookup.put(feat.getName(), feat);
+			featureLookup.put(feat.getId(), feat);
 			for (Feature subfeat : feat.getSubFeatures())
 			{
 				if (featureLookup.containsValue(subfeat))
 				{
 					continue;
 				}
-				if (featureLookup.containsKey(subfeat.getName()))
+				if (featureLookup.containsKey(subfeat.getId()))
 				{
-					throw new FeatureModelException(String.format("Duplicate feature name: %s", subfeat.getName()));
+					throw new FeatureModelException(String.format("Duplicate feature name: %s", subfeat.getId()));
 				}
 				todo.add(subfeat);
 			}

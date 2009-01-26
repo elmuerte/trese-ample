@@ -15,10 +15,23 @@ import java.util.Collection;
 public interface Feature
 {
 	/**
-	 * @return The name of the feature. The name of a feature should be unique
+	 * @return The id of the feature. The ID of a feature should be unique
 	 *         within the system.
 	 */
-	String getName();
+	String getId();
+
+	/**
+	 * @return A friendlier description of the feature. Does not have to be
+	 *         unique
+	 */
+	String getDescription();
+
+	/**
+	 * Set the friendly description of a feature
+	 * 
+	 * @param value
+	 */
+	void setDescription(String value);
 
 	/**
 	 * @return The parent feature, will be null when this is the root feature.

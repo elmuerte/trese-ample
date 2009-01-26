@@ -2,7 +2,7 @@
  * 
  * Copyright (C) 2008 TRESE; University of Twente
  */
-package trese.arch.tracing.conversion;
+package trese.arch.tracing.groove;
 
 import groove.graph.DefaultLabel;
 import groove.graph.Label;

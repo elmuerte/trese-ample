@@ -2,7 +2,7 @@
  * 
  * Copyright (C) 2008 TRESE; University of Twente
  */
-package trese.arch.tracing.conversion;
+package trese.arch.tracing.groove;
 
 import edu.uci.isr.xarch.IXArch;
 import edu.uci.isr.xarch.instance.IDescription;
@@ -46,6 +46,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import trese.arch.tracing.XADLUtils;
 
 /**
  * Convert a xADL(2.0) model to a Graph used by the groove transformation rules
@@ -484,7 +486,7 @@ public class XADL2Graph
 	protected void createSubArchitecture(ISubArchitecture subArch, Node parentNode) throws ConversionException
 	{
 		IXMLLink subarch = subArch.getArchStructure();
-		String subArchId = getIdFromXMLLink(subarch);
+		String subArchId = XADLUtils.getIdFromXMLLink(subarch);
 
 		if (restrictToStructure != null && !restrictToStructure.contains(subArchId))
 		{
@@ -821,28 +823,6 @@ public class XADL2Graph
 				throw new ConversionException(String.format("Unable to find a node for id '%s'", uri.toString()));
 			}
 			return result;
-		}
-		catch (URISyntaxException e)
-		{
-			throw new ConversionException(e);
-		}
-	}
-
-	protected String getIdFromXMLLink(IXMLLink type) throws ConversionException
-	{
-		if (type == null)
-		{
-			return null;
-		}
-		try
-		{
-			URI uri = new URI(type.getHref());
-			if (!uri.getPath().isEmpty())
-			{
-				throw new ConversionException(String.format("Can not handle cross document references (%s)", uri
-						.toString()));
-			}
-			return uri.getFragment();
 		}
 		catch (URISyntaxException e)
 		{

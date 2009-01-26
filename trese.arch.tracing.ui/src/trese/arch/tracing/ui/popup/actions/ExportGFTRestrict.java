@@ -7,7 +7,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.action.IAction;
@@ -20,14 +19,16 @@ import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
+import trese.arch.tracing.featuremodel.XArchToFeatueModel;
 import trese.arch.tracing.groove.Converter;
 import trese.arch.tracing.ui.dialogs.ArchitectureSelector;
+import trese.featuremodels.model.Feature;
 import edu.uci.isr.xarch.IXArch;
 import edu.uci.isr.xarch.IXArchImplementation;
 import edu.uci.isr.xarch.XArchParseException;
 import edu.uci.isr.xarch.XArchUtils;
 
-public class ExportGSTRestrict implements IObjectActionDelegate
+public class ExportGFTRestrict implements IObjectActionDelegate
 {
 
 	private Shell shell;
@@ -37,7 +38,7 @@ public class ExportGSTRestrict implements IObjectActionDelegate
 	/**
 	 * Constructor for Action1.
 	 */
-	public ExportGSTRestrict()
+	public ExportGFTRestrict()
 	{
 		super();
 	}
@@ -61,9 +62,7 @@ public class ExportGSTRestrict implements IObjectActionDelegate
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException
 				{
 					SubMonitor progress = SubMonitor.convert(monitor);
-					Converter converter = new Converter();
-					progress.beginTask("Exporting xADL models to Groove GST",
-							((IStructuredSelection) selection).size() * 4);
+					progress.beginTask("Exporting xADL models to GFT", ((IStructuredSelection) selection).size() * 4);
 					for (Object o : ((IStructuredSelection) selection).toList())
 					{
 						if (progress.isCanceled())
@@ -76,7 +75,7 @@ public class ExportGSTRestrict implements IObjectActionDelegate
 							{
 								IFile sourceFile = (IFile) o;
 								File dest = new File(sourceFile.getRawLocation().makeAbsolute().toFile().toString()
-										+ ".gst");
+										+ ".gft");
 								Reader source = new InputStreamReader(sourceFile.getContents());
 
 								progress.subTask("Loading xADL");
@@ -100,12 +99,18 @@ public class ExportGSTRestrict implements IObjectActionDelegate
 									restrictTo = null;
 								}
 
-								progress.subTask(String.format("Exporting to: %s", dest.toString()));
-								converter.convert(arch, restrictTo, dest);
+								// progress.subTask(String.format("Exporting to: %s",
+								// dest.toString()));
+								// ...
+
+								Set<Feature> result = XArchToFeatueModel.convert(arch, restrictTo);
+
 								progress.worked(2);
-								sourceFile.getParent().refreshLocal(1, progress);
-								IResource resc = sourceFile.getParent().findMember(dest.getName());
-								resc.setDerived(true);
+								// sourceFile.getParent().refreshLocal(1,
+								// progress);
+								// IResource resc =
+								// sourceFile.getParent().findMember(dest.getName());
+								// resc.setDerived(true);
 							}
 							catch (Exception e)
 							{

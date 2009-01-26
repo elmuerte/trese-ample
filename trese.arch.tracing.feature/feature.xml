@@ -2,7 +2,7 @@
 <feature
       id="trese.arch.tracing.feature"
       label="ArchTracing"
-      version="0.2.1"
+      version="0.3.0"
       provider-name="University of Twente">
 
    <description>
@@ -42,6 +42,12 @@
 
    <plugin
          id="trese.arch.tracing.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="trese.featuremodels"
          download-size="0"
          install-size="0"
          version="0.0.0"/>

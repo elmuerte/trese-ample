@@ -23,9 +23,14 @@ import trese.featuremodels.model.FeatureStatus;
 public class FeatureImpl implements Feature
 {
 	/**
-	 * The name of the feature
+	 * The id of the feature
 	 */
-	protected String name;
+	protected String id;
+
+	/**
+	 * The description
+	 */
+	protected String description = "";
 
 	/**
 	 * True if this feature is included in the project
@@ -60,11 +65,38 @@ public class FeatureImpl implements Feature
 	/**
 	 * Create a new feature
 	 */
-	public FeatureImpl(String name)
+	public FeatureImpl(String featureID)
 	{
-		this.name = name;
+		id = featureID;
 		subFeatures = new HashSet<Feature>();
 		constraints = new HashSet<FeatureConstraint>();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see trese.featuremodels.model.Feature#getDescription()
+	 */
+	@Override
+	public String getDescription()
+	{
+		return description;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see trese.featuremodels.model.Feature#setDescription(java.lang.String)
+	 */
+	@Override
+	public void setDescription(String value)
+	{
+		if (value == null)
+		{
+			description = "";
+		}
+		else
+		{
+			description = value;
+		}
 	}
 
 	/*
@@ -92,9 +124,9 @@ public class FeatureImpl implements Feature
 	 * @see trese.featuremodels.model.Feature#getName()
 	 */
 	@Override
-	public String getName()
+	public String getId()
 	{
-		return name;
+		return id;
 	}
 
 	/*
@@ -212,6 +244,6 @@ public class FeatureImpl implements Feature
 	@Override
 	public String toString()
 	{
-		return getName();
+		return getId();
 	}
 }

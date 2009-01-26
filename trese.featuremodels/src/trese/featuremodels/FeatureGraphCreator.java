@@ -114,8 +114,8 @@ public final class FeatureGraphCreator
 				if (feature != rootFeature)
 				{
 					throw new FeatureModelException(String.format(
-							"Detected root feature \"%s\" is not the base line \"%s\"", feature.getName(), fromResult
-									.getBaseLine().getName()));
+							"Detected root feature \"%s\" is not the base line \"%s\"", feature.getId(), fromResult
+									.getBaseLine().getId()));
 				}
 				graph.addEdge(entry.getValue(), DefaultLabel.createLabel(LABEL_BASE_LINE), entry.getValue());
 				continue;
@@ -138,7 +138,7 @@ public final class FeatureGraphCreator
 						case NONE:
 							throw new FeatureModelException(String.format(
 									"Feature \"%s\" assumes a group relation, but parent \"%s\" does not define one",
-									feature.getName(), parent.getName()));
+									feature.getId(), parent.getId()));
 						default:
 							throw new FeatureModelException(String.format("Unknown feature group relation: %s", parent
 									.getGroupRelation()));
@@ -152,7 +152,7 @@ public final class FeatureGraphCreator
 			if (parentNode == null)
 			{
 				throw new FeatureModelException(String.format("Parent feature \"%s\" is not in the feature model",
-						parent.getName()));
+						parent.getId()));
 			}
 			graph.addEdge(parentNode, DefaultLabel.createLabel(relationLabel), entry.getValue());
 		}
@@ -165,7 +165,7 @@ public final class FeatureGraphCreator
 			if (rhsNode == null)
 			{
 				throw new FeatureModelException(String.format("Constraint feature \"%s\" is not in the feature model",
-						constraint.getRHS().getName()));
+						constraint.getRHS().getId()));
 			}
 			String relationLabel = null;
 			switch (constraint.getType())
@@ -188,7 +188,7 @@ public final class FeatureGraphCreator
 	 */
 	private static Label createFeatureLabel(Feature feature)
 	{
-		return DefaultLabel.createLabel(String.format("string:\"%s\"", feature.getName()));
+		return DefaultLabel.createLabel(String.format("string:\"%s\"", feature.getId()));
 	}
 
 }
