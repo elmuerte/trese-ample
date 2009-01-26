@@ -4,10 +4,7 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -16,26 +13,19 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.window.Window;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.dialogs.ListDialog;
 
 import trese.arch.tracing.conversion.Converter;
+import trese.arch.tracing.ui.dialogs.ArchitectureSelector;
 import edu.uci.isr.xarch.IXArch;
 import edu.uci.isr.xarch.IXArchImplementation;
 import edu.uci.isr.xarch.XArchParseException;
 import edu.uci.isr.xarch.XArchUtils;
-import edu.uci.isr.xarch.instance.IDescription;
-import edu.uci.isr.xarch.types.IArchStructure;
 
 public class ExportGSTRestrict implements IObjectActionDelegate
 {
@@ -73,7 +63,7 @@ public class ExportGSTRestrict implements IObjectActionDelegate
 					SubMonitor progress = SubMonitor.convert(monitor);
 					Converter converter = new Converter();
 					progress.beginTask("Exporting xADL models to Groove GST",
-							((IStructuredSelection) selection).size() * 3);
+							((IStructuredSelection) selection).size() * 4);
 					for (Object o : ((IStructuredSelection) selection).toList())
 					{
 						if (progress.isCanceled())
@@ -98,7 +88,7 @@ public class ExportGSTRestrict implements IObjectActionDelegate
 									progress.worked(1);
 									continue;
 								}
-								String restrictTo = selectStructure(arch, sourceFile.getName());
+								Set<String> restrictTo = selectStructures(arch, sourceFile.getName());
 								if (restrictTo == null)
 								{
 									// skip it
@@ -112,7 +102,7 @@ public class ExportGSTRestrict implements IObjectActionDelegate
 
 								progress.subTask(String.format("Exporting to: %s", dest.toString()));
 								converter.convert(arch, restrictTo, dest);
-								progress.worked(1);
+								progress.worked(2);
 								sourceFile.getParent().refreshLocal(1, progress);
 								IResource resc = sourceFile.getParent().findMember(dest.getName());
 								resc.setDerived(true);
@@ -169,76 +159,10 @@ public class ExportGSTRestrict implements IObjectActionDelegate
 	 * @param archFile
 	 * @return
 	 */
-	protected String selectStructure(final IXArch arch, final String archFile)
+	protected Set<String> selectStructures(final IXArch arch, final String archFile)
 	{
-		final Map<IArchStructure, String> archs = new HashMap<IArchStructure, String>();
-		for (Object o : arch.getAllObjects())
-		{
-			if (o instanceof IArchStructure)
-			{
-				String archName = ((IArchStructure) o).getId();
-				IDescription desc = ((IArchStructure) o).getDescription();
-				if (desc != null && !desc.getValue().isEmpty())
-				{
-					archName = desc.getValue();
-				}
-				archs.put((IArchStructure) o, archName);
-			}
-		}
-		if (archs.size() <= 1)
-		{
-			return "";
-		}
-
-		final List<String> result = new ArrayList<String>();
-
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run()
-			{
-				ILabelProvider lblProvider = new LabelProvider() {
-					public String getText(Object arg0)
-					{
-						return archs.get(arg0);
-					}
-				};
-
-				ListDialog dlg = new ListDialog(shell);
-				dlg.setTitle("Restrict to ArchStructure");
-				dlg.setContentProvider(new ArrayContentProvider());
-				dlg.setLabelProvider(lblProvider);
-				dlg.setBlockOnOpen(true);
-				dlg
-						.setMessage(String
-								.format(
-										"Select the ArchStructure from %s to restrict the output to. Press cancel to export all structures.",
-										archFile));
-				dlg.setInput(archs.keySet().toArray());
-				switch (dlg.open())
-				{
-					case Window.OK:
-						Object[] res = dlg.getResult();
-						if (res.length == 1)
-						{
-							result.add(((IArchStructure) res[0]).getId());
-						}
-						else
-						{
-							result.add("");
-						}
-						break;
-					case Window.CANCEL:
-						result.add("");
-						break;
-					default:
-						break;
-				}
-			}
-		});
-		if (result.size() == 1)
-		{
-			return result.get(0);
-		}
-		return null;
+		ArchitectureSelector asel = new ArchitectureSelector(shell, arch, archFile);
+		return asel.selectMultiple();
 	}
 
 	/**
