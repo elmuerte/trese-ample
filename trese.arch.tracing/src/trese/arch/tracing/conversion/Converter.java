@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Set;
 
 import edu.uci.isr.xarch.IXArch;
 import edu.uci.isr.xarch.IXArchImplementation;
@@ -82,7 +83,7 @@ public class Converter
 	 * @throws ConversionException
 	 * @throws IOException
 	 */
-	public void convert(IXArch arch, String restrictToArchId, File dest) throws ConversionException, IOException
+	public void convert(IXArch arch, Set<String> restrictToArchId, File dest) throws ConversionException, IOException
 	{
 		AspectGraph graph = XADL2Graph.convert(arch, restrictToArchId);
 		AspectGxl gxl = new AspectGxl();

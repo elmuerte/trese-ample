@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: ArchTracing
 Bundle-SymbolicName: trese.arch.tracing;singleton:=true
-Bundle-Version: 0.2.0
+Bundle-Version: 0.2.1
 Bundle-ClassPath: ArchTracing.jar
 Bundle-Vendor: University of Twente
 Require-Bundle: edu.uci.isr.xarchlibs.apigen;bundle-version="4.1.50",

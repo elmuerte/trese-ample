@@ -72,11 +72,12 @@ public class XADL2Graph
 	 * 
 	 * @param arch
 	 * @param restrictTo
+	 *            optional list of subarchitectures to restrict the output to
 	 * @return A groove graph
 	 * @throws ConversionException
 	 *             thrown when an error was encountered during conversion
 	 */
-	public static final AspectGraph convert(IXArch arch, String restrictTo) throws ConversionException
+	public static final AspectGraph convert(IXArch arch, Set<String> restrictTo) throws ConversionException
 	{
 		XADL2Graph converter = new XADL2Graph(arch, restrictTo);
 		return converter.internalConvert();
@@ -101,7 +102,7 @@ public class XADL2Graph
 	/**
 	 * If set restrict the output to just the structure with this ID
 	 */
-	protected String restrictToStructure;
+	protected Set<String> restrictToStructure;
 
 	/**
 	 * Mapping from ID to an IArchTypes element, used for lookup
@@ -129,10 +130,14 @@ public class XADL2Graph
 	 * @param architecture
 	 * @param restrictTo
 	 */
-	protected XADL2Graph(IXArch architecture, String restrictTo)
+	protected XADL2Graph(IXArch architecture, Set<String> restrictTo)
 	{
 		arch = architecture;
-		restrictToStructure = restrictTo;
+		if (restrictTo != null && !restrictTo.isEmpty())
+		{
+			restrictToStructure = new HashSet<String>();
+			restrictToStructure.addAll(restrictTo);
+		}
 		graph = new DefaultGraph();
 		idMap = new HashMap<String, Node>();
 		pendingNodes = new HashMap<String, Node>();
@@ -478,7 +483,10 @@ public class XADL2Graph
 	 */
 	protected void createSubArchitecture(ISubArchitecture subArch, Node parentNode) throws ConversionException
 	{
-		if (restrictToStructure != null)
+		IXMLLink subarch = subArch.getArchStructure();
+		String subArchId = getIdFromXMLLink(subarch);
+
+		if (restrictToStructure != null && !restrictToStructure.contains(subArchId))
 		{
 			graph.addEdge(parentNode, GraphConstants.NODE_HAS_SUBARCHITECTURE, parentNode);
 			return;
@@ -488,7 +496,7 @@ public class XADL2Graph
 		graph.addEdge(node, GraphConstants.NODE_SUBARCHITECTURE, node);
 		graph.addEdge(parentNode, GraphConstants.EDGE_SUBARCHITECTURE, node);
 
-		Node archNode = resolveXMLinkToNode(subArch.getArchStructure());
+		Node archNode = resolveXMLinkToNode(subarch);
 		if (archNode != null)
 		{
 			graph.addEdge(node, GraphConstants.EDGE_ARCHITECTURE, archNode);
@@ -604,7 +612,7 @@ public class XADL2Graph
 		{
 			if (o instanceof IArchStructure)
 			{
-				if (restrictToStructure == null || ((IArchStructure) o).getId().equals(restrictToStructure))
+				if (restrictToStructure == null || restrictToStructure.contains(((IArchStructure) o).getId()))
 				{
 					createStructureNode((IArchStructure) o);
 				}
@@ -813,6 +821,28 @@ public class XADL2Graph
 				throw new ConversionException(String.format("Unable to find a node for id '%s'", uri.toString()));
 			}
 			return result;
+		}
+		catch (URISyntaxException e)
+		{
+			throw new ConversionException(e);
+		}
+	}
+
+	protected String getIdFromXMLLink(IXMLLink type) throws ConversionException
+	{
+		if (type == null)
+		{
+			return null;
+		}
+		try
+		{
+			URI uri = new URI(type.getHref());
+			if (!uri.getPath().isEmpty())
+			{
+				throw new ConversionException(String.format("Can not handle cross document references (%s)", uri
+						.toString()));
+			}
+			return uri.getFragment();
 		}
 		catch (URISyntaxException e)
 		{
