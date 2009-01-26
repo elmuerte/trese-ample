@@ -113,6 +113,7 @@ public class XArchToFeatueModel
 	protected Feature createFeature(IArchStructure struct)
 	{
 		XADLFeature result = new XADLFeature(getUniqueId(struct), struct);
+		result.setRequirement(FeatureRequirement.MANDATORY);
 		addSubFeatures(result, struct);
 		return result;
 	}
@@ -208,7 +209,7 @@ public class XArchToFeatueModel
 	 */
 	protected Feature createFeature(IVariant variant)
 	{
-		IXArchElement elm = idMap.get(variant.getVariantType());
+		IXArchElement elm = idMap.get(XADLUtils.getIdFromXMLLink(variant.getVariantType()));
 		if (elm instanceof IComponentType)
 		{
 			XADLFeature feature = new XADLFeature(getUniqueId(elm), elm);
