@@ -37,7 +37,7 @@ public class GftParserBase extends Parser
 	/**
 	 * Mapping from the feature name (i.e. description) to the feature
 	 */
-	protected Map<String, FeatureImpl> nameFeatureMap;
+	protected Map<String, Set<FeatureImpl>> nameFeatureMap;
 
 	/**
 	 * Constraints that should be included
@@ -65,7 +65,7 @@ public class GftParserBase extends Parser
 	{
 		super(arg0, arg1);
 		nodeFeatureMap = new HashMap<String, FeatureImpl>();
-		nameFeatureMap = new HashMap<String, FeatureImpl>();
+		nameFeatureMap = new HashMap<String, Set<FeatureImpl>>();
 		useConstraints = new HashSet<String>();
 	}
 
@@ -110,7 +110,7 @@ public class GftParserBase extends Parser
 	{
 		FeatureImpl feature = getFeatureById(id);
 		feature.setDescription(name);
-		nameFeatureMap.put(name, feature);
+		registerFeatureName(name, feature);
 		for (String childId : mand)
 		{
 			FeatureImpl child = getFeatureById(childId);
@@ -126,6 +126,21 @@ public class GftParserBase extends Parser
 	}
 
 	/**
+	 * @param name
+	 * @param feature
+	 */
+	protected void registerFeatureName(String name, FeatureImpl feature)
+	{
+		Set<FeatureImpl> nameLst = nameFeatureMap.get(name);
+		if (nameLst == null)
+		{
+			nameLst = new HashSet<FeatureImpl>();
+			nameFeatureMap.put(name, nameLst);
+		}
+		nameLst.add(feature);
+	}
+
+	/**
 	 * Register a or feature set
 	 * 
 	 * @param id
@@ -136,7 +151,7 @@ public class GftParserBase extends Parser
 	{
 		FeatureImpl feature = getFeatureById(id);
 		feature.setDescription(name);
-		nameFeatureMap.put(name, feature);
+		registerFeatureName(name, feature);
 		feature.setGroupRelation(FeatureGroupRelation.OR);
 		for (String childId : children)
 		{
@@ -157,7 +172,7 @@ public class GftParserBase extends Parser
 	{
 		FeatureImpl feature = getFeatureById(id);
 		feature.setDescription(name);
-		nameFeatureMap.put(name, feature);
+		registerFeatureName(name, feature);
 		feature.setGroupRelation(FeatureGroupRelation.ALTERNATIVE);
 		for (String childId : children)
 		{
@@ -191,8 +206,8 @@ public class GftParserBase extends Parser
 		{
 			return;
 		}
-		FeatureImpl f1 = nameFeatureMap.get(feature1);
-		FeatureImpl f2 = nameFeatureMap.get(feature2);
+		Set<FeatureImpl> f1 = nameFeatureMap.get(feature1);
+		Set<FeatureImpl> f2 = nameFeatureMap.get(feature2);
 		FeatureConstraintType ctype = null;
 		if (FeatureConstraintType.EXCLUDES.toString().equalsIgnoreCase(type))
 		{
@@ -204,7 +219,13 @@ public class GftParserBase extends Parser
 		}
 		if (f1 != null && f2 != null && ctype != null)
 		{
-			f1.addConstraint(new FeatureConstraintImpl(ctype, f1, f2));
+			for (FeatureImpl lhs : f1)
+			{
+				for (FeatureImpl rhs : f2)
+				{
+					lhs.addConstraint(new FeatureConstraintImpl(ctype, lhs, rhs));
+				}
+			}
 		}
 		else
 		{

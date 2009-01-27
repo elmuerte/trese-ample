@@ -1,0 +1,5 @@
+f_tree = MandOpt "TV Product Line" [n2] [n5]
+n2 = Xor "TV Tuner Controller" [n4,n3]
+n4 = MandOpt "PAL Tuner Type" [] []
+n3 = MandOpt "NTSC Tuner Type" [] []
+n5 = MandOpt "DVD Player Controller" [] []

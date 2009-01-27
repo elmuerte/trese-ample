@@ -91,7 +91,7 @@ public class ArchitectureSelector
 		}
 
 		dialogResult = null;
-		Display.getDefault().asyncExec(new Runnable() {
+		Display.getDefault().syncExec(new Runnable() {
 			public void run()
 			{
 				ListSelectionDialog dlg = new ListSelectionDialog(
@@ -147,7 +147,7 @@ public class ArchitectureSelector
 		}
 
 		dialogResult = null;
-		Display.getDefault().asyncExec(new Runnable() {
+		Display.getDefault().syncExec(new Runnable() {
 			public void run()
 			{
 				ListDialog dlg = new ListDialog(shell);

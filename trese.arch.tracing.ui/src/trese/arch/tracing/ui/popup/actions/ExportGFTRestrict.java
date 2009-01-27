@@ -1,12 +1,15 @@
 package trese.arch.tracing.ui.popup.actions;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.action.IAction;
@@ -20,8 +23,8 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
 import trese.arch.tracing.featuremodel.XArchToFeatueModel;
-import trese.arch.tracing.groove.Converter;
 import trese.arch.tracing.ui.dialogs.ArchitectureSelector;
+import trese.featuremodels.gft.SaveAsGFT;
 import trese.featuremodels.model.Feature;
 import edu.uci.isr.xarch.IXArch;
 import edu.uci.isr.xarch.IXArchImplementation;
@@ -74,8 +77,6 @@ public class ExportGFTRestrict implements IObjectActionDelegate
 							try
 							{
 								IFile sourceFile = (IFile) o;
-								File dest = new File(sourceFile.getRawLocation().makeAbsolute().toFile().toString()
-										+ ".gft");
 								Reader source = new InputStreamReader(sourceFile.getContents());
 
 								progress.subTask("Loading xADL");
@@ -84,14 +85,14 @@ public class ExportGFTRestrict implements IObjectActionDelegate
 								if (arch == null)
 								{
 									// TODO error
-									progress.worked(1);
+									progress.worked(3);
 									continue;
 								}
 								Set<String> restrictTo = selectStructures(arch, sourceFile.getName());
 								if (restrictTo == null)
 								{
 									// skip it
-									progress.worked(1);
+									progress.worked(3);
 									continue;
 								}
 								if (restrictTo.isEmpty())
@@ -104,13 +105,22 @@ public class ExportGFTRestrict implements IObjectActionDelegate
 								// ...
 
 								Set<Feature> result = XArchToFeatueModel.convert(arch, restrictTo);
+								progress.worked(1);
 
-								progress.worked(2);
-								// sourceFile.getParent().refreshLocal(1,
-								// progress);
-								// IResource resc =
-								// sourceFile.getParent().findMember(dest.getName());
-								// resc.setDerived(true);
+								SubMonitor submon = progress.newChild(1);
+								submon.beginTask("Saving results", result.size() * 2);
+								for (Feature f : result)
+								{
+									File dest = new File(sourceFile.getRawLocation().makeAbsolute()
+											.removeFileExtension().toFile().toString()
+											+ "." + f.getDescription().replaceAll("[^0-9a-zA-Z]+", "_") + ".gft");
+									SaveAsGFT.save(f, new FileOutputStream(dest));
+									submon.worked(1);
+
+									sourceFile.getParent().refreshLocal(1, submon.newChild(1));
+									IResource resc = sourceFile.getParent().findMember(dest.getName());
+									resc.setDerived(true);
+								}
 							}
 							catch (Exception e)
 							{

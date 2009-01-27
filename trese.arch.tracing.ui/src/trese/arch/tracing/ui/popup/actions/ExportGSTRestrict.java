@@ -75,7 +75,8 @@ public class ExportGSTRestrict implements IObjectActionDelegate
 							try
 							{
 								IFile sourceFile = (IFile) o;
-								File dest = new File(sourceFile.getRawLocation().makeAbsolute().toFile().toString()
+								File dest = new File(sourceFile.getRawLocation().makeAbsolute().removeFileExtension()
+										.toFile().toString()
 										+ ".gst");
 								Reader source = new InputStreamReader(sourceFile.getContents());
 
@@ -85,14 +86,14 @@ public class ExportGSTRestrict implements IObjectActionDelegate
 								if (arch == null)
 								{
 									// TODO error
-									progress.worked(1);
+									progress.worked(3);
 									continue;
 								}
 								Set<String> restrictTo = selectStructures(arch, sourceFile.getName());
 								if (restrictTo == null)
 								{
 									// skip it
-									progress.worked(1);
+									progress.worked(3);
 									continue;
 								}
 								if (restrictTo.isEmpty())
@@ -103,7 +104,7 @@ public class ExportGSTRestrict implements IObjectActionDelegate
 								progress.subTask(String.format("Exporting to: %s", dest.toString()));
 								converter.convert(arch, restrictTo, dest);
 								progress.worked(2);
-								sourceFile.getParent().refreshLocal(1, progress);
+								sourceFile.getParent().refreshLocal(1, progress.newChild(1));
 								IResource resc = sourceFile.getParent().findMember(dest.getName());
 								resc.setDerived(true);
 							}
