@@ -21,6 +21,8 @@ import groove.view.aspect.AspectGraph;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashSet;
@@ -98,7 +100,8 @@ public class Evaluator
 			AspectGxl gxl = new AspectGxl();
 			try
 			{
-				gxl.marshalGraph(graph, new File("./featureModel.gst"));
+				gxl.marshalGraph(graph, new File("./featureModel_"
+						+ baseLine.getDescription().replaceAll("[^0-9a-zA-Z]+", "_") + ".gst"));
 			}
 			catch (IOException e)
 			{
@@ -106,7 +109,14 @@ public class Evaluator
 			}
 		}
 
+		PrintStream stdout = System.out;
+		System.setOut(new PrintStream(new OutputStream() {
+			@Override
+			public void write(int b) throws IOException
+			{}
+		}));
 		Collection<GraphState> finalStates = executeRules(graph, findFirst);
+		System.setOut(stdout);
 		return extractResults(finalStates, base);
 	}
 

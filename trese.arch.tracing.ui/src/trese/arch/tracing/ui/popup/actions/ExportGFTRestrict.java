@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
@@ -99,10 +98,6 @@ public class ExportGFTRestrict implements IObjectActionDelegate
 								{
 									restrictTo = null;
 								}
-
-								// progress.subTask(String.format("Exporting to: %s",
-								// dest.toString()));
-								// ...
 
 								Set<Feature> result = XArchToFeatueModel.convert(arch, restrictTo);
 								progress.worked(1);
