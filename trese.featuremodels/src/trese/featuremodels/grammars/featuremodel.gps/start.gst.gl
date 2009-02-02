@@ -1,4 +1,4 @@
-# Layout information for C:\local\mhendrik_ample\featuremodel.gps\start.gst
+# Layout information for C:\local\mhendrik_ample\trese.ample\trese.featuremodels\src\trese\featuremodels\grammars\featuremodel.gps\start.gst
 # Each line contains layout information about a node or edge
 # Version info: v <version number>; 1 = pre-jgraph 5.9, 2 = jgraph 5.9
 #     v 1: label position = (x-permillage, y-permillage)
@@ -6,18 +6,18 @@
 # Node Format: n <node id> <bounds>
 # Edge Format: e <source id> <target id> <edge label> <relative label position> [<points list> <line style>]
 v 2
-n n18350 512 506 48 15 
-n n18360 92 209 48 15 
-n n18347 485 236 50 15 
-n n18348 377 518 49 15 
-n n18355 368 413 15 15 
-n n18357 56 473 49 15 
-n n18351 275 86 52 15 
-n n18353 467 410 15 15 
-n n18361 224 512 49 15 
-n n18352 215 245 15 15 
-n n18359 236 413 15 15 
-n n18349 662 482 50 15 
-n n18358 137 416 15 15 
-n n18354 374 242 15 15 
-n n18356 572 389 15 15 
+n n30327 572 389 15 15 
+n n30317 368 413 15 15 
+n n30330 92 209 48 15 
+n n30316 485 236 50 15 
+n n30323 662 482 50 15 
+n n30324 215 245 15 15 
+n n30328 467 410 15 15 
+n n30329 236 413 15 15 
+n n30326 512 506 48 15 
+n n30319 56 473 49 15 
+n n30321 374 242 15 15 
+n n30318 224 512 49 15 
+n n30325 377 518 49 15 
+n n30322 137 416 15 15 
+n n30320 275 86 68 15 

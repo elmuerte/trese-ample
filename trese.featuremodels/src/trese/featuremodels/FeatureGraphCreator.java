@@ -32,7 +32,7 @@ public final class FeatureGraphCreator
 	/**
 	 * Used to identify the baseline of the product
 	 */
-	public static final String LABEL_BASE_LINE = "BaseLine";
+	public static final String LABEL_ROOT_FEATURE = "RootFeature";
 
 	/**
 	 * Generic label used for all feature nodes
@@ -52,7 +52,7 @@ public final class FeatureGraphCreator
 	/**
 	 * Label used for the name value
 	 */
-	public static final String LABEL_NAME = "id";
+	public static final String LABEL_ID = "id";
 
 	/**
 	 * Label used for the name value
@@ -109,7 +109,7 @@ public final class FeatureGraphCreator
 
 			// add node containing the name
 			Node nameNode = graph.addNode();
-			graph.addEdge(node, DefaultLabel.createLabel(LABEL_NAME), nameNode);
+			graph.addEdge(node, DefaultLabel.createLabel(LABEL_ID), nameNode);
 			graph.addEdge(nameNode, createStringLabel(feature.getId()), nameNode);
 
 			String description = feature.getDescription();
@@ -152,7 +152,7 @@ public final class FeatureGraphCreator
 							"Detected root feature \"%s\" is not the base line \"%s\"", feature.getId(), fromResult
 									.getBaseLine().getId()));
 				}
-				graph.addEdge(entry.getValue(), DefaultLabel.createLabel(LABEL_BASE_LINE), entry.getValue());
+				graph.addEdge(entry.getValue(), DefaultLabel.createLabel(LABEL_ROOT_FEATURE), entry.getValue());
 				continue;
 			}
 

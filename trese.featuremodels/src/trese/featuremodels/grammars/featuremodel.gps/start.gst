@@ -4,129 +4,129 @@
         <attr name="$version">
             <string>curly</string>
         </attr>
-        <node id="n18347"/>
-        <node id="n18348"/>
-        <node id="n18349"/>
-        <node id="n18350"/>
-        <node id="n18351"/>
-        <node id="n18352"/>
-        <node id="n18353"/>
-        <node id="n18354"/>
-        <node id="n18355"/>
-        <node id="n18356"/>
-        <node id="n18357"/>
-        <node id="n18358"/>
-        <node id="n18359"/>
-        <node id="n18360"/>
-        <node id="n18361"/>
-        <edge from="n18354" to="n18353">
+        <node id="n30316"/>
+        <node id="n30317"/>
+        <node id="n30318"/>
+        <node id="n30319"/>
+        <node id="n30320"/>
+        <node id="n30321"/>
+        <node id="n30322"/>
+        <node id="n30323"/>
+        <node id="n30324"/>
+        <node id="n30325"/>
+        <node id="n30326"/>
+        <node id="n30327"/>
+        <node id="n30328"/>
+        <node id="n30329"/>
+        <node id="n30330"/>
+        <edge from="n30324" to="n30322">
             <attr name="label">
-                <string>or</string>
+                <string>alt</string>
             </attr>
         </edge>
-        <edge from="n18360" to="n18360">
-            <attr name="label">
-                <string>string:"A"</string>
-            </attr>
-        </edge>
-        <edge from="n18356" to="n18349">
-            <attr name="label">
-                <string>name</string>
-            </attr>
-        </edge>
-        <edge from="n18349" to="n18349">
-            <attr name="label">
-                <string>string:"G"</string>
-            </attr>
-        </edge>
-        <edge from="n18355" to="n18348">
-            <attr name="label">
-                <string>name</string>
-            </attr>
-        </edge>
-        <edge from="n18357" to="n18357">
-            <attr name="label">
-                <string>string:"B"</string>
-            </attr>
-        </edge>
-        <edge from="n18350" to="n18350">
+        <edge from="n30326" to="n30326">
             <attr name="label">
                 <string>string:"F"</string>
             </attr>
         </edge>
-        <edge from="n18347" to="n18347">
+        <edge from="n30320" to="n30320">
             <attr name="label">
-                <string>string:"D"</string>
+                <string>RootFeature</string>
             </attr>
         </edge>
-        <edge from="n18351" to="n18354">
+        <edge from="n30329" to="n30318">
+            <attr name="label">
+                <string>id</string>
+            </attr>
+        </edge>
+        <edge from="n30317" to="n30325">
+            <attr name="label">
+                <string>id</string>
+            </attr>
+        </edge>
+        <edge from="n30320" to="n30321">
             <attr name="label">
                 <string>optional</string>
             </attr>
         </edge>
-        <edge from="n18351" to="n18351">
+        <edge from="n30323" to="n30323">
             <attr name="label">
-                <string>BaseLine</string>
+                <string>string:"G"</string>
             </attr>
         </edge>
-        <edge from="n18354" to="n18356">
+        <edge from="n30327" to="n30323">
+            <attr name="label">
+                <string>id</string>
+            </attr>
+        </edge>
+        <edge from="n30330" to="n30330">
+            <attr name="label">
+                <string>string:"A"</string>
+            </attr>
+        </edge>
+        <edge from="n30322" to="n30319">
+            <attr name="label">
+                <string>id</string>
+            </attr>
+        </edge>
+        <edge from="n30321" to="n30328">
             <attr name="label">
                 <string>or</string>
             </attr>
         </edge>
-        <edge from="n18352" to="n18358">
+        <edge from="n30321" to="n30317">
+            <attr name="label">
+                <string>or</string>
+            </attr>
+        </edge>
+        <edge from="n30321" to="n30316">
+            <attr name="label">
+                <string>id</string>
+            </attr>
+        </edge>
+        <edge from="n30319" to="n30319">
+            <attr name="label">
+                <string>string:"B"</string>
+            </attr>
+        </edge>
+        <edge from="n30324" to="n30329">
             <attr name="label">
                 <string>alt</string>
             </attr>
         </edge>
-        <edge from="n18353" to="n18350">
-            <attr name="label">
-                <string>name</string>
-            </attr>
-        </edge>
-        <edge from="n18354" to="n18355">
-            <attr name="label">
-                <string>or</string>
-            </attr>
-        </edge>
-        <edge from="n18361" to="n18361">
-            <attr name="label">
-                <string>string:"C"</string>
-            </attr>
-        </edge>
-        <edge from="n18352" to="n18360">
-            <attr name="label">
-                <string>name</string>
-            </attr>
-        </edge>
-        <edge from="n18348" to="n18348">
-            <attr name="label">
-                <string>string:"E"</string>
-            </attr>
-        </edge>
-        <edge from="n18351" to="n18352">
+        <edge from="n30320" to="n30324">
             <attr name="label">
                 <string>mandatory</string>
             </attr>
         </edge>
-        <edge from="n18358" to="n18357">
+        <edge from="n30324" to="n30330">
             <attr name="label">
-                <string>name</string>
+                <string>id</string>
             </attr>
         </edge>
-        <edge from="n18352" to="n18359">
+        <edge from="n30318" to="n30318">
             <attr name="label">
-                <string>alt</string>
+                <string>string:"C"</string>
             </attr>
         </edge>
-        <edge from="n18359" to="n18361">
+        <edge from="n30321" to="n30327">
             <attr name="label">
-                <string>name</string>
+                <string>or</string>
             </attr>
         </edge>
-        <edge from="n18354" to="n18347">
+        <edge from="n30325" to="n30325">
             <attr name="label">
-                <string>name</string>
+                <string>string:"E"</string>
+            </attr>
+        </edge>
+        <edge from="n30316" to="n30316">
+            <attr name="label">
+                <string>string:"D"</string>
+            </attr>
+        </edge>
+        <edge from="n30328" to="n30326">
+            <attr name="label">
+                <string>id</string>
             </attr>
         </edge>
     </graph>

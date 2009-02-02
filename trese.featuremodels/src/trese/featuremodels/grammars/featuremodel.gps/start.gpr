@@ -7,20 +7,20 @@
         <attr name="$version">
             <string>curly</string>
         </attr>
-        <node id="n23058"/>
-        <edge from="n23058" to="n23058">
+        <node id="n29887"/>
+        <edge from="n29887" to="n29887">
             <attr name="label">
-                <string>not:featureIncluded</string>
+                <string>RootFeature</string>
             </attr>
         </edge>
-        <edge from="n23058" to="n23058">
+        <edge from="n29887" to="n29887">
             <attr name="label">
                 <string>new:featureIncluded</string>
             </attr>
         </edge>
-        <edge from="n23058" to="n23058">
+        <edge from="n29887" to="n29887">
             <attr name="label">
-                <string>BaseLine</string>
+                <string>not:featureIncluded</string>
             </attr>
         </edge>
     </graph>

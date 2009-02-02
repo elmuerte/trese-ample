@@ -152,7 +152,7 @@ public class Evaluator
 	protected Collection<EvaluationResult> extractResults(Collection<GraphState> finalStates, EvaluationResult base)
 			throws FeatureModelException
 	{
-		DefaultLabel nameLabel = DefaultLabel.createLabel(FeatureGraphCreator.LABEL_NAME);
+		DefaultLabel nameLabel = DefaultLabel.createLabel(FeatureGraphCreator.LABEL_ID);
 
 		Set<EvaluationResult> resultSet = new HashSet<EvaluationResult>();
 		for (GraphState graphState : finalStates)

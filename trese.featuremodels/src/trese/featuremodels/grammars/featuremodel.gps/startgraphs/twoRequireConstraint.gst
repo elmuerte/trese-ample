@@ -21,7 +21,7 @@
         <node id="n20102"/>
         <edge from="n20102" to="n20096">
             <attr name="label">
-                <string>name</string>
+                <string>id</string>
             </attr>
         </edge>
         <edge from="n20100" to="n20100">
@@ -31,7 +31,7 @@
         </edge>
         <edge from="n20093" to="n20090">
             <attr name="label">
-                <string>name</string>
+                <string>id</string>
             </attr>
         </edge>
         <edge from="n20089" to="n20093">
@@ -71,32 +71,32 @@
         </edge>
         <edge from="n20098" to="n20097">
             <attr name="label">
-                <string>name</string>
+                <string>id</string>
             </attr>
         </edge>
         <edge from="n20089" to="n20095">
             <attr name="label">
-                <string>name</string>
+                <string>id</string>
             </attr>
         </edge>
         <edge from="n20094" to="n20091">
             <attr name="label">
-                <string>name</string>
+                <string>id</string>
             </attr>
         </edge>
         <edge from="n20092" to="n20101">
             <attr name="label">
-                <string>name</string>
+                <string>id</string>
             </attr>
         </edge>
         <edge from="n20088" to="n20100">
             <attr name="label">
-                <string>name</string>
+                <string>id</string>
             </attr>
         </edge>
         <edge from="n20099" to="n20099">
             <attr name="label">
-                <string>BaseLine</string>
+                <string>RootFeature</string>
             </attr>
         </edge>
         <edge from="n20089" to="n20094">
