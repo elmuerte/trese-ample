@@ -1,3 +1,8 @@
+/*
+ * !! LICENSE PENDING !! 
+ *
+ * Copyright (C) 2008 University of Twente.
+ */
 package trese.arch.tracing.ui.popup.actions;
 
 import java.util.Collections;

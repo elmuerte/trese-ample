@@ -1,5 +1,7 @@
-/**
- * 
+/*
+ * !! LICENSE PENDING !! 
+ *
+ * Copyright (C) 2008 University of Twente.
  */
 package trese.featuremodels.ui.popup.actions;
 
