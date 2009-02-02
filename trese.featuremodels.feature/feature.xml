@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="trese.featuremodels.feature"
-      label="Feature Models (GFT)"
+      id="trese.featuremodel.feature"
+      label="Feature Model (GFT)"
       version="0.1.0"
       provider-name="University of Twente">
 
@@ -28,19 +28,19 @@
    </requires>
 
    <plugin
-         id="trese.featuremodels"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="trese.featuremodels.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="groove"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="trese.featuremodel.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="trese.featuremodel"
          download-size="0"
          install-size="0"
          version="0.0.0"/>

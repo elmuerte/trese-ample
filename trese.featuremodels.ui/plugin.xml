@@ -4,10 +4,10 @@
    <extension
          point="org.eclipse.ui.popupMenus">
       <objectContribution
-            id="trese.featuremodels.ui"
+            id="trese.featuremodel.ui"
             objectClass="org.eclipse.core.resources.IFile">
          <menu
-               id="trese.featuremodels.ui.gft"
+               id="trese.featuremodel.ui.gft"
                label="Generalized Feature Tree"
                path="additions">
             <groupMarker
@@ -15,17 +15,17 @@
             </groupMarker>
          </menu>
          <action
-               class="trese.featuremodels.ui.popup.actions.ExportGST"
+               class="trese.featuremodel.ui.popup.actions.ExportGST"
                enablesFor="+"
-               id="trese.featuremodels.ui.exportgst"
+               id="trese.featuremodel.ui.exportgst"
                label="Export to Groove Graph"
-               menubarPath="trese.featuremodels.ui.gft/group1"
+               menubarPath="trese.featuremodel.ui.gft/group1"
                tooltip="Export the Generalized Feature Tree to a Groove graph">
          </action>
          <visibility>
             <objectState
                   name="contentTypeId"
-                  value="trese.featuremodels.gft">
+                  value="trese.featuremodel.gft">
             </objectState>
          </visibility>
       </objectContribution>
