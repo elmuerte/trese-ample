@@ -4,4 +4,4 @@ Bundle-Name: Tracing UI
 Bundle-SymbolicName: trese.tracing.ui;singleton:=true
 Bundle-Version: 0.1.0
 Bundle-Vendor: University of Twente
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

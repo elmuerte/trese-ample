@@ -35,7 +35,7 @@
          version="0.0.0"/>
 
    <plugin
-         id="trese.arch.tracing"
+         id="trese.archmodel"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
