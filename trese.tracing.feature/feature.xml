@@ -2,11 +2,13 @@
 <feature
       id="trese.tracing"
       label="Tracing"
-      version="0.1.0"
+      version="0.5.0"
       provider-name="University of Twente">
 
    <description>
-      [Enter Feature Description here.]
+      This feature includes the following features:
+- ArchModel (previously called ArchTracing)
+- FeatureModel
    </description>
 
    <copyright>
