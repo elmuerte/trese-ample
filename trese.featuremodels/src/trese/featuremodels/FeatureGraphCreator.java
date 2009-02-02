@@ -78,11 +78,24 @@ public final class FeatureGraphCreator
 	 */
 	public static final AspectGraph createGraph(EvaluationResult fromResult) throws FeatureModelException
 	{
+		DefaultGraph graph = new DefaultGraph();
+		createGraph(fromResult, graph);
+		return AspectGraph.getFactory().fromPlainGraph(graph);
+	}
+
+	/**
+	 * Add the graph representation of the feature result to the given graph
+	 * 
+	 * @param fromResult
+	 * @param graph
+	 * @throws FeatureModelException
+	 */
+	public static final void createGraph(EvaluationResult fromResult, DefaultGraph graph) throws FeatureModelException
+	{
 		Feature rootFeature = fromResult.getBaseLine();
 		Map<Feature, Node> nodeMapping = new HashMap<Feature, Node>();
 		Set<FeatureConstraint> constraints = new HashSet<FeatureConstraint>();
 
-		DefaultGraph graph = new DefaultGraph();
 		// create all feature nodes
 		for (Feature feature : fromResult.getAllFeatures())
 		{
@@ -201,7 +214,6 @@ public final class FeatureGraphCreator
 			}
 			graph.addEdge(lhsNode, DefaultLabel.createLabel(relationLabel), rhsNode);
 		}
-		return AspectGraph.getFactory().fromPlainGraph(graph);
 	}
 
 	/**

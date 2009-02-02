@@ -43,7 +43,7 @@ public final class GstToModel
 		Feature baseLine = null;
 
 		// find all features
-		Set<? extends Edge> edges = graph.labelEdgeSet(2, DefaultLabel.createLabel(FeatureGraphCreator.LABEL_NAME));
+		Set<? extends Edge> edges = graph.labelEdgeSet(2, DefaultLabel.createLabel(FeatureGraphCreator.LABEL_FEATURE));
 		for (Edge edge : edges)
 		{
 			Node featureNode = edge.source();
@@ -51,28 +51,66 @@ public final class GstToModel
 			{
 				continue;
 			}
-			Node nameNode = edge.opposite();
 
-			String featureName = null;
-			for (Edge e : graph.outEdgeSet(nameNode))
+			String featureId = null;
+			String featureDesc = null;
+			for (Edge outEdge : graph.outEdgeSet(featureNode))
 			{
-				// not great, but works
-				if (e.label().text().startsWith("\""))
+				if (edge.label().text().equals(FeatureGraphCreator.LABEL_NAME))
 				{
-					try
+					Node nameNode = outEdge.opposite();
+					for (Edge e : graph.outEdgeSet(nameNode))
 					{
-						featureName = groove.util.ExprParser.toUnquoted(e.label().text(), '"');
+						// not great, but works
+						if (e.label().text().startsWith("\""))
+						{
+							try
+							{
+								featureId = groove.util.ExprParser.toUnquoted(e.label().text(), '"');
+							}
+							catch (FormatException e1)
+							{
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+						}
 					}
-					catch (FormatException e1)
+				}
+				else if (edge.label().text().equals(FeatureGraphCreator.LABEL_DESCRIPTION))
+				{
+					Node nameNode = outEdge.opposite();
+					for (Edge e : graph.outEdgeSet(nameNode))
 					{
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						// not great, but works
+						if (e.label().text().startsWith("\""))
+						{
+							try
+							{
+								featureDesc = groove.util.ExprParser.toUnquoted(e.label().text(), '"');
+							}
+							catch (FormatException e1)
+							{
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+						}
 					}
 				}
 			}
 
-			FeatureImpl feature = new FeatureImpl(featureName);
-			featureNodes.put(featureNode, feature);
+			if (featureId != null)
+			{
+				FeatureImpl feature = new FeatureImpl(featureId);
+				if (featureDesc != null)
+				{
+					feature.setDescription(featureDesc);
+				}
+				featureNodes.put(featureNode, feature);
+			}
+			else
+			{
+				// TODO error
+			}
 		}
 
 		edges = graph.labelEdgeSet(2, DefaultLabel.createLabel(FeatureGraphCreator.LABEL_BASE_LINE));
