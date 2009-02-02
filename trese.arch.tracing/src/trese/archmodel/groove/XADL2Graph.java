@@ -2,7 +2,7 @@
  * 
  * Copyright (C) 2008 TRESE; University of Twente
  */
-package trese.arch.tracing.groove;
+package trese.archmodel.groove;
 
 import edu.uci.isr.xarch.IXArch;
 import edu.uci.isr.xarch.instance.IDescription;
@@ -48,7 +48,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import trese.arch.tracing.XADLUtils;
+import trese.archmodel.XADLUtils;
 
 /**
  * Convert a xADL(2.0) model to a Graph used by the groove transformation rules

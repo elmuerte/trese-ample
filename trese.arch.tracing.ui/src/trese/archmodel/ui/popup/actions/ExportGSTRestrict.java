@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2008 University of Twente.
  */
-package trese.arch.tracing.ui.popup.actions;
+package trese.archmodel.ui.popup.actions;
 
 import java.io.File;
 import java.io.InputStreamReader;
@@ -25,8 +25,8 @@ import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
-import trese.arch.tracing.groove.Converter;
-import trese.arch.tracing.ui.dialogs.ArchitectureSelector;
+import trese.archmodel.groove.Converter;
+import trese.archmodel.ui.dialogs.ArchitectureSelector;
 import edu.uci.isr.xarch.IXArch;
 import edu.uci.isr.xarch.IXArchImplementation;
 import edu.uci.isr.xarch.XArchParseException;

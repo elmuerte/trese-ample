@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2008 University of Twente
  */
-package trese.arch.tracing.ui.dialogs;
+package trese.archmodel.ui.dialogs;
 
 import java.util.Collections;
 import java.util.HashMap;

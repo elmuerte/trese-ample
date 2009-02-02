@@ -4,10 +4,10 @@
    <extension
          point="org.eclipse.ui.popupMenus">
       <objectContribution
-            id="trese.arch.tracing.ui.xadl2gst"
+            id="trese.archmodel.ui.xadl2gst"
             objectClass="org.eclipse.core.resources.IFile">
          <menu
-               id="trese.arch.tracing.ui.archstudio"
+               id="trese.archmodel.ui.archstudio"
                label="ArchStudio"
                path="additions">
             <separator
@@ -15,19 +15,19 @@
             </separator>
          </menu>
          <action
-               class="trese.arch.tracing.ui.popup.actions.ExportGST"
+               class="trese.archmodel.ui.popup.actions.ExportGST"
                enablesFor="+"
-               id="trese.arch.tracing.ui.export.gst"
+               id="trese.archmodel.ui.export.gst"
                label="Export all structures"
-               menubarPath="trese.arch.tracing.ui.archstudio/group1"
+               menubarPath="trese.archmodel.ui.archstudio/group1"
                tooltip="Export the whole document to a Groove GST">
          </action>
          <action
-               class="trese.arch.tracing.ui.popup.actions.ExportGSTRestrict"
+               class="trese.archmodel.ui.popup.actions.ExportGSTRestrict"
                enablesFor="+"
-               id="trese.arch.tracing.ui.export.gst.restrict"
+               id="trese.archmodel.ui.export.gst.restrict"
                label="Export selected structures..."
-               menubarPath="trese.arch.tracing.ui.archstudio/group1"
+               menubarPath="trese.archmodel.ui.archstudio/group1"
                tooltip="Export a subset of the architectures to a Groove GST">
          </action>
          <visibility>

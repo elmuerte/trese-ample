@@ -2,7 +2,7 @@
  * 
  * Copyright (C) 2008 TRESE; University of Twente
  */
-package trese.arch.tracing;
+package trese.archmodel;
 
 import java.net.URI;
 import java.net.URISyntaxException;

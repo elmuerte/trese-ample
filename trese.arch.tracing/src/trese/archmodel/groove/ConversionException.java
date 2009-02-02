@@ -2,7 +2,7 @@
  * 
  * Copyright (C) 2008 TRESE; University of Twente
  */
-package trese.arch.tracing.groove;
+package trese.archmodel.groove;
 
 /**
  * Exception thrown during conversions

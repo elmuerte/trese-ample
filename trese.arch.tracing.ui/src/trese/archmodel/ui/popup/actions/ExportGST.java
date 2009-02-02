@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2008 University of Twente.
  */
-package trese.arch.tracing.ui.popup.actions;
+package trese.archmodel.ui.popup.actions;
 
 import java.util.Collections;
 import java.util.Set;
@@ -27,7 +27,7 @@ public class ExportGST extends ExportGSTRestrict
 	/*
 	 * (non-Javadoc)
 	 * @see
-	 * trese.arch.tracing.ui.popup.actions.ExportGSTRestrict#selectStructures
+	 * trese.archmodel.ui.popup.actions.ExportGSTRestrict#selectStructures
 	 * (edu.uci.isr.xarch.IXArch, java.lang.String)
 	 */
 	@Override
