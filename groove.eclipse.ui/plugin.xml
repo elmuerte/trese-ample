@@ -4,6 +4,7 @@
    <extension
          point="org.eclipse.core.runtime.contentTypes">
       <content-type
+            base-type="org.eclipse.core.runtime.xml"
             file-extensions="gst"
             id="groove.file.gst"
             name="Groove Start Graph"
