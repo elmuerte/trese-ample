@@ -25,11 +25,11 @@
          <visibility>
             <or>
                <objectState
-                     name="DISABLED-contentTypeId"
+                     name="contentTypeId"
                      value="edu.uci.isr.archstudio4.xadlContentBinding">
                </objectState>
                <objectState
-                     name="DISABLED-contentTypeId"
+                     name="contentTypeId"
                      value="trese.featuremodel.gft">
                </objectState>
             </or>

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Tracing UI
 Bundle-SymbolicName: trese.tracing.ui;singleton:=true
-Bundle-Version: 0.5.0
+Bundle-Version: 0.5.1
 Bundle-Vendor: University of Twente
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.core.resources;bundle-version="3.4.0",
@@ -10,4 +10,5 @@ Require-Bundle: org.eclipse.core.resources;bundle-version="3.4.0",
  org.eclipse.ui;bundle-version="3.4.0",
  trese.archmodel;bundle-version="0.5.0",
  trese.archmodel.ui;bundle-version="0.5.0",
- trese.featuremodel;bundle-version="0.5.0"
+ trese.featuremodel;bundle-version="0.5.0",
+ groove;bundle-version="3.2.0"
