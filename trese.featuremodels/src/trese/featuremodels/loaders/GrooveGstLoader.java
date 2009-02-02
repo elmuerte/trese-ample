@@ -9,6 +9,7 @@ import groove.graph.Graph;
 import groove.io.AspectGxl;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
 import trese.featuremodels.GstToModel;
@@ -51,6 +52,17 @@ public class GrooveGstLoader implements Loader
 			e.printStackTrace(System.err);
 		}
 		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * trese.featuremodels.loaders.Loader#loadFeatureModel(java.io.InputStream)
+	 */
+	@Override
+	public Feature loadFeatureModel(InputStream stream) throws UnsupportedOperationException
+	{
+		throw new UnsupportedOperationException();
 	}
 
 }

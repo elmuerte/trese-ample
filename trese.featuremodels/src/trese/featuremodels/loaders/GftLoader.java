@@ -43,8 +43,27 @@ public class GftLoader implements Loader
 	{
 		try
 		{
-			InputStream is = location.openStream();
-			GftLexer lx = new GftLexer(new ANTLRInputStream(is));
+			return loadFeatureModel(location.openStream());
+		}
+		catch (Exception e)
+		{
+			// TODO
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * trese.featuremodels.loaders.Loader#loadFeatureModel(java.io.InputStream)
+	 */
+	@Override
+	public Feature loadFeatureModel(InputStream stream) throws UnsupportedOperationException
+	{
+		try
+		{
+			GftLexer lx = new GftLexer(new ANTLRInputStream(stream));
 			TokenStream ts = new CommonTokenStream(lx);
 			GftParser parser = new GftParser(ts);
 			parser.gft();

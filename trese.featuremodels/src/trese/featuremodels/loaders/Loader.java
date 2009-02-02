@@ -5,6 +5,7 @@
  */
 package trese.featuremodels.loaders;
 
+import java.io.InputStream;
 import java.net.URL;
 
 import trese.featuremodels.model.Feature;
@@ -29,4 +30,13 @@ public interface Loader
 	 * @return
 	 */
 	Feature loadFeatureModel(URL location);
+
+	/**
+	 * Load a feature from an inputstream
+	 * 
+	 * @param stream
+	 * @return
+	 * @throws UnsupportedOperationException
+	 */
+	Feature loadFeatureModel(InputStream stream) throws UnsupportedOperationException;
 }

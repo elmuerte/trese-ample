@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="trese.featuremodels.ui"
+            objectClass="org.eclipse.core.resources.IFile">
+         <menu
+               id="trese.featuremodels.ui.gft"
+               label="Generalized Feature Tree"
+               path="additions">
+            <groupMarker
+                  name="group1">
+            </groupMarker>
+         </menu>
+         <action
+               class="trese.featuremodels.ui.popup.actions.ExportGST"
+               enablesFor="+"
+               id="trese.featuremodels.ui.exportgst"
+               label="Export to Groove Graph"
+               menubarPath="trese.featuremodels.ui.gft/group1"
+               tooltip="Export the Generalized Feature Tree to a Groove graph">
+         </action>
+         <visibility>
+            <objectState
+                  name="contentTypeId"
+                  value="trese.featuremodels.gft">
+            </objectState>
+         </visibility>
+      </objectContribution>
+   </extension>
+
+</plugin>
