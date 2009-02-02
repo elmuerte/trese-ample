@@ -5,6 +5,10 @@ import java.util.Set;
 
 import edu.uci.isr.xarch.IXArch;
 
+/**
+ * @author Michiel Hendriks
+ * 
+ */
 public class ExportGST extends ExportGSTRestrict
 {
 	/**

@@ -27,6 +27,10 @@ import edu.uci.isr.xarch.IXArchImplementation;
 import edu.uci.isr.xarch.XArchParseException;
 import edu.uci.isr.xarch.XArchUtils;
 
+/**
+ * @author Michiel Hendriks
+ * 
+ */
 public class ExportGSTRestrict implements IObjectActionDelegate
 {
 
