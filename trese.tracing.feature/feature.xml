@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="trese.tracing"
+      label="Tracing"
+      version="0.1.0"
+      provider-name="University of Twente">
+
+   <description>
+      [Enter Feature Description here.]
+   </description>
+
+   <copyright>
+      Copyright 2009 University of Twente
+   </copyright>
+
+   <license>
+      [Enter License Description here.]
+   </license>
+
+   <url>
+      <update label="TRESE AMPLE Dev Update Site" url="http://eclipse.elmuerte.com/trese.ample.updatesite"/>
+   </url>
+
+   <includes
+         id="trese.archmodel.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="trese.featuremodel.feature"
+         version="0.0.0"/>
+
+   <plugin
+         id="trese.tracing.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
