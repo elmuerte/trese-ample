@@ -10,7 +10,6 @@ import groove.graph.Edge;
 import groove.graph.Graph;
 import groove.graph.Node;
 import groove.graph.algebra.ValueNode;
-import groove.io.AspectGxl;
 import groove.io.AspectualViewGps;
 import groove.io.URLLoaderFactory;
 import groove.lts.GraphState;
@@ -19,7 +18,6 @@ import groove.view.DefaultGrammarView;
 import groove.view.FormatException;
 import groove.view.aspect.AspectGraph;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -94,20 +92,21 @@ public class Evaluator
 		EvaluationResult base = new EvaluationResult(baseLine);
 		AspectGraph graph = FeatureGraphCreator.createGraph(base);
 
-		if (true)
-		{
-			// debug export
-			AspectGxl gxl = new AspectGxl();
-			try
-			{
-				gxl.marshalGraph(graph, new File("./featureModel_"
-						+ baseLine.getDescription().replaceAll("[^0-9a-zA-Z]+", "_") + ".gst"));
-			}
-			catch (IOException e)
-			{
-				e.printStackTrace();
-			}
-		}
+		// if (true)
+		// {
+		// // debug export
+		// AspectGxl gxl = new AspectGxl();
+		// try
+		// {
+		// gxl.marshalGraph(graph, new File("./featureModel_"
+		// + baseLine.getDescription().replaceAll("[^0-9a-zA-Z]+", "_") +
+		// ".gst"));
+		// }
+		// catch (IOException e)
+		// {
+		// e.printStackTrace();
+		// }
+		// }
 
 		PrintStream stdout = System.out;
 		System.setOut(new PrintStream(new OutputStream() {

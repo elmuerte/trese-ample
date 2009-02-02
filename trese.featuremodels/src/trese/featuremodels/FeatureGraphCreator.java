@@ -11,6 +11,7 @@ import groove.graph.Label;
 import groove.graph.Node;
 import groove.view.aspect.AspectGraph;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -34,6 +35,11 @@ public final class FeatureGraphCreator
 	public static final String LABEL_BASE_LINE = "BaseLine";
 
 	/**
+	 * Generic label used for all feature nodes
+	 */
+	public static final String LABEL_FEATURE = "Feature";
+
+	/**
 	 * Label text used for features which are excluded
 	 */
 	public static final String LABEL_FEATURE_EXCLUDED = "featureExcluded";
@@ -46,7 +52,12 @@ public final class FeatureGraphCreator
 	/**
 	 * Label used for the name value
 	 */
-	public static final String LABEL_NAME = "name";
+	public static final String LABEL_NAME = "id";
+
+	/**
+	 * Label used for the name value
+	 */
+	public static final String LABEL_DESCRIPTION = "description";
 
 	/**
 	 * Label used for the error node
@@ -81,10 +92,21 @@ public final class FeatureGraphCreator
 			Node node = graph.addNode();
 			nodeMapping.put(feature, node);
 
+			graph.addEdge(node, DefaultLabel.createLabel(LABEL_FEATURE), node);
+
 			// add node containing the name
 			Node nameNode = graph.addNode();
 			graph.addEdge(node, DefaultLabel.createLabel(LABEL_NAME), nameNode);
-			graph.addEdge(nameNode, createFeatureLabel(feature), nameNode);
+			graph.addEdge(nameNode, createStringLabel(feature.getId()), nameNode);
+
+			String description = feature.getDescription();
+			if (description != null && !description.isEmpty())
+			{
+				// add node containing the name
+				Node descNode = graph.addNode();
+				graph.addEdge(node, DefaultLabel.createLabel(LABEL_DESCRIPTION), descNode);
+				graph.addEdge(descNode, createStringLabel(description), descNode);
+			}
 
 			// set possible status
 			switch (feature.getStatus())
@@ -186,9 +208,9 @@ public final class FeatureGraphCreator
 	 * @param feature
 	 * @return
 	 */
-	private static Label createFeatureLabel(Feature feature)
+	private static Label createStringLabel(String value)
 	{
-		return DefaultLabel.createLabel(String.format("string:\"%s\"", feature.getId()));
+		return DefaultLabel.createLabel(String.format("string:\"%s\"", groove.util.ExprParser.toEscaped(value,
+				Collections.singleton('"'))));
 	}
-
 }

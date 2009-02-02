@@ -9,6 +9,7 @@ import groove.graph.DefaultLabel;
 import groove.graph.Edge;
 import groove.graph.Graph;
 import groove.graph.Node;
+import groove.view.FormatException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -58,8 +59,15 @@ public final class GstToModel
 				// not great, but works
 				if (e.label().text().startsWith("\""))
 				{
-					featureName = e.label().text();
-					featureName = featureName.substring(1, featureName.length() - 1);
+					try
+					{
+						featureName = groove.util.ExprParser.toUnquoted(e.label().text(), '"');
+					}
+					catch (FormatException e1)
+					{
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 			}
 

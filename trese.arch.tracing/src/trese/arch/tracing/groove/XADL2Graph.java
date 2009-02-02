@@ -42,6 +42,7 @@ import groove.view.aspect.AspectGraph;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -93,7 +94,8 @@ public class XADL2Graph
 	 */
 	public static final Label createStringLabel(String value)
 	{
-		return DefaultLabel.createLabel(String.format("string:\"%s\"", value.replace("\"", "")));
+		return DefaultLabel.createLabel(String.format("string:\"%s\"", groove.util.ExprParser.toEscaped(value,
+				Collections.singleton('"'))));
 	}
 
 	/**
