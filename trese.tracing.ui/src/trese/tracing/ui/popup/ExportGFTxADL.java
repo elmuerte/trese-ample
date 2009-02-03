@@ -204,7 +204,6 @@ public class ExportGFTxADL extends ExportGSTRestrict
 			{
 				path.addFileExtension("gst");
 			}
-			System.out.println(path);
 			ContainerGenerator gen = new ContainerGenerator(path.removeLastSegments(1));
 			IContainer container;
 			try
@@ -218,7 +217,6 @@ public class ExportGFTxADL extends ExportGSTRestrict
 				return null;
 			}
 			IFile result = container.getFile(path.removeFirstSegments(path.segmentCount() - 1));
-			System.out.println(result);
 			return result;
 		}
 		return null;
