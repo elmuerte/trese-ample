@@ -17,6 +17,7 @@
             class="groove.gui.EclipseGraphViewer"
             default="true"
             extensions="gst"
+            icon="res/icons/groove-g-16x16.gif"
             id="groove.eclipse.ui.editor.graph"
             name="Graph Viewer">
          <contentTypeBinding
