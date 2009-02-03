@@ -21,6 +21,7 @@ import groove.view.aspect.AspectGraph;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashSet;
@@ -210,6 +211,20 @@ public class Evaluator
 	protected void initialize()
 	{
 		URL grammarUrl = Evaluator.class.getResource(GROOVE_GRAMMAR);
+		if (grammarUrl.getProtocol().startsWith("bundle"))
+		{
+			try
+			{
+				Class<?> p = Class.forName("org.eclipse.core.runtime.Platform");
+				Method m = p.getMethod("resolve", URL.class);
+				grammarUrl = (URL) m.invoke(null, grammarUrl);
+			}
+			catch (Exception e)
+			{
+				throw new IllegalStateException(String.format("Unable to load groove grammar from: %s%s",
+						Evaluator.class.getResource(""), GROOVE_GRAMMAR));
+			}
+		}
 		if (grammarUrl == null)
 		{
 			throw new IllegalStateException(String.format("Unable to load groove grammar from: %s%s", Evaluator.class

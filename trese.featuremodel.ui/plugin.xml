@@ -22,6 +22,14 @@
                menubarPath="trese.featuremodel.ui.gft/group1"
                tooltip="Export the Generalized Feature Tree to a Groove graph">
          </action>
+         <action
+               class="trese.featuremodel.ui.popup.actions.HasProduct"
+               enablesFor="1"
+               id="trese.featuremodel.ui.hasproduct"
+               label="Find valid configuration"
+               menubarPath="trese.featuremodel.ui.gft/group1"
+               tooltip="Find a valid product configuration">
+         </action>
          <visibility>
             <objectState
                   name="contentTypeId"
