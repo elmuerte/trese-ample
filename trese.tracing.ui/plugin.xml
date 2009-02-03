@@ -8,7 +8,7 @@
             objectClass="org.eclipse.core.resources.IFile">
          <menu
                id="trese.tracing.ui.popup"
-               label="TRESE Tracing [todo]"
+               label="xADL+GFT"
                path="additions">
             <groupMarker
                   name="group1">

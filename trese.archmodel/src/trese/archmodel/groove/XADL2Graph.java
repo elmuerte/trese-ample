@@ -87,6 +87,23 @@ public class XADL2Graph
 	}
 
 	/**
+	 * Convert the provided xADL structure to a Groove Graph
+	 * 
+	 * @param arch
+	 * @param restrictTo
+	 *            optional list of subarchitectures to restrict the output to
+	 * @return A groove graph
+	 * @throws ConversionException
+	 *             thrown when an error was encountered during conversion
+	 */
+	public static final void convert(IXArch arch, Set<String> restrictTo, DefaultGraph destGraph)
+			throws ConversionException
+	{
+		XADL2Graph converter = new XADL2Graph(arch, restrictTo);
+		converter.internalConvert(destGraph);
+	}
+
+	/**
 	 * Create a string value label
 	 * 
 	 * @param value
@@ -142,7 +159,6 @@ public class XADL2Graph
 			restrictToStructure = new HashSet<String>();
 			restrictToStructure.addAll(restrictTo);
 		}
-		graph = new DefaultGraph();
 		idMap = new HashMap<String, Node>();
 		pendingNodes = new HashMap<String, Node>();
 		typeMap = new HashMap<String, Object>();
@@ -155,12 +171,25 @@ public class XADL2Graph
 	 * @return
 	 * @throws ConversionException
 	 */
-	protected AspectGraph internalConvert() throws ConversionException
+	protected void internalConvert(DefaultGraph destGraph) throws ConversionException
 	{
+		graph = destGraph;
 		createTypeMapping();
 		// createTypeNodes();
 		createStructureNodes();
 		createTypeNodesEx();
+	}
+
+	/**
+	 * Performs the actual conversion
+	 * 
+	 * @param arch
+	 * @return
+	 * @throws ConversionException
+	 */
+	protected AspectGraph internalConvert() throws ConversionException
+	{
+		internalConvert(new DefaultGraph());
 		return AspectGraph.getFactory().fromPlainGraph(graph);
 	}
 

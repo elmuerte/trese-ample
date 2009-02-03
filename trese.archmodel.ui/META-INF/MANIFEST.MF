@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: ArchModel UI
 Bundle-SymbolicName: trese.archmodel.ui;singleton:=true
-Bundle-Version: 0.5.0
+Bundle-Version: 0.5.1
 Bundle-Vendor: University of Twente
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: edu.uci.isr.xarchlibs.apigen;bundle-version="4.1.50",
@@ -11,3 +11,5 @@ Require-Bundle: edu.uci.isr.xarchlibs.apigen;bundle-version="4.1.50",
  org.eclipse.core.resources,
  org.eclipse.core.runtime
 Bundle-ClassPath: trese.archmodel.ui.jar
+Export-Package: trese.archmodel.ui.dialogs,
+ trese.archmodel.ui.popup.actions
