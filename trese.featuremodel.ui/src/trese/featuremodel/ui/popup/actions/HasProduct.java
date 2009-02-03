@@ -16,6 +16,7 @@ import java.util.Map.Entry;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -42,6 +43,9 @@ public class HasProduct implements IObjectActionDelegate
 	private Shell shell;
 
 	private ISelection selection;
+
+	private Evaluator eval;
+	private GftLoader loader;
 
 	/**
 	 * 
@@ -73,89 +77,90 @@ public class HasProduct implements IObjectActionDelegate
 		final Map<IFile, SortedSet<String>> productConfigs = new LinkedHashMap<IFile, SortedSet<String>>();
 		if (selection instanceof IStructuredSelection)
 		{
-			IRunnableWithProgress op = new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException
+			// IRunnableWithProgress op = new IRunnableWithProgress() {
+			// public void run(IProgressMonitor monitor) throws
+			// InvocationTargetException, InterruptedException
+			// {
+			IProgressMonitor monitor = new NullProgressMonitor();
+			if (eval == null) eval = new Evaluator();
+			if (loader == null) loader = new GftLoader();
+			SubMonitor progress = SubMonitor.convert(monitor);
+			progress.beginTask("Finding product configurations", ((IStructuredSelection) selection).size());
+			for (Object o : ((IStructuredSelection) selection).toList())
+			{
+				if (progress.isCanceled())
 				{
-					Evaluator eval = new Evaluator();
-					GftLoader loader = new GftLoader();
-					SubMonitor progress = SubMonitor.convert(monitor);
-					progress.beginTask("Finding product configurations", ((IStructuredSelection) selection).size());
-					for (Object o : ((IStructuredSelection) selection).toList())
+					break;
+				}
+				if (o instanceof IFile)
+				{
+					try
 					{
-						if (progress.isCanceled())
+						IFile sourceFile = (IFile) o;
+						Feature baseLine = loader.loadFeatureModel(sourceFile.getContents(true));
+						Collection<EvaluationResult> result = eval.evaluate(baseLine, true);
+						if (result == null || result.isEmpty())
 						{
-							break;
+							productConfigs.put(sourceFile, null);
 						}
-						if (o instanceof IFile)
+						else
 						{
-							try
+							EvaluationResult res = result.iterator().next();
+							SortedSet<String> validconf = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+							for (Feature feat : res.getIncludedFeatures())
 							{
-								IFile sourceFile = (IFile) o;
-								Feature baseLine = loader.loadFeatureModel(sourceFile.getContents(true));
-								Collection<EvaluationResult> result = eval.evaluate(baseLine, true);
-								if (result == null || result.isEmpty())
+								String featName = feat.getDescription();
+								if (featName == null || featName.isEmpty())
 								{
-									productConfigs.put(sourceFile, null);
+									feat.getId();
 								}
-								else
-								{
-									EvaluationResult res = result.iterator().next();
-									SortedSet<String> validconf = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
-									for (Feature feat : res.getIncludedFeatures())
-									{
-										String featName = feat.getDescription();
-										if (featName == null || featName.isEmpty())
-										{
-											feat.getId();
-										}
-										validconf.add(featName);
-									}
-									productConfigs.put(sourceFile, validconf);
-								}
+								validconf.add(featName);
 							}
-							catch (Exception e)
-							{
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
+							productConfigs.put(sourceFile, validconf);
 						}
-						progress.worked(1);
+					}
+					catch (Exception e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
 				}
-			};
-			try
-			{
-				new ProgressMonitorDialog(shell).run(true, true, op);
-			}
-			catch (InvocationTargetException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			catch (InterruptedException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			finally
-			{
-				for (Entry<IFile, SortedSet<String>> entry : productConfigs.entrySet())
-				{
-					SortedSet<String> result = entry.getValue();
-					if (result == null)
-					{
-						MessageDialog.openError(shell, "No Product Configuration Found", String.format(
-								"%s does not contain a valid product configuration.", entry.getKey().getName()));
-					}
-					else
-					{
-						MessageDialog.openInformation(shell, "Valid Product Configuration Found", String.format(
-								"%s contains at least one valid product configuration:\n%s", entry.getKey().getName(),
-								result));
-					}
-				}
+				progress.worked(1);
 			}
 		}
+		// };
+		// try
+		// {
+		// new ProgressMonitorDialog(shell).run(true, true, op);
+		// }
+		// catch (InvocationTargetException e)
+		// {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// catch (InterruptedException e)
+		// {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// finally
+		// {
+		for (Entry<IFile, SortedSet<String>> entry : productConfigs.entrySet())
+		{
+			SortedSet<String> result = entry.getValue();
+			if (result == null)
+			{
+				MessageDialog.openError(shell, "No Product Configuration Found", String.format(
+						"%s does not contain a valid product configuration.", entry.getKey().getName()));
+			}
+			else
+			{
+				MessageDialog.openInformation(shell, "Valid Product Configuration Found", String.format(
+						"%s contains at least one valid product configuration:\n%s", entry.getKey().getName(), result));
+			}
+		}
+		// }
+		// }
 	}
 
 	/*
