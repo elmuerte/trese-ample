@@ -16,7 +16,7 @@
          </menu>
          <action
                class="trese.tracing.ui.popup.ExportGFTxADL"
-               enablesFor="2"
+               enablesFor="+"
                id="trese.tracing.ui.export.gftxadl"
                label="Create combined graph"
                menubarPath="trese.tracing.ui.popup/group1"

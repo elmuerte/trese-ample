@@ -14,10 +14,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -30,6 +34,7 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ContainerGenerator;
 import org.eclipse.ui.dialogs.SaveAsDialog;
@@ -42,6 +47,7 @@ import trese.featuremodel.FeatureGraphCreator;
 import trese.featuremodel.loaders.GftLoader;
 import trese.featuremodel.model.Feature;
 import trese.featuremodel.model.FeatureModelException;
+import trese.tracing.ui.dialog.WorkbenchFileSelectionDialog;
 
 /**
  * 
@@ -79,11 +85,6 @@ public class ExportGFTxADL extends ExportGSTRestrict
 	@Override
 	public void run(IAction action)
 	{
-		final IFile destFile = selectDestination();
-		if (destFile == null)
-		{
-			return;
-		}
 		if (selection instanceof IStructuredSelection)
 		{
 			IRunnableWithProgress op = new IRunnableWithProgress() {
@@ -124,6 +125,14 @@ public class ExportGFTxADL extends ExportGSTRestrict
 							}
 						}
 					}
+					if (xadlFile == null)
+					{
+						xadlFile = selectXADLFile();
+					}
+					if (gftFile == null)
+					{
+						gftFile = selectGFTFile();
+					}
 					if (xadlFile != null && gftFile != null)
 					{
 						DefaultGraph graph = new DefaultGraph();
@@ -136,6 +145,11 @@ public class ExportGFTxADL extends ExportGSTRestrict
 							return;
 						}
 
+						IFile destFile = selectDestination();
+						if (destFile == null)
+						{
+							return;
+						}
 						File dest = destFile.getLocation().toFile();
 
 						// save graph
@@ -187,6 +201,66 @@ public class ExportGFTxADL extends ExportGSTRestrict
 		}
 	}
 
+	protected IFile selectXADLFile()
+	{
+		final List<Object> result = new ArrayList<Object>();
+		Display.getDefault().syncExec(new Runnable() {
+			public void run()
+			{
+				WorkbenchFileSelectionDialog diag = new WorkbenchFileSelectionDialog(shell, Collections
+						.singleton(XADL_CONTENT_TYPE));
+				diag.setInput(ResourcesPlugin.getWorkspace().getRoot());
+				diag.setTitle("Select an xADL document");
+				diag.setMessage("Select the xADL document you want to export to the Groove graph.");
+				diag.setAllowMultiple(false);
+				diag.open();
+				Object[] res = diag.getResult();
+				if (res != null && res.length > 0)
+				{
+					result.add(res[0]);
+				}
+			}
+		});
+		if (result.size() == 0)
+		{
+			return null;
+		}
+		else
+		{
+			return (IFile) result.get(0);
+		}
+	}
+
+	protected IFile selectGFTFile()
+	{
+		final List<Object> result = new ArrayList<Object>();
+		Display.getDefault().syncExec(new Runnable() {
+			public void run()
+			{
+				WorkbenchFileSelectionDialog diag = new WorkbenchFileSelectionDialog(shell, Collections
+						.singleton(GFT_CONTENT_TYPE));
+				diag.setInput(ResourcesPlugin.getWorkspace().getRoot());
+				diag.setTitle("Select an Generealized Feature Tree");
+				diag.setMessage("Select the GFT document you want to export to the Groove graph.");
+				diag.setAllowMultiple(false);
+				diag.open();
+				Object[] res = diag.getResult();
+				if (res != null && res.length > 0)
+				{
+					result.add(res[0]);
+				}
+			}
+		});
+		if (result.size() == 0)
+		{
+			return null;
+		}
+		else
+		{
+			return (IFile) result.get(0);
+		}
+	}
+
 	/**
 	 * @return The selected destination of the file
 	 */
@@ -194,32 +268,45 @@ public class ExportGFTxADL extends ExportGSTRestrict
 	{
 		// TODO This sucks, it's not a very userfriendly way to do this, but it
 		// is ok for now.
-		SaveAsDialog diag = new SaveAsDialog(shell);
-		diag.setBlockOnOpen(true);
-		diag.open();
-		IPath path = diag.getResult();
-		if (path != null)
+		final List<IFile> result = new ArrayList<IFile>();
+		Display.getDefault().syncExec(new Runnable() {
+			public void run()
+			{
+				SaveAsDialog diag = new SaveAsDialog(shell);
+				diag.open();
+				IPath path = diag.getResult();
+				if (path != null)
+				{
+					if (!path.getFileExtension().equals("gst"))
+					{
+						path.addFileExtension("gst");
+					}
+					ContainerGenerator gen = new ContainerGenerator(path.removeLastSegments(1));
+					IContainer container;
+					try
+					{
+						container = gen.generateContainer(new NullProgressMonitor());
+					}
+					catch (CoreException e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						return;
+					}
+					IFile file = container.getFile(path.removeFirstSegments(path.segmentCount() - 1));
+					result.add(file);
+				}
+				return;
+			}
+		});
+		if (result.size() == 0)
 		{
-			if (!path.getFileExtension().equals("gst"))
-			{
-				path.addFileExtension("gst");
-			}
-			ContainerGenerator gen = new ContainerGenerator(path.removeLastSegments(1));
-			IContainer container;
-			try
-			{
-				container = gen.generateContainer(new NullProgressMonitor());
-			}
-			catch (CoreException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return null;
-			}
-			IFile result = container.getFile(path.removeFirstSegments(path.segmentCount() - 1));
-			return result;
+			return null;
 		}
-		return null;
+		else
+		{
+			return result.get(0);
+		}
 	}
 
 	/*
@@ -236,41 +323,39 @@ public class ExportGFTxADL extends ExportGSTRestrict
 		if (!value.isEmpty() && value instanceof IStructuredSelection)
 		{
 			this.selection = (IStructuredSelection) value;
-			if (selection.size() == 2)
+
+			int hasGft = 0;
+			int hasxAdl = 0;
+			for (Object o : selection.toList())
 			{
-				boolean hasGft = false;
-				boolean hasxAdl = false;
-				for (Object o : selection.toList())
+				if (o instanceof IFile)
 				{
-					if (o instanceof IFile)
+					try
 					{
-						try
+						IContentDescription cd = ((IFile) o).getContentDescription();
+						if (cd != null)
 						{
-							IContentDescription cd = ((IFile) o).getContentDescription();
-							if (cd != null)
+							IContentType ct = cd.getContentType();
+							if (ct != null)
 							{
-								IContentType ct = cd.getContentType();
-								if (ct != null)
+								if (ct.getId().equals(XADL_CONTENT_TYPE))
 								{
-									if (ct.getId().equals(XADL_CONTENT_TYPE))
-									{
-										hasGft = true;
-									}
-									else if (ct.getId().equals(GFT_CONTENT_TYPE))
-									{
-										hasxAdl = true;
-									}
+									++hasxAdl;
+								}
+								else if (ct.getId().equals(GFT_CONTENT_TYPE))
+								{
+									++hasGft;
 								}
 							}
 						}
-						catch (CoreException e)
-						{
-							continue;
-						}
+					}
+					catch (CoreException e)
+					{
+						continue;
 					}
 				}
-				enabled = hasGft && hasxAdl;
 			}
+			enabled = (hasGft == 1) || (hasxAdl == 1);
 		}
 		action.setEnabled(enabled);
 	}

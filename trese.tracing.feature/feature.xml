@@ -2,7 +2,7 @@
 <feature
       id="trese.tracing"
       label="Tracing"
-      version="0.5.2"
+      version="0.5.3"
       provider-name="University of Twente">
 
    <description>

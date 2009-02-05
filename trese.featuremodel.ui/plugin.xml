@@ -41,6 +41,14 @@
                menubarPath="trese.featuremodel.ui.gft/group1"
                tooltip="Find a valid product configuration">
          </action>
+         <action
+               class="trese.featuremodel.ui.popup.actions.FindProducts"
+               enablesFor="1"
+               id="trese.featuremodel.ui.hasproduct"
+               label="Find all configurations"
+               menubarPath="trese.featuremodel.ui.gft/group1"
+               tooltip="Find all valid product configurations">
+         </action>
       </objectContribution>
    </extension>
 
