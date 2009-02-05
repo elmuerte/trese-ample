@@ -2,7 +2,7 @@
 <feature
       id="trese.tracing"
       label="Tracing"
-      version="0.5.1"
+      version="0.5.2"
       provider-name="University of Twente">
 
    <description>
@@ -30,6 +30,19 @@
    <includes
          id="trese.featuremodel.feature"
          version="0.0.0"/>
+
+   <requires>
+      <import plugin="org.eclipse.core.resources" version="3.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.core.runtime" version="3.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui" version="3.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui.ide" version="3.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui.editors" version="3.0.0" match="greaterOrEqual"/>
+      <import plugin="trese.archmodel" version="0.5.2" match="greaterOrEqual"/>
+      <import plugin="trese.archmodel.ui" version="0.5.2" match="greaterOrEqual"/>
+      <import plugin="trese.featuremodel" version="0.5.2" match="greaterOrEqual"/>
+      <import plugin="groove" version="3.2.0" match="greaterOrEqual"/>
+      <import plugin="edu.uci.isr.xarchlibs.apigen" version="4.1.50" match="greaterOrEqual"/>
+   </requires>
 
    <plugin
          id="trese.tracing.ui"
