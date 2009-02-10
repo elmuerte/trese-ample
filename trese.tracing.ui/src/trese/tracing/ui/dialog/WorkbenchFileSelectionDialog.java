@@ -69,7 +69,6 @@ public class WorkbenchFileSelectionDialog extends ElementTreeSelectionDialog imp
 	 * org.eclipse.ui.dialogs.ISelectionStatusValidator#validate(java.lang.Object
 	 * [])
 	 */
-	@Override
 	public IStatus validate(Object[] selection)
 	{
 		if (selection.length == 0)

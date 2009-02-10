@@ -11,13 +11,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.Map.Entry;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
@@ -25,6 +23,10 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.console.ConsolePlugin;
+import org.eclipse.ui.console.IConsole;
+import org.eclipse.ui.console.MessageConsole;
+import org.eclipse.ui.console.MessageConsoleStream;
 
 import trese.featuremodel.EvaluationResult;
 import trese.featuremodel.Evaluator;
@@ -60,7 +62,6 @@ public class FindProducts implements IObjectActionDelegate
 	 * org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.
 	 * action.IAction, org.eclipse.ui.IWorkbenchPart)
 	 */
-	@Override
 	public void setActivePart(IAction action, IWorkbenchPart targetPart)
 	{
 		shell = targetPart.getSite().getShell();
@@ -70,7 +71,6 @@ public class FindProducts implements IObjectActionDelegate
 	 * (non-Javadoc)
 	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
 	 */
-	@Override
 	public void run(IAction action)
 	{
 		final Map<IFile, SortedSet<String>> productConfigs = new LinkedHashMap<IFile, SortedSet<String>>();
@@ -79,6 +79,10 @@ public class FindProducts implements IObjectActionDelegate
 			IRunnableWithProgress op = new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException
 				{
+					MessageConsole console = new MessageConsole("Feature Model", null);
+					console.activate();
+					ConsolePlugin.getDefault().getConsoleManager().addConsoles(new IConsole[] { console });
+					MessageConsoleStream msgs = console.newMessageStream();
 					if (eval == null) eval = new Evaluator();
 					if (loader == null) loader = new GftLoader();
 					SubMonitor progress = SubMonitor.convert(monitor);
@@ -107,7 +111,10 @@ public class FindProducts implements IObjectActionDelegate
 								while (thread.isAlive())
 								{
 									if (Runtime.getRuntime().maxMemory() <= Runtime.getRuntime().totalMemory()
-											&& Runtime.getRuntime().freeMemory() < 3145728) // 3MB, a bit arbitrary
+											&& Runtime.getRuntime().freeMemory() < 3145728) // 3MB,
+									// a
+									// bit
+									// arbitrary
 									{
 										thread.interrupt();
 										progress.setCanceled(true);
@@ -140,20 +147,20 @@ public class FindProducts implements IObjectActionDelegate
 								}
 								else
 								{
-									System.out.println("Valid products configurations:");
+									msgs.println("Valid products configurations:");
 									for (EvaluationResult res : result)
 									{
 										SortedSet<String> validconf = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
 										for (Feature feat : res.getIncludedFeatures())
 										{
 											String featName = feat.getDescription();
-											if (featName == null || featName.isEmpty())
+											if (featName == null || featName.length() == 0)
 											{
 												feat.getId();
 											}
 											validconf.add(featName);
 										}
-										System.out.println(validconf);
+										msgs.println(validconf.toString());
 										productConfigs.put(sourceFile, validconf);
 									}
 								}
@@ -184,21 +191,26 @@ public class FindProducts implements IObjectActionDelegate
 			}
 			finally
 			{
-				for (Entry<IFile, SortedSet<String>> entry : productConfigs.entrySet())
-				{
-					SortedSet<String> result = entry.getValue();
-					if (result == null)
-					{
-						MessageDialog.openError(shell, "No Product Configuration Found", String.format(
-								"%s does not contain a valid product configuration.", entry.getKey().getName()));
-					}
-					else
-					{
-						MessageDialog.openInformation(shell, "Valid Product Configuration Found", String.format(
-								"%s contains at least one valid product configuration:\n%s", entry.getKey().getName(),
-								result));
-					}
-				}
+				// for (Entry<IFile, SortedSet<String>> entry :
+				// productConfigs.entrySet())
+				// {
+				// SortedSet<String> result = entry.getValue();
+				// if (result == null)
+				// {
+				// MessageDialog.openError(shell,
+				// "No Product Configuration Found", String.format(
+				// "%s does not contain a valid product configuration.",
+				// entry.getKey().getName()));
+				// }
+				// else
+				// {
+				// MessageDialog.openInformation(shell,
+				// "Valid Product Configuration Found", String.format(
+				// "%s contains at least one valid product configuration:\n%s",
+				// entry.getKey().getName(),
+				// result));
+				// }
+				// }
 			}
 		}
 	}
@@ -209,7 +221,6 @@ public class FindProducts implements IObjectActionDelegate
 	 * org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action
 	 * .IAction, org.eclipse.jface.viewers.ISelection)
 	 */
-	@Override
 	public void selectionChanged(IAction action, ISelection selection)
 	{
 		this.selection = selection;
@@ -226,7 +237,6 @@ public class FindProducts implements IObjectActionDelegate
 		 * (non-Javadoc)
 		 * @see java.lang.Runnable#run()
 		 */
-		@Override
 		public void run()
 		{
 			try

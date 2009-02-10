@@ -77,7 +77,11 @@ public final class CmdLineEvaluator
 			}
 			final Set<String> exts = BaseLoader.supportedExtensions();
 			files = scanDir.list(new FilenameFilter() {
-				@Override
+				/*
+				 * (non-Javadoc)
+				 * @see java.io.FilenameFilter#accept(java.io.File,
+				 * java.lang.String)
+				 */
 				public boolean accept(File arg0, String arg1)
 				{
 					String ext = arg1.toString();
@@ -160,12 +164,12 @@ public final class CmdLineEvaluator
 						for (Feature f : incFeatures)
 						{
 							String fname = f.getDescription();
-							if (fname == null || fname.isEmpty())
+							if (fname == null || fname.length() == 0)
 							{
 								fname = f.getId();
 							}
 							// ingore empty baseline
-							if (fname == null || fname.isEmpty())
+							if (fname == null || fname.length() == 0)
 							{
 								continue;
 							}
@@ -182,12 +186,12 @@ public final class CmdLineEvaluator
 					for (Feature f : deadFeatures)
 					{
 						String fname = f.getDescription();
-						if (fname == null || fname.isEmpty())
+						if (fname == null || fname.length() == 0)
 						{
 							fname = f.getId();
 						}
 						// ingore empty baseline
-						if (fname == null || fname.isEmpty())
+						if (fname == null || fname.length() == 0)
 						{
 							continue;
 						}

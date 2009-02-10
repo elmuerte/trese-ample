@@ -113,7 +113,7 @@ public final class FeatureGraphCreator
 			graph.addEdge(nameNode, createStringLabel(feature.getId()), nameNode);
 
 			String description = feature.getDescription();
-			if (description != null && !description.isEmpty())
+			if (description != null && description.length() != 0)
 			{
 				// add node containing the name
 				Node descNode = graph.addNode();

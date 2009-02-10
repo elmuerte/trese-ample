@@ -295,7 +295,7 @@ public class XADL2Graph
 		idMap.put(id, node);
 		pendingNodes.remove(id);
 
-		if (description != null && description.getValue() != null && !description.getValue().isEmpty())
+		if (description != null && description.getValue() != null && description.getValue().length() != 0)
 		{
 			// the "description" value
 			Node valueNode = graph.addNode();
@@ -843,7 +843,7 @@ public class XADL2Graph
 		try
 		{
 			URI uri = new URI(type.getHref());
-			if (!uri.getPath().isEmpty())
+			if (uri.getPath().length() != 0)
 			{
 				throw new ConversionException(String.format("Can not handle cross document references (%s)", uri
 						.toString()));

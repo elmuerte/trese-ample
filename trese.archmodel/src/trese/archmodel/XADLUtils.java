@@ -232,7 +232,7 @@ public final class XADLUtils
 		try
 		{
 			URI uri = new URI(type.getHref());
-			if (!uri.getPath().isEmpty())
+			if (uri.getPath().length() != 0)
 			{
 				return null;
 				// TODO:

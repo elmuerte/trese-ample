@@ -72,7 +72,7 @@ public class SaveAsGFT
 	protected String getFeatureDesc(Feature feature)
 	{
 		String desc = feature.getDescription();
-		if (desc == null || desc.isEmpty())
+		if (desc == null || desc.length() == 0)
 		{
 			desc = feature.getId();
 		}

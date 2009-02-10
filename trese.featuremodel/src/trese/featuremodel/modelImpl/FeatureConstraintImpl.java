@@ -40,7 +40,6 @@ public class FeatureConstraintImpl implements FeatureConstraint
 	 * (non-Javadoc)
 	 * @see trese.featuremodel.model.FeatureConstraint#getLHS()
 	 */
-	@Override
 	public Feature getLHS()
 	{
 		return lhs;
@@ -50,7 +49,6 @@ public class FeatureConstraintImpl implements FeatureConstraint
 	 * (non-Javadoc)
 	 * @see trese.featuremodel.model.FeatureConstraint#getRHS()
 	 */
-	@Override
 	public Feature getRHS()
 	{
 		return rhs;
@@ -60,7 +58,6 @@ public class FeatureConstraintImpl implements FeatureConstraint
 	 * (non-Javadoc)
 	 * @see trese.featuremodel.model.FeatureConstraint#getType()
 	 */
-	@Override
 	public FeatureConstraintType getType()
 	{
 		return type;

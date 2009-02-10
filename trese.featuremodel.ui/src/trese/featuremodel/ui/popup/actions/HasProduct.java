@@ -57,7 +57,6 @@ public class HasProduct implements IObjectActionDelegate
 	 * org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.
 	 * action.IAction, org.eclipse.ui.IWorkbenchPart)
 	 */
-	@Override
 	public void setActivePart(IAction action, IWorkbenchPart targetPart)
 	{
 		shell = targetPart.getSite().getShell();
@@ -67,7 +66,6 @@ public class HasProduct implements IObjectActionDelegate
 	 * (non-Javadoc)
 	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
 	 */
-	@Override
 	public void run(IAction action)
 	{
 		final Map<IFile, SortedSet<String>> productConfigs = new LinkedHashMap<IFile, SortedSet<String>>();
@@ -106,7 +104,7 @@ public class HasProduct implements IObjectActionDelegate
 							for (Feature feat : res.getIncludedFeatures())
 							{
 								String featName = feat.getDescription();
-								if (featName == null || featName.isEmpty())
+								if (featName == null || featName.length() == 0)
 								{
 									feat.getId();
 								}
@@ -165,7 +163,6 @@ public class HasProduct implements IObjectActionDelegate
 	 * org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action
 	 * .IAction, org.eclipse.jface.viewers.ISelection)
 	 */
-	@Override
 	public void selectionChanged(IAction action, ISelection selection)
 	{
 		this.selection = selection;

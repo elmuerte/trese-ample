@@ -23,12 +23,10 @@ import trese.featuremodel.model.Feature;
  */
 public class GftLoader implements Loader
 {
-
 	/*
 	 * (non-Javadoc)
 	 * @see trese.featuremodel.loaders.Loader#acceptsExtension()
 	 */
-	@Override
 	public String[] acceptsExtension()
 	{
 		return new String[] { "gft" };
@@ -38,7 +36,6 @@ public class GftLoader implements Loader
 	 * (non-Javadoc)
 	 * @see trese.featuremodel.loaders.Loader#loadFeatureModel(java.net.URL)
 	 */
-	@Override
 	public Feature loadFeatureModel(URL location)
 	{
 		try
@@ -58,7 +55,6 @@ public class GftLoader implements Loader
 	 * @see
 	 * trese.featuremodel.loaders.Loader#loadFeatureModel(java.io.InputStream)
 	 */
-	@Override
 	public Feature loadFeatureModel(InputStream stream) throws UnsupportedOperationException
 	{
 		try

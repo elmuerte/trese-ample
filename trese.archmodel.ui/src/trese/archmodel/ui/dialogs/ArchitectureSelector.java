@@ -65,7 +65,7 @@ public class ArchitectureSelector
 			{
 				String archName = ((IArchStructure) o).getId();
 				IDescription desc = ((IArchStructure) o).getDescription();
-				if (desc != null && !desc.getValue().isEmpty())
+				if (desc != null && desc.getValue().length() != 0)
 				{
 					archName = desc.getValue();
 				}

@@ -76,7 +76,6 @@ public class FeatureImpl implements Feature
 	 * (non-Javadoc)
 	 * @see trese.featuremodel.model.Feature#getDescription()
 	 */
-	@Override
 	public String getDescription()
 	{
 		return description;
@@ -86,7 +85,6 @@ public class FeatureImpl implements Feature
 	 * (non-Javadoc)
 	 * @see trese.featuremodel.model.Feature#setDescription(java.lang.String)
 	 */
-	@Override
 	public void setDescription(String value)
 	{
 		if (value == null)
@@ -103,7 +101,6 @@ public class FeatureImpl implements Feature
 	 * (non-Javadoc)
 	 * @see trese.featuremodel.model.Feature#getConstraints()
 	 */
-	@Override
 	public Collection<FeatureConstraint> getConstraints()
 	{
 		return Collections.unmodifiableCollection(constraints);
@@ -113,7 +110,6 @@ public class FeatureImpl implements Feature
 	 * (non-Javadoc)
 	 * @see trese.featuremodel.model.Feature#getGroupRelation()
 	 */
-	@Override
 	public FeatureGroupRelation getGroupRelation()
 	{
 		return groupRelation;
@@ -123,7 +119,6 @@ public class FeatureImpl implements Feature
 	 * (non-Javadoc)
 	 * @see trese.featuremodel.model.Feature#getName()
 	 */
-	@Override
 	public String getId()
 	{
 		return id;
@@ -133,7 +128,6 @@ public class FeatureImpl implements Feature
 	 * (non-Javadoc)
 	 * @see trese.featuremodel.model.Feature#getParentFeature()
 	 */
-	@Override
 	public Feature getParentFeature()
 	{
 		return parent;
@@ -143,7 +137,6 @@ public class FeatureImpl implements Feature
 	 * (non-Javadoc)
 	 * @see trese.featuremodel.model.Feature#getRequirement()
 	 */
-	@Override
 	public FeatureRequirement getRequirement()
 	{
 		return requirement;
@@ -153,7 +146,7 @@ public class FeatureImpl implements Feature
 	 * (non-Javadoc)
 	 * @see trese.featuremodel.model.Feature#getSubFeatures()
 	 */
-	@Override
+
 	public Collection<Feature> getSubFeatures()
 	{
 		return Collections.unmodifiableCollection(subFeatures);
@@ -163,7 +156,6 @@ public class FeatureImpl implements Feature
 	 * (non-Javadoc)
 	 * @see trese.featuremodel.model.Feature#isIncluded()
 	 */
-	@Override
 	public FeatureStatus getStatus()
 	{
 		return included;
@@ -173,7 +165,6 @@ public class FeatureImpl implements Feature
 	 * (non-Javadoc)
 	 * @see trese.featuremodel.model.Feature#setIncluded(boolean)
 	 */
-	@Override
 	public void setStatus(FeatureStatus value)
 	{
 		included = value;

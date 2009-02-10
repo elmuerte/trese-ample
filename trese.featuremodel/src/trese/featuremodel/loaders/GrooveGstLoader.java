@@ -26,7 +26,6 @@ public class GrooveGstLoader implements Loader
 	 * (non-Javadoc)
 	 * @see trese.featuremodel.loaders.Loader#acceptsExtension()
 	 */
-	@Override
 	public String[] acceptsExtension()
 	{
 		return new String[] { "gst" };
@@ -37,7 +36,6 @@ public class GrooveGstLoader implements Loader
 	 * @see
 	 * trese.featuremodel.loaders.Loader#loadFeatureModel(java.io.InputStream)
 	 */
-	@Override
 	public Feature loadFeatureModel(URL location)
 	{
 		AspectGxl gxl = new AspectGxl();
@@ -59,7 +57,6 @@ public class GrooveGstLoader implements Loader
 	 * @see
 	 * trese.featuremodel.loaders.Loader#loadFeatureModel(java.io.InputStream)
 	 */
-	@Override
 	public Feature loadFeatureModel(InputStream stream) throws UnsupportedOperationException
 	{
 		throw new UnsupportedOperationException();
