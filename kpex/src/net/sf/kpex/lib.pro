@@ -3,7 +3,7 @@
 % returns the name of the Prolog dialect 
 % in BinProlog is_prolog(Which) returns Which=binprolog
 
-is_prolog(kernel_prolog).
+is_prolog(kpex).
 
 % Kernel Prolog operations
 

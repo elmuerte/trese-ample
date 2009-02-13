@@ -34,8 +34,8 @@ public class JinniGuiMain
 			return false;
 		}
 		Init.builtinDict = new GuiBuiltins();
-		Init.askJinni("reconsult('tarau/jinni/lib.pro')");
-		Init.askJinni("reconsult('tarau/jinnigui/gui_lib.pro')");
+		Init.askJinni("reconsult('" + Init.class.getResource("lib.pro") + "')");
+		Init.askJinni("reconsult('" + JinniGuiMain.class.getResource("gui_lib.pro") + "')");
 		return true;
 	}
 
