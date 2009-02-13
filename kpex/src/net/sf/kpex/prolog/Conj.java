@@ -30,7 +30,7 @@ public class Conj extends Cons
 	static public final Term getTail(Term T)
 	{
 		T = T.getRef();
-		return T instanceof Conj ? ((Conj) T).getArg(1) : Const.aTrue;
+		return T instanceof Conj ? ((Conj) T).getArg(1) : Const.TRUE;
 	}
 
 	public Conj(Term x0, Term x1)

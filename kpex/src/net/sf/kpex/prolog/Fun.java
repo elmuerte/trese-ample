@@ -91,11 +91,11 @@ public class Fun extends Const
 	@Override
 	public Const listify()
 	{
-		Cons l = new Cons(new Const(name()), Const.aNil);
+		Cons l = new Cons(new Const(name()), Const.NIL);
 		Cons curr = l;
 		for (int i = 0; i < args.length; i++)
 		{
-			Cons tail = new Cons(args[i], Const.aNil);
+			Cons tail = new Cons(args[i], Const.NIL);
 			curr.args[1] = tail;
 			curr = tail;
 		}
@@ -166,10 +166,10 @@ public class Fun extends Const
 	{
 		if (args == null)
 		{
-			return qname() + "()";
+			return quotedName() + "()";
 		}
 		int l = args.length;
-		return qname() + (l <= 0 ? "" : "(" + show_args() + ")");
+		return quotedName() + (l <= 0 ? "" : "(" + show_args() + ")");
 	}
 
 	// stuff allowing polymorphic cloning of Fun subclasses

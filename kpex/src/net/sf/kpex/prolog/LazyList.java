@@ -44,7 +44,7 @@ public class LazyList extends Cons
 
 	public Const getNull()
 	{
-		return Const.aNil;
+		return Const.NIL;
 	}
 
 	/**

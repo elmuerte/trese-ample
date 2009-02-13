@@ -20,18 +20,24 @@
 package net.sf.kpex.prolog;
 
 /**
- * Always fails
+ * Always succeeds
+ * 
+ * @see Const#TRUE
  */
-public class fail_ extends ConstBuiltin
+public class True extends ConstBuiltin
 {
-	fail_()
+	protected True()
 	{
-		super("fail");
+		super("true");
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.kpex.prolog.ConstBuiltin#exec(net.sf.kpex.prolog.Prog)
+	 */
 	@Override
 	public int exec(Prog p)
 	{
-		return 0;
+		return 1;
 	}
 }

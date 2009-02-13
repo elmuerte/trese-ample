@@ -22,18 +22,27 @@ package net.sf.kpex.prolog;
 /**
  * Template for builtins of arity 0
  */
-
 abstract public class ConstBuiltin extends Const
 {
-
-	public ConstBuiltin(String s)
+	/**
+	 * @param s
+	 */
+	protected ConstBuiltin(String s)
 	{
 		super(s);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.kpex.prolog.Term#exec(net.sf.kpex.prolog.Prog)
+	 */
 	@Override
 	abstract public int exec(Prog p);
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.kpex.prolog.Term#isBuiltin()
+	 */
 	@Override
 	public boolean isBuiltin()
 	{

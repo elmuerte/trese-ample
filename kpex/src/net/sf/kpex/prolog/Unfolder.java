@@ -136,7 +136,7 @@ public class Unfolder extends Source
 	 */
 	Clause getAnswer()
 	{
-		if (null != goal && goal.getBody() instanceof true_)
+		if (null != goal && goal.getBody() instanceof True)
 		{
 			return goal.ccopy();
 		}

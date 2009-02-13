@@ -78,8 +78,8 @@ public class Builtins extends HashDict
 		// add a line here for each new builtin
 		// basics
 		register(new is_builtin());
-		register(Const.aTrue);
-		register(Const.aFail);
+		register(Const.TRUE);
+		register(Const.FAIL);
 		register(new halt());
 		register(new compute());
 
@@ -1124,7 +1124,7 @@ class get extends FunBuiltin
 		// IO.mes("<<"+getArg(0)+"\n"+p+p.getTrail().pprint());
 		Source S = (Source) getArg(0);
 		Term A = Const.the(S.getElement());
-		// if(null==A) A=Const.aNo;
+		// if(null==A) A=Const.NO;
 		// else A=new Fun("the",A);
 		// IO.mes(">>"+A+"\n"+p+p.getTrail().pprint());
 		return putArg(1, A, p);
@@ -1263,7 +1263,7 @@ class collect extends FunBuiltin
 		Term X = s.collect();
 		if (null == X)
 		{
-			X = Const.aNo;
+			X = Const.NO;
 		}
 		else
 		{
@@ -1420,7 +1420,7 @@ class set_persistent extends FunBuiltin
 	{
 		Fluent F = (Fluent) getArg(0);
 		Const R = (Const) getArg(1);
-		boolean yesno = !R.eq(Const.aNo);
+		boolean yesno = !R.eq(Const.NO);
 		F.setPersistent(yesno);
 		return 1;
 	}
@@ -1439,7 +1439,7 @@ class get_persistent extends FunBuiltin
 	public int exec(Prog p)
 	{
 		Fluent F = (Fluent) getArg(0);
-		Term R = F.getPersistent() ? Const.aYes : Const.aNo;
+		Term R = F.getPersistent() ? Const.YES : Const.NO;
 		return putArg(1, R, p);
 	}
 }
@@ -1460,7 +1460,7 @@ class source_lazy_list extends FunBuiltin
 		Source S = (Source) getArg(0);
 		// S.setPersistent(true);
 		Term X = S.getElement();
-		Term Xs = Const.aNil;
+		Term Xs = Const.NIL;
 		if (null != X)
 		{
 			Xs = new LazyList(X, S, new Trail());

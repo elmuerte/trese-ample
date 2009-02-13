@@ -42,13 +42,13 @@ public class DataBase extends BlackBoard
 
 	private static String lastFile = "tarau/jinni/lib.pro";
 
-	private static Const no = Const.aNo;
+	private static Const no = Const.NO;
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 3030128958993551856L;
-	private static Const yes = Const.aYes;
+	private static Const yes = Const.YES;
 
 	/**
 	 * adds a Clause to the joint Linda and Predicate table
@@ -341,7 +341,7 @@ public class DataBase extends BlackBoard
 		all0(max, To, k, FXs);
 		if (To.size() == 0)
 		{
-			return Const.aNil;
+			return Const.NIL;
 		}
 		Fun R = new Fun("$", To.size());
 		To.copyInto(R.args);

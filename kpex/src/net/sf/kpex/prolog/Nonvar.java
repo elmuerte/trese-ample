@@ -48,7 +48,7 @@ public abstract class Nonvar extends Term
 	 */
 	Const listify()
 	{
-		return new Cons(this, Const.aNil);
+		return new Cons(this, Const.NIL);
 	}
 
 	@Override

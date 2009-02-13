@@ -86,13 +86,13 @@ public abstract class Term implements Cloneable
 	{
 		if (0 == s.length())
 		{
-			return Const.aNil;
+			return Const.NIL;
 		}
-		Cons l = new Cons(new Int(s.charAt(0)), Const.aNil);
+		Cons l = new Cons(new Int(s.charAt(0)), Const.NIL);
 		Cons curr = l;
 		for (int i = 1; i < s.length(); i++)
 		{
-			Cons tail = new Cons(new Int(s.charAt(i)), Const.aNil);
+			Cons tail = new Cons(new Int(s.charAt(i)), Const.NIL);
 			curr.args[1] = tail;
 			curr = tail;
 		}
@@ -224,7 +224,7 @@ public abstract class Term implements Cloneable
 	 */
 	public Clause toClause()
 	{
-		return new Clause(this, Const.aTrue);
+		return new Clause(this, Const.TRUE);
 	}
 
 	// TODO what does this to

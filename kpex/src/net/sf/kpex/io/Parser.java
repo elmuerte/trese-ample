@@ -106,7 +106,7 @@ public class Parser extends Lexer
 			mes = "unknown_error";
 		}
 		Fun f = new Fun("error", new Const(type), new Const(mes), new Fun("line", new Int(line)));
-		Clause C = new Clause(f, Const.aTrue);
+		Clause C = new Clause(f, Const.TRUE);
 		if (verbose)
 		{
 			IO.errmes(type + " error at line:" + line);
@@ -276,7 +276,7 @@ public class Parser extends Lexer
 		Term n = next();
 		if (n instanceof rbraToken)
 		{
-			return Const.aNil;
+			return Const.NIL;
 		}
 		Term t = getTerm(n);
 		return getListCont(t);
@@ -289,7 +289,7 @@ public class Parser extends Lexer
 		Term t = null;
 		if (n instanceof rbraToken)
 		{
-			t = new Cons(curr, Const.aNil);
+			t = new Cons(curr, Const.NIL);
 		}
 		else if (n instanceof barToken)
 		{
@@ -416,7 +416,7 @@ class eofToken extends Fun
 {
 	public eofToken()
 	{
-		super("eofToken", Const.anEof);
+		super("eofToken", Const.EOF);
 	}
 }
 

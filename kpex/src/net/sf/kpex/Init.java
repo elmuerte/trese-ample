@@ -79,9 +79,9 @@ public class Init
 		if (!(Names instanceof Fun))
 		{ // no vars in Goal
 			Term Result = Prog.firstSolution(Goal.getHead(), Goal.getBody());
-			if (!Const.aNo.eq(Result))
+			if (!Const.NO.eq(Result))
 			{
-				Result = Const.aYes;
+				Result = Const.YES;
 			}
 			IO.println(Result.toString());
 			return;

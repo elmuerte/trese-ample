@@ -47,9 +47,9 @@ abstract public class Source extends Fluent
 		Term head = getElement();
 		if (null == head)
 		{
-			return Const.aNil;
+			return Const.NIL;
 		}
-		Cons l = new Cons(head, Const.aNil);
+		Cons l = new Cons(head, Const.NIL);
 		Cons curr = l;
 		for (;;)
 		{
@@ -58,7 +58,7 @@ abstract public class Source extends Fluent
 			{
 				break;
 			}
-			Cons tail = new Cons(head, Const.aNil);
+			Cons tail = new Cons(head, Const.NIL);
 			curr.args[1] = tail;
 			curr = tail;
 		}

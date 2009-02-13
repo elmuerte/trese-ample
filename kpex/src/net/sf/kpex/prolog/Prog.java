@@ -58,7 +58,7 @@ public class Prog extends Source implements Runnable
 		}
 		else
 		{
-			A = Const.aNo;
+			A = Const.NO;
 		}
 		return A;
 	}

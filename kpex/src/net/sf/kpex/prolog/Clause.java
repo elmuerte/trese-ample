@@ -46,7 +46,7 @@ public class Clause extends Fun
 
 		if (null == line)
 		{
-			line = Const.anEof.name();
+			line = Const.EOF.name();
 		}
 		else if (0 == line.length())
 		{
@@ -72,11 +72,11 @@ public class Clause extends Fun
 	static final Term appendConj(Term x, Term y)
 	{
 		y = y.getRef();
-		if (x instanceof true_)
+		if (x instanceof True)
 		{
 			return y;
 		}
-		if (y instanceof true_)
+		if (y instanceof True)
 		{
 			return x; // comment out if using getState
 		}
@@ -276,7 +276,7 @@ public class Clause extends Fun
 	@Override
 	public Term toTerm()
 	{
-		if (getBody() instanceof true_)
+		if (getBody() instanceof True)
 		{
 			return getHead();
 		}
@@ -315,7 +315,7 @@ public class Clause extends Fun
 		{
 			return ((Conj) body).args[0].getRef();
 		}
-		else if (body instanceof true_)
+		else if (body instanceof True)
 		{
 			return null;
 		}
@@ -342,7 +342,7 @@ public class Clause extends Fun
 		}
 		else
 		{
-			return Const.aTrue;
+			return Const.TRUE;
 		}
 	}
 

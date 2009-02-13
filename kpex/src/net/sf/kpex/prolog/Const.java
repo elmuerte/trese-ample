@@ -25,29 +25,34 @@ import net.sf.kpex.util.Trail;
 /**
  * Symbolic constant, of arity 0.
  */
-
 public class Const extends Nonvar
 {
-
-	public final static Const aFail = new fail_();
-	public final static Const anEof = new Const("end_of_file");
-	public final static Nil aNil = new Nil();
-	public final static Const aNo = new Const("no");
-	public final static Const aTrue = new true_();
-	public final static Const aYes = new Const("yes");
+	public final static Const FAIL = new Fail();
+	public final static Const EOF = new Const("end_of_file");
+	public final static Nil NIL = new Nil();
+	public final static Const NO = new Const("no");
+	public final static Const TRUE = new True();
+	public final static Const YES = new Const("yes");
 
 	public final static Const the(Term X)
 	{
-		return null == X ? Const.aNo : new Fun("the", X);
+		return null == X ? Const.NO : new Fun("the", X);
 	}
 
 	private String sym;
 
+	/**
+	 * @param s
+	 */
 	public Const(String s)
 	{
 		sym = s.intern();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.kpex.prolog.Nonvar#eq(net.sf.kpex.prolog.Term)
+	 */
 	@Override
 	public boolean eq(Term that)
 	{
@@ -65,19 +70,30 @@ public class Const extends Nonvar
 		return Term.ARITY_CONST;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.kpex.prolog.Term#getKey()
+	 */
 	@Override
 	public String getKey()
 	{
 		return sym;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.kpex.prolog.Nonvar#name()
+	 */
 	@Override
 	public final String name()
 	{
 		return sym;
 	}
 
-	public String qname()
+	/**
+	 * @return the quoted name
+	 */
+	public String quotedName()
 	{
 		if (0 == sym.length())
 		{
@@ -98,19 +114,20 @@ public class Const extends Nonvar
 	 * builtin while returning its argument unchanged if it is just a plain
 	 * Prolog constant with no builtin code attached to it
 	 */
+	// FIXME: should be moved to the builtin dictionary
 	public Const toBuiltin()
 	{
-		if (name().equals(Const.aNil.name()))
+		if (name().equals(Const.NIL.name()))
 		{
-			return Const.aNil;
+			return Const.NIL;
 		}
-		if (name().equals(Const.aNo.name()))
+		if (name().equals(Const.NO.name()))
 		{
-			return Const.aNo;
+			return Const.NO;
 		}
-		if (name().equals(Const.aYes.name()))
+		if (name().equals(Const.YES.name()))
 		{
-			return Const.aYes;
+			return Const.YES;
 		}
 
 		ConstBuiltin B = (ConstBuiltin) Init.builtinDict.newBuiltin(this);
@@ -121,18 +138,31 @@ public class Const extends Nonvar
 		return B;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString()
 	{
-		return qname();
+		return quotedName();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.kpex.prolog.Term#toUnquoted()
+	 */
 	@Override
 	public String toUnquoted()
 	{
 		return name();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.kpex.prolog.Nonvar#bindTo(net.sf.kpex.prolog.Term,
+	 * net.sf.kpex.util.Trail)
+	 */
 	@Override
 	protected boolean bindTo(Term that, Trail trail)
 	{
