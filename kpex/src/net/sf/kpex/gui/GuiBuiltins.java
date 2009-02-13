@@ -118,7 +118,7 @@ public class GuiBuiltins extends Builtins
 		}
 		else
 		{
-			String m = ((Const) L).name();
+			String m = ((Const) L).getName();
 			if (m.equals("border"))
 			{
 				M = new BorderLayout();
@@ -210,7 +210,7 @@ class add_to extends FunBuiltin
 		Term Where = getArg(2);
 		if (Where instanceof Const)
 		{
-			String direction = ((Const) Where).name();
+			String direction = ((Const) Where).getName();
 			container.add(direction, component);
 		}
 		else
@@ -913,7 +913,7 @@ class new_image extends FunBuiltin
 	public int exec(Prog p)
 	{
 		JinniContainer C = (JinniContainer) ((JavaObject) getArg(0)).toObject();
-		String src = ((Const) getArg(1)).name();
+		String src = ((Const) getArg(1)).getName();
 		int width = (int) ((Int) getArg(2)).getValue();
 		int height = (int) ((Int) getArg(3)).getValue();
 		JinniImagePanel P = new JinniImagePanel(src, width, height);

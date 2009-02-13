@@ -44,6 +44,6 @@ public class PseudoVar extends Const
 	@Override
 	public String toString()
 	{
-		return name();
+		return getName();
 	}
 }

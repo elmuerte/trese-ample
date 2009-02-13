@@ -61,7 +61,7 @@ public class Real extends Num
 	 * @see net.sf.kpex.prolog.Nonvar#name()
 	 */
 	@Override
-	public String name()
+	public String getName()
 	{
 		return Double.toString(value);
 	}

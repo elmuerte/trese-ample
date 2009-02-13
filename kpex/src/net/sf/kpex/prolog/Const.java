@@ -85,7 +85,7 @@ public class Const extends Nonvar
 	 * @see net.sf.kpex.prolog.Nonvar#name()
 	 */
 	@Override
-	public final String name()
+	public final String getName()
 	{
 		return sym;
 	}
@@ -117,15 +117,15 @@ public class Const extends Nonvar
 	// FIXME: should be moved to the builtin dictionary
 	public Const toBuiltin()
 	{
-		if (name().equals(Const.NIL.name()))
+		if (getName().equals(Const.NIL.getName()))
 		{
 			return Const.NIL;
 		}
-		if (name().equals(Const.NO.name()))
+		if (getName().equals(Const.NO.getName()))
 		{
 			return Const.NO;
 		}
-		if (name().equals(Const.YES.name()))
+		if (getName().equals(Const.YES.getName()))
 		{
 			return Const.YES;
 		}
@@ -155,7 +155,7 @@ public class Const extends Nonvar
 	@Override
 	public String toUnquoted()
 	{
-		return name();
+		return getName();
 	}
 
 	/*

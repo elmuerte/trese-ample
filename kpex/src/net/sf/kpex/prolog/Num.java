@@ -40,6 +40,6 @@ public abstract class Num extends Nonvar
 	@Override
 	public String toString()
 	{
-		return name();
+		return getName();
 	}
 }

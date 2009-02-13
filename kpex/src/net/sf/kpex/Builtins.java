@@ -63,10 +63,6 @@ import net.sf.kpex.util.Trail;
  */
 public class Builtins extends HashDict
 {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8061409367924631427L;
 
 	/**
@@ -175,7 +171,7 @@ public class Builtins extends HashDict
 	 */
 	public void register(Const proto)
 	{
-		String key = proto.name() + "/" + proto.getArity();
+		String key = proto.getName() + "/" + proto.getArity();
 		// IO.mes("registering builtin: "+key);
 		put(key, proto);
 	}
@@ -185,7 +181,7 @@ public class Builtins extends HashDict
 	 */
 	public Const newBuiltin(Const S)
 	{
-		String name = S.name();
+		String name = S.getName();
 		int arity = S.getArity();
 		String key = name + "/" + arity;
 		Const b = (Const) get(key);
@@ -252,7 +248,7 @@ class system extends FunBuiltin
 	@Override
 	public int exec(Prog p)
 	{
-		String cmd = ((Const) getArg(0)).name();
+		String cmd = ((Const) getArg(0)).getName();
 		return IO.system(cmd);
 	}
 }
@@ -278,7 +274,7 @@ class file_char_reader extends FunBuiltin
 		}
 		else
 		{
-			String s = ((Const) I).name();
+			String s = ((Const) I).getName();
 			f = new CharReader(s, p);
 		}
 		return putArg(1, f, p);
@@ -306,7 +302,7 @@ class file_clause_reader extends FunBuiltin
 		}
 		else
 		{
-			String s = ((Const) getArg(0)).name();
+			String s = ((Const) getArg(0)).getName();
 			f = new ClauseReader(s, p);
 		}
 		return putArg(1, f, p);
@@ -326,7 +322,7 @@ class char_file_writer extends FunBuiltin
 	@Override
 	public int exec(Prog p)
 	{
-		String s = ((Const) getArg(0)).name();
+		String s = ((Const) getArg(0)).getName();
 		Fluent f = new CharWriter(s, p);
 		return putArg(1, f, p);
 	}
@@ -345,7 +341,7 @@ class clause_file_writer extends FunBuiltin
 	@Override
 	public int exec(Prog p)
 	{
-		String s = ((Const) getArg(0)).name();
+		String s = ((Const) getArg(0)).getName();
 		Fluent f = new ClauseWriter(s, p);
 		return putArg(1, f, p);
 	}
@@ -484,7 +480,7 @@ class reconsult extends FunBuiltin
 	@Override
 	public int exec(Prog p)
 	{
-		String f = ((Const) getArg(0)).name();
+		String f = ((Const) getArg(0)).getName();
 		return DataBase.fromFile(f) ? 1 : 0;
 	}
 }
@@ -505,7 +501,7 @@ class consult extends FunBuiltin
 	@Override
 	public int exec(Prog p)
 	{
-		String f = ((Const) getArg(0)).name();
+		String f = ((Const) getArg(0)).getName();
 		IO.trace("consulting: " + f);
 		return DataBase.fromFile(f, false) ? 1 : 0;
 	}
@@ -734,7 +730,7 @@ class arg extends FunBuiltin
 	{
 		int i = getIntArg(0);
 		Fun F = (Fun) getArg(1);
-		Term A = i == 0 ? new Const(F.name()) : i == -1 ? new Int(F.getArity()) : F.args[i - 1];
+		Term A = i == 0 ? new Const(F.getName()) : i == -1 ? new Int(F.getArity()) : F.args[i - 1];
 		return putArg(2, A, p);
 	}
 }
@@ -753,7 +749,7 @@ class new_fun extends FunBuiltin
 	@Override
 	public int exec(Prog p)
 	{
-		String s = ((Const) getArg(0)).name();
+		String s = ((Const) getArg(0)).getName();
 		int i = getIntArg(1);
 		Term T;
 		if (i == 0)
@@ -864,7 +860,7 @@ class compute extends FunBuiltin
 		{
 			IO.errmes("bad arithmetic operation (" + o + "): " + a + "," + b + "\nprog: " + p.toString());
 		}
-		String opname = ((Const) o).name();
+		String opname = ((Const) o).getName();
 		double x = ((Num) a).getValue();
 		double y = ((Num) b).getValue();
 		double r;

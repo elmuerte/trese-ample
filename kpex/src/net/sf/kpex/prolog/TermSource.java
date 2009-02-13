@@ -50,7 +50,7 @@ public class TermSource extends Source
 		}
 		else if (0 == pos)
 		{
-			X = new Const(val.name());
+			X = new Const(val.getName());
 		}
 		else if (pos <= ((Fun) val).getArity())
 		{

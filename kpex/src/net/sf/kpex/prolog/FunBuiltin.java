@@ -30,9 +30,17 @@ abstract public class FunBuiltin extends Fun
 		super(f, i);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.kpex.prolog.Term#exec(net.sf.kpex.prolog.Prog)
+	 */
 	@Override
 	abstract public int exec(Prog p);
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.kpex.prolog.Term#isBuiltin()
+	 */
 	@Override
 	public boolean isBuiltin()
 	{

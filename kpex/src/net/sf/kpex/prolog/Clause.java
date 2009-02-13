@@ -46,7 +46,7 @@ public class Clause extends Fun
 
 		if (null == line)
 		{
-			line = Const.EOF.name();
+			line = Const.EOF.getName();
 		}
 		else if (0 == line.length())
 		{

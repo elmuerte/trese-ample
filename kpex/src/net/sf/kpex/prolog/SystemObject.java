@@ -60,7 +60,7 @@ public class SystemObject extends Nonvar
 	 * @see net.sf.kpex.prolog.Nonvar#name()
 	 */
 	@Override
-	public String name()
+	public String getName()
 	{
 		return String.format("{%s.%d}", getClass().getName(), ordinal);
 	}
@@ -72,7 +72,7 @@ public class SystemObject extends Nonvar
 	@Override
 	public String toString()
 	{
-		return name();
+		return getName();
 	}
 
 	/*

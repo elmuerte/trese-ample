@@ -41,7 +41,7 @@ public abstract class Nonvar extends Term
 	/**
 	 * @return The name of the non variable
 	 */
-	public abstract String name();
+	public abstract String getName();
 
 	/*
 	 * (non-Javadoc)

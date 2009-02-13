@@ -74,7 +74,7 @@ public class Parser extends Lexer
 	static public final boolean isError(Clause C)
 	{
 		Term H = C.getHead();
-		if (H instanceof Fun && "error".equals(((Fun) H).name()) && H.getArity() == 3
+		if (H instanceof Fun && "error".equals(((Fun) H).getName()) && H.getArity() == 3
 				&& !(((Fun) H).args[0].getRef() instanceof Var))
 		{
 			return true;

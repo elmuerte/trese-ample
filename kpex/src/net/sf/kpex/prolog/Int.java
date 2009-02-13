@@ -74,7 +74,7 @@ public class Int extends Num
 	 * @see net.sf.kpex.prolog.Nonvar#name()
 	 */
 	@Override
-	public String name()
+	public String getName()
 	{
 		return Long.toString(value);
 	}

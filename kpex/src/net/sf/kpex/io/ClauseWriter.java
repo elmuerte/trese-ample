@@ -47,7 +47,7 @@ public class ClauseWriter extends CharWriter
 			return 0;
 		}
 		String s = null;
-		if (t instanceof Fun && "$string".equals(((Fun) t).name()))
+		if (t instanceof Fun && "$string".equals(((Fun) t).getName()))
 		{
 			Const Xs = (Const) ((Fun) t).getArg(0);
 			s = Term.charsToString(Xs);

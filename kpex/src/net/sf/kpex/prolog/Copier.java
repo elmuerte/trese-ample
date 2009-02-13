@@ -84,7 +84,7 @@ public class Copier extends SystemObject
 		{
 			return c;
 		}
-		Fun f = new Fun(c.name(), e.toArray(new Term[e.size()]));
+		Fun f = new Fun(c.getName(), e.toArray(new Term[e.size()]));
 		return f;
 	}
 
@@ -96,7 +96,7 @@ public class Copier extends SystemObject
 	{
 		Const f = (Const) V.firstElement();
 		int arity = V.size() - 1;
-		Fun T = new Fun(f.name(), arity);
+		Fun T = new Fun(f.getName(), arity);
 		for (int i = 0; i < arity; i++)
 		{
 			T.args[i] = (Term) V.elementAt(i + 1);

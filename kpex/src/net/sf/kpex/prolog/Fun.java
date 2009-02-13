@@ -91,7 +91,7 @@ public class Fun extends Const
 	@Override
 	public Const listify()
 	{
-		Cons l = new Cons(new Const(name()), Const.NIL);
+		Cons l = new Cons(new Const(getName()), Const.NIL);
 		Cons curr = l;
 		for (int i = 0; i < args.length; i++)
 		{
@@ -115,11 +115,11 @@ public class Fun extends Const
 	@Override
 	public Const toBuiltin()
 	{
-		if (name().equals(":-") && getArity() == 2)
+		if (getName().equals(":-") && getArity() == 2)
 		{
 			return new Clause(args[0], args[1]);
 		}
-		if (name().equals(",") && getArity() == 2)
+		if (getName().equals(",") && getArity() == 2)
 		{
 			return new Conj(args[0], args[1]);
 		}
@@ -199,7 +199,7 @@ public class Fun extends Const
 	@Override
 	protected boolean isClause()
 	{
-		return getArity() == 2 && name().equals(":-");
+		return getArity() == 2 && getName().equals(":-");
 	}
 
 	@Override
