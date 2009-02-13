@@ -55,13 +55,13 @@ DETAIL: &nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructo
 <!-- ======== START OF CLASS DATA ======== -->
 <H2>
 <FONT SIZE="-1">
-tarau.jinni</FONT>
+net.sf.kpex</FONT>
 <BR>
 Class  Init</H2>
 <PRE>
 java.lang.Object
   |
-  +--<B>tarau.jinni.Init</B>
+  +--<B>net.sf.kpex.Init</B>
 </PRE>
 <HR>
 <DL>
@@ -149,7 +149,7 @@ if no such solution exists</TD>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>static&nbsp;<A HREF="../../tarau/jinni/Term.html">Term</A></CODE></FONT></TD>
-<TD><CODE><B><A HREF="../../tarau/jinni/Init.html#askJinni(tarau.jinni.Term)">askJinni</A></B>(<A HREF="../../tarau/jinni/Term.html">Term</A>&nbsp;Goal)</CODE>
+<TD><CODE><B><A HREF="../../tarau/jinni/Init.html#askJinni(net.sf.kpex.Term)">askJinni</A></B>(<A HREF="../../tarau/jinni/Term.html">Term</A>&nbsp;Goal)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Asks Jinni a query Goal and returns the
@@ -160,7 +160,7 @@ Answer is an instance of Goal or the constant
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>static&nbsp;<A HREF="../../tarau/jinni/Term.html">Term</A></CODE></FONT></TD>
-<TD><CODE><B><A HREF="../../tarau/jinni/Init.html#askJinni(tarau.jinni.Term, tarau.jinni.Term)">askJinni</A></B>(<A HREF="../../tarau/jinni/Term.html">Term</A>&nbsp;Answer,
+<TD><CODE><B><A HREF="../../tarau/jinni/Init.html#askJinni(net.sf.kpex.Term, net.sf.kpex.Term)">askJinni</A></B>(<A HREF="../../tarau/jinni/Term.html">Term</A>&nbsp;Answer,
          <A HREF="../../tarau/jinni/Term.html">Term</A>&nbsp;Body)</CODE>
 
 <BR>
@@ -171,7 +171,7 @@ first solution of the form "the(Answer)" or the constant
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>static&nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../../tarau/jinni/Init.html#evalGoal(tarau.jinni.Clause)">evalGoal</A></B>(<A HREF="../../tarau/jinni/Clause.html">Clause</A>&nbsp;Goal)</CODE>
+<TD><CODE><B><A HREF="../../tarau/jinni/Init.html#evalGoal(net.sf.kpex.Clause)">evalGoal</A></B>(<A HREF="../../tarau/jinni/Clause.html">Clause</A>&nbsp;Goal)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;evalutes a query</TD>
@@ -252,7 +252,7 @@ first solution of the form "the(Answer)" or the constant
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>static&nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../../tarau/jinni/Init.html#timeGoal(tarau.jinni.Clause)">timeGoal</A></B>(<A HREF="../../tarau/jinni/Clause.html">Clause</A>&nbsp;Goal)</CODE>
+<TD><CODE><B><A HREF="../../tarau/jinni/Init.html#timeGoal(net.sf.kpex.Clause)">timeGoal</A></B>(<A HREF="../../tarau/jinni/Clause.html">Clause</A>&nbsp;Goal)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;evaluates and times a Goal querying program P</TD>
@@ -374,7 +374,7 @@ static <A HREF="../../tarau/jinni/Clause.html">Clause</A> <B>getGoal</B>()</PRE>
 <DD>reads a query from input strea</DL>
 <HR>
 
-<A NAME="evalGoal(tarau.jinni.Clause)"><!-- --></A><H3>
+<A NAME="evalGoal(net.sf.kpex.Clause)"><!-- --></A><H3>
 evalGoal</H3>
 <PRE>
 public static void <B>evalGoal</B>(<A HREF="../../tarau/jinni/Clause.html">Clause</A>&nbsp;Goal)</PRE>
@@ -390,7 +390,7 @@ static boolean <B>moreAnswers</B>(int&nbsp;i)</PRE>
 </DL>
 <HR>
 
-<A NAME="timeGoal(tarau.jinni.Clause)"><!-- --></A><H3>
+<A NAME="timeGoal(net.sf.kpex.Clause)"><!-- --></A><H3>
 timeGoal</H3>
 <PRE>
 public static void <B>timeGoal</B>(<A HREF="../../tarau/jinni/Clause.html">Clause</A>&nbsp;Goal)</PRE>
@@ -415,7 +415,7 @@ public static void <B>standardTop</B>(java.lang.String&nbsp;prompt)</PRE>
 </DL>
 <HR>
 
-<A NAME="askJinni(tarau.jinni.Term, tarau.jinni.Term)"><!-- --></A><H3>
+<A NAME="askJinni(net.sf.kpex.Term, net.sf.kpex.Term)"><!-- --></A><H3>
 askJinni</H3>
 <PRE>
 public static <A HREF="../../tarau/jinni/Term.html">Term</A> <B>askJinni</B>(<A HREF="../../tarau/jinni/Term.html">Term</A>&nbsp;Answer,
@@ -426,7 +426,7 @@ first solution of the form "the(Answer)" or the constant
 "no" if no solution exists</DL>
 <HR>
 
-<A NAME="askJinni(tarau.jinni.Term)"><!-- --></A><H3>
+<A NAME="askJinni(net.sf.kpex.Term)"><!-- --></A><H3>
 askJinni</H3>
 <PRE>
 public static <A HREF="../../tarau/jinni/Term.html">Term</A> <B>askJinni</B>(<A HREF="../../tarau/jinni/Term.html">Term</A>&nbsp;Goal)</PRE>
