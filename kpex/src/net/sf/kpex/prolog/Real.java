@@ -29,23 +29,11 @@ import net.sf.kpex.util.Trail;
  */
 public class Real extends Num
 {
+	double val;
+
 	public Real(double i)
 	{
 		val = i;
-	}
-
-	double val;
-
-	@Override
-	public String name()
-	{
-		return "" + val;
-	}
-
-	@Override
-	boolean bind_to(Term that, Trail trail)
-	{
-		return super.bind_to(that, trail) && val == ((Real) that).val;
 	}
 
 	@Override
@@ -58,5 +46,17 @@ public class Real extends Num
 	public final double getValue()
 	{
 		return val;
+	}
+
+	@Override
+	public String name()
+	{
+		return "" + val;
+	}
+
+	@Override
+	boolean bind_to(Term that, Trail trail)
+	{
+		return super.bind_to(that, trail) && val == ((Real) that).val;
 	}
 }

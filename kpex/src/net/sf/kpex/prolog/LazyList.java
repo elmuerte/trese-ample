@@ -29,6 +29,11 @@ import net.sf.kpex.util.Trail;
  */
 public class LazyList extends Cons
 {
+	private boolean bound;
+
+	private Source source;
+	private Trail trail;
+
 	public LazyList(Term head, Source source, Trail trail)
 	{
 		super(head, new Var());
@@ -37,9 +42,40 @@ public class LazyList extends Cons
 		this.trail = trail;
 	}
 
-	private Source source;
-	private boolean bound;
-	private Trail trail;
+	public Const getNull()
+	{
+		return Const.aNil;
+	}
+
+	/**
+	 * Advances the tail of a lazy list. Note that they inherit getHead() from
+	 * Cons.
+	 */
+
+	@Override
+	public Term getTail()
+	{
+		advance();
+		return super.getTail();
+	}
+
+	@Override
+	public void undo()
+	{
+		// if(source.getPersistent()) return;		trail.unwind(0);
+		source.stop();
+		source = null;
+	}
+
+	/**
+	 * this permissive definition for bind_to allows a Lazy List to Unify with
+	 * any 2 arg constructor chain
+	 */
+	@Override
+	boolean bind_to(Term that, Trail trail)
+	{
+		return that instanceof Fun && 2 == that.getArity();
+	}
 
 	/**
 	 * advances the Lazy List, pulling out elements of the Source as needed
@@ -62,40 +98,5 @@ public class LazyList extends Cons
 		}
 		((Var) getArg(1)).unify(thisTail, trail);
 		bound = true;
-	}
-
-	/**
-	 * Advances the tail of a lazy list. Note that they inherit getHead() from
-	 * Cons.
-	 */
-
-	@Override
-	public Term getTail()
-	{
-		advance();
-		return super.getTail();
-	}
-
-	/**
-	 * this permissive definition for bind_to allows a Lazy List to Unify with
-	 * any 2 arg constructor chain
-	 */
-	@Override
-	boolean bind_to(Term that, Trail trail)
-	{
-		return that instanceof Fun && 2 == that.getArity();
-	}
-
-	public Const getNull()
-	{
-		return Const.aNil;
-	}
-
-	@Override
-	public void undo()
-	{
-		// if(source.getPersistent()) return;		trail.unwind(0);
-		source.stop();
-		source = null;
 	}
 }

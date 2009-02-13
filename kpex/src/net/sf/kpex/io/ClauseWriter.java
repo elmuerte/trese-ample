@@ -29,14 +29,14 @@ import net.sf.kpex.prolog.Term;
  */
 public class ClauseWriter extends CharWriter
 {
-	public ClauseWriter(String f, Prog p)
-	{
-		super(f, p);
-	}
-
 	public ClauseWriter(Prog p)
 	{
 		super(p);
+	}
+
+	public ClauseWriter(String f, Prog p)
+	{
+		super(f, p);
 	}
 
 	@Override

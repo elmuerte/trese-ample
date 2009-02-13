@@ -40,23 +40,6 @@ public class Var extends Term
 	}
 
 	@Override
-	public int getArity()
-	{
-		return Term.VAR;
-	}
-
-	final boolean unbound()
-	{
-		return val == this;
-	}
-
-	@Override
-	public Term ref()
-	{
-		return unbound() ? this : val.ref();
-	}
-
-	@Override
 	public boolean bind_to(Term x, Trail trail)
 	{
 		val = x;
@@ -65,22 +48,15 @@ public class Var extends Term
 	}
 
 	@Override
-	public void undo()
-	{
-		val = this;
-	}
-
-	@Override
-	boolean unify_to(Term that, Trail trail)
-	{
-		// expects: this, that are dereferenced
-		return val.bind_to(that, trail);
-	}
-
-	@Override
 	public boolean eq(Term x)
 	{ // not a term compare!
 		return ref() == x.ref();
+	}
+
+	@Override
+	public int getArity()
+	{
+		return Term.VAR;
 	}
 
 	@Override
@@ -98,6 +74,29 @@ public class Var extends Term
 	}
 
 	@Override
+	public Term ref()
+	{
+		return unbound() ? this : val.ref();
+	}
+
+	@Override
+	public String toString()
+	{
+		return unbound() ? name() : ref().toString();
+	}
+
+	@Override
+	public void undo()
+	{
+		val = this;
+	}
+
+	protected String name()
+	{
+		return "_" + Integer.toHexString(hashCode());
+	}
+
+	@Override
 	Term reaction(Term agent)
 	{
 
@@ -111,14 +110,15 @@ public class Var extends Term
 		return R;
 	}
 
-	protected String name()
+	final boolean unbound()
 	{
-		return "_" + Integer.toHexString(hashCode());
+		return val == this;
 	}
 
 	@Override
-	public String toString()
+	boolean unify_to(Term that, Trail trail)
 	{
-		return unbound() ? name() : ref().toString();
+		// expects: this, that are dereferenced
+		return val.bind_to(that, trail);
 	}
 }

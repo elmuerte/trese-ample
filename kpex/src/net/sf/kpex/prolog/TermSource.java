@@ -24,15 +24,16 @@ package net.sf.kpex.prolog;
  */
 public class TermSource extends Source
 {
+	private int pos;
+
+	private Nonvar val;
+
 	public TermSource(Nonvar val, Prog p)
 	{
 		super(p);
 		this.val = val;
 		pos = 0;
 	}
-
-	private Nonvar val;
-	private int pos;
 
 	@Override
 	public Term getElement()

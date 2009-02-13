@@ -55,42 +55,40 @@ public class BlackBoard extends HashDict
 		super();
 	}
 
-	/**
-	 * Removes the first Term having key k or the first enumerated key if k is
-	 * null
-	 */
-	synchronized private final Term pick(String k)
+	synchronized public Enumeration toEnumeration()
 	{
-		if (k == null)
-		{
-			Enumeration e = keys();
-			if (!e.hasMoreElements())
-			{
-				return null;
-			}
-			k = (String) e.nextElement();
-			// IO.trace("$$Got key:"+k+this);
-		}
+		return new BBoardEnumerator(elements());
+	}
+
+	/**
+	 * This gives an enumeration view for the sequence of objects kept under key
+	 * k.
+	 */
+	synchronized public Enumeration toEnumerationFor(String k)
+	{
+		Queue Q = (Queue) get(k);
+		Vector V = Q == null ? new Vector() : Q.toVector();
+		return V.elements();
+	}
+
+	/**
+	 * Adds a Term or Clause to the the blackboard, to be used by Linda out/1
+	 * operation
+	 * 
+	 * @see PrologBlackBoard
+	 */
+	synchronized protected final void add(String k, Term value)
+	{
 		Queue Q = (Queue) get(k);
 		if (Q == null)
 		{
-			return null;
+			Q = new Queue();
+			put(k, Q);
 		}
-		Term T = (Term) Q.deq();
-		if (Q.isEmpty())
+		if (!Q.enq(value))
 		{
-			remove(k);
-			// IO.trace("$$Removed key:"+k+this);
-		}
-		return T;
-	}
-
-	private final void addBack(String k, Vector V)
-	{
-		for (Enumeration e = V.elements(); e.hasMoreElements();)
-		{
-			// cannot be here if k==null
-			add(k, (Term) e.nextElement());
+			IO.errmes("Queue full, key:" + k);
+			// IO.trace("$$Added key/val:"+k+"/"+value+"=>"+this);
 		}
 	}
 
@@ -127,41 +125,43 @@ public class BlackBoard extends HashDict
 		return t;
 	}
 
-	/**
-	 * Adds a Term or Clause to the the blackboard, to be used by Linda out/1
-	 * operation
-	 * 
-	 * @see PrologBlackBoard
-	 */
-	synchronized protected final void add(String k, Term value)
+	private final void addBack(String k, Vector V)
 	{
+		for (Enumeration e = V.elements(); e.hasMoreElements();)
+		{
+			// cannot be here if k==null
+			add(k, (Term) e.nextElement());
+		}
+	}
+
+	/**
+	 * Removes the first Term having key k or the first enumerated key if k is
+	 * null
+	 */
+	synchronized private final Term pick(String k)
+	{
+		if (k == null)
+		{
+			Enumeration e = keys();
+			if (!e.hasMoreElements())
+			{
+				return null;
+			}
+			k = (String) e.nextElement();
+			// IO.trace("$$Got key:"+k+this);
+		}
 		Queue Q = (Queue) get(k);
 		if (Q == null)
 		{
-			Q = new Queue();
-			put(k, Q);
+			return null;
 		}
-		if (!Q.enq(value))
+		Term T = (Term) Q.deq();
+		if (Q.isEmpty())
 		{
-			IO.errmes("Queue full, key:" + k);
-			// IO.trace("$$Added key/val:"+k+"/"+value+"=>"+this);
+			remove(k);
+			// IO.trace("$$Removed key:"+k+this);
 		}
-	}
-
-	/**
-	 * This gives an enumeration view for the sequence of objects kept under key
-	 * k.
-	 */
-	synchronized public Enumeration toEnumerationFor(String k)
-	{
-		Queue Q = (Queue) get(k);
-		Vector V = Q == null ? new Vector() : Q.toVector();
-		return V.elements();
-	}
-
-	synchronized public Enumeration toEnumeration()
-	{
-		return new BBoardEnumerator(elements());
+		return T;
 	}
 
 }
@@ -174,14 +174,15 @@ public class BlackBoard extends HashDict
 
 class BBoardEnumerator extends Object implements Enumeration
 {
+	private Enumeration EH;
+
+	private Enumeration EQ;
+
 	BBoardEnumerator(Enumeration EH)
 	{
 		EQ = null;
 		this.EH = EH; // elements();
 	}
-
-	private Enumeration EQ;
-	private Enumeration EH;
 
 	synchronized public boolean hasMoreElements()
 	{

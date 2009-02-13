@@ -33,7 +33,28 @@ import net.sf.kpex.prolog.Term;
  */
 public class ClauseReader extends CharReader
 {
+	static Fun extract_info(Clause C)
+	{
+		if (null == C)
+		{
+			return null;
+		}
+		Term Vs = C.varsOf();
+		Clause SuperC = new Clause(Vs, C);
+		SuperC.dict = C.dict;
+		Clause NamedSuperC = SuperC.cnumbervars(false);
+		Term Ns = NamedSuperC.getHead();
+		Term NamedC = NamedSuperC.getBody();
+		return new Fun("clause", C, Vs, NamedC, Ns);
+	}
+
 	protected Parser parser;
+
+	public ClauseReader(Prog p)
+	{
+		super(p);
+		make_parser("standard input");
+	}
 
 	public ClauseReader(Reader reader, Prog p)
 	{
@@ -47,12 +68,6 @@ public class ClauseReader extends CharReader
 		make_parser(f);
 	}
 
-	public ClauseReader(Prog p)
-	{
-		super(p);
-		make_parser("standard input");
-	}
-
 	/**
 	 * parses from a string representation of a term
 	 */
@@ -60,25 +75,6 @@ public class ClauseReader extends CharReader
 	{
 		super(t, p);
 		make_parser("string parser");
-	}
-
-	void make_parser(String f)
-	{
-		if (null != reader)
-		{
-			try
-			{
-				parser = new Parser(reader);
-			}
-			catch (IOException e)
-			{
-				IO.errmes("unable to build parser for: " + f);
-			}
-		}
-		else
-		{
-			parser = null;
-		}
 	}
 
 	@Override
@@ -117,25 +113,29 @@ public class ClauseReader extends CharReader
 		return extract_info(C);
 	}
 
-	static Fun extract_info(Clause C)
-	{
-		if (null == C)
-		{
-			return null;
-		}
-		Term Vs = C.varsOf();
-		Clause SuperC = new Clause(Vs, C);
-		SuperC.dict = C.dict;
-		Clause NamedSuperC = SuperC.cnumbervars(false);
-		Term Ns = NamedSuperC.getHead();
-		Term NamedC = NamedSuperC.getBody();
-		return new Fun("clause", C, Vs, NamedC, Ns);
-	}
-
 	@Override
 	public void stop()
 	{
 		super.stop();
 		parser = null;
+	}
+
+	void make_parser(String f)
+	{
+		if (null != reader)
+		{
+			try
+			{
+				parser = new Parser(reader);
+			}
+			catch (IOException e)
+			{
+				IO.errmes("unable to build parser for: " + f);
+			}
+		}
+		else
+		{
+			parser = null;
+		}
 	}
 }

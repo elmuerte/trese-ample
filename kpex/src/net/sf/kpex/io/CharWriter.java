@@ -34,16 +34,16 @@ public class CharWriter extends Sink
 {
 	protected Writer writer;
 
-	public CharWriter(String f, Prog p)
-	{
-		super(p);
-		writer = IO.toFileWriter(f);
-	}
-
 	public CharWriter(Prog p)
 	{
 		super(p);
 		writer = IO.output;
+	}
+
+	public CharWriter(String f, Prog p)
+	{
+		super(p);
+		writer = IO.toFileWriter(f);
 	}
 
 	@Override

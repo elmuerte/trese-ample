@@ -42,17 +42,21 @@ import net.sf.kpex.prolog.Prog;
 public class GuiEngine extends Panel implements IOPeer, Runnable
 {
 
+	static public int textHeight = 12;
+	static public int textWidth = 60;
+	static private int instance_ctr = 0;
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2546367520798617838L;
-	private Container container;
+	Thread goalThread = null;
 	TextField inputField;
 	TextField readField;
+	Thread readThread = null;
+
+	private Container container;
+
 	private TextArea outputArea;
-	static public int textHeight = 12;
-	static public int textWidth = 60;
-	static private int instance_ctr = 0;
 
 	/**
 	 * Creates the Frame together with its program thread and it's Prolog code
@@ -66,6 +70,88 @@ public class GuiEngine extends Panel implements IOPeer, Runnable
 		instance_ctr++;
 		this.container = container;
 		// super("Jinni Engine "+ ++instance_ctr); **
+	}
+
+	/**
+	 * Acts on events from TextFields
+	 */
+	@Override
+	public boolean action(Event evt, Object arg)
+	{
+		// println(Thread.currentThread()+" :action: "+
+		// evt.getClass()+"<"+evt.target+">"+arg);
+
+		if (evt.target == inputField || evt.target == readField)
+		{
+			initPeer();
+			if (readThread == null)
+			{
+				changeFocus(readField, inputField);
+				// println("action thread="+Thread.currentThread());
+				// println("got: " +arg);
+				clean_up_goal();
+				GuiQA qa = new GuiQA(this);
+				goalThread = new Thread(qa);
+				goalThread.start();
+			}
+			else
+			{
+				readThread.resume();
+				readThread = null;
+				// println("read done:");
+				changeFocus(readField, inputField);
+			}
+		}
+		else if (evt.target instanceof Runnable)
+		{
+			((Runnable) evt.target).run();
+		}
+		else
+		{
+			println("TARGET: " + evt.target);
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Executes when the applet is destroyed. Cleans up goal threads.
+	 */
+	public void destroy()
+	{
+		stop();
+		removeAll();
+	}
+
+	/**
+	 * Initializes Jinni input area with this
+	 */
+	public String firstQuery()
+	{
+		// return "show_document('http://www.binnetcorp.com').";
+		// return ""; // empty by default
+		return "member(X,[1,2,3])";
+	}
+
+	public String getInfo()
+	{
+		return Init.getInfo();
+	}
+
+	public void halt()
+	{
+		stop();
+		// Runtime.getRuntime().exit(0); $$
+	}
+
+	@Override
+	public boolean handleEvent(Event event)
+	{
+		if (event.id == Event.WINDOW_DESTROY)
+		{
+			Runtime.getRuntime().exit(0);
+		}
+		return super.handleEvent(event);
 	}
 
 	/**
@@ -84,9 +170,35 @@ public class GuiEngine extends Panel implements IOPeer, Runnable
 		print(s + "\n");
 	}
 
-	public void traceln(String s)
+	/**
+	 * Reads a string. Suspends and resumes the caller thread until the string
+	 * is available.
+	 */
+	public String readln()
 	{
-		println(s);
+		if (!addReader(Thread.currentThread()))
+		{
+			return null;
+		}
+		Thread.currentThread().suspend();
+		String s = getReadString();
+		print(s + "\n");
+		return s;
+	}
+
+	/**
+	 * Avoids spurious reinitialisation.
+	 */
+	public void run()
+	{
+		initThis();
+		initPeer();
+		validate();
+		// pack(); $$
+		show();
+		println("% Starting...");
+		// jg.stop();
+		// jg.destroy();
 	}
 
 	public void show_document(URL url, String target)
@@ -100,13 +212,89 @@ public class GuiEngine extends Panel implements IOPeer, Runnable
 	}
 
 	/**
-	 * Initializes Jinni input area with this
+	 * Executes when the applet is stopped.
 	 */
-	public String firstQuery()
+	public void stop()
 	{
-		// return "show_document('http://www.binnetcorp.com').";
-		// return ""; // empty by default
-		return "member(X,[1,2,3])";
+		// servant.disconnect();
+		// serverThread.stop();
+		resetPeer();
+		println("% stoping...");
+		clean_up_goal();
+	}
+
+	public void traceln(String s)
+	{
+		println(s);
+	}
+
+	/**
+	 * Swtiches between '?-' query input and Prolog read(X) operations.
+	 */
+	void changeFocus(TextField from, TextField to)
+	{
+		from.hide();
+		to.show();
+		validate();
+		to.requestFocus();
+		to.selectAll();
+	}
+
+	void clean_up_goal()
+	{
+		if (IO.peer != null)
+		{
+			return;
+		}
+		if (goalThread != null)
+		{
+			goalThread.stop(); // no need for this
+			goalThread = null;
+		}
+		if (readThread != null)
+		{
+			readThread.stop();
+			readThread = null;
+		}
+	}
+
+	/**
+	 * Notifies class IO that we are an GUI mode.
+	 */
+	void initPeer()
+	{
+		IO.peer = this; // passes itself to the IO routines
+	}
+
+	void resetPeer()
+	{
+		IO.peer = null; // passes itself to the IO routines
+	}
+
+	/**
+	 * Registers a reader thread to operate on readField
+	 */
+	private boolean addReader(Thread readThread)
+	{
+		if (this.readThread != null)
+		{
+			IO.errmes("already reading for thread:" + readThread);
+			return false;
+		}
+		this.readThread = readThread;
+
+		changeFocus(inputField, readField);
+		return true;
+	}
+
+	/**
+	 * returns a String read from readField
+	 */
+	private String getReadString()
+	{
+		String s = readField.getText();
+		changeFocus(readField, inputField);
+		return s;
 	}
 
 	/**
@@ -157,193 +345,6 @@ public class GuiEngine extends Panel implements IOPeer, Runnable
 
 		changeFocus(readField, inputField);
 	}
-
-	/**
-	 * Notifies class IO that we are an GUI mode.
-	 */
-	void initPeer()
-	{
-		IO.peer = this; // passes itself to the IO routines
-	}
-
-	void resetPeer()
-	{
-		IO.peer = null; // passes itself to the IO routines
-	}
-
-	/**
-	 * Avoids spurious reinitialisation.
-	 */
-	public void run()
-	{
-		initThis();
-		initPeer();
-		validate();
-		// pack(); $$
-		show();
-		println("% Starting...");
-		// jg.stop();
-		// jg.destroy();
-	}
-
-	/**
-	 * Executes when the applet is stopped.
-	 */
-	public void stop()
-	{
-		// servant.disconnect();
-		// serverThread.stop();
-		resetPeer();
-		println("% stoping...");
-		clean_up_goal();
-	}
-
-	/**
-	 * Executes when the applet is destroyed. Cleans up goal threads.
-	 */
-	public void destroy()
-	{
-		stop();
-		removeAll();
-	}
-
-	public void halt()
-	{
-		stop();
-		// Runtime.getRuntime().exit(0); $$
-	}
-
-	void clean_up_goal()
-	{
-		if (IO.peer != null)
-		{
-			return;
-		}
-		if (goalThread != null)
-		{
-			goalThread.stop(); // no need for this
-			goalThread = null;
-		}
-		if (readThread != null)
-		{
-			readThread.stop();
-			readThread = null;
-		}
-	}
-
-	Thread goalThread = null;
-	Thread readThread = null;
-
-	/**
-	 * Swtiches between '?-' query input and Prolog read(X) operations.
-	 */
-	void changeFocus(TextField from, TextField to)
-	{
-		from.hide();
-		to.show();
-		validate();
-		to.requestFocus();
-		to.selectAll();
-	}
-
-	/**
-	 * Registers a reader thread to operate on readField
-	 */
-	private boolean addReader(Thread readThread)
-	{
-		if (this.readThread != null)
-		{
-			IO.errmes("already reading for thread:" + readThread);
-			return false;
-		}
-		this.readThread = readThread;
-
-		changeFocus(inputField, readField);
-		return true;
-	}
-
-	/**
-	 * returns a String read from readField
-	 */
-	private String getReadString()
-	{
-		String s = readField.getText();
-		changeFocus(readField, inputField);
-		return s;
-	}
-
-	/**
-	 * Reads a string. Suspends and resumes the caller thread until the string
-	 * is available.
-	 */
-	public String readln()
-	{
-		if (!addReader(Thread.currentThread()))
-		{
-			return null;
-		}
-		Thread.currentThread().suspend();
-		String s = getReadString();
-		print(s + "\n");
-		return s;
-	}
-
-	/**
-	 * Acts on events from TextFields
-	 */
-	@Override
-	public boolean action(Event evt, Object arg)
-	{
-		// println(Thread.currentThread()+" :action: "+
-		// evt.getClass()+"<"+evt.target+">"+arg);
-
-		if (evt.target == inputField || evt.target == readField)
-		{
-			initPeer();
-			if (readThread == null)
-			{
-				changeFocus(readField, inputField);
-				// println("action thread="+Thread.currentThread());
-				// println("got: " +arg);
-				clean_up_goal();
-				GuiQA qa = new GuiQA(this);
-				goalThread = new Thread(qa);
-				goalThread.start();
-			}
-			else
-			{
-				readThread.resume();
-				readThread = null;
-				// println("read done:");
-				changeFocus(readField, inputField);
-			}
-		}
-		else if (evt.target instanceof Runnable)
-		{
-			((Runnable) evt.target).run();
-		}
-		else
-		{
-			println("TARGET: " + evt.target);
-			return false;
-		}
-		return true;
-	}
-
-	@Override
-	public boolean handleEvent(Event event)
-	{
-		if (event.id == Event.WINDOW_DESTROY)
-		{
-			Runtime.getRuntime().exit(0);
-		}
-		return super.handleEvent(event);
-	}
-
-	public String getInfo()
-	{
-		return Init.getInfo();
-	}
 }
 
 /**
@@ -354,12 +355,12 @@ public class GuiEngine extends Panel implements IOPeer, Runnable
  */
 class GuiQA implements Runnable
 {
+	private GuiEngine I;
+
 	GuiQA(GuiEngine I)
 	{
 		this.I = I;
 	}
-
-	private GuiEngine I;
 
 	/**
 	 * Gets a query from inputField and launches a goal to answer it.

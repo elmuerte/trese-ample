@@ -31,6 +31,17 @@ abstract public class Source extends Fluent
 
 	abstract public Term getElement();
 
+	public Term toFun()
+	{
+		Vector V = new Vector();
+		Term X;
+		while (null != (X = getElement()))
+		{
+			V.addElement(X);
+		}
+		return Copier.VectorToFun(V);
+	}
+
 	public Const toList()
 	{
 		Term head = getElement();
@@ -52,16 +63,5 @@ abstract public class Source extends Fluent
 			curr = tail;
 		}
 		return l;
-	}
-
-	public Term toFun()
-	{
-		Vector V = new Vector();
-		Term X;
-		while (null != (X = getElement()))
-		{
-			V.addElement(X);
-		}
-		return Copier.VectorToFun(V);
 	}
 }

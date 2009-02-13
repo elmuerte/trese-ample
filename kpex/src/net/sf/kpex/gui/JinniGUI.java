@@ -32,6 +32,17 @@ public class JinniGUI extends Applet
 	 */
 	private static final long serialVersionUID = 4630471743888073666L;
 
+	public static void main(String args[])
+	{
+		JinniGuiMain.main(args);
+	}
+
+	@Override
+	public void destroy()
+	{
+		IO.println("destroying...");
+	}
+
 	/**
 	 * Used to initialise applet
 	 */
@@ -66,16 +77,5 @@ public class JinniGUI extends Applet
 	public void stop()
 	{
 		IO.println("stopping...");
-	}
-
-	@Override
-	public void destroy()
-	{
-		IO.println("destroying...");
-	}
-
-	public static void main(String args[])
-	{
-		JinniGuiMain.main(args);
 	}
 }

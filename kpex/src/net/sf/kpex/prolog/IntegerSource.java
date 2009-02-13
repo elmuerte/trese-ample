@@ -25,6 +25,12 @@ package net.sf.kpex.prolog;
 public class IntegerSource extends Source
 {
 
+	private long a;
+
+	private long b;
+	private long fuel;
+	private long x;
+
 	public IntegerSource(long fuel, long a, long x, long b, Prog p)
 	{
 		super(p);
@@ -33,11 +39,6 @@ public class IntegerSource extends Source
 		this.b = b;
 		this.x = x;
 	}
-
-	private long fuel;
-	private long a;
-	private long b;
-	private long x;
 
 	@Override
 	public Term getElement()

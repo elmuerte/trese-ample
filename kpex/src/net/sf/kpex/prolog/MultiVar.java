@@ -42,9 +42,10 @@ public class MultiVar extends Fluent
 		p.getTrail().push(this);
 	}
 
-	public Term val()
+	@Override
+	public String toString()
 	{
-		return (Term) vals.peek();
+		return "MultiVar[" + vals.size() + "]->{" + vals.peek().toString() + "}";
 	}
 
 	/**
@@ -56,9 +57,8 @@ public class MultiVar extends Fluent
 		vals.pop();
 	}
 
-	@Override
-	public String toString()
+	public Term val()
 	{
-		return "MultiVar[" + vals.size() + "]->{" + vals.peek().toString() + "}";
+		return (Term) vals.peek();
 	}
 }

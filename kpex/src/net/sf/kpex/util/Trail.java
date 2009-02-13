@@ -37,10 +37,6 @@ import net.sf.kpex.prolog.Var;
  */
 public class Trail extends Stack
 {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -7383604147299422937L;
 
 	public Trail()
@@ -58,11 +54,15 @@ public class Trail extends Stack
 		return name() + "\n" + super.toString() + "\n";
 	}
 
+	public String stat()
+	{
+		return "Trail=" + size();
+	}
+
 	/**
 	 * Used to undo bindings after unification, if we intend to leave no side
 	 * effects.
 	 */
-
 	synchronized final public void unwind(int to)
 	{
 		// IO.mes("unwind TRAIL: "+name()+": "+size()+"=>"+to);
@@ -73,10 +73,5 @@ public class Trail extends Stack
 			Term V = (Term) pop();
 			V.undo();
 		}
-	}
-
-	public String stat()
-	{
-		return "Trail=" + size();
 	}
 }

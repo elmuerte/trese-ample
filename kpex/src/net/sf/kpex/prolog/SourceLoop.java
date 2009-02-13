@@ -30,9 +30,9 @@ import java.util.Vector;
  */
 public class SourceLoop extends Source
 {
-	private Vector v;
 	Source s;
 	private int i;
+	private Vector v;
 
 	public SourceLoop(Source s, Prog p)
 	{
@@ -40,17 +40,6 @@ public class SourceLoop extends Source
 		this.s = s;
 		v = new Vector();
 		i = 0;
-	}
-
-	private final Term getMemoized()
-	{
-		if (null == v || v.size() <= 0)
-		{
-			return null;
-		}
-		Term T = (Term) v.elementAt(i);
-		i = (i + 1) % v.size();
-		return T;
 	}
 
 	@Override
@@ -80,5 +69,16 @@ public class SourceLoop extends Source
 	{
 		v = null;
 		s = null;
+	}
+
+	private final Term getMemoized()
+	{
+		if (null == v || v.size() <= 0)
+		{
+			return null;
+		}
+		Term T = (Term) v.elementAt(i);
+		i = (i + 1) % v.size();
+		return T;
 	}
 }

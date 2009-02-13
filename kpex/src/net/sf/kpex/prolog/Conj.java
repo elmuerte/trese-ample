@@ -19,9 +19,20 @@
  */
 package net.sf.kpex.prolog;
 
-
 public class Conj extends Cons
 {
+	static public final Term getHead(Term T)
+	{
+		T = T.ref();
+		return T instanceof Conj ? ((Conj) T).getArg(0) : T;
+	}
+
+	static public final Term getTail(Term T)
+	{
+		T = T.ref();
+		return T instanceof Conj ? ((Conj) T).getArg(1) : Const.aTrue;
+	}
+
 	public Conj(Term x0, Term x1)
 	{
 		super(",", x0, x1);
@@ -53,17 +64,5 @@ public class Conj extends Cons
 	public String toString()
 	{
 		return funToString();
-	}
-
-	static public final Term getHead(Term T)
-	{
-		T = T.ref();
-		return T instanceof Conj ? ((Conj) T).getArg(0) : T;
-	}
-
-	static public final Term getTail(Term T)
-	{
-		T = T.ref();
-		return T instanceof Conj ? ((Conj) T).getArg(1) : Const.aTrue;
 	}
 }

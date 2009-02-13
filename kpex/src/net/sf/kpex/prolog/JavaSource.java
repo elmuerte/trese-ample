@@ -29,16 +29,16 @@ public class JavaSource extends Source
 {
 	private Enumeration e;
 
-	JavaSource(Prog p)
-	{
-		super(p);
-		e = null;
-	}
-
 	public JavaSource(Enumeration e, Prog p)
 	{
 		super(p);
 		this.e = e;
+	}
+
+	JavaSource(Prog p)
+	{
+		super(p);
+		e = null;
 	}
 
 	JavaSource(Vector V, Prog p)

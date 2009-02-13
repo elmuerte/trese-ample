@@ -30,8 +30,8 @@ import net.sf.kpex.util.HashDict;
  */
 public class VarNumberer extends SystemObject
 {
-	HashDict dict;
 	int ctr;
+	HashDict dict;
 
 	VarNumberer()
 	{

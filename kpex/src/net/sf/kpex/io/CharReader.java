@@ -36,16 +36,21 @@ public class CharReader extends Source
 {
 	protected Reader reader;
 
-	public CharReader(Reader reader, Prog p)
-	{
-		super(p);
-		this.reader = reader;
-	}
-
 	public CharReader(CharReader charreader, Prog p)
 	{
 		super(p);
 		reader = charreader.reader;
+	}
+
+	public CharReader(Prog p)
+	{
+		this(IO.input, p);
+	}
+
+	public CharReader(Reader reader, Prog p)
+	{
+		super(p);
+		this.reader = reader;
 	}
 
 	public CharReader(String f, Prog p)
@@ -58,16 +63,6 @@ public class CharReader extends Source
 	{
 		super(p);
 		reader = new StringReader(t.toUnquoted());
-	}
-
-	public CharReader(Prog p)
-	{
-		this(IO.input, p);
-	}
-
-	protected void makeReader(String f)
-	{
-		reader = IO.url_or_file(f);
 	}
 
 	@Override
@@ -118,5 +113,10 @@ public class CharReader extends Source
 			{}
 			reader = null;
 		}
+	}
+
+	protected void makeReader(String f)
+	{
+		reader = IO.url_or_file(f);
 	}
 }

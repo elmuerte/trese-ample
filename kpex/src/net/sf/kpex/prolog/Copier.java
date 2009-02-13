@@ -31,58 +31,12 @@ import net.sf.kpex.util.HashDict;
  */
 public class Copier extends SystemObject
 {
-	private HashDict dict;
-
 	/**
-	 * creates a new Copier together with its related HashDict for variables
+	 * Extracts the free variables of a Term, using a generic action/reaction
+	 * mechanism which takes care of recursing over its structure. It can be
+	 * speeded up through specialization.
 	 */
-	Copier()
-	{
-		dict = new HashDict();
-	}
-
-	/**
-	 * This action only defines what happens here (at this <b> place </b>).
-	 * Ageneric mechanism will be used to recurse over Terms in a (truly:-)) OO
-	 * style (well, looks more like some Haskell stuff, but who cares).
-	 */
-	@Override
-	Term action(Term place)
-	{
-
-		if (place instanceof Var)
-		{
-			Var root = (Var) dict.get(place);
-			if (null == root)
-			{
-				root = new Var();
-				dict.put(place, root);
-			}
-			place = root;
-		}
-
-		return place;
-	}
-
-	// Term copyMe(Term that) {
-	// return that.reaction(this);
-	// }
-
-	/**
-	 * Reifies an Enumeration as a Vector. Vector.elements can give back the
-	 * enumeration if needed.
-	 * 
-	 * @see Copier
-	 */
-	static Vector EnumerationToVector(Enumeration e)
-	{
-		Vector V = new Vector();
-		while (e.hasMoreElements())
-		{
-			V.addElement(e.nextElement());
-		}
-		return V;
-	}
+	final static Const anAnswer = new Const("answer");
 
 	static Vector ConsToVector(Const Xs)
 	{
@@ -115,6 +69,26 @@ public class Copier extends SystemObject
 		// IO.mes("V="+V);
 		return V;
 	}
+
+	/**
+	 * Reifies an Enumeration as a Vector. Vector.elements can give back the
+	 * enumeration if needed.
+	 * 
+	 * @see Copier
+	 */
+	static Vector EnumerationToVector(Enumeration e)
+	{
+		Vector V = new Vector();
+		while (e.hasMoreElements())
+		{
+			V.addElement(e.nextElement());
+		}
+		return V;
+	}
+
+	// Term copyMe(Term that) {
+	// return that.reaction(this);
+	// }
 
 	/**
 	 * Converts a reified Enumeration to functor based on name of Const c and
@@ -153,12 +127,38 @@ public class Copier extends SystemObject
 		return T;
 	}
 
+	private HashDict dict;
+
 	/**
-	 * Extracts the free variables of a Term, using a generic action/reaction
-	 * mechanism which takes care of recursing over its structure. It can be
-	 * speeded up through specialization.
+	 * creates a new Copier together with its related HashDict for variables
 	 */
-	final static Const anAnswer = new Const("answer");
+	Copier()
+	{
+		dict = new HashDict();
+	}
+
+	/**
+	 * This action only defines what happens here (at this <b> place </b>).
+	 * Ageneric mechanism will be used to recurse over Terms in a (truly:-)) OO
+	 * style (well, looks more like some Haskell stuff, but who cares).
+	 */
+	@Override
+	Term action(Term place)
+	{
+
+		if (place instanceof Var)
+		{
+			Var root = (Var) dict.get(place);
+			if (null == root)
+			{
+				root = new Var();
+				dict.put(place, root);
+			}
+			place = root;
+		}
+
+		return place;
+	}
 
 	Term getMyVars(Term that)
 	{

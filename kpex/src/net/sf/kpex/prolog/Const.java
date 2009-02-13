@@ -29,12 +29,12 @@ import net.sf.kpex.util.Trail;
 public class Const extends Nonvar
 {
 
-	public final static Nil aNil = new Nil();
-	public final static Const aTrue = new true_();
 	public final static Const aFail = new fail_();
-	public final static Const aYes = new Const("yes");
-	public final static Const aNo = new Const("no");
 	public final static Const anEof = new Const("end_of_file");
+	public final static Nil aNil = new Nil();
+	public final static Const aNo = new Const("no");
+	public final static Const aTrue = new true_();
+	public final static Const aYes = new Const("yes");
 
 	public final static Const the(Term X)
 	{
@@ -46,6 +46,29 @@ public class Const extends Nonvar
 	public Const(String s)
 	{
 		sym = s.intern();
+	}
+
+	@Override
+	public boolean eq(Term that)
+	{
+		return that instanceof Const && ((Const) that).sym == sym;
+	}
+
+	/**
+	 * returns an arity normally defined as 0
+	 * 
+	 * @see Term#CONST
+	 */
+	@Override
+	public int getArity()
+	{
+		return Term.CONST;
+	}
+
+	@Override
+	public String getKey()
+	{
+		return sym;
 	}
 
 	@Override
@@ -68,41 +91,6 @@ public class Const extends Nonvar
 			}
 		}
 		return sym;
-	}
-
-	@Override
-	public String toString()
-	{
-		return qname();
-	}
-
-	@Override
-	boolean bind_to(Term that, Trail trail)
-	{
-		return super.bind_to(that, trail) && ((Const) that).sym == sym;
-	}
-
-	@Override
-	public boolean eq(Term that)
-	{
-		return that instanceof Const && ((Const) that).sym == sym;
-	}
-
-	@Override
-	public String getKey()
-	{
-		return sym;
-	}
-
-	/**
-	 * returns an arity normally defined as 0
-	 * 
-	 * @see Term#CONST
-	 */
-	@Override
-	public int getArity()
-	{
-		return Term.CONST;
 	}
 
 	/**
@@ -134,8 +122,20 @@ public class Const extends Nonvar
 	}
 
 	@Override
+	public String toString()
+	{
+		return qname();
+	}
+
+	@Override
 	public String toUnquoted()
 	{
 		return name();
+	}
+
+	@Override
+	boolean bind_to(Term that, Trail trail)
+	{
+		return super.bind_to(that, trail) && ((Const) that).sym == sym;
 	}
 }

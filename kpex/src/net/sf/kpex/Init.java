@@ -32,41 +32,41 @@ import net.sf.kpex.prolog.Term;
  */
 public class Init
 {
-	public static final int version = 84;
-
-	public static final String getInfo()
-	{
-		String s = "Kernel Prolog " + version / 100.0 + "\n" + "Copyright (c) Paul Tarau && BinNet Corp. 1999\n"
-				+ "Open Source Edition, under GNU General Public License.\n"
-				+ "Download latest version from: http://www.binnetcorp.com/kprolog/Main.html\n"
-				+ "For commercial licensing, related service or support contracts\n"
-				+ "and commercial extensions in binary form, contact BinNet Corporation at:\n"
-				+ "binnetcorp@binnetcorp.com, http://www.binnetcorp.com\n";
-		return s;
-	}
-
-	public static DataBase default_db;
 	public static Builtins builtinDict;
 
-	public static Clause getGoal(String line)
-	{
-		Clause G = Clause.goalFromString(line);
-		// IO.mes("getGoal: "+G+" DICT: "+G.dict); //OK
-		return G;
-	}
+	public static DataBase default_db;
 
-	public static void run_query(String query)
+	public static final int version = 84;
+
+	/**
+	 * Asks Jinni a String query and gets back a string Answer of the form
+	 * "the('[]'(VarsOfQuery))" containing a binding of the variables or the
+	 * first solution to the query or "no" if no such solution exists
+	 */
+	public static String askJinni(String query)
 	{
 		Clause Goal = getGoal(query);
-		timeGoal(Goal);
+		Term Body = Goal.getBody();
+		return askJinni(Body).pprint();
 	}
 
 	/**
-	 * reads a query from input strea
+	 * Asks Jinni a query Goal and returns the first solution of the form
+	 * "the(Answer)" , where Answer is an instance of Goal or the constant "no"
+	 * if no solution exists
 	 */
-	static Clause getGoal()
+	public static Term askJinni(Term Goal)
 	{
-		return getGoal(IO.promptln("?- "));
+		return askJinni(Goal, Goal);
+	}
+
+	/**
+	 * Asks Jinni a query Answer, Goal and returns the first solution of the
+	 * form "the(Answer)" or the constant "no" if no solution exists
+	 */
+	public static Term askJinni(Term Answer, Term Body)
+	{
+		return Prog.firstSolution(Answer, Body);
 	}
 
 	/**
@@ -115,43 +115,46 @@ public class Init
 		}
 	}
 
-	static boolean moreAnswers(int i)
+	public static Clause getGoal(String line)
 	{
-		if (IO.maxAnswers == 0)
-		{ // under user control
-			String more = IO.promptln("; for more, <enter> to stop: ");
-			return more.equals(";");
-		}
-		else if (i < IO.maxAnswers || IO.maxAnswers < 0)
-		{
-			IO.println(";"); // print all remaining
-			return true;
-		}
-		else
-		{ // i >= ...}
-			IO.println(";");
-			IO.println("No more answers computed, max reached! (" + IO.maxAnswers + ")");
-			return false;
-		}
+		Clause G = Clause.goalFromString(line);
+		// IO.mes("getGoal: "+G+" DICT: "+G.dict); //OK
+		return G;
 	}
 
-	/**
-	 * evaluates and times a Goal querying program P
-	 */
-
-	public static void timeGoal(Clause Goal)
+	public static final String getInfo()
 	{
-		long t1 = System.currentTimeMillis();
-		try
+		String s = "Kernel Prolog " + version / 100.0 + "\n" + "Copyright (c) Paul Tarau && BinNet Corp. 1999\n"
+				+ "Open Source Edition, under GNU General Public License.\n"
+				+ "Download latest version from: http://www.binnetcorp.com/kprolog/Main.html\n"
+				+ "For commercial licensing, related service or support contracts\n"
+				+ "and commercial extensions in binary form, contact BinNet Corporation at:\n"
+				+ "binnetcorp@binnetcorp.com, http://www.binnetcorp.com\n";
+		return s;
+	}
+
+	public static boolean run(String[] args)
+	{
+		if (null != args)
 		{
-			evalGoal(Goal);
+			for (String arg : args)
+			{
+				String result = askJinni(arg);
+				IO.trace(result);
+				if ("no".equals(result.intern()))
+				{
+					IO.errmes("failing cmd line argument: " + arg);
+					return false;
+				}
+			}
 		}
-		catch (Throwable e)
-		{
-			IO.errmes("Execution error in goal:\n  " + Goal.pprint() + ".\n", e);
-		}
-		long t2 = System.currentTimeMillis();
-		IO.println("Time: " + (t2 - t1) / 1000.0 + " sec, threads=" + Thread.activeCount());
+		return true;
+	}
+
+	public static void run_query(String query)
+	{
+		Clause Goal = getGoal(query);
+		timeGoal(Goal);
 	}
 
 	/**
@@ -178,55 +181,6 @@ public class Init
 	}
 
 	/**
-	 * Asks Jinni a query Answer, Goal and returns the first solution of the
-	 * form "the(Answer)" or the constant "no" if no solution exists
-	 */
-	public static Term askJinni(Term Answer, Term Body)
-	{
-		return Prog.firstSolution(Answer, Body);
-	}
-
-	/**
-	 * Asks Jinni a query Goal and returns the first solution of the form
-	 * "the(Answer)" , where Answer is an instance of Goal or the constant "no"
-	 * if no solution exists
-	 */
-	public static Term askJinni(Term Goal)
-	{
-		return askJinni(Goal, Goal);
-	}
-
-	/**
-	 * Asks Jinni a String query and gets back a string Answer of the form
-	 * "the('[]'(VarsOfQuery))" containing a binding of the variables or the
-	 * first solution to the query or "no" if no such solution exists
-	 */
-	public static String askJinni(String query)
-	{
-		Clause Goal = getGoal(query);
-		Term Body = Goal.getBody();
-		return askJinni(Body).pprint();
-	}
-
-	public static boolean run(String[] args)
-	{
-		if (null != args)
-		{
-			for (String arg : args)
-			{
-				String result = askJinni(arg);
-				IO.trace(result);
-				if ("no".equals(result.intern()))
-				{
-					IO.errmes("failing cmd line argument: " + arg);
-					return false;
-				}
-			}
-		}
-		return true;
-	}
-
-	/**
 	 * Initialises key data areas. Runs a first query, which, if suceeeds a
 	 * true, otherwise false is returned
 	 */
@@ -237,6 +191,53 @@ public class Init
 		IO.println(getInfo());
 		default_db = new DataBase();
 		return true;
+	}
+
+	/**
+	 * evaluates and times a Goal querying program P
+	 */
+
+	public static void timeGoal(Clause Goal)
+	{
+		long t1 = System.currentTimeMillis();
+		try
+		{
+			evalGoal(Goal);
+		}
+		catch (Throwable e)
+		{
+			IO.errmes("Execution error in goal:\n  " + Goal.pprint() + ".\n", e);
+		}
+		long t2 = System.currentTimeMillis();
+		IO.println("Time: " + (t2 - t1) / 1000.0 + " sec, threads=" + Thread.activeCount());
+	}
+
+	/**
+	 * reads a query from input strea
+	 */
+	static Clause getGoal()
+	{
+		return getGoal(IO.promptln("?- "));
+	}
+
+	static boolean moreAnswers(int i)
+	{
+		if (IO.maxAnswers == 0)
+		{ // under user control
+			String more = IO.promptln("; for more, <enter> to stop: ");
+			return more.equals(";");
+		}
+		else if (i < IO.maxAnswers || IO.maxAnswers < 0)
+		{
+			IO.println(";"); // print all remaining
+			return true;
+		}
+		else
+		{ // i >= ...}
+			IO.println(";");
+			IO.println("No more answers computed, max reached! (" + IO.maxAnswers + ")");
+			return false;
+		}
 	}
 
 }

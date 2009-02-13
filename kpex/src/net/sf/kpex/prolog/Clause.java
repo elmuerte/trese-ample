@@ -32,49 +32,12 @@ import net.sf.kpex.util.Trail;
 public class Clause extends Fun
 {
 	/**
-	 * Builds a clause given ith head and its body
-	 */
-	public Clause(Term head, Term body)
-	{
-		super(":-", head, body);
-	}
-
-	/**
-	 * Constructs a clause by parsing its string representation. Note the
-	 * building of a dictionary of variables, allowing listing of the clause
-	 * with its original variable names.
-	 */
-	public Clause(String s)
-	{
-		super(":-");
-		Clause C = clauseFromString(s);
-		// IO.mes("CLAUSE:"+C.pprint()+"\nDICT:"+C.dict);
-		args = C.args;
-		dict = C.dict;
-		setGround(C.isGround());
-	}
-
-	/**
 	 * Extracts a clause from its String representation.
 	 */
 
 	public static Clause clauseFromString(String s)
 	{
 		return Parser.clsFromString(s);
-	}
-
-	/**
-	 * Reads a goal as a clause containing a dummy header with all veriables in
-	 * it
-	 */
-
-	public Clause toGoal()
-	{
-		Clause G = new Clause(varsOf(), getHead());
-		G.dict = dict;
-		G.checkIfGround();
-		IO.trace("conversion from clause to goal ignores body of: " + pprint());
-		return G;
 	}
 
 	public static Clause goalFromString(String line)
@@ -102,17 +65,48 @@ public class Clause extends Fun
 	}
 
 	/**
-	 * Detects that a clause is ground (i.e. has no variables)
+	 * Concatenates 2 Conjunctions
+	 * 
+	 * @see Clause#unfold
 	 */
-	final void checkIfGround()
+	static final Term appendConj(Term x, Term y)
 	{
-		setGround(varsOf().getArity() == 0);
+		y = y.ref();
+		if (x instanceof true_)
+		{
+			return y;
+		}
+		if (y instanceof true_)
+		{
+			return x; // comment out if using getState
+		}
+		if (x instanceof Conj)
+		{
+			Term curr = ((Conj) x).args[0].ref();
+			Term cont = appendConj(((Conj) x).args[1], y);
+			// curr.getState(this,cont);
+			return new Conj(curr, cont);
+		}
+		else
+		{
+			return new Conj(x, y);
+		}
 	}
+
+	public int begins_at = 0;
 
 	/**
 	 * Variable dictionary
 	 */
 	public HashDict dict = null;
+
+	public int ends_at = 0;
+
+	/**
+	 * File name and line where sources start and end (if applicable)
+	 */
+
+	public String fname = null;
 
 	/**
 	 * Remembers if a clause is ground.
@@ -120,76 +114,26 @@ public class Clause extends Fun
 	private boolean ground = false;
 
 	/**
-	 * File name and line where sources start and end (if applicable)
+	 * Constructs a clause by parsing its string representation. Note the
+	 * building of a dictionary of variables, allowing listing of the clause
+	 * with its original variable names.
 	 */
-
-	public String fname = null;
-	public int begins_at = 0;
-	public int ends_at = 0;
-
-	public void setFile(String fname, int begins_at, int ends_at)
+	public Clause(String s)
 	{
-		this.fname = fname.intern();
-		this.begins_at = begins_at;
-		this.ends_at = ends_at;
+		super(":-");
+		Clause C = clauseFromString(s);
+		// IO.mes("CLAUSE:"+C.pprint()+"\nDICT:"+C.dict);
+		args = C.args;
+		dict = C.dict;
+		setGround(C.isGround());
 	}
 
 	/**
-	 * Checks if a Clause has been proven ground after beeing read in or
-	 * created.
+	 * Builds a clause given ith head and its body
 	 */
-	final boolean provenGround()
+	public Clause(Term head, Term body)
 	{
-		return isGround();
-	}
-
-	/**
-	 * Prints out a clause as Head:-Body
-	 */
-	private String Clause2String(Clause c)
-	{
-		Term h = c.getHead();
-		Term t = c.getBody();
-		if (t instanceof Conj)
-		{
-			return h + ":-" + ((Conj) t).conjToString();
-		}
-		return h + ":-" + t;
-	}
-
-	// uncomment if you want this to be the default toString
-	// procedure - it might create read-back problems, though
-	// public String toString() {
-	// return Clause2String(this);
-	// }
-
-	/**
-	 * Pretty prints a clause after replacing ugly variable names
-	 */
-	@Override
-	public String pprint()
-	{
-		return pprint(false);
-	}
-
-	/**
-	 * Pretty prints a clause after replacing ugly variable names
-	 */
-	@Override
-	public String pprint(boolean replaceAnonymous)
-	{
-		String s = Clause2String(cnumbervars(replaceAnonymous));
-		// if(fname!=null) s="%% "+fname+":"+begins_at+"-"+ends_at+"\n"+s;
-		return s;
-	}
-
-	/**
-	 * Clause to Term converter: the joy of strong typing:-)
-	 */
-	@Override
-	public Clause toClause()
-	{ // overrides toClause in Term
-		return this;
+		super(":-", head, body);
 	}
 
 	/**
@@ -227,6 +171,105 @@ public class Clause extends Fun
 	}
 
 	/**
+	 * Extracts the body of a clause
+	 */
+	public final Term getBody()
+	{
+		return args[1].ref();
+	}
+
+	/**
+	 * Extracts the head of a clause (a Term).
+	 */
+	public final Term getHead()
+	{
+		return args[0].ref();
+	}
+
+	/**
+	 * Returns a key based on the principal functor of the head of the clause
+	 * and its arity.
+	 */
+	@Override
+	public String getKey()
+	{
+		return getHead().getKey();
+	}
+
+	// uncomment if you want this to be the default toString
+	// procedure - it might create read-back problems, though
+	// public String toString() {
+	// return Clause2String(this);
+	// }
+
+	/**
+	 * @return the ground
+	 */
+	public boolean isGround()
+	{
+		return ground;
+	}
+
+	/**
+	 * Pretty prints a clause after replacing ugly variable names
+	 */
+	@Override
+	public String pprint()
+	{
+		return pprint(false);
+	}
+
+	/**
+	 * Pretty prints a clause after replacing ugly variable names
+	 */
+	@Override
+	public String pprint(boolean replaceAnonymous)
+	{
+		String s = Clause2String(cnumbervars(replaceAnonymous));
+		// if(fname!=null) s="%% "+fname+":"+begins_at+"-"+ends_at+"\n"+s;
+		return s;
+	}
+
+	public void setFile(String fname, int begins_at, int ends_at)
+	{
+		this.fname = fname.intern();
+		this.begins_at = begins_at;
+		this.ends_at = ends_at;
+	}
+
+	/**
+	 * @param ground
+	 *            the ground to set
+	 */
+	public void setGround(boolean ground)
+	{
+		this.ground = ground;
+	}
+
+	/**
+	 * Clause to Term converter: the joy of strong typing:-)
+	 */
+	@Override
+	public Clause toClause()
+	{ // overrides toClause in Term
+		return this;
+	}
+
+	/**
+	 * Reads a goal as a clause containing a dummy header with all veriables in
+	 * it
+	 */
+
+	public Clause toGoal()
+	{
+		Clause G = new Clause(varsOf(), getHead());
+		G.dict = dict;
+		G.checkIfGround();
+		IO.trace("conversion from clause to goal ignores body of: " + pprint());
+		return G;
+	}
+
+	/**
 	 * Converts a clause to a term. Note that Head:-true will convert to the
 	 * term Head.
 	 */
@@ -254,19 +297,11 @@ public class Clause extends Fun
 	}
 
 	/**
-	 * Extracts the head of a clause (a Term).
+	 * Detects that a clause is ground (i.e. has no variables)
 	 */
-	public final Term getHead()
+	final void checkIfGround()
 	{
-		return args[0].ref();
-	}
-
-	/**
-	 * Extracts the body of a clause
-	 */
-	public final Term getBody()
-	{
-		return args[1].ref();
+		setGround(varsOf().getArity() == 0);
 	}
 
 	/**
@@ -311,33 +346,19 @@ public class Clause extends Fun
 		}
 	}
 
-	/**
-	 * Concatenates 2 Conjunctions
-	 * 
-	 * @see Clause#unfold
-	 */
-	static final Term appendConj(Term x, Term y)
+	@Override
+	final boolean isClause()
 	{
-		y = y.ref();
-		if (x instanceof true_)
-		{
-			return y;
-		}
-		if (y instanceof true_)
-		{
-			return x; // comment out if using getState
-		}
-		if (x instanceof Conj)
-		{
-			Term curr = ((Conj) x).args[0].ref();
-			Term cont = appendConj(((Conj) x).args[1], y);
-			// curr.getState(this,cont);
-			return new Conj(curr, cont);
-		}
-		else
-		{
-			return new Conj(x, y);
-		}
+		return true;
+	}
+
+	/**
+	 * Checks if a Clause has been proven ground after beeing read in or
+	 * created.
+	 */
+	final boolean provenGround()
+	{
+		return isGround();
 	}
 
 	/**
@@ -394,35 +415,16 @@ public class Clause extends Fun
 	}
 
 	/**
-	 * Returns a key based on the principal functor of the head of the clause
-	 * and its arity.
+	 * Prints out a clause as Head:-Body
 	 */
-	@Override
-	public String getKey()
+	private String Clause2String(Clause c)
 	{
-		return getHead().getKey();
-	}
-
-	@Override
-	final boolean isClause()
-	{
-		return true;
-	}
-
-	/**
-	 * @param ground
-	 *            the ground to set
-	 */
-	public void setGround(boolean ground)
-	{
-		this.ground = ground;
-	}
-
-	/**
-	 * @return the ground
-	 */
-	public boolean isGround()
-	{
-		return ground;
+		Term h = c.getHead();
+		Term t = c.getBody();
+		if (t instanceof Conj)
+		{
+			return h + ":-" + ((Conj) t).conjToString();
+		}
+		return h + ":-" + t;
 	}
 }

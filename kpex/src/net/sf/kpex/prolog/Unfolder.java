@@ -35,9 +35,9 @@ import net.sf.kpex.io.IO;
  */
 public class Unfolder extends Source
 {
-	private int oldtop;
 	private Enumeration e;
 	private Clause goal;
+	private int oldtop;
 	private Prog prog;
 
 	/**
@@ -72,13 +72,64 @@ public class Unfolder extends Source
 	}
 
 	/**
+	 * Returns a new clause by unfolding the goal with a matching clause in the
+	 * database, or null if no such clause exists.
+	 */
+	@Override
+	public Term getElement()
+	{
+		if (null == e)
+		{
+			return null;
+		}
+		Clause unfolded_goal = null;
+		while (e.hasMoreElements())
+		{
+			Term T = (Term) e.nextElement();
+			if (!(T instanceof Clause))
+			{
+				continue;
+			}
+			// resolution step, over goal/resolvent of the form:
+			// Answer:-G1,G2,...,Gn.
+			prog.getTrail().unwind(oldtop);
+			unfolded_goal = T.toClause().unfold_with_goal(goal, prog.getTrail());
+			if (null != unfolded_goal)
+			{
+				break;
+			}
+		}
+		return unfolded_goal;
+	};
+
+	/**
+	 * Stops production of more alternatives by setting the clause enumerator to
+	 * null
+	 */
+	@Override
+	public void stop()
+	{
+		e = null;
+	}
+
+	/**
+	 * Returns a string representation of this unfolder, based on the original
+	 * clause it is based on.
+	 */
+	@Override
+	public String toString()
+	{
+		return null == goal ? "{Unfolder}" : "{Unfolder=> " + goal.pprint() + "}";
+	}
+
+	/**
 	 * Overrides default trailing by empty action
 	 */
 	@Override
 	protected void trailMe(Prog p)
 	{
 	// IO.mes("not trailing"+this);
-	};
+	}
 
 	/**
 	 * Extracts an answer at the end of an AND-derivation
@@ -150,44 +201,19 @@ public class Unfolder extends Source
 	}
 
 	/**
-	 * Returns a new clause by unfolding the goal with a matching clause in the
-	 * database, or null if no such clause exists.
+	 * Tracer on exiting g
 	 */
-	@Override
-	public Term getElement()
+	final void trace_failing(Clause g)
 	{
-		if (null == e)
+		switch (Prog.tracing)
 		{
-			return null;
-		}
-		Clause unfolded_goal = null;
-		while (e.hasMoreElements())
-		{
-			Term T = (Term) e.nextElement();
-			if (!(T instanceof Clause))
-			{
-				continue;
-			}
-			// resolution step, over goal/resolvent of the form:
-			// Answer:-G1,G2,...,Gn.
-			prog.getTrail().unwind(oldtop);
-			unfolded_goal = T.toClause().unfold_with_goal(goal, prog.getTrail());
-			if (null != unfolded_goal)
-			{
+			case 2:
+				IO.println("FAILING CALL IN<<<: " + g.getFirst());
 				break;
-			}
+			case 3:
+				IO.println("FAILING CALL IN<<<: " + g.pprint());
+				break;
 		}
-		return unfolded_goal;
-	}
-
-	/**
-	 * Stops production of more alternatives by setting the clause enumerator to
-	 * null
-	 */
-	@Override
-	public void stop()
-	{
-		e = null;
 	}
 
 	/**
@@ -207,22 +233,6 @@ public class Unfolder extends Source
 	}
 
 	/**
-	 * Tracer on exiting g
-	 */
-	final void trace_failing(Clause g)
-	{
-		switch (Prog.tracing)
-		{
-			case 2:
-				IO.println("FAILING CALL IN<<<: " + g.getFirst());
-				break;
-			case 3:
-				IO.println("FAILING CALL IN<<<: " + g.pprint());
-				break;
-		}
-	}
-
-	/**
 	 * Tracer for undefined predicates
 	 */
 	final void trace_nomatch(Term first)
@@ -231,15 +241,5 @@ public class Unfolder extends Source
 		{
 			IO.println("*** UNDEFINED CALL: " + first.pprint());
 		}
-	}
-
-	/**
-	 * Returns a string representation of this unfolder, based on the original
-	 * clause it is based on.
-	 */
-	@Override
-	public String toString()
-	{
-		return null == goal ? "{Unfolder}" : "{Unfolder=> " + goal.pprint() + "}";
 	}
 }

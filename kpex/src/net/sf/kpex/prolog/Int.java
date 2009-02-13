@@ -23,12 +23,34 @@ import net.sf.kpex.util.Trail;
 
 public class Int extends Num
 {
+	long val;
+
 	public Int(long i)
 	{
 		val = i;
 	}
 
-	long val;
+	@Override
+	public final int getArity()
+	{
+		return Term.INT;
+	}
+
+	@Override
+	public final double getValue()
+	{
+		return val;
+	}
+
+	public final int intValue()
+	{
+		return (int) val;
+	}
+
+	public final long longValue()
+	{
+		return val;
+	}
 
 	@Override
 	public String name()
@@ -45,27 +67,5 @@ public class Int extends Num
 		// Microsoft's jview that 1==1
 		// $$ casting to double to be removed
 		// once they get it right
-	}
-
-	@Override
-	public final int getArity()
-	{
-		return Term.INT;
-	}
-
-	public final long longValue()
-	{
-		return val;
-	}
-
-	public final int intValue()
-	{
-		return (int) val;
-	}
-
-	@Override
-	public final double getValue()
-	{
-		return val;
 	}
 }

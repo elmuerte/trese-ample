@@ -37,6 +37,12 @@ public class TermCollector extends Sink
 	}
 
 	@Override
+	public Term collect()
+	{
+		return new JavaSource(buffer, p);
+	}
+
+	@Override
 	public int putElement(Term T)
 	{
 		buffer.addElement(T);
@@ -47,11 +53,5 @@ public class TermCollector extends Sink
 	public void stop()
 	{
 		buffer = null;
-	}
-
-	@Override
-	public Term collect()
-	{
-		return new JavaSource(buffer, p);
 	}
 }

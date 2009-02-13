@@ -27,10 +27,10 @@ abstract public class Sink extends Fluent
 		super(p);
 	}
 
-	abstract public int putElement(Term T);
-
 	public Term collect()
 	{
 		return null;
 	}
+
+	abstract public int putElement(Term T);
 }

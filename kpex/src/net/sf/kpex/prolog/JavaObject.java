@@ -26,13 +26,13 @@ package net.sf.kpex.prolog;
 
 public class JavaObject extends SystemObject
 {
+	Object val;
+
 	public JavaObject(Object i)
 	{
 		// available=true;
 		val = i;
 	}
-
-	Object val;
 
 	@Override
 	public Object toObject()

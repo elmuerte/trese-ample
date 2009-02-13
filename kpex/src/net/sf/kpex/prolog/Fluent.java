@@ -26,22 +26,11 @@ package net.sf.kpex.prolog;
  */
 public class Fluent extends SystemObject
 {
+	private boolean persistent = false;
+
 	public Fluent(Prog p)
 	{
 		trailMe(p);
-	}
-
-	private boolean persistent = false;
-
-	/**
-	 * Dynamically sets the persistence status of this Fluent. A persistent
-	 * Fluent will not have its stop method outomatically called upon
-	 * backtracking. A typical example would be a file or socket handle saved to
-	 * the database to be reused after backtracking.
-	 */
-	public void setPersistent(boolean persistent)
-	{
-		this.persistent = persistent;
 	}
 
 	/**
@@ -53,15 +42,14 @@ public class Fluent extends SystemObject
 	}
 
 	/**
-	 * Adds this Fluent to the parent Solver's trail, which will eventually call
-	 * the undo method of the Fluent on backtracking.
+	 * Dynamically sets the persistence status of this Fluent. A persistent
+	 * Fluent will not have its stop method outomatically called upon
+	 * backtracking. A typical example would be a file or socket handle saved to
+	 * the database to be reused after backtracking.
 	 */
-	protected void trailMe(Prog p)
+	public void setPersistent(boolean persistent)
 	{
-		if (null != p)
-		{
-			p.getTrail().push(this);
-		}
+		this.persistent = persistent;
 	}
 
 	public void stop()
@@ -76,6 +64,18 @@ public class Fluent extends SystemObject
 		if (!persistent)
 		{
 			stop();
+		}
+	}
+
+	/**
+	 * Adds this Fluent to the parent Solver's trail, which will eventually call
+	 * the undo method of the Fluent on backtracking.
+	 */
+	protected void trailMe(Prog p)
+	{
+		if (null != p)
+		{
+			p.getTrail().push(this);
 		}
 	}
 }

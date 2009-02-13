@@ -33,6 +33,12 @@ public class StringSink extends Sink
 	}
 
 	@Override
+	public Term collect()
+	{
+		return new Const(buffer.toString());
+	}
+
+	@Override
 	public int putElement(Term t)
 	{
 		buffer.append(t.toUnquoted());
@@ -43,11 +49,5 @@ public class StringSink extends Sink
 	public void stop()
 	{
 		buffer = null;
-	}
-
-	@Override
-	public Term collect()
-	{
-		return new Const(buffer.toString());
 	}
 }

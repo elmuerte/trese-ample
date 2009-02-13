@@ -29,12 +29,26 @@ import net.sf.kpex.util.Trail;
 public abstract class Nonvar extends Term
 {
 
+	@Override
+	public boolean eq(Term that)
+	{
+		return that instanceof Nonvar && bind_to(that, null);
+	}
+
 	public abstract String name();
 
 	@Override
 	boolean bind_to(Term that, Trail trail)
 	{
 		return getClass() == that.getClass();
+	}
+
+	/**
+	 * returns a list representation of the object
+	 */
+	Const listify()
+	{
+		return new Cons(this, Const.aNil);
 	}
 
 	@Override
@@ -48,19 +62,5 @@ public abstract class Nonvar extends Term
 		{
 			return that.bind_to(this, trail);
 		}
-	}
-
-	@Override
-	public boolean eq(Term that)
-	{
-		return that instanceof Nonvar && bind_to(that, null);
-	}
-
-	/**
-	 * returns a list representation of the object
-	 */
-	Const listify()
-	{
-		return new Cons(this, Const.aNil);
 	}
 }

@@ -30,21 +30,21 @@ import net.sf.kpex.io.IO;
  */
 public class Queue implements Cloneable
 {
-	final static int MIN_QUEUE = 4;
 	final static int MAX_QUEUE = 1 << 24;
+	final static int MIN_QUEUE = 4;
 
-	private int head, tail;
 	private boolean busy;
+	private int head, tail;
 	private Object queue[];
-
-	public Queue(int size)
-	{
-		makeIt(size);
-	}
 
 	public Queue()
 	{
 		this(0);
+	}
+
+	public Queue(int size)
+	{
+		makeIt(size);
 	}
 
 	public Queue(Vector V)
@@ -56,17 +56,114 @@ public class Queue implements Cloneable
 		}
 	}
 
+	/**
+	 * Removes the first element of the queue
+	 */
+	synchronized public final Object deq()
+	{
+		enterCritical();
+		if (tail == head)
+		{
+			return null;
+		}
+		if (4 * count() < queue.length)
+		{
+			requeue("shrinking");
+		}
+		Object V = queue[head];
+		head = inc(head);
+		exitCritical();
+		return V;
+	}
+
+	/**
+	 * Adds an element to the end of the queue
+	 */
+	synchronized public final boolean enq(Object V)
+	{
+		enterCritical();
+		if (inc(tail) == head)
+		{ // full !!!
+			if (!requeue("expanding"))
+			{
+				IO.errmes("Warning: queue overflow at:" + V);
+				return false;
+			}
+		}
+		queue[tail] = V;
+		tail = inc(tail);
+		exitCritical();
+		return true;
+	}
+
+	synchronized public final boolean isEmpty()
+	{
+		boolean empty;
+		enterCritical();
+		empty = tail == head;
+		exitCritical();
+		return empty;
+	}
+
+	public Enumeration toEnumeration()
+	{
+		return toVector().elements();
+	}
+
+	@Override
+	public String toString()
+	{
+		return count() + "/" + queue.length + "=>" + toVector().toString();
+	}
+
+	synchronized public Vector toVector()
+	{
+		// enterCritical(); DEADLOCKS!
+		Vector v = new Vector();
+		for (int i = head; i != tail; i = inc(i))
+		{
+			v.addElement(queue[i]);
+		}
+		// exitCritical();
+		return v;
+	}
+
+	private final int count()
+	{
+		return head <= tail ? tail - head : queue.length - head + tail;
+	}
+
+	private final void enterCritical()
+	{
+		while (busy)
+		{
+			try
+			{
+				wait();
+			}
+			catch (InterruptedException e)
+			{}
+		}
+		busy = true;
+	}
+
+	private final void exitCritical()
+	{
+		busy = false;
+		notifyAll();
+	}
+
+	private final int inc(int val)
+	{
+		return (val + 1) % queue.length;
+	}
+
 	synchronized private final void makeIt(int size)
 	{
 		size = size < MIN_QUEUE ? MIN_QUEUE : size;
 		queue = new Object[size];
 		head = tail = 0;
 		busy = false;
-	}
-
-	private final int count()
-	{
-		return head <= tail ? tail - head : queue.length - head + tail;
 	}
 
 	/**
@@ -90,103 +187,6 @@ public class Queue implements Cloneable
 		head = 0;
 		tail = j;
 		return true;
-	}
-
-	private final void enterCritical()
-	{
-		while (busy)
-		{
-			try
-			{
-				wait();
-			}
-			catch (InterruptedException e)
-			{}
-		}
-		busy = true;
-	}
-
-	private final void exitCritical()
-	{
-		busy = false;
-		notifyAll();
-	}
-
-	/**
-	 * Adds an element to the end of the queue
-	 */
-	synchronized public final boolean enq(Object V)
-	{
-		enterCritical();
-		if (inc(tail) == head)
-		{ // full !!!
-			if (!requeue("expanding"))
-			{
-				IO.errmes("Warning: queue overflow at:" + V);
-				return false;
-			}
-		}
-		queue[tail] = V;
-		tail = inc(tail);
-		exitCritical();
-		return true;
-	}
-
-	/**
-	 * Removes the first element of the queue
-	 */
-	synchronized public final Object deq()
-	{
-		enterCritical();
-		if (tail == head)
-		{
-			return null;
-		}
-		if (4 * count() < queue.length)
-		{
-			requeue("shrinking");
-		}
-		Object V = queue[head];
-		head = inc(head);
-		exitCritical();
-		return V;
-	}
-
-	private final int inc(int val)
-	{
-		return (val + 1) % queue.length;
-	}
-
-	synchronized public final boolean isEmpty()
-	{
-		boolean empty;
-		enterCritical();
-		empty = tail == head;
-		exitCritical();
-		return empty;
-	}
-
-	synchronized public Vector toVector()
-	{
-		// enterCritical(); DEADLOCKS!
-		Vector v = new Vector();
-		for (int i = head; i != tail; i = inc(i))
-		{
-			v.addElement(queue[i]);
-		}
-		// exitCritical();
-		return v;
-	}
-
-	public Enumeration toEnumeration()
-	{
-		return toVector().elements();
-	}
-
-	@Override
-	public String toString()
-	{
-		return count() + "/" + queue.length + "=>" + toVector().toString();
 	}
 
 	/*

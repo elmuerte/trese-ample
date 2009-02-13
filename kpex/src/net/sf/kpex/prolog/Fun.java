@@ -30,13 +30,12 @@ import net.sf.kpex.util.Trail;
  */
 public class Fun extends Const
 {
-	public Term args[];
-
-	@Override
-	public final int getArity()
+	protected static String watchNull(Term x)
 	{
-		return args.length;
+		return null == x ? "null" : x.toString();
 	}
+
+	public Term args[];
 
 	public Fun(String s)
 	{
@@ -52,35 +51,6 @@ public class Fun extends Const
 	{
 		super(s);
 		args = new Term[arity];
-	}
-
-	public void init(int arity)
-	{
-		args = new Term[arity];
-		for (int i = 0; i < arity; i++)
-		{
-			args[i] = new Var();
-		}
-	}
-
-	public final Term getArg(int i)
-	{
-		return args[i].ref();
-	}
-
-	public final int getIntArg(int i)
-	{
-		return (int) ((Int) getArg(i)).getValue();
-	}
-
-	public final void setArg(int i, Term T)
-	{
-		args[i] = T;
-	}
-
-	public final int putArg(int i, Term T, Prog p)
-	{
-		return getArg(i).unify(T, p.getTrail()) ? 1 : 0;
 	}
 
 	public Fun(String s, Term x0)
@@ -113,115 +83,29 @@ public class Fun extends Const
 		args[3] = x3;
 	}
 
-	protected final String funToString()
+	public final Term getArg(int i)
 	{
-		if (args == null)
-		{
-			return qname() + "()";
-		}
-		int l = args.length;
-		return qname() + (l <= 0 ? "" : "(" + show_args() + ")");
+		return args[i].ref();
 	}
 
 	@Override
-	public String toString()
+	public final int getArity()
 	{
-		return funToString();
+		return args.length;
 	}
 
-	protected static String watchNull(Term x)
+	public final int getIntArg(int i)
 	{
-		return null == x ? "null" : x.toString();
+		return (int) ((Int) getArg(i)).getValue();
 	}
 
-	private String show_args()
+	public void init(int arity)
 	{
-		StringBuffer s = new StringBuffer(watchNull(args[0]));
-		for (int i = 1; i < args.length; i++)
+		args = new Term[arity];
+		for (int i = 0; i < arity; i++)
 		{
-			s.append("," + watchNull(args[i]));
+			args[i] = new Var();
 		}
-		return s.toString();
-	}
-
-	@Override
-	boolean bind_to(Term that, Trail trail)
-	{
-		return super.bind_to(that, trail) && args.length == ((Fun) that).args.length;
-	}
-
-	@Override
-	boolean unify_to(Term that, Trail trail)
-	{
-		if (bind_to(that, trail))
-		{
-			for (int i = 0; i < args.length; i++)
-			{
-				if (!args[i].unify(((Fun) that).args[i], trail))
-				{
-					return false;
-				}
-			}
-			return true;
-		}
-		else
-		{
-			return that.bind_to(this, trail);
-		}
-	}
-
-	@Override
-	public Term token()
-	{
-		return args[0];
-	}
-
-	// stuff allowing polymorphic cloning of Fun subclasses
-	// without using reflection - should be probaly faster than
-	// reflection classes - to check
-
-	final protected Fun funClone()
-	{
-		Fun f = null;
-
-		try
-		{
-			// use of clone is needed for "polymorphic" copy
-			f = (Fun) clone();
-		}
-		catch (CloneNotSupportedException e)
-		{
-			IO.errmes("clone: " + e);
-		}
-
-		return f;
-	}
-
-	protected Fun unInitializedClone()
-	{
-		Fun f = funClone();
-		f.args = new Term[args.length];
-		return f;
-	}
-
-	protected Fun initializedClone()
-	{
-		Fun f = funClone();
-		f.init(args.length);
-		return f;
-	}
-
-	@Override
-	Term reaction(Term that)
-	{
-		// IO.mes("TRACE>> "+name());
-		Fun f = funClone();
-		f.args = new Term[args.length];
-		for (int i = 0; i < args.length; i++)
-		{
-			f.args[i] = args[i].reaction(that);
-		}
-		return f;
 	}
 
 	@Override
@@ -236,6 +120,16 @@ public class Fun extends Const
 			curr = tail;
 		}
 		return l;
+	}
+
+	public final int putArg(int i, Term T, Prog p)
+	{
+		return getArg(i).unify(T, p.getTrail()) ? 1 : 0;
+	}
+
+	public final void setArg(int i, Term T)
+	{
+		args[i] = T;
 	}
 
 	@Override
@@ -260,8 +154,114 @@ public class Fun extends Const
 	}
 
 	@Override
+	public Term token()
+	{
+		return args[0];
+	}
+
+	@Override
+	public String toString()
+	{
+		return funToString();
+	}
+
+	final protected Fun funClone()
+	{
+		Fun f = null;
+
+		try
+		{
+			// use of clone is needed for "polymorphic" copy
+			f = (Fun) clone();
+		}
+		catch (CloneNotSupportedException e)
+		{
+			IO.errmes("clone: " + e);
+		}
+
+		return f;
+	}
+
+	protected final String funToString()
+	{
+		if (args == null)
+		{
+			return qname() + "()";
+		}
+		int l = args.length;
+		return qname() + (l <= 0 ? "" : "(" + show_args() + ")");
+	}
+
+	// stuff allowing polymorphic cloning of Fun subclasses
+	// without using reflection - should be probaly faster than
+	// reflection classes - to check
+
+	protected Fun initializedClone()
+	{
+		Fun f = funClone();
+		f.init(args.length);
+		return f;
+	}
+
+	protected Fun unInitializedClone()
+	{
+		Fun f = funClone();
+		f.args = new Term[args.length];
+		return f;
+	}
+
+	@Override
+	boolean bind_to(Term that, Trail trail)
+	{
+		return super.bind_to(that, trail) && args.length == ((Fun) that).args.length;
+	}
+
+	@Override
 	boolean isClause()
 	{
 		return getArity() == 2 && name().equals(":-");
+	}
+
+	@Override
+	Term reaction(Term that)
+	{
+		// IO.mes("TRACE>> "+name());
+		Fun f = funClone();
+		f.args = new Term[args.length];
+		for (int i = 0; i < args.length; i++)
+		{
+			f.args[i] = args[i].reaction(that);
+		}
+		return f;
+	}
+
+	@Override
+	boolean unify_to(Term that, Trail trail)
+	{
+		if (bind_to(that, trail))
+		{
+			for (int i = 0; i < args.length; i++)
+			{
+				if (!args[i].unify(((Fun) that).args[i], trail))
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+		else
+		{
+			return that.bind_to(this, trail);
+		}
+	}
+
+	private String show_args()
+	{
+		StringBuffer s = new StringBuffer(watchNull(args[0]));
+		for (int i = 1; i < args.length; i++)
+		{
+			s.append("," + watchNull(args[i]));
+		}
+		return s.toString();
 	}
 }

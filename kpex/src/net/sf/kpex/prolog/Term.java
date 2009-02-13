@@ -28,11 +28,70 @@ import net.sf.kpex.util.Trail;
 public abstract class Term extends Object implements Cloneable
 {
 
+	public final static int CONST = 0;
+	public final static int INT = -2;
 	public final static int JAVA = -4;
 	public final static int REAL = -3;
-	public final static int INT = -2;
 	public final static int VAR = -1;
-	public final static int CONST = 0;
+
+	public static Term fromString(String s)
+	{
+		return Clause.clauseFromString(s).toTerm();
+	}
+
+	/**
+	 * Converts a list of character codes to a String.
+	 */
+	protected static String charsToString(Nonvar Cs)
+	{
+		StringBuffer s = new StringBuffer("");
+
+		while (!(Cs instanceof Nil))
+		{
+			if (!(Cs instanceof Cons))
+			{
+				return null;
+			}
+			Nonvar head = (Nonvar) ((Cons) Cs).getArg(0);
+			if (!(head instanceof Int))
+			{
+				return null;
+			}
+			char c = (char) ((Int) head).val;
+			s.append(c);
+			Cs = (Nonvar) ((Cons) Cs).getArg(1);
+		}
+
+		return s.toString();
+	}
+
+	static final Nonvar stringToChars(String s)
+	{
+		if (0 == s.length())
+		{
+			return Const.aNil;
+		}
+		Cons l = new Cons(new Int(s.charAt(0)), Const.aNil);
+		Cons curr = l;
+		for (int i = 1; i < s.length(); i++)
+		{
+			Cons tail = new Cons(new Int(s.charAt(i)), Const.aNil);
+			curr.args[1] = tail;
+			curr = tail;
+		}
+		return l;
+	}
+
+	/**
+	 * Returns a copy of a term with variables standardized apart (`fresh
+	 * variables').
+	 */
+	synchronized public Term copy()
+	{
+		return reaction(new Copier());
+	}
+
+	public abstract boolean eq(Term that);
 
 	/**
 	 * returns or fakes an arity for all subtypes
@@ -40,55 +99,17 @@ public abstract class Term extends Object implements Cloneable
 	abstract public int getArity();
 
 	/**
-	 * Dereferences if necessary. This should be synchronized otherwise vicious
-	 * non-reentrancy problems may occur in the presence of GC and heavy
-	 * multi-threading!!!
+	 * Returns a string key used based on the string name of the term. Note that
+	 * the key for a clause AL-B,C. is the key insted of ':-'.
 	 */
-	public Term ref()
-	{ // synchronized !!!
-		return this;
-	}
-
-	abstract boolean bind_to(Term that, Trail trail);
-
-	/** Unify dereferenced */
-	abstract boolean unify_to(Term that, Trail trail);
-
-	/** Dereference and unify_to */
-	protected final boolean unify(Term that, Trail trail)
+	public String getKey()
 	{
-		return ref().unify_to(that.ref(), trail);
+		return toString();
 	}
 
-	public void undo()
-	{ // does nothing
-	}
-
-	public abstract boolean eq(Term that);
-
-	public Term token()
-	{
-		return this;
-	}
-
-	Term toTerm()
-	{
-		return this;
-	}
-
-	public Clause toClause()
-	{
-		return new Clause(this, Const.aTrue);
-	}
-
-	boolean isClause()
+	public boolean isBuiltin()
 	{
 		return false;
-	}
-
-	public static Term fromString(String s)
-	{
-		return Clause.clauseFromString(s).toTerm();
 	}
 
 	/**
@@ -128,45 +149,6 @@ public abstract class Term extends Object implements Cloneable
 	}
 
 	/**
-	 * Defines the reaction to an agent recursing over the structure of a term.
-	 * <b>This</b> is passed to the agent and the result of the action is
-	 * returned. Through overriding, for instance, a Fun term will provide the
-	 * recursion over its arguments, by applying the action to each of them.
-	 * 
-	 * @see Fun
-	 */
-	Term reaction(Term agent)
-	{
-		Term T = agent.action(this);
-		return T;
-	}
-
-	/**
-	 * Identity action.
-	 */
-	Term action(Term that)
-	{
-		return that;
-	}
-
-	/**
-	 * Returns a copy of a term with variables standardized apart (`fresh
-	 * variables').
-	 */
-	synchronized public Term copy()
-	{
-		return reaction(new Copier());
-	}
-
-	/**
-	 * Returns '[]'(V1,V2,..Vn) where Vi is a variable occuring in this Term
-	 */
-	public Term varsOf()
-	{
-		return new Copier().getMyVars(this);
-	}
-
-	/**
 	 * Replaces variables with uppercase constants named `V1', 'V2', etc. to be
 	 * read back as variables.
 	 */
@@ -188,21 +170,29 @@ public abstract class Term extends Object implements Cloneable
 		return pprint();
 	}
 
-	/*
-	 * Returns an unquoted version of toString()
+	/**
+	 * Dereferences if necessary. This should be synchronized otherwise vicious
+	 * non-reentrancy problems may occur in the presence of GC and heavy
+	 * multi-threading!!!
 	 */
-	public String toUnquoted()
-	{
-		return pprint();
+	public Term ref()
+	{ // synchronized !!!
+		return this;
 	}
 
-	/**
-	 * Returns a string key used based on the string name of the term. Note that
-	 * the key for a clause AL-B,C. is the key insted of ':-'.
-	 */
-	public String getKey()
+	public Nonvar toChars()
 	{
-		return toString();
+		return stringToChars(toUnquoted());
+	}
+
+	public Clause toClause()
+	{
+		return new Clause(this, Const.aTrue);
+	}
+
+	public Term token()
+	{
+		return this;
 	}
 
 	/**
@@ -215,14 +205,23 @@ public abstract class Term extends Object implements Cloneable
 	}
 
 	/*
-	 * Just to catch the frequent error when the arg is forgotten while definig
-	 * a builtin. Being final, it will generate a compile time error if this
-	 * happens
+	 * Returns an unquoted version of toString()
 	 */
-	final int exec()
+	public String toUnquoted()
 	{
+		return pprint();
+	}
 
-		return -1;
+	public void undo()
+	{ // does nothing
+	}
+
+	/**
+	 * Returns '[]'(V1,V2,..Vn) where Vi is a variable occuring in this Term
+	 */
+	public Term varsOf()
+	{
+		return new Copier().getMyVars(this);
 	}
 
 	/**
@@ -234,56 +233,57 @@ public abstract class Term extends Object implements Cloneable
 		return -1;
 	}
 
-	static final Nonvar stringToChars(String s)
+	/** Dereference and unify_to */
+	protected final boolean unify(Term that, Trail trail)
 	{
-		if (0 == s.length())
-		{
-			return Const.aNil;
-		}
-		Cons l = new Cons(new Int(s.charAt(0)), Const.aNil);
-		Cons curr = l;
-		for (int i = 1; i < s.length(); i++)
-		{
-			Cons tail = new Cons(new Int(s.charAt(i)), Const.aNil);
-			curr.args[1] = tail;
-			curr = tail;
-		}
-		return l;
-	}
-
-	public Nonvar toChars()
-	{
-		return stringToChars(toUnquoted());
+		return ref().unify_to(that.ref(), trail);
 	}
 
 	/**
-	 * Converts a list of character codes to a String.
+	 * Identity action.
 	 */
-	protected static String charsToString(Nonvar Cs)
+	Term action(Term that)
 	{
-		StringBuffer s = new StringBuffer("");
-
-		while (!(Cs instanceof Nil))
-		{
-			if (!(Cs instanceof Cons))
-			{
-				return null;
-			}
-			Nonvar head = (Nonvar) ((Cons) Cs).getArg(0);
-			if (!(head instanceof Int))
-			{
-				return null;
-			}
-			char c = (char) ((Int) head).val;
-			s.append(c);
-			Cs = (Nonvar) ((Cons) Cs).getArg(1);
-		}
-
-		return s.toString();
+		return that;
 	}
 
-	public boolean isBuiltin()
+	abstract boolean bind_to(Term that, Trail trail);
+
+	/*
+	 * Just to catch the frequent error when the arg is forgotten while definig
+	 * a builtin. Being final, it will generate a compile time error if this
+	 * happens
+	 */
+	final int exec()
+	{
+
+		return -1;
+	}
+
+	boolean isClause()
 	{
 		return false;
 	}
+
+	/**
+	 * Defines the reaction to an agent recursing over the structure of a term.
+	 * <b>This</b> is passed to the agent and the result of the action is
+	 * returned. Through overriding, for instance, a Fun term will provide the
+	 * recursion over its arguments, by applying the action to each of them.
+	 * 
+	 * @see Fun
+	 */
+	Term reaction(Term agent)
+	{
+		Term T = agent.action(this);
+		return T;
+	}
+
+	Term toTerm()
+	{
+		return this;
+	}
+
+	/** Unify dereferenced */
+	abstract boolean unify_to(Term that, Trail trail);
 }

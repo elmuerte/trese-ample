@@ -27,13 +27,13 @@ import net.sf.kpex.util.Queue;
  */
 public class SourceMerger extends JavaSource
 {
+	private Queue Q;
+
 	public SourceMerger(Const Xs, Prog p)
 	{
 		super(p);
 		Q = new Queue(Copier.ConsToVector(Xs));
 	}
-
-	private Queue Q;
 
 	@Override
 	public Term getElement()

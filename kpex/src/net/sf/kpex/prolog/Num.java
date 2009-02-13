@@ -29,11 +29,11 @@ package net.sf.kpex.prolog;
 public abstract class Num extends Nonvar
 {
 
+	abstract public double getValue();
+
 	@Override
 	public String toString()
 	{
 		return name();
 	}
-
-	abstract public double getValue();
 }
