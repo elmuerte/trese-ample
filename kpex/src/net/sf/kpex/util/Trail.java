@@ -35,7 +35,7 @@ import net.sf.kpex.prolog.Var;
  * @see Term
  * @see Var
  */
-public class Trail extends Stack
+public class Trail extends Stack<Term>
 {
 	private static final long serialVersionUID = -7383604147299422937L;
 
@@ -70,7 +70,7 @@ public class Trail extends Stack
 		// IO.assertion("unwind attempted from smaller to larger top");
 		for (int i = size() - to; i > 0; i--)
 		{
-			Term V = (Term) pop();
+			Term V = pop();
 			V.undoBinding();
 		}
 	}

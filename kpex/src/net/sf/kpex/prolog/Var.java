@@ -22,8 +22,8 @@ package net.sf.kpex.prolog;
 import net.sf.kpex.util.Trail;
 
 /**
- * Part of the Term hierarchy implmenting logical variables. They are subject to
- * reset by application of and undo action keep on the trail stack.
+ * Part of the Term hierarchy implementing logical variables. They are subject
+ * to reset by application of and undo action keep on the trail stack.
  * 
  * @see Trail
  * @see Prog
@@ -32,33 +32,53 @@ import net.sf.kpex.util.Trail;
  */
 public class Var extends Term
 {
-	protected Term val;
+	/**
+	 * The current value of this variable. Will be "this" when unbound
+	 */
+	protected Term value;
 
 	public Var()
 	{
-		val = this;
+		value = this;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.kpex.prolog.Term#bindTo(net.sf.kpex.prolog.Term,
+	 * net.sf.kpex.util.Trail)
+	 */
 	@Override
 	public boolean bindTo(Term x, Trail trail)
 	{
-		val = x;
+		value = x;
 		trail.push(this);
 		return true;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.kpex.prolog.Term#eq(net.sf.kpex.prolog.Term)
+	 */
 	@Override
 	public boolean eq(Term x)
 	{ // not a term compare!
 		return getRef() == x.getRef();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.kpex.prolog.Term#getArity()
+	 */
 	@Override
 	public int getArity()
 	{
 		return Term.ARITY_VAR;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.kpex.prolog.Term#getKey()
+	 */
 	@Override
 	public String getKey()
 	{
@@ -73,33 +93,51 @@ public class Var extends Term
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.kpex.prolog.Term#getRef()
+	 */
 	@Override
 	public Term getRef()
 	{
-		return unbound() ? this : val.getRef();
+		return unbound() ? this : value.getRef();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString()
 	{
 		return unbound() ? name() : getRef().toString();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.kpex.prolog.Term#undoBinding()
+	 */
 	@Override
 	public void undoBinding()
 	{
-		val = this;
+		value = this;
 	}
 
+	/**
+	 * @return
+	 */
 	protected String name()
 	{
 		return "_" + Integer.toHexString(hashCode());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.kpex.prolog.Term#reaction(net.sf.kpex.prolog.Term)
+	 */
 	@Override
 	protected Term reaction(Term agent)
 	{
-
 		Term R = agent.action(getRef());
 
 		if (!(R instanceof Var))
@@ -110,16 +148,23 @@ public class Var extends Term
 		return R;
 	}
 
-	final boolean unbound()
+	/**
+	 * @return True if this variable is not bound
+	 */
+	public final boolean unbound()
 	{
-		return val == this;
+		return value == this;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.kpex.prolog.Term#unifyTo(net.sf.kpex.prolog.Term,
+	 * net.sf.kpex.util.Trail)
+	 */
 	@Override
-	protected
-	boolean unifyTo(Term that, Trail trail)
+	protected boolean unifyTo(Term that, Trail trail)
 	{
 		// expects: this, that are dereferenced
-		return val.bindTo(that, trail);
+		return value.bindTo(that, trail);
 	}
 }
