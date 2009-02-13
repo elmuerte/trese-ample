@@ -21,51 +21,72 @@ package net.sf.kpex.prolog;
 
 import net.sf.kpex.util.Trail;
 
+/**
+ * An integer representation (as a long value)
+ */
 public class Int extends Num
 {
-	long val;
+	protected long value;
 
 	public Int(long i)
 	{
-		val = i;
+		value = i;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.kpex.prolog.Term#getArity()
+	 */
 	@Override
 	public final int getArity()
 	{
 		return Term.ARITY_INT;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.kpex.prolog.Num#getValue()
+	 */
 	@Override
 	public final double getValue()
 	{
-		return val;
+		return value;
 	}
 
+	/**
+	 * @return The value as an integer
+	 */
 	public final int intValue()
 	{
-		return (int) val;
+		return (int) value;
 	}
 
+	/**
+	 * @return The value as a long
+	 */
 	public final long longValue()
 	{
-		return val;
+		return value;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.kpex.prolog.Nonvar#name()
+	 */
 	@Override
 	public String name()
 	{
-		return "" + val;
+		return Long.toString(value);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.kpex.prolog.Nonvar#bindTo(net.sf.kpex.prolog.Term,
+	 * net.sf.kpex.util.Trail)
+	 */
 	@Override
 	protected boolean bindTo(Term that, Trail trail)
 	{
-		return super.bindTo(that, trail) && (double) val == (double) ((Int) that).val;
-		// unbelievable but true: converting
-		// to double is the only way to convince
-		// Microsoft's jview that 1==1
-		// $$ casting to double to be removed
-		// once they get it right
+		return super.bindTo(that, trail) && value == ((Int) that).value;
 	}
 }

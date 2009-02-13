@@ -24,11 +24,17 @@ package net.sf.kpex.prolog;
  */
 public class Nil extends Const
 {
+	/**
+	 * 
+	 */
 	public Nil()
 	{
 		this("[]");
 	}
 
+	/**
+	 * @param s
+	 */
 	public Nil(String s)
 	{
 		super(s);

@@ -24,20 +24,28 @@ package net.sf.kpex.prolog;
  * wrapped Java object
  */
 
-public class JavaObject extends SystemObject
+public class JavaObject<T> extends SystemObject
 {
-	Object val;
+	protected T value;
 
-	public JavaObject(Object i)
+	public JavaObject(T val)
 	{
 		// available=true;
-		val = i;
+		value = val;
 	}
 
 	@Override
 	public Object toObject()
 	{
-		return val;
+		return value;
+	}
+
+	/**
+	 * @return the value
+	 */
+	public T getValue()
+	{
+		return value;
 	}
 
 	/*

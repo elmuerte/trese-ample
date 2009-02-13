@@ -28,9 +28,15 @@ package net.sf.kpex.prolog;
  */
 public abstract class Num extends Nonvar
 {
-
+	/**
+	 * @return The value as a double
+	 */
 	abstract public double getValue();
 
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString()
 	{

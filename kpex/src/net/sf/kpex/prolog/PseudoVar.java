@@ -27,16 +27,20 @@ package net.sf.kpex.prolog;
  */
 public class PseudoVar extends Const
 {
-	PseudoVar(int i)
+	public PseudoVar(int i)
 	{
 		super("V_" + i);
 	}
 
-	PseudoVar(String s)
+	public PseudoVar(String s)
 	{
 		super(s);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.kpex.prolog.Const#toString()
+	 */
 	@Override
 	public String toString()
 	{

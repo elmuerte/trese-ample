@@ -27,34 +27,59 @@ import net.sf.kpex.util.Trail;
  */
 public class SystemObject extends Nonvar
 {
+	private static long idCounter = 0;
 
-	static long ctr = 0;
-
-	private long ordinal;
-
-	SystemObject()
+	/**
+	 * @return The next id
+	 */
+	protected static long nextId()
 	{
-		ordinal = ++ctr;
+		return ++idCounter;
 	}
 
+	/**
+	 * Identification number for this object
+	 */
+	protected long ordinal = nextId();
+
+	protected SystemObject()
+	{}
+
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.kpex.prolog.Term#getArity()
+	 */
 	@Override
 	public final int getArity()
 	{
 		return Term.ARITY_JAVA;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.kpex.prolog.Nonvar#name()
+	 */
 	@Override
 	public String name()
 	{
-		return "{" + getClass().getName() + "." + ordinal + "}";
+		return String.format("{%s.%d}", getClass().getName(), ordinal);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString()
 	{
 		return name();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.kpex.prolog.Nonvar#bindTo(net.sf.kpex.prolog.Term,
+	 * net.sf.kpex.util.Trail)
+	 */
 	@Override
 	protected boolean bindTo(Term that, Trail trail)
 	{

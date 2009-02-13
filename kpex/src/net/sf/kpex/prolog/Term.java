@@ -73,7 +73,7 @@ public abstract class Term implements Cloneable
 			{
 				return null;
 			}
-			char c = (char) ((Int) head).val;
+			char c = (char) ((Int) head).value;
 			s.append(c);
 			Cs = (Nonvar) ((Cons) Cs).getArg(1);
 		}
@@ -289,6 +289,8 @@ public abstract class Term implements Cloneable
 	}
 
 	/**
+	 * Bind this term to the other term. Returns true when the bind is valid.
+	 * 
 	 * @param that
 	 * @param trail
 	 * @return

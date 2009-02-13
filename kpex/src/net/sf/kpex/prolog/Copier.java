@@ -19,14 +19,15 @@
  */
 package net.sf.kpex.prolog;
 
-import java.util.Enumeration;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 import net.sf.kpex.io.IO;
-import net.sf.kpex.util.HashDict;
 
 /**
- * Term Copier agent. Has its own Variable dictionnary. Uses a generic action
+ * Term Copier agent. Has its own Variable dictionary. Uses a generic action
  * propagator which recurses over Terms.
  */
 public class Copier extends SystemObject
@@ -38,6 +39,7 @@ public class Copier extends SystemObject
 	 */
 	final static Const anAnswer = new Const("answer");
 
+	// TODO
 	static Vector ConsToVector(Const Xs)
 	{
 		Vector V = new Vector();
@@ -71,50 +73,25 @@ public class Copier extends SystemObject
 	}
 
 	/**
-	 * Reifies an Enumeration as a Vector. Vector.elements can give back the
-	 * enumeration if needed.
-	 * 
-	 * @see Copier
-	 */
-	static Vector EnumerationToVector(Enumeration e)
-	{
-		Vector V = new Vector();
-		while (e.hasMoreElements())
-		{
-			V.addElement(e.nextElement());
-		}
-		return V;
-	}
-
-	// Term copyMe(Term that) {
-	// return that.reaction(this);
-	// }
-
-	/**
 	 * Converts a reified Enumeration to functor based on name of Const c and
 	 * args being the elements of the Enumeration.
 	 */
 
-	static Term toFun(Const c, Enumeration e)
+	public static Term toFun(Const c, Collection<Term> e)
 	{
-		Vector V = EnumerationToVector(e);
-		int arity = V.size();
+		int arity = e.size();
 		if (arity == 0)
 		{
 			return c;
 		}
-		Fun f = new Fun(c.name(), arity);
-		for (int i = 0; i < arity; i++)
-		{
-			f.args[i] = (Term) V.elementAt(i);
-		}
+		Fun f = new Fun(c.name(), e.toArray(new Term[e.size()]));
 		return f;
 	}
 
 	/**
 	 * Represents a list [f,a1...,an] as f(a1,...,an)
 	 */
-
+	// TODO
 	static Fun VectorToFun(Vector V)
 	{
 		Const f = (Const) V.firstElement();
@@ -127,14 +104,17 @@ public class Copier extends SystemObject
 		return T;
 	}
 
-	private HashDict dict;
+	/**
+	 * 
+	 */
+	protected Map<Term, Var> dict;
 
 	/**
 	 * creates a new Copier together with its related HashDict for variables
 	 */
-	Copier()
+	public Copier()
 	{
-		dict = new HashDict();
+		dict = new HashMap<Term, Var>();
 	}
 
 	/**
@@ -148,7 +128,7 @@ public class Copier extends SystemObject
 
 		if (place instanceof Var)
 		{
-			Var root = (Var) dict.get(place);
+			Var root = dict.get(place);
 			if (null == root)
 			{
 				root = new Var();
@@ -160,9 +140,13 @@ public class Copier extends SystemObject
 		return place;
 	}
 
-	Term getMyVars(Term that)
+	/**
+	 * @param that
+	 * @return
+	 */
+	public Term getMyVars(Term that)
 	{
-		/* Term */that.reaction(this);
-		return toFun(anAnswer, dict.keys());
+		that.reaction(this);
+		return toFun(anAnswer, dict.keySet());
 	}
 }

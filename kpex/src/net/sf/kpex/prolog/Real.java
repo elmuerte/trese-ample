@@ -29,34 +29,51 @@ import net.sf.kpex.util.Trail;
  */
 public class Real extends Num
 {
-	double val;
+	protected double value;
 
 	public Real(double i)
 	{
-		val = i;
+		value = i;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.kpex.prolog.Term#getArity()
+	 */
 	@Override
 	public final int getArity()
 	{
 		return Term.ARITY_REAL;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.kpex.prolog.Num#getValue()
+	 */
 	@Override
 	public final double getValue()
 	{
-		return val;
+		return value;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.kpex.prolog.Nonvar#name()
+	 */
 	@Override
 	public String name()
 	{
-		return "" + val;
+		return Double.toString(value);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.kpex.prolog.Nonvar#bindTo(net.sf.kpex.prolog.Term,
+	 * net.sf.kpex.util.Trail)
+	 */
 	@Override
 	protected boolean bindTo(Term that, Trail trail)
 	{
-		return super.bindTo(that, trail) && val == ((Real) that).val;
+		return super.bindTo(that, trail) && value == ((Real) that).value;
 	}
 }

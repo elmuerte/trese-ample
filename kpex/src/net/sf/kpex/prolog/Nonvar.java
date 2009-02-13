@@ -28,15 +28,26 @@ import net.sf.kpex.util.Trail;
  */
 public abstract class Nonvar extends Term
 {
-
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.kpex.prolog.Term#eq(net.sf.kpex.prolog.Term)
+	 */
 	@Override
 	public boolean eq(Term that)
 	{
 		return that instanceof Nonvar && bindTo(that, null);
 	}
 
+	/**
+	 * @return The name of the non variable
+	 */
 	public abstract String name();
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.kpex.prolog.Term#bindTo(net.sf.kpex.prolog.Term,
+	 * net.sf.kpex.util.Trail)
+	 */
 	@Override
 	protected boolean bindTo(Term that, Trail trail)
 	{
@@ -46,14 +57,19 @@ public abstract class Nonvar extends Term
 	/**
 	 * returns a list representation of the object
 	 */
-	Const listify()
+	// TODO: never used
+	protected Const listify()
 	{
 		return new Cons(this, Const.NIL);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.kpex.prolog.Term#unifyTo(net.sf.kpex.prolog.Term,
+	 * net.sf.kpex.util.Trail)
+	 */
 	@Override
-	protected
-	boolean unifyTo(Term that, Trail trail)
+	protected boolean unifyTo(Term that, Trail trail)
 	{
 		if (bindTo(that, trail))
 		{
