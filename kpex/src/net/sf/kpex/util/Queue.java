@@ -25,7 +25,7 @@ import java.util.Vector;
 import net.sf.kpex.io.IO;
 
 /**
- * Generic dynamic Queeue with (amortized) O(1) enq/deq (add and remove)
+ * Generic dynamic Queue with (amortized) O(1) enq/deq (add and remove)
  * operations
  */
 public class Queue implements Cloneable

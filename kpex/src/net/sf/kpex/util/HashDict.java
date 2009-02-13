@@ -23,7 +23,10 @@ import java.util.Hashtable;
 
 /**
  * General purpose dictionary
+ * 
+ * @deprecated should be replaced by Map<?,?>
  */
+@Deprecated
 public class HashDict extends Hashtable
 {
 	/**
