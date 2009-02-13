@@ -22,7 +22,7 @@ package net.sf.kpex.prolog;
 import java.util.Enumeration;
 
 import net.sf.kpex.io.IO;
-import net.sf.kpex.io.Parser;
+import net.sf.kpex.parser.Parser;
 import net.sf.kpex.util.HashDict;
 import net.sf.kpex.util.Trail;
 
@@ -93,25 +93,25 @@ public class Clause extends Fun
 		}
 	}
 
-	public int begins_at = 0;
+	protected int begins_at = 0;
 
 	/**
 	 * Variable dictionary
 	 */
 	public HashDict dict = null;
 
-	public int ends_at = 0;
+	protected int ends_at = 0;
 
 	/**
 	 * File name and line where sources start and end (if applicable)
 	 */
 
-	public String fname = null;
+	protected String fname = null;
 
 	/**
 	 * Remembers if a clause is ground.
 	 */
-	private boolean ground = false;
+	protected boolean ground = false;
 
 	/**
 	 * Constructs a clause by parsing its string representation. Note the
@@ -137,7 +137,7 @@ public class Clause extends Fun
 	}
 
 	/**
-	 * Replaces varibles with nice looking upper case constants for printing
+	 * Replaces variables with nice looking upper case constants for printing
 	 * purposes
 	 */
 	synchronized public Clause cnumbervars(boolean replaceAnonymous)

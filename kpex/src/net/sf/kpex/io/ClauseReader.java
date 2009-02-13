@@ -22,6 +22,7 @@ package net.sf.kpex.io;
 import java.io.IOException;
 import java.io.Reader;
 
+import net.sf.kpex.parser.Parser;
 import net.sf.kpex.prolog.Clause;
 import net.sf.kpex.prolog.Const;
 import net.sf.kpex.prolog.Fun;

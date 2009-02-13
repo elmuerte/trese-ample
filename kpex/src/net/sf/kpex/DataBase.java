@@ -24,7 +24,7 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import net.sf.kpex.io.IO;
-import net.sf.kpex.io.Parser;
+import net.sf.kpex.parser.Parser;
 import net.sf.kpex.prolog.Clause;
 import net.sf.kpex.prolog.Cons;
 import net.sf.kpex.prolog.Const;
