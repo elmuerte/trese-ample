@@ -1439,7 +1439,7 @@ class get_persistent extends FunBuiltin
 	public int exec(Prog p)
 	{
 		Fluent F = (Fluent) getArg(0);
-		Term R = F.getPersistent() ? Const.YES : Const.NO;
+		Term R = F.isPersistent() ? Const.YES : Const.NO;
 		return putArg(1, R, p);
 	}
 }

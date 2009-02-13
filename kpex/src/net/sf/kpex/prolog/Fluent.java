@@ -30,13 +30,13 @@ public class Fluent extends SystemObject
 
 	public Fluent(Prog p)
 	{
-		trailMe(p);
+		addToTrail(p);
 	}
 
 	/**
 	 * returns true if this Fluent is persistent, false otherwise
 	 */
-	public boolean getPersistent()
+	public boolean isPersistent()
 	{
 		return persistent;
 	}
@@ -71,9 +71,9 @@ public class Fluent extends SystemObject
 	 * Adds this Fluent to the parent Solver's trail, which will eventually call
 	 * the undo method of the Fluent on backtracking.
 	 */
-	protected void trailMe(Prog p)
+	protected void addToTrail(Prog p)
 	{
-		if (null != p)
+		if (p != null)
 		{
 			p.getTrail().push(this);
 		}

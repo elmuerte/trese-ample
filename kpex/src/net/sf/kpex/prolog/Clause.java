@@ -93,19 +93,18 @@ public class Clause extends Fun
 		}
 	}
 
-	protected int begins_at = 0;
+	protected int beginsAt = 0;
 
 	/**
 	 * Variable dictionary
 	 */
 	public HashDict dict = null;
 
-	protected int ends_at = 0;
+	protected int endsAt = 0;
 
 	/**
 	 * File name and line where sources start and end (if applicable)
 	 */
-
 	protected String fname = null;
 
 	/**
@@ -225,7 +224,7 @@ public class Clause extends Fun
 	@Override
 	public String prettyPrint(boolean replaceAnonymous)
 	{
-		String s = Clause2String(cnumbervars(replaceAnonymous));
+		String s = clauseToString(cnumbervars(replaceAnonymous));
 		// if(fname!=null) s="%% "+fname+":"+begins_at+"-"+ends_at+"\n"+s;
 		return s;
 	}
@@ -233,8 +232,8 @@ public class Clause extends Fun
 	public void setFile(String fname, int begins_at, int ends_at)
 	{
 		this.fname = fname.intern();
-		this.begins_at = begins_at;
-		this.ends_at = ends_at;
+		beginsAt = begins_at;
+		endsAt = ends_at;
 	}
 
 	/**
@@ -396,7 +395,7 @@ public class Clause extends Fun
 		return result;
 	}
 
-	synchronized final Clause unfold_with_goal(Clause goal, Trail trail)
+	synchronized final Clause unfoldWithGoal(Clause goal, Trail trail)
 	{
 		return goal.unfold(this, trail);
 	}
@@ -417,7 +416,7 @@ public class Clause extends Fun
 	/**
 	 * Prints out a clause as Head:-Body
 	 */
-	private String Clause2String(Clause c)
+	private String clauseToString(Clause c)
 	{
 		Term h = c.getHead();
 		Term t = c.getBody();

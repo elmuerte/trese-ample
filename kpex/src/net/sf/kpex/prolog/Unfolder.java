@@ -93,7 +93,7 @@ public class Unfolder extends Source
 			// resolution step, over goal/resolvent of the form:
 			// Answer:-G1,G2,...,Gn.
 			prog.getTrail().unwind(oldtop);
-			unfolded_goal = T.toClause().unfold_with_goal(goal, prog.getTrail());
+			unfolded_goal = T.toClause().unfoldWithGoal(goal, prog.getTrail());
 			if (null != unfolded_goal)
 			{
 				break;
@@ -126,7 +126,7 @@ public class Unfolder extends Source
 	 * Overrides default trailing by empty action
 	 */
 	@Override
-	protected void trailMe(Prog p)
+	protected void addToTrail(Prog p)
 	{
 	// IO.mes("not trailing"+this);
 	}
