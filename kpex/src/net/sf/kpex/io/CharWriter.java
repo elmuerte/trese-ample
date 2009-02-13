@@ -17,65 +17,66 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package net.sf.kpex.gui;
+package net.sf.kpex.io;
 
-import java.applet.Applet;
+import java.io.IOException;
+import java.io.Writer;
 
-import net.sf.kpex.Init;
-import net.sf.kpex.io.IO;
+import net.sf.kpex.prolog.Int;
+import net.sf.kpex.prolog.Prog;
+import net.sf.kpex.prolog.Sink;
+import net.sf.kpex.prolog.Term;
 
-public class JinniGUI extends Applet
+/**
+ * Writer
+ */
+public class CharWriter extends Sink
 {
+	protected Writer writer;
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4630471743888073666L;
-
-	/**
-	 * Used to initialise applet
-	 */
-	@Override
-	public void init()
+	public CharWriter(String f, Prog p)
 	{
-		IO.applet = this;
-		if (!JinniGuiMain.init_gui())
-		{
-			return;
-		}
-		String command = getParameter("command");
-		if (null != command && command.length() != 0)
-		{
-			Init.askJinni(command);
-		}
-		else
-		{
-			Init.askJinni("applet_console"); // default if applet PARAM
-			// "command" is absent
-		}
-		super.init();
+		super(p);
+		writer = IO.toFileWriter(f);
+	}
+
+	public CharWriter(Prog p)
+	{
+		super(p);
+		writer = IO.output;
 	}
 
 	@Override
-	public void start()
+	public int putElement(Term t)
 	{
-		IO.println("starting...");
+		if (null == writer)
+		{
+			return 0;
+		}
+		try
+		{
+			char c = (char) ((Int) t).intValue();
+			writer.write(c);
+		}
+		catch (IOException e)
+		{
+			return 0;
+		}
+		return 1;
 	}
 
 	@Override
 	public void stop()
 	{
-		IO.println("stopping...");
-	}
-
-	@Override
-	public void destroy()
-	{
-		IO.println("destroying...");
-	}
-
-	public static void main(String args[])
-	{
-		JinniGuiMain.main(args);
+		if (null != writer && IO.output != writer)
+		{
+			try
+			{
+				writer.close();
+			}
+			catch (IOException e)
+			{}
+			writer = null;
+		}
 	}
 }

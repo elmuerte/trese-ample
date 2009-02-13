@@ -17,65 +17,21 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package net.sf.kpex.gui;
+package net.sf.kpex.prolog;
 
-import java.applet.Applet;
-
-import net.sf.kpex.Init;
-import net.sf.kpex.io.IO;
-
-public class JinniGUI extends Applet
+/**
+ * Always succeeds
+ */
+public class true_ extends ConstBuiltin
 {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4630471743888073666L;
-
-	/**
-	 * Used to initialise applet
-	 */
-	@Override
-	public void init()
+	true_()
 	{
-		IO.applet = this;
-		if (!JinniGuiMain.init_gui())
-		{
-			return;
-		}
-		String command = getParameter("command");
-		if (null != command && command.length() != 0)
-		{
-			Init.askJinni(command);
-		}
-		else
-		{
-			Init.askJinni("applet_console"); // default if applet PARAM
-			// "command" is absent
-		}
-		super.init();
+		super("true");
 	}
 
 	@Override
-	public void start()
+	public int exec(Prog p)
 	{
-		IO.println("starting...");
-	}
-
-	@Override
-	public void stop()
-	{
-		IO.println("stopping...");
-	}
-
-	@Override
-	public void destroy()
-	{
-		IO.println("destroying...");
-	}
-
-	public static void main(String args[])
-	{
-		JinniGuiMain.main(args);
+		return 1;
 	}
 }

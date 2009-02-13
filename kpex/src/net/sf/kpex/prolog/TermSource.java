@@ -17,65 +17,56 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package net.sf.kpex.gui;
+package net.sf.kpex.prolog;
 
-import java.applet.Applet;
-
-import net.sf.kpex.Init;
-import net.sf.kpex.io.IO;
-
-public class JinniGUI extends Applet
+/**
+ * Maps a Term to an Source for iterating over its arguments
+ */
+public class TermSource extends Source
 {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4630471743888073666L;
-
-	/**
-	 * Used to initialise applet
-	 */
-	@Override
-	public void init()
+	public TermSource(Nonvar val, Prog p)
 	{
-		IO.applet = this;
-		if (!JinniGuiMain.init_gui())
+		super(p);
+		this.val = val;
+		pos = 0;
+	}
+
+	private Nonvar val;
+	private int pos;
+
+	@Override
+	public Term getElement()
+	{
+		Term X;
+		if (null == val)
 		{
-			return;
+			X = null;
 		}
-		String command = getParameter("command");
-		if (null != command && command.length() != 0)
+		else if (!(val instanceof Fun))
 		{
-			Init.askJinni(command);
+			X = val;
+			val = null;
+		}
+		else if (0 == pos)
+		{
+			X = new Const(val.name());
+		}
+		else if (pos <= ((Fun) val).getArity())
+		{
+			X = ((Fun) val).getArg(pos - 1);
 		}
 		else
 		{
-			Init.askJinni("applet_console"); // default if applet PARAM
-			// "command" is absent
+			X = null;
+			val = null;
 		}
-		super.init();
-	}
-
-	@Override
-	public void start()
-	{
-		IO.println("starting...");
+		pos++;
+		return X;
 	}
 
 	@Override
 	public void stop()
 	{
-		IO.println("stopping...");
-	}
-
-	@Override
-	public void destroy()
-	{
-		IO.println("destroying...");
-	}
-
-	public static void main(String args[])
-	{
-		JinniGuiMain.main(args);
+		val = null;
 	}
 }

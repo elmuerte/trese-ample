@@ -17,65 +17,44 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package net.sf.kpex.gui;
+package net.sf.kpex.prolog;
 
-import java.applet.Applet;
+import net.sf.kpex.util.HashDict;
 
-import net.sf.kpex.Init;
-import net.sf.kpex.io.IO;
-
-public class JinniGUI extends Applet
+/**
+ * Used in implementing uniform replacement of variables with new constants.
+ * useful for printing out with nicer variable names.
+ * 
+ * @see Var
+ * @see Clause
+ */
+public class VarNumberer extends SystemObject
 {
+	HashDict dict;
+	int ctr;
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4630471743888073666L;
-
-	/**
-	 * Used to initialise applet
-	 */
-	@Override
-	public void init()
+	VarNumberer()
 	{
-		IO.applet = this;
-		if (!JinniGuiMain.init_gui())
+		dict = new HashDict();
+		ctr = 0;
+	}
+
+	@Override
+	Term action(Term place)
+	{
+		place = place.ref();
+		// IO.trace(">>action: "+place);
+		if (place instanceof Var)
 		{
-			return;
+			Const root = (Const) dict.get(place);
+			if (null == root)
+			{
+				root = new PseudoVar(ctr++);
+				dict.put(place, root);
+			}
+			place = root;
 		}
-		String command = getParameter("command");
-		if (null != command && command.length() != 0)
-		{
-			Init.askJinni(command);
-		}
-		else
-		{
-			Init.askJinni("applet_console"); // default if applet PARAM
-			// "command" is absent
-		}
-		super.init();
-	}
-
-	@Override
-	public void start()
-	{
-		IO.println("starting...");
-	}
-
-	@Override
-	public void stop()
-	{
-		IO.println("stopping...");
-	}
-
-	@Override
-	public void destroy()
-	{
-		IO.println("destroying...");
-	}
-
-	public static void main(String args[])
-	{
-		JinniGuiMain.main(args);
+		// IO.trace("<<action: "+place);
+		return place;
 	}
 }

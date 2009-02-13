@@ -23,6 +23,17 @@ import java.io.Reader;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import net.sf.kpex.io.IO;
+import net.sf.kpex.io.Parser;
+import net.sf.kpex.prolog.Clause;
+import net.sf.kpex.prolog.Cons;
+import net.sf.kpex.prolog.Const;
+import net.sf.kpex.prolog.Fun;
+import net.sf.kpex.prolog.Prog;
+import net.sf.kpex.prolog.Term;
+import net.sf.kpex.util.HashDict;
+import net.sf.kpex.util.Queue;
+
 /**
  * Implements a Term and Clause objects based blackboard (database).
  */

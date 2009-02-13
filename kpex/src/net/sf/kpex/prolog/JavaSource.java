@@ -17,65 +17,52 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package net.sf.kpex.gui;
+package net.sf.kpex.prolog;
 
-import java.applet.Applet;
+import java.util.Enumeration;
+import java.util.Vector;
 
-import net.sf.kpex.Init;
-import net.sf.kpex.io.IO;
-
-public class JinniGUI extends Applet
+/**
+ * Builds Jinni Iterators from Java Sequences and Iterator type classes
+ */
+public class JavaSource extends Source
 {
+	private Enumeration e;
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4630471743888073666L;
-
-	/**
-	 * Used to initialise applet
-	 */
-	@Override
-	public void init()
+	JavaSource(Prog p)
 	{
-		IO.applet = this;
-		if (!JinniGuiMain.init_gui())
-		{
-			return;
-		}
-		String command = getParameter("command");
-		if (null != command && command.length() != 0)
-		{
-			Init.askJinni(command);
-		}
-		else
-		{
-			Init.askJinni("applet_console"); // default if applet PARAM
-			// "command" is absent
-		}
-		super.init();
+		super(p);
+		e = null;
+	}
+
+	public JavaSource(Enumeration e, Prog p)
+	{
+		super(p);
+		this.e = e;
+	}
+
+	JavaSource(Vector V, Prog p)
+	{
+		super(p);
+		e = V.elements();
 	}
 
 	@Override
-	public void start()
+	public Term getElement()
 	{
-		IO.println("starting...");
+		if (null == e || !e.hasMoreElements())
+		{
+			return null;
+		}
+		else
+		{
+			return (Term) e.nextElement();
+		}
 	}
 
 	@Override
 	public void stop()
 	{
-		IO.println("stopping...");
-	}
-
-	@Override
-	public void destroy()
-	{
-		IO.println("destroying...");
-	}
-
-	public static void main(String args[])
-	{
-		JinniGuiMain.main(args);
+		e = null;
 	}
 }

@@ -17,65 +17,47 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package net.sf.kpex.gui;
+package net.sf.kpex.prolog;
 
-import java.applet.Applet;
+import net.sf.kpex.util.Trail;
 
-import net.sf.kpex.Init;
-import net.sf.kpex.io.IO;
-
-public class JinniGUI extends Applet
+/**
+ * A SystemObject is a Jinni Nonvar with system assigned name
+ * 
+ */
+public class SystemObject extends Nonvar
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4630471743888073666L;
+	static long ctr = 0;
 
-	/**
-	 * Used to initialise applet
-	 */
-	@Override
-	public void init()
+	private long ordinal;
+
+	SystemObject()
 	{
-		IO.applet = this;
-		if (!JinniGuiMain.init_gui())
-		{
-			return;
-		}
-		String command = getParameter("command");
-		if (null != command && command.length() != 0)
-		{
-			Init.askJinni(command);
-		}
-		else
-		{
-			Init.askJinni("applet_console"); // default if applet PARAM
-			// "command" is absent
-		}
-		super.init();
+		ordinal = ++ctr;
 	}
 
 	@Override
-	public void start()
+	public String name()
 	{
-		IO.println("starting...");
+		return "{" + getClass().getName() + "." + ordinal + "}";
 	}
 
 	@Override
-	public void stop()
+	boolean bind_to(Term that, Trail trail)
 	{
-		IO.println("stopping...");
+		return super.bind_to(that, trail) && ordinal == ((SystemObject) that).ordinal;
 	}
 
 	@Override
-	public void destroy()
+	public String toString()
 	{
-		IO.println("destroying...");
+		return name();
 	}
 
-	public static void main(String args[])
+	@Override
+	public final int getArity()
 	{
-		JinniGuiMain.main(args);
+		return Term.JAVA;
 	}
 }

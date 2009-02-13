@@ -17,65 +17,51 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package net.sf.kpex.gui;
+package net.sf.kpex.prolog;
 
-import java.applet.Applet;
+import java.util.Vector;
 
-import net.sf.kpex.Init;
-import net.sf.kpex.io.IO;
-
-public class JinniGUI extends Applet
+abstract public class Source extends Fluent
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4630471743888073666L;
-
-	/**
-	 * Used to initialise applet
-	 */
-	@Override
-	public void init()
+	public Source(Prog p)
 	{
-		IO.applet = this;
-		if (!JinniGuiMain.init_gui())
+		super(p);
+	}
+
+	abstract public Term getElement();
+
+	public Const toList()
+	{
+		Term head = getElement();
+		if (null == head)
 		{
-			return;
+			return Const.aNil;
 		}
-		String command = getParameter("command");
-		if (null != command && command.length() != 0)
+		Cons l = new Cons(head, Const.aNil);
+		Cons curr = l;
+		for (;;)
 		{
-			Init.askJinni(command);
+			head = getElement();
+			if (null == head)
+			{
+				break;
+			}
+			Cons tail = new Cons(head, Const.aNil);
+			curr.args[1] = tail;
+			curr = tail;
 		}
-		else
+		return l;
+	}
+
+	public Term toFun()
+	{
+		Vector V = new Vector();
+		Term X;
+		while (null != (X = getElement()))
 		{
-			Init.askJinni("applet_console"); // default if applet PARAM
-			// "command" is absent
+			V.addElement(X);
 		}
-		super.init();
-	}
-
-	@Override
-	public void start()
-	{
-		IO.println("starting...");
-	}
-
-	@Override
-	public void stop()
-	{
-		IO.println("stopping...");
-	}
-
-	@Override
-	public void destroy()
-	{
-		IO.println("destroying...");
-	}
-
-	public static void main(String args[])
-	{
-		JinniGuiMain.main(args);
+		return Copier.VectorToFun(V);
 	}
 }

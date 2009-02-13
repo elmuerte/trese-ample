@@ -17,65 +17,46 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package net.sf.kpex.gui;
+package net.sf.kpex.io;
 
-import java.applet.Applet;
+import net.sf.kpex.prolog.Const;
+import net.sf.kpex.prolog.Fun;
+import net.sf.kpex.prolog.Prog;
+import net.sf.kpex.prolog.Term;
 
-import net.sf.kpex.Init;
-import net.sf.kpex.io.IO;
-
-public class JinniGUI extends Applet
+/**
+ * Writer
+ */
+public class ClauseWriter extends CharWriter
 {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4630471743888073666L;
-
-	/**
-	 * Used to initialise applet
-	 */
-	@Override
-	public void init()
+	public ClauseWriter(String f, Prog p)
 	{
-		IO.applet = this;
-		if (!JinniGuiMain.init_gui())
+		super(f, p);
+	}
+
+	public ClauseWriter(Prog p)
+	{
+		super(p);
+	}
+
+	@Override
+	public int putElement(Term t)
+	{
+		if (null == writer)
 		{
-			return;
+			return 0;
 		}
-		String command = getParameter("command");
-		if (null != command && command.length() != 0)
+		String s = null;
+		if (t instanceof Fun && "$string".equals(((Fun) t).name()))
 		{
-			Init.askJinni(command);
+			Const Xs = (Const) ((Fun) t).getArg(0);
+			s = Term.charsToString(Xs);
 		}
 		else
 		{
-			Init.askJinni("applet_console"); // default if applet PARAM
-			// "command" is absent
+			s = t.pprint();
 		}
-		super.init();
-	}
-
-	@Override
-	public void start()
-	{
-		IO.println("starting...");
-	}
-
-	@Override
-	public void stop()
-	{
-		IO.println("stopping...");
-	}
-
-	@Override
-	public void destroy()
-	{
-		IO.println("destroying...");
-	}
-
-	public static void main(String args[])
-	{
-		JinniGuiMain.main(args);
+		IO.print(writer, s);
+		return 1;
 	}
 }

@@ -17,65 +17,50 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package net.sf.kpex.gui;
+package net.sf.kpex.prolog;
 
-import java.applet.Applet;
+import net.sf.kpex.util.Trail;
 
-import net.sf.kpex.Init;
-import net.sf.kpex.io.IO;
-
-public class JinniGUI extends Applet
+/**
+ * Part of the Prolog Term hierarchy
+ * 
+ * @see Term
+ */
+public abstract class Nonvar extends Term
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4630471743888073666L;
+	public abstract String name();
 
-	/**
-	 * Used to initialise applet
-	 */
 	@Override
-	public void init()
+	boolean bind_to(Term that, Trail trail)
 	{
-		IO.applet = this;
-		if (!JinniGuiMain.init_gui())
+		return getClass() == that.getClass();
+	}
+
+	@Override
+	boolean unify_to(Term that, Trail trail)
+	{
+		if (bind_to(that, trail))
 		{
-			return;
-		}
-		String command = getParameter("command");
-		if (null != command && command.length() != 0)
-		{
-			Init.askJinni(command);
+			return true;
 		}
 		else
 		{
-			Init.askJinni("applet_console"); // default if applet PARAM
-			// "command" is absent
+			return that.bind_to(this, trail);
 		}
-		super.init();
 	}
 
 	@Override
-	public void start()
+	public boolean eq(Term that)
 	{
-		IO.println("starting...");
+		return that instanceof Nonvar && bind_to(that, null);
 	}
 
-	@Override
-	public void stop()
+	/**
+	 * returns a list representation of the object
+	 */
+	Const listify()
 	{
-		IO.println("stopping...");
-	}
-
-	@Override
-	public void destroy()
-	{
-		IO.println("destroying...");
-	}
-
-	public static void main(String args[])
-	{
-		JinniGuiMain.main(args);
+		return new Cons(this, Const.aNil);
 	}
 }

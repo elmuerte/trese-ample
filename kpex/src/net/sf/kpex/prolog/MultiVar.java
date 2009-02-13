@@ -17,65 +17,48 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package net.sf.kpex.gui;
+package net.sf.kpex.prolog;
 
-import java.applet.Applet;
+import java.util.Stack;
 
-import net.sf.kpex.Init;
-import net.sf.kpex.io.IO;
-
-public class JinniGUI extends Applet
+/**
+ * Varable-like entity, with a multiple values, in stack order. Set operations
+ * are undone on backtraking, when the previous value is restored.
+ */
+public class MultiVar extends Fluent
 {
+	Stack vals;
+
+	public MultiVar(Term T, Prog p)
+	{
+		super(p);
+		vals = new Stack();
+		vals.push(T.ref());
+	}
+
+	public final void set(Term T, Prog p)
+	{
+		vals.push(T);
+		p.getTrail().push(this);
+	}
+
+	public Term val()
+	{
+		return (Term) vals.peek();
+	}
 
 	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4630471743888073666L;
-
-	/**
-	 * Used to initialise applet
+	 * cannot be made presistent
 	 */
 	@Override
-	public void init()
+	public void undo()
 	{
-		IO.applet = this;
-		if (!JinniGuiMain.init_gui())
-		{
-			return;
-		}
-		String command = getParameter("command");
-		if (null != command && command.length() != 0)
-		{
-			Init.askJinni(command);
-		}
-		else
-		{
-			Init.askJinni("applet_console"); // default if applet PARAM
-			// "command" is absent
-		}
-		super.init();
+		vals.pop();
 	}
 
 	@Override
-	public void start()
+	public String toString()
 	{
-		IO.println("starting...");
-	}
-
-	@Override
-	public void stop()
-	{
-		IO.println("stopping...");
-	}
-
-	@Override
-	public void destroy()
-	{
-		IO.println("destroying...");
-	}
-
-	public static void main(String args[])
-	{
-		JinniGuiMain.main(args);
+		return "MultiVar[" + vals.size() + "]->{" + vals.peek().toString() + "}";
 	}
 }

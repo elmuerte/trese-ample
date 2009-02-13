@@ -45,16 +45,15 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import net.sf.kpex.Builtins;
-import net.sf.kpex.Const;
-import net.sf.kpex.Fun;
-import net.sf.kpex.FunBuiltin;
-import net.sf.kpex.IO;
-import net.sf.kpex.Int;
-import net.sf.kpex.JavaObject;
-import net.sf.kpex.Num;
-import net.sf.kpex.Prog;
-import net.sf.kpex.Term;
-
+import net.sf.kpex.io.IO;
+import net.sf.kpex.prolog.Const;
+import net.sf.kpex.prolog.Fun;
+import net.sf.kpex.prolog.FunBuiltin;
+import net.sf.kpex.prolog.Int;
+import net.sf.kpex.prolog.JavaObject;
+import net.sf.kpex.prolog.Num;
+import net.sf.kpex.prolog.Prog;
+import net.sf.kpex.prolog.Term;
 
 /**
  * Registers Jinni builtins for GUI programs

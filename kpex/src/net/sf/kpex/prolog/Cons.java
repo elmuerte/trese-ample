@@ -17,65 +17,63 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package net.sf.kpex.gui;
+package net.sf.kpex.prolog;
 
-import java.applet.Applet;
-
-import net.sf.kpex.Init;
-import net.sf.kpex.io.IO;
-
-public class JinniGUI extends Applet
+/**
+ * List Constructor. Cooperates with terminator Nil.
+ * 
+ * @see Nil
+ */
+public class Cons extends Fun
 {
+	public Cons(String cons, Term x0, Term x1)
+	{
+		super(cons, x0, x1);
+	}
+
+	public Cons(Term x0, Term x1)
+	{
+		this(".", x0, x1);
+	}
+
+	public Term getHead()
+	{
+		return getArg(0);
+	}
+
+	public Term getTail()
+	{
+		return getArg(1);
+	}
 
 	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4630471743888073666L;
-
-	/**
-	 * Used to initialise applet
+	 * List printer.
 	 */
 	@Override
-	public void init()
+	public String toString()
 	{
-		IO.applet = this;
-		if (!JinniGuiMain.init_gui())
+		Term h = getArg(0);
+		Term t = getArg(1);
+		StringBuffer s = new StringBuffer("[" + watchNull(h));
+		for (;;)
 		{
-			return;
+			if (t instanceof Nil)
+			{
+				s.append("]");
+				break;
+			}
+			else if (t instanceof Cons)
+			{
+				h = ((Cons) t).getArg(0);
+				t = ((Cons) t).getArg(1);
+				s.append("," + watchNull(h));
+			}
+			else
+			{
+				s.append("|" + watchNull(t) + "]");
+				break;
+			}
 		}
-		String command = getParameter("command");
-		if (null != command && command.length() != 0)
-		{
-			Init.askJinni(command);
-		}
-		else
-		{
-			Init.askJinni("applet_console"); // default if applet PARAM
-			// "command" is absent
-		}
-		super.init();
-	}
-
-	@Override
-	public void start()
-	{
-		IO.println("starting...");
-	}
-
-	@Override
-	public void stop()
-	{
-		IO.println("stopping...");
-	}
-
-	@Override
-	public void destroy()
-	{
-		IO.println("destroying...");
-	}
-
-	public static void main(String args[])
-	{
-		JinniGuiMain.main(args);
+		return s.toString();
 	}
 }

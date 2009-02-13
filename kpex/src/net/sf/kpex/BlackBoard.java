@@ -23,6 +23,11 @@ import java.util.Enumeration;
 import java.util.NoSuchElementException;
 import java.util.Vector;
 
+import net.sf.kpex.io.IO;
+import net.sf.kpex.prolog.Term;
+import net.sf.kpex.util.HashDict;
+import net.sf.kpex.util.Queue;
+
 /**
  * This class implementes generic multiple tuples by key operations for use by
  * the PrologBlackBoard class implementing Linda operations on Prolog terms. It

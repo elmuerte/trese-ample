@@ -17,65 +17,33 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package net.sf.kpex.gui;
+package net.sf.kpex.prolog;
 
-import java.applet.Applet;
+/**
+ * A JavaObject is a Jinni SystemObject with a val slot which containing a
+ * wrapped Java object
+ */
 
-import net.sf.kpex.Init;
-import net.sf.kpex.io.IO;
-
-public class JinniGUI extends Applet
+public class JavaObject extends SystemObject
 {
+	public JavaObject(Object i)
+	{
+		// available=true;
+		val = i;
+	}
 
-	/**
-	 * 
+	Object val;
+
+	@Override
+	public Object toObject()
+	{
+		return val;
+	}
+
+	/*
+	 * private boolean available; synchronized public void suspend() {
+	 * available=false; while(!available) { try { wait(); }
+	 * catch(InterruptedException e) {} } } synchronized public void resume() {
+	 * available=true; notifyAll(); }
 	 */
-	private static final long serialVersionUID = 4630471743888073666L;
-
-	/**
-	 * Used to initialise applet
-	 */
-	@Override
-	public void init()
-	{
-		IO.applet = this;
-		if (!JinniGuiMain.init_gui())
-		{
-			return;
-		}
-		String command = getParameter("command");
-		if (null != command && command.length() != 0)
-		{
-			Init.askJinni(command);
-		}
-		else
-		{
-			Init.askJinni("applet_console"); // default if applet PARAM
-			// "command" is absent
-		}
-		super.init();
-	}
-
-	@Override
-	public void start()
-	{
-		IO.println("starting...");
-	}
-
-	@Override
-	public void stop()
-	{
-		IO.println("stopping...");
-	}
-
-	@Override
-	public void destroy()
-	{
-		IO.println("destroying...");
-	}
-
-	public static void main(String args[])
-	{
-		JinniGuiMain.main(args);
-	}
 }

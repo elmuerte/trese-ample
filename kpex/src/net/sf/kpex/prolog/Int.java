@@ -17,65 +17,55 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package net.sf.kpex.gui;
+package net.sf.kpex.prolog;
 
-import java.applet.Applet;
+import net.sf.kpex.util.Trail;
 
-import net.sf.kpex.Init;
-import net.sf.kpex.io.IO;
-
-public class JinniGUI extends Applet
+public class Int extends Num
 {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4630471743888073666L;
-
-	/**
-	 * Used to initialise applet
-	 */
-	@Override
-	public void init()
+	public Int(long i)
 	{
-		IO.applet = this;
-		if (!JinniGuiMain.init_gui())
-		{
-			return;
-		}
-		String command = getParameter("command");
-		if (null != command && command.length() != 0)
-		{
-			Init.askJinni(command);
-		}
-		else
-		{
-			Init.askJinni("applet_console"); // default if applet PARAM
-			// "command" is absent
-		}
-		super.init();
+		val = i;
+	}
+
+	long val;
+
+	@Override
+	public String name()
+	{
+		return "" + val;
 	}
 
 	@Override
-	public void start()
+	boolean bind_to(Term that, Trail trail)
 	{
-		IO.println("starting...");
+		return super.bind_to(that, trail) && (double) val == (double) ((Int) that).val;
+		// unbelievable but true: converting
+		// to double is the only way to convince
+		// Microsoft's jview that 1==1
+		// $$ casting to double to be removed
+		// once they get it right
 	}
 
 	@Override
-	public void stop()
+	public final int getArity()
 	{
-		IO.println("stopping...");
+		return Term.INT;
+	}
+
+	public final long longValue()
+	{
+		return val;
+	}
+
+	public final int intValue()
+	{
+		return (int) val;
 	}
 
 	@Override
-	public void destroy()
+	public final double getValue()
 	{
-		IO.println("destroying...");
-	}
-
-	public static void main(String args[])
-	{
-		JinniGuiMain.main(args);
+		return val;
 	}
 }

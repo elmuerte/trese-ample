@@ -31,11 +31,10 @@ import java.awt.TextArea;
 import java.awt.TextField;
 import java.net.URL;
 
-import net.sf.kpex.IO;
-import net.sf.kpex.IOPeer;
 import net.sf.kpex.Init;
-import net.sf.kpex.Prog;
-
+import net.sf.kpex.io.IO;
+import net.sf.kpex.io.IOPeer;
+import net.sf.kpex.prolog.Prog;
 
 /**
  * Simple GUI interface to Jinni. To be extended:-)

@@ -19,6 +19,13 @@
  */
 package net.sf.kpex;
 
+import net.sf.kpex.io.IO;
+import net.sf.kpex.prolog.Clause;
+import net.sf.kpex.prolog.Const;
+import net.sf.kpex.prolog.Fun;
+import net.sf.kpex.prolog.Prog;
+import net.sf.kpex.prolog.Term;
+
 /**
  * Initializes Jinni. Sets up shared data areas. Ensures that lib.class,
  * obtained from lib.pro->lib.java is loaded.

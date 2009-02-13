@@ -19,6 +19,42 @@
  */
 package net.sf.kpex;
 
+import net.sf.kpex.io.CharReader;
+import net.sf.kpex.io.CharWriter;
+import net.sf.kpex.io.ClauseReader;
+import net.sf.kpex.io.ClauseWriter;
+import net.sf.kpex.io.IO;
+import net.sf.kpex.prolog.Clause;
+import net.sf.kpex.prolog.Cons;
+import net.sf.kpex.prolog.Const;
+import net.sf.kpex.prolog.ConstBuiltin;
+import net.sf.kpex.prolog.Fluent;
+import net.sf.kpex.prolog.Fun;
+import net.sf.kpex.prolog.FunBuiltin;
+import net.sf.kpex.prolog.Int;
+import net.sf.kpex.prolog.IntegerSource;
+import net.sf.kpex.prolog.JavaObject;
+import net.sf.kpex.prolog.JavaSource;
+import net.sf.kpex.prolog.LazyList;
+import net.sf.kpex.prolog.ListSource;
+import net.sf.kpex.prolog.MultiVar;
+import net.sf.kpex.prolog.Nonvar;
+import net.sf.kpex.prolog.Num;
+import net.sf.kpex.prolog.Prog;
+import net.sf.kpex.prolog.Real;
+import net.sf.kpex.prolog.Sink;
+import net.sf.kpex.prolog.Source;
+import net.sf.kpex.prolog.SourceLoop;
+import net.sf.kpex.prolog.SourceMerger;
+import net.sf.kpex.prolog.StringSink;
+import net.sf.kpex.prolog.Term;
+import net.sf.kpex.prolog.TermCollector;
+import net.sf.kpex.prolog.TermSource;
+import net.sf.kpex.prolog.Unfolder;
+import net.sf.kpex.prolog.Var;
+import net.sf.kpex.util.HashDict;
+import net.sf.kpex.util.Trail;
+
 /**
  * This class contains a dictionary of all builtins i.e. Java based classes
  * callable from Prolog. They should provide a constructor and an exec method.
@@ -147,7 +183,7 @@ public class Builtins extends HashDict
 	/**
 	 * Creates a new builtin
 	 */
-	Const newBuiltin(Const S)
+	public Const newBuiltin(Const S)
 	{
 		String className = S.name();
 		int arity = S.getArity();
@@ -238,7 +274,7 @@ class file_char_reader extends FunBuiltin
 		Fluent f;
 		if (I instanceof CharReader)
 		{
-			f = new CharReader(((CharReader) I).reader, p);
+			f = new CharReader(((CharReader) I), p);
 		}
 		else
 		{
@@ -266,7 +302,7 @@ class file_clause_reader extends FunBuiltin
 		Fluent f;
 		if (I instanceof CharReader)
 		{
-			f = new ClauseReader(((CharReader) I).reader, p);
+			f = new ClauseReader((I), p);
 		}
 		else
 		{
@@ -762,6 +798,7 @@ class chars_to_name extends FunBuiltin
 		super("chars_to_name", 3);
 	}
 
+	@Override
 	public int exec(Prog p)
 	{
 		int convert = getIntArg(0);
@@ -798,6 +835,7 @@ class numbervars extends FunBuiltin
 		super("numbervars", 2);
 	}
 
+	@Override
 	public int exec(Prog p)
 	{
 		Term T = getArg(0).numbervars();
@@ -815,6 +853,7 @@ class compute extends FunBuiltin
 		super("compute", 4);
 	}
 
+	@Override
 	public int exec(Prog p)
 	{
 
@@ -888,6 +927,7 @@ class set_trace extends FunBuiltin
 		super("set_trace", 1);
 	}
 
+	@Override
 	public int exec(Prog p)
 	{
 		Prog.tracing = getIntArg(0);
@@ -906,6 +946,7 @@ class source_list extends FunBuiltin
 		super("source_list", 2);
 	}
 
+	@Override
 	public int exec(Prog p)
 	{
 		Source S = (Source) getArg(0);
@@ -934,6 +975,7 @@ class list_source extends FunBuiltin
 		super("list_source", 2);
 	}
 
+	@Override
 	public int exec(Prog p)
 	{
 		Source E = new ListSource((Const) getArg(0), p);
@@ -952,6 +994,7 @@ class term_source extends FunBuiltin
 		super("term_source", 2);
 	}
 
+	@Override
 	public int exec(Prog p)
 	{
 		TermSource E = new TermSource((Nonvar) getArg(0), p);
@@ -972,6 +1015,7 @@ class integer_source extends FunBuiltin
 		super("integer_source", 5);
 	}
 
+	@Override
 	public int exec(Prog p)
 	{
 		IntegerSource E = new IntegerSource(((Int) getArg(0)).longValue(), ((Int) getArg(1)).longValue(),
@@ -990,6 +1034,7 @@ class source_loop extends FunBuiltin
 		super("source_loop", 2);
 	}
 
+	@Override
 	public int exec(Prog p)
 	{
 		Source s = (Source) getArg(0);
@@ -1008,6 +1053,7 @@ class source_term extends FunBuiltin
 		super("source_term", 2);
 	}
 
+	@Override
 	public int exec(Prog p)
 	{
 		Source S = (Source) getArg(0);
@@ -1031,6 +1077,7 @@ class answer_source extends FunBuiltin
 		super("answer_source", 3);
 	}
 
+	@Override
 	public int exec(Prog p)
 	{
 		Clause goal = new Clause(getArg(0), getArg(1));
@@ -1049,6 +1096,7 @@ class unfolder_source extends FunBuiltin
 		super("unfolder_source", 2);
 	}
 
+	@Override
 	public int exec(Prog p)
 	{
 		Clause goal = getArg(0).toClause();
@@ -1070,6 +1118,7 @@ class get extends FunBuiltin
 		super("get", 2);
 	}
 
+	@Override
 	public int exec(Prog p)
 	{
 		// IO.mes("<<"+getArg(0)+"\n"+p+p.getTrail().pprint());
@@ -1093,6 +1142,7 @@ class put extends FunBuiltin
 		super("put", 2);
 	}
 
+	@Override
 	public int exec(Prog p)
 	{
 		Sink S = (Sink) getArg(0);
@@ -1116,6 +1166,7 @@ class stop extends FunBuiltin
 		super("stop", 1);
 	}
 
+	@Override
 	public int exec(Prog p)
 	{
 		Fluent S = (Fluent) getArg(0);
@@ -1135,6 +1186,7 @@ class split_source extends FunBuiltin
 		super("split_source", 3);
 	}
 
+	@Override
 	public int exec(Prog p)
 	{
 		Source original = (Source) getArg(0);
@@ -1153,6 +1205,7 @@ class merge_sources extends FunBuiltin
 		super("merge_sources", 2);
 	}
 
+	@Override
 	public int exec(Prog p)
 	{
 		Const list = (Const) getArg(0);
@@ -1170,6 +1223,7 @@ class discharge extends FunBuiltin
 		super("discharge", 2);
 	}
 
+	@Override
 	public int exec(Prog p)
 	{
 		Source from = (Source) getArg(0);
@@ -1202,6 +1256,7 @@ class collect extends FunBuiltin
 		super("collect", 2);
 	}
 
+	@Override
 	public int exec(Prog p)
 	{
 		Sink s = (Sink) getArg(0);
@@ -1229,6 +1284,7 @@ class term_string_collector extends FunBuiltin
 		super("term_string_collector", 1);
 	}
 
+	@Override
 	public int exec(Prog p)
 	{
 		return putArg(0, new StringSink(p), p);
@@ -1246,6 +1302,7 @@ class term_collector extends FunBuiltin
 		super("term_collector", 1);
 	}
 
+	@Override
 	public int exec(Prog p)
 	{
 		return putArg(0, new TermCollector(p), p);
@@ -1262,6 +1319,7 @@ class string_char_reader extends FunBuiltin
 		super("string_char_reader", 2);
 	}
 
+	@Override
 	public int exec(Prog p)
 	{
 		return putArg(1, new CharReader(getArg(0), p), p);
@@ -1278,6 +1336,7 @@ class string_clause_reader extends FunBuiltin
 		super("string_clause_reader", 2);
 	}
 
+	@Override
 	public int exec(Prog p)
 	{
 		return putArg(1, new ClauseReader(getArg(0), p), p);
@@ -1294,6 +1353,7 @@ class def extends FunBuiltin
 		super("def", 2);
 	}
 
+	@Override
 	public int exec(Prog p)
 	{
 		Var X = (Var) getArg(0);
@@ -1313,6 +1373,7 @@ class set extends FunBuiltin
 		super("set", 2);
 	}
 
+	@Override
 	public int exec(Prog p)
 	{
 		MultiVar V = (MultiVar) getArg(0);
@@ -1331,6 +1392,7 @@ class val extends FunBuiltin
 		super("val", 2);
 	}
 
+	@Override
 	public int exec(Prog p)
 	{
 		MultiVar V = (MultiVar) getArg(0);
@@ -1353,6 +1415,7 @@ class set_persistent extends FunBuiltin
 		super("set_persistent", 2);
 	}
 
+	@Override
 	public int exec(Prog p)
 	{
 		Fluent F = (Fluent) getArg(0);
