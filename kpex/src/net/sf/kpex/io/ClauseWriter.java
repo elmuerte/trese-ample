@@ -54,7 +54,7 @@ public class ClauseWriter extends CharWriter
 		}
 		else
 		{
-			s = t.pprint();
+			s = t.prettyPrint();
 		}
 		IO.print(writer, s);
 		return 1;

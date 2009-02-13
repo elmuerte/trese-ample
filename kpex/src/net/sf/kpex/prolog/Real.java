@@ -39,7 +39,7 @@ public class Real extends Num
 	@Override
 	public final int getArity()
 	{
-		return Term.REAL;
+		return Term.ARITY_REAL;
 	}
 
 	@Override
@@ -55,8 +55,8 @@ public class Real extends Num
 	}
 
 	@Override
-	boolean bind_to(Term that, Trail trail)
+	protected boolean bindTo(Term that, Trail trail)
 	{
-		return super.bind_to(that, trail) && val == ((Real) that).val;
+		return super.bindTo(that, trail) && val == ((Real) that).val;
 	}
 }

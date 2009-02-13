@@ -268,7 +268,7 @@ public class DataBase extends BlackBoard
 		StringBuffer s = new StringBuffer("% " + key + "\n\n");
 		while (e.hasMoreElements())
 		{
-			s.append(((Term) e.nextElement()).pprint(true));
+			s.append(((Term) e.nextElement()).prettyPrint(true));
 			s.append(".\n");
 		}
 		s.append("\n");
@@ -309,7 +309,7 @@ public class DataBase extends BlackBoard
 			{
 				break;
 			}
-			t = t.matching_copy(FXs);
+			t = t.matchingCopy(FXs);
 			if (t != null && 0 != max--)
 			{
 				To.addElement(t);

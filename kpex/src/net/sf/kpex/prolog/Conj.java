@@ -23,13 +23,13 @@ public class Conj extends Cons
 {
 	static public final Term getHead(Term T)
 	{
-		T = T.ref();
+		T = T.getRef();
 		return T instanceof Conj ? ((Conj) T).getArg(0) : T;
 	}
 
 	static public final Term getTail(Term T)
 	{
-		T = T.ref();
+		T = T.getRef();
 		return T instanceof Conj ? ((Conj) T).getArg(1) : Const.aTrue;
 	}
 
@@ -40,8 +40,8 @@ public class Conj extends Cons
 
 	public String conjToString()
 	{
-		Term h = args[0].ref();
-		Term t = args[1].ref();
+		Term h = args[0].getRef();
+		Term t = args[1].getRef();
 		StringBuffer s = new StringBuffer(watchNull(h));
 		for (;;)
 		{
@@ -52,8 +52,8 @@ public class Conj extends Cons
 			}
 			else
 			{
-				h = ((Conj) t).args[0].ref();
-				t = ((Conj) t).args[1].ref();
+				h = ((Conj) t).args[0].getRef();
+				t = ((Conj) t).args[1].getRef();
 				s.append("," + watchNull(h));
 			}
 		}

@@ -40,7 +40,7 @@ public class SystemObject extends Nonvar
 	@Override
 	public final int getArity()
 	{
-		return Term.JAVA;
+		return Term.ARITY_JAVA;
 	}
 
 	@Override
@@ -56,8 +56,8 @@ public class SystemObject extends Nonvar
 	}
 
 	@Override
-	boolean bind_to(Term that, Trail trail)
+	protected boolean bindTo(Term that, Trail trail)
 	{
-		return super.bind_to(that, trail) && ordinal == ((SystemObject) that).ordinal;
+		return super.bindTo(that, trail) && ordinal == ((SystemObject) that).ordinal;
 	}
 }

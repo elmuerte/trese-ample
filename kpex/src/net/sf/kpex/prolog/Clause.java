@@ -71,7 +71,7 @@ public class Clause extends Fun
 	 */
 	static final Term appendConj(Term x, Term y)
 	{
-		y = y.ref();
+		y = y.getRef();
 		if (x instanceof true_)
 		{
 			return y;
@@ -82,7 +82,7 @@ public class Clause extends Fun
 		}
 		if (x instanceof Conj)
 		{
-			Term curr = ((Conj) x).args[0].ref();
+			Term curr = ((Conj) x).args[0].getRef();
 			Term cont = appendConj(((Conj) x).args[1], y);
 			// curr.getState(this,cont);
 			return new Conj(curr, cont);
@@ -144,7 +144,7 @@ public class Clause extends Fun
 	{
 		if (dict == null)
 		{
-			return (Clause) numbervars();
+			return (Clause) numberVars();
 		}
 		if (provenGround())
 		{
@@ -165,7 +165,7 @@ public class Clause extends Fun
 				V.unify(new PseudoVar(s), trail);
 			}
 		}
-		Clause NewC = (Clause) numbervars();
+		Clause NewC = (Clause) numberVars();
 		trail.unwind(0);
 		return NewC;
 	}
@@ -175,7 +175,7 @@ public class Clause extends Fun
 	 */
 	public final Term getBody()
 	{
-		return args[1].ref();
+		return args[1].getRef();
 	}
 
 	/**
@@ -183,7 +183,7 @@ public class Clause extends Fun
 	 */
 	public final Term getHead()
 	{
-		return args[0].ref();
+		return args[0].getRef();
 	}
 
 	/**
@@ -214,16 +214,16 @@ public class Clause extends Fun
 	 * Pretty prints a clause after replacing ugly variable names
 	 */
 	@Override
-	public String pprint()
+	public String prettyPrint()
 	{
-		return pprint(false);
+		return prettyPrint(false);
 	}
 
 	/**
 	 * Pretty prints a clause after replacing ugly variable names
 	 */
 	@Override
-	public String pprint(boolean replaceAnonymous)
+	public String prettyPrint(boolean replaceAnonymous)
 	{
 		String s = Clause2String(cnumbervars(replaceAnonymous));
 		// if(fname!=null) s="%% "+fname+":"+begins_at+"-"+ends_at+"\n"+s;
@@ -265,7 +265,7 @@ public class Clause extends Fun
 		Clause G = new Clause(varsOf(), getHead());
 		G.dict = dict;
 		G.checkIfGround();
-		IO.trace("conversion from clause to goal ignores body of: " + pprint());
+		IO.trace("conversion from clause to goal ignores body of: " + prettyPrint());
 		return G;
 	}
 
@@ -313,7 +313,7 @@ public class Clause extends Fun
 		Term body = getBody();
 		if (body instanceof Conj)
 		{
-			return ((Conj) body).args[0].ref();
+			return ((Conj) body).args[0].getRef();
 		}
 		else if (body instanceof true_)
 		{
@@ -338,7 +338,7 @@ public class Clause extends Fun
 		Term body = getBody();
 		if (body instanceof Conj)
 		{
-			return ((Conj) body).args[1].ref();
+			return ((Conj) body).args[1].getRef();
 		}
 		else
 		{
@@ -347,7 +347,7 @@ public class Clause extends Fun
 	}
 
 	@Override
-	final boolean isClause()
+	protected final boolean isClause()
 	{
 		return true;
 	}

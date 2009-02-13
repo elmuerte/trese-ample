@@ -143,7 +143,7 @@ public class Copier extends SystemObject
 	 * style (well, looks more like some Haskell stuff, but who cares).
 	 */
 	@Override
-	Term action(Term place)
+	protected Term action(Term place)
 	{
 
 		if (place instanceof Var)

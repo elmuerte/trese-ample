@@ -119,7 +119,7 @@ public class Unfolder extends Source
 	@Override
 	public String toString()
 	{
-		return null == goal ? "{Unfolder}" : "{Unfolder=> " + goal.pprint() + "}";
+		return null == goal ? "{Unfolder}" : "{Unfolder=> " + goal.prettyPrint() + "}";
 	}
 
 	/**
@@ -211,7 +211,7 @@ public class Unfolder extends Source
 				IO.println("FAILING CALL IN<<<: " + g.getFirst());
 				break;
 			case 3:
-				IO.println("FAILING CALL IN<<<: " + g.pprint());
+				IO.println("FAILING CALL IN<<<: " + g.prettyPrint());
 				break;
 		}
 	}
@@ -227,7 +227,7 @@ public class Unfolder extends Source
 				IO.println(">>>: " + g.getFirst());
 				break;
 			case 3:
-				IO.println(">>>: " + g.pprint());
+				IO.println(">>>: " + g.prettyPrint());
 				break;
 		}
 	}
@@ -239,7 +239,7 @@ public class Unfolder extends Source
 	{
 		if (Prog.tracing > 0)
 		{
-			IO.println("*** UNDEFINED CALL: " + first.pprint());
+			IO.println("*** UNDEFINED CALL: " + first.prettyPrint());
 		}
 	}
 }

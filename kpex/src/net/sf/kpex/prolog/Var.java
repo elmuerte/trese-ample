@@ -40,7 +40,7 @@ public class Var extends Term
 	}
 
 	@Override
-	public boolean bind_to(Term x, Trail trail)
+	public boolean bindTo(Term x, Trail trail)
 	{
 		val = x;
 		trail.push(this);
@@ -50,19 +50,19 @@ public class Var extends Term
 	@Override
 	public boolean eq(Term x)
 	{ // not a term compare!
-		return ref() == x.ref();
+		return getRef() == x.getRef();
 	}
 
 	@Override
 	public int getArity()
 	{
-		return Term.VAR;
+		return Term.ARITY_VAR;
 	}
 
 	@Override
 	public String getKey()
 	{
-		Term t = ref();
+		Term t = getRef();
 		if (t instanceof Var)
 		{
 			return null;
@@ -74,19 +74,19 @@ public class Var extends Term
 	}
 
 	@Override
-	public Term ref()
+	public Term getRef()
 	{
-		return unbound() ? this : val.ref();
+		return unbound() ? this : val.getRef();
 	}
 
 	@Override
 	public String toString()
 	{
-		return unbound() ? name() : ref().toString();
+		return unbound() ? name() : getRef().toString();
 	}
 
 	@Override
-	public void undo()
+	public void undoBinding()
 	{
 		val = this;
 	}
@@ -97,10 +97,10 @@ public class Var extends Term
 	}
 
 	@Override
-	Term reaction(Term agent)
+	protected Term reaction(Term agent)
 	{
 
-		Term R = agent.action(ref());
+		Term R = agent.action(getRef());
 
 		if (!(R instanceof Var))
 		{
@@ -116,9 +116,10 @@ public class Var extends Term
 	}
 
 	@Override
-	boolean unify_to(Term that, Trail trail)
+	protected
+	boolean unifyTo(Term that, Trail trail)
 	{
 		// expects: this, that are dereferenced
-		return val.bind_to(that, trail);
+		return val.bindTo(that, trail);
 	}
 }

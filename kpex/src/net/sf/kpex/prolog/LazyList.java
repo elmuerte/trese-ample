@@ -60,7 +60,7 @@ public class LazyList extends Cons
 	}
 
 	@Override
-	public void undo()
+	public void undoBinding()
 	{
 		// if(source.getPersistent()) return;		trail.unwind(0);
 		source.stop();
@@ -72,7 +72,7 @@ public class LazyList extends Cons
 	 * any 2 arg constructor chain
 	 */
 	@Override
-	boolean bind_to(Term that, Trail trail)
+	protected boolean bindTo(Term that, Trail trail)
 	{
 		return that instanceof Fun && 2 == that.getArity();
 	}

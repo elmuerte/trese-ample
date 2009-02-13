@@ -33,7 +33,7 @@ public class Int extends Num
 	@Override
 	public final int getArity()
 	{
-		return Term.INT;
+		return Term.ARITY_INT;
 	}
 
 	@Override
@@ -59,9 +59,9 @@ public class Int extends Num
 	}
 
 	@Override
-	boolean bind_to(Term that, Trail trail)
+	protected boolean bindTo(Term that, Trail trail)
 	{
-		return super.bind_to(that, trail) && (double) val == (double) ((Int) that).val;
+		return super.bindTo(that, trail) && (double) val == (double) ((Int) that).val;
 		// unbelievable but true: converting
 		// to double is the only way to convince
 		// Microsoft's jview that 1==1

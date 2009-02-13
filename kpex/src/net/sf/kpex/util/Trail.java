@@ -71,7 +71,7 @@ public class Trail extends Stack
 		for (int i = size() - to; i > 0; i--)
 		{
 			Term V = (Term) pop();
-			V.undo();
+			V.undoBinding();
 		}
 	}
 }

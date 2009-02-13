@@ -32,13 +32,13 @@ public abstract class Nonvar extends Term
 	@Override
 	public boolean eq(Term that)
 	{
-		return that instanceof Nonvar && bind_to(that, null);
+		return that instanceof Nonvar && bindTo(that, null);
 	}
 
 	public abstract String name();
 
 	@Override
-	boolean bind_to(Term that, Trail trail)
+	protected boolean bindTo(Term that, Trail trail)
 	{
 		return getClass() == that.getClass();
 	}
@@ -52,15 +52,16 @@ public abstract class Nonvar extends Term
 	}
 
 	@Override
-	boolean unify_to(Term that, Trail trail)
+	protected
+	boolean unifyTo(Term that, Trail trail)
 	{
-		if (bind_to(that, trail))
+		if (bindTo(that, trail))
 		{
 			return true;
 		}
 		else
 		{
-			return that.bind_to(this, trail);
+			return that.bindTo(this, trail);
 		}
 	}
 }

@@ -25,15 +25,30 @@ import net.sf.kpex.util.Trail;
  * Top element of the Prolog term hierarchy. Describes a simple or compound ter
  * like: X,a,13,f(X,s(X)),[a,s(X),b,c], a:-b,c(X,X),d, etc.
  */
-public abstract class Term extends Object implements Cloneable
+public abstract class Term implements Cloneable
 {
+	/**
+	 * The arity returned by {@link Const}
+	 */
+	public final static int ARITY_CONST = 0;
+	/**
+	 * The arity returned by {@link Int}
+	 */
+	public final static int ARITY_INT = -2;
+	/**
+	 * The arity returned by {@link SystemObject}
+	 */
+	public final static int ARITY_JAVA = -4;
+	/**
+	 * The arity returned by {@link Real}
+	 */
+	public final static int ARITY_REAL = -3;
+	/**
+	 * The arity returned by {@link Var}
+	 */
+	public final static int ARITY_VAR = -1;
 
-	public final static int CONST = 0;
-	public final static int INT = -2;
-	public final static int JAVA = -4;
-	public final static int REAL = -3;
-	public final static int VAR = -1;
-
+	// FIXME move to utility class
 	public static Term fromString(String s)
 	{
 		return Clause.clauseFromString(s).toTerm();
@@ -42,6 +57,7 @@ public abstract class Term extends Object implements Cloneable
 	/**
 	 * Converts a list of character codes to a String.
 	 */
+	// FIXME move to utility class
 	protected static String charsToString(Nonvar Cs)
 	{
 		StringBuffer s = new StringBuffer("");
@@ -65,6 +81,7 @@ public abstract class Term extends Object implements Cloneable
 		return s.toString();
 	}
 
+	// FIXME move to utility class
 	static final Nonvar stringToChars(String s)
 	{
 		if (0 == s.length())
@@ -91,22 +108,36 @@ public abstract class Term extends Object implements Cloneable
 		return reaction(new Copier());
 	}
 
+	/**
+	 * @param that
+	 * @return True when this term is equal to the other term.
+	 */
+	// FIXME change to equals method? does it have the same semantics?
 	public abstract boolean eq(Term that);
 
 	/**
 	 * returns or fakes an arity for all subtypes
+	 * 
+	 * @see #ARITY_CONST
+	 * @see #ARITY_INT
+	 * @see #ARITY_JAVA
+	 * @see #ARITY_REAL
+	 * @see #ARITY_VAR
 	 */
 	abstract public int getArity();
 
 	/**
 	 * Returns a string key used based on the string name of the term. Note that
-	 * the key for a clause AL-B,C. is the key insted of ':-'.
+	 * the key for a clause AL-B,C. is the key instead of ':-'.
 	 */
 	public String getKey()
 	{
 		return toString();
 	}
 
+	/**
+	 * @return True if this is a builtin term (i.e. non user defined)
+	 */
 	public boolean isBuiltin()
 	{
 		return false;
@@ -122,10 +153,8 @@ public abstract class Term extends Object implements Cloneable
 	synchronized public boolean matches(Term that)
 	{
 		Trail trail = new Trail();
-		// IO.trace("Curr:>>"+trail.pprint());
 		boolean ok = unify(that, trail);
 		trail.unwind(0);
-		// IO.trace("CurrT<<:"+trail.pprint());
 		return ok;
 	}
 
@@ -135,7 +164,7 @@ public abstract class Term extends Object implements Cloneable
 	 * Synchronization happens over this, not over that. Make sure it is used as
 	 * SHARED.matching_copy(NONSHARED,trail).
 	 */
-	synchronized public Term matching_copy(Term that)
+	synchronized public Term matchingCopy(Term that)
 	{
 		Trail trail = new Trail();
 		boolean ok = unify(that, trail);
@@ -152,7 +181,7 @@ public abstract class Term extends Object implements Cloneable
 	 * Replaces variables with uppercase constants named `V1', 'V2', etc. to be
 	 * read back as variables.
 	 */
-	public Term numbervars()
+	public Term numberVars()
 	{
 		return copy().reaction(new VarNumberer());
 	}
@@ -160,36 +189,45 @@ public abstract class Term extends Object implements Cloneable
 	/**
 	 * Prints out a term to a String with variables named in order V1, V2,....
 	 */
-	public String pprint()
+	public String prettyPrint()
 	{
-		return numbervars().toString();
+		return numberVars().toString();
 	}
 
-	public String pprint(boolean replaceAnonymous)
+	public String prettyPrint(boolean replaceAnonymous)
 	{ // not used
-		return pprint();
+		return prettyPrint();
 	}
 
 	/**
+	 * Return the reference to the term value (Used by variables)
+	 * 
 	 * Dereferences if necessary. This should be synchronized otherwise vicious
 	 * non-reentrancy problems may occur in the presence of GC and heavy
 	 * multi-threading!!!
 	 */
-	public Term ref()
+	public Term getRef()
 	{ // synchronized !!!
 		return this;
 	}
 
-	public Nonvar toChars()
+	/**
+	 * @return Convert the term to a sequence of characters
+	 */
+	public Term toChars()
 	{
 		return stringToChars(toUnquoted());
 	}
 
+	/**
+	 * @return Convert the term to a clause
+	 */
 	public Clause toClause()
 	{
 		return new Clause(this, Const.aTrue);
 	}
 
+	// TODO what does this to
 	public Term token()
 	{
 		return this;
@@ -201,18 +239,21 @@ public abstract class Term extends Object implements Cloneable
 	 */
 	public Object toObject()
 	{
-		return ref();
+		return getRef();
 	}
 
-	/*
-	 * Returns an unquoted version of toString()
+	/**
+	 * Returns an unquoted string representation of this term.
 	 */
 	public String toUnquoted()
 	{
-		return pprint();
+		return prettyPrint();
 	}
 
-	public void undo()
+	/**
+	 * Undo the (last) binding
+	 */
+	public void undoBinding()
 	{ // does nothing
 	}
 
@@ -236,31 +277,39 @@ public abstract class Term extends Object implements Cloneable
 	/** Dereference and unify_to */
 	protected final boolean unify(Term that, Trail trail)
 	{
-		return ref().unify_to(that.ref(), trail);
+		return getRef().unifyTo(that.getRef(), trail);
 	}
 
 	/**
 	 * Identity action.
 	 */
-	Term action(Term that)
+	protected Term action(Term that)
 	{
 		return that;
 	}
 
-	abstract boolean bind_to(Term that, Trail trail);
+	/**
+	 * @param that
+	 * @param trail
+	 * @return
+	 */
+	protected abstract boolean bindTo(Term that, Trail trail);
 
 	/*
 	 * Just to catch the frequent error when the arg is forgotten while definig
 	 * a builtin. Being final, it will generate a compile time error if this
 	 * happens
 	 */
-	final int exec()
+	protected final int exec()
 	{
-
+		// FIXME: this is a bad way to enforce it
 		return -1;
 	}
 
-	boolean isClause()
+	/**
+	 * @return True if this term is a clause
+	 */
+	protected boolean isClause()
 	{
 		return false;
 	}
@@ -273,17 +322,23 @@ public abstract class Term extends Object implements Cloneable
 	 * 
 	 * @see Fun
 	 */
-	Term reaction(Term agent)
+	protected Term reaction(Term agent)
 	{
 		Term T = agent.action(this);
 		return T;
 	}
 
-	Term toTerm()
+	/**
+	 * @return Converts the Term to a Term.
+	 * @see Clause#toTerm()
+	 */
+	protected Term toTerm()
 	{
 		return this;
 	}
 
-	/** Unify dereferenced */
-	abstract boolean unify_to(Term that, Trail trail);
+	/**
+	 * Unify dereferenced
+	 */
+	protected abstract boolean unifyTo(Term that, Trail trail);
 }

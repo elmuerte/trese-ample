@@ -19,7 +19,8 @@
  */
 package net.sf.kpex.prolog;
 
-import net.sf.kpex.util.HashDict;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Used in implementing uniform replacement of variables with new constants.
@@ -30,31 +31,33 @@ import net.sf.kpex.util.HashDict;
  */
 public class VarNumberer extends SystemObject
 {
-	int ctr;
-	HashDict dict;
+	protected int ctr;
+	protected Map<Term, Const> dict;
 
-	VarNumberer()
+	public VarNumberer()
 	{
-		dict = new HashDict();
+		dict = new HashMap<Term, Const>();
 		ctr = 0;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.sf.kpex.prolog.Term#action(net.sf.kpex.prolog.Term)
+	 */
 	@Override
-	Term action(Term place)
+	protected Term action(Term place)
 	{
-		place = place.ref();
-		// IO.trace(">>action: "+place);
+		place = place.getRef();
 		if (place instanceof Var)
 		{
-			Const root = (Const) dict.get(place);
-			if (null == root)
+			Const root = dict.get(place);
+			if (root == null)
 			{
 				root = new PseudoVar(ctr++);
 				dict.put(place, root);
 			}
 			place = root;
 		}
-		// IO.trace("<<action: "+place);
 		return place;
 	}
 }

@@ -838,7 +838,7 @@ class numbervars extends FunBuiltin
 	@Override
 	public int exec(Prog p)
 	{
-		Term T = getArg(0).numbervars();
+		Term T = getArg(0).numberVars();
 		return putArg(1, T, p);
 	}
 }
@@ -1358,7 +1358,7 @@ class def extends FunBuiltin
 	{
 		Var X = (Var) getArg(0);
 		MultiVar V = new MultiVar(getArg(1), p);
-		X.bind_to(V, p.getTrail());
+		X.bindTo(V, p.getTrail());
 		return 1;
 	}
 }

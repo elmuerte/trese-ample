@@ -57,12 +57,12 @@ public class Const extends Nonvar
 	/**
 	 * returns an arity normally defined as 0
 	 * 
-	 * @see Term#CONST
+	 * @see Term#ARITY_CONST
 	 */
 	@Override
 	public int getArity()
 	{
-		return Term.CONST;
+		return Term.ARITY_CONST;
 	}
 
 	@Override
@@ -134,8 +134,8 @@ public class Const extends Nonvar
 	}
 
 	@Override
-	boolean bind_to(Term that, Trail trail)
+	protected boolean bindTo(Term that, Trail trail)
 	{
-		return super.bind_to(that, trail) && ((Const) that).sym == sym;
+		return super.bindTo(that, trail) && ((Const) that).sym == sym;
 	}
 }

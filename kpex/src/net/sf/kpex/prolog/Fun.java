@@ -53,39 +53,19 @@ public class Fun extends Const
 		args = new Term[arity];
 	}
 
-	public Fun(String s, Term x0)
+	public Fun(String s, Term... terms)
 	{
-		this(s, 1);
-		args[0] = x0;
-	}
-
-	public Fun(String s, Term x0, Term x1)
-	{
-		this(s, 2);
-		args[0] = x0;
-		args[1] = x1;
-	}
-
-	public Fun(String s, Term x0, Term x1, Term x2)
-	{
-		this(s, 3);
-		args[0] = x0;
-		args[1] = x1;
-		args[2] = x2;
-	}
-
-	public Fun(String s, Term x0, Term x1, Term x2, Term x3)
-	{
-		this(s, 4);
-		args[0] = x0;
-		args[1] = x1;
-		args[2] = x2;
-		args[3] = x3;
+		this(s, terms.length);
+		args = new Term[terms.length];
+		for (int i = 0; i < terms.length; i++)
+		{
+			args[i] = terms[i];
+		}
 	}
 
 	public final Term getArg(int i)
 	{
-		return args[i].ref();
+		return args[i].getRef();
 	}
 
 	@Override
@@ -211,19 +191,19 @@ public class Fun extends Const
 	}
 
 	@Override
-	boolean bind_to(Term that, Trail trail)
+	protected boolean bindTo(Term that, Trail trail)
 	{
-		return super.bind_to(that, trail) && args.length == ((Fun) that).args.length;
+		return super.bindTo(that, trail) && args.length == ((Fun) that).args.length;
 	}
 
 	@Override
-	boolean isClause()
+	protected boolean isClause()
 	{
 		return getArity() == 2 && name().equals(":-");
 	}
 
 	@Override
-	Term reaction(Term that)
+	protected Term reaction(Term that)
 	{
 		// IO.mes("TRACE>> "+name());
 		Fun f = funClone();
@@ -236,9 +216,10 @@ public class Fun extends Const
 	}
 
 	@Override
-	boolean unify_to(Term that, Trail trail)
+	protected
+	boolean unifyTo(Term that, Trail trail)
 	{
-		if (bind_to(that, trail))
+		if (bindTo(that, trail))
 		{
 			for (int i = 0; i < args.length; i++)
 			{
@@ -251,7 +232,7 @@ public class Fun extends Const
 		}
 		else
 		{
-			return that.bind_to(this, trail);
+			return that.bindTo(this, trail);
 		}
 	}
 

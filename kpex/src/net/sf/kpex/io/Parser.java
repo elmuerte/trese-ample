@@ -78,7 +78,7 @@ public class Parser extends Lexer
 	{
 		Term H = C.getHead();
 		if (H instanceof Fun && "error".equals(((Fun) H).name()) && H.getArity() == 3
-				&& !(((Fun) H).args[0].ref() instanceof Var))
+				&& !(((Fun) H).args[0].getRef() instanceof Var))
 		{
 			return true;
 		}
@@ -110,7 +110,7 @@ public class Parser extends Lexer
 		if (verbose)
 		{
 			IO.errmes(type + " error at line:" + line);
-			IO.errmes(C.pprint(), e);
+			IO.errmes(C.prettyPrint(), e);
 		}
 		return C;
 	}

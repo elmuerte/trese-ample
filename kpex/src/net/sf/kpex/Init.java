@@ -47,7 +47,7 @@ public class Init
 	{
 		Clause Goal = getGoal(query);
 		Term Body = Goal.getBody();
-		return askJinni(Body).pprint();
+		return askJinni(Body).prettyPrint();
 	}
 
 	/**
@@ -100,7 +100,7 @@ public class Init
 			}
 			if (Names instanceof Fun)
 			{
-				Fun NamedR = (Fun) R.numbervars();
+				Fun NamedR = (Fun) R.numberVars();
 				for (int j = 0; j < Names.getArity(); j++)
 				{
 					IO.println(((Fun) Names).getArg(j) + "=" + NamedR.getArg(j));
@@ -206,7 +206,7 @@ public class Init
 		}
 		catch (Throwable e)
 		{
-			IO.errmes("Execution error in goal:\n  " + Goal.pprint() + ".\n", e);
+			IO.errmes("Execution error in goal:\n  " + Goal.prettyPrint() + ".\n", e);
 		}
 		long t2 = System.currentTimeMillis();
 		IO.println("Time: " + (t2 - t1) / 1000.0 + " sec, threads=" + Thread.activeCount());

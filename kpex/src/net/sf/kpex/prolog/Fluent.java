@@ -59,7 +59,7 @@ public class Fluent extends SystemObject
 	 * applies a non-persistent Fluent's stop() method on backtracking
 	 */
 	@Override
-	public void undo()
+	public void undoBinding()
 	{
 		if (!persistent)
 		{

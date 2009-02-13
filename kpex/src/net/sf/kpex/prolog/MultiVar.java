@@ -33,7 +33,7 @@ public class MultiVar extends Fluent
 	{
 		super(p);
 		vals = new Stack();
-		vals.push(T.ref());
+		vals.push(T.getRef());
 	}
 
 	public final void set(Term T, Prog p)
@@ -52,7 +52,7 @@ public class MultiVar extends Fluent
 	 * cannot be made presistent
 	 */
 	@Override
-	public void undo()
+	public void undoBinding()
 	{
 		vals.pop();
 	}
