@@ -185,9 +185,9 @@ public class Builtins extends HashDict
 	 */
 	public Const newBuiltin(Const S)
 	{
-		String className = S.name();
+		String name = S.name();
 		int arity = S.getArity();
-		String key = className + "/" + arity;
+		String key = name + "/" + arity;
 		Const b = (Const) get(key);
 		return b;
 	}
@@ -541,7 +541,7 @@ class get_default_db extends FunBuiltin
 	@Override
 	public int exec(Prog p)
 	{
-		return putArg(0, new JavaObject(Init.default_db), p);
+		return putArg(0, new JavaObject(p.getDatabase()), p);
 	}
 }
 
@@ -672,7 +672,7 @@ class at_key extends FunBuiltin
 	@Override
 	public int exec(Prog p)
 	{
-		Term R = Init.default_db.all(getArg(0).getKey(), new Var());
+		Term R = p.getDatabase().all(getArg(0).getKey(), new Var());
 		return putArg(1, R, p);
 	}
 }
@@ -692,7 +692,7 @@ class pred_to_string extends FunBuiltin
 	public int exec(Prog p)
 	{
 		String key = getArg(0).getKey();
-		String listing = Init.default_db.pred_to_string(key);
+		String listing = p.getDatabase().pred_to_string(key);
 		if (null == listing)
 		{
 			return 0;
@@ -715,7 +715,7 @@ class db_to_string extends FunBuiltin
 	@Override
 	public int exec(Prog p)
 	{
-		return putArg(0, new Const(Init.default_db.pprint()), p);
+		return putArg(0, new Const(p.getDatabase().prettyPrint()), p);
 	}
 }
 
@@ -1436,6 +1436,7 @@ class get_persistent extends FunBuiltin
 		super("get_persistent", 2);
 	}
 
+	@Override
 	public int exec(Prog p)
 	{
 		Fluent F = (Fluent) getArg(0);
@@ -1455,6 +1456,7 @@ class source_lazy_list extends FunBuiltin
 		super("source_lazy_list", 2);
 	}
 
+	@Override
 	public int exec(Prog p)
 	{
 		Source S = (Source) getArg(0);
@@ -1480,6 +1482,7 @@ class lazy_head extends FunBuiltin
 		super("lazy_head", 2);
 	}
 
+	@Override
 	public int exec(Prog p)
 	{
 		Cons L = (Cons) getArg(0);
@@ -1497,6 +1500,7 @@ class lazy_tail extends FunBuiltin
 		super("lazy_tail", 2);
 	}
 
+	@Override
 	public int exec(Prog p)
 	{
 		Cons L = (Cons) getArg(0);

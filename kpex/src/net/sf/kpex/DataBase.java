@@ -39,16 +39,8 @@ import net.sf.kpex.util.Queue;
  */
 public class DataBase extends BlackBoard
 {
-
 	private static String lastFile = "tarau/jinni/lib.pro";
-
-	private static Const no = Const.NO;
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3030128958993551856L;
-	private static Const yes = Const.YES;
 
 	/**
 	 * adds a Clause to the joint Linda and Predicate table
@@ -215,7 +207,7 @@ public class DataBase extends BlackBoard
 		// }
 		if (found == null)
 		{
-			found = no;
+			found = Const.NO;
 		}
 		else
 		{
@@ -239,13 +231,13 @@ public class DataBase extends BlackBoard
 	public Term out(String k, Term pattern, boolean copying)
 	{
 		add(k, copying ? pattern.copy() : pattern);
-		return yes;
+		return Const.YES;
 	}
 
 	/**
 	 * Returns a formatted String representation of this PrologBlackboard object
 	 */
-	public String pprint()
+	public String prettyPrint()
 	{
 		StringBuffer s = new StringBuffer(name());
 		Enumeration e = keys();

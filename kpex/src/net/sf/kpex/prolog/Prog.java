@@ -21,6 +21,8 @@ package net.sf.kpex.prolog;
 
 import java.util.Stack;
 
+import net.sf.kpex.Builtins;
+import net.sf.kpex.DataBase;
 import net.sf.kpex.Init;
 import net.sf.kpex.io.IO;
 import net.sf.kpex.util.Trail;
@@ -32,11 +34,7 @@ import net.sf.kpex.util.Trail;
  */
 public class Prog extends Source implements Runnable
 {
-	// CONSTRUCTORS
-
 	public static int tracing = 1;
-
-	// INSTANCE FIELDS
 
 	static public Term ask_engine(Prog p)
 	{
@@ -70,15 +68,15 @@ public class Prog extends Source implements Runnable
 		return p;
 	}
 
-	private Stack orStack;
+	protected DataBase database = Init.default_db;
 
-	private Prog parent;
+	protected Builtins builtins = Init.builtinDict;
 
-	// CLASS FIELDS
+	protected Stack orStack;
 
-	private Trail trail;
+	protected Prog parent;
 
-	// INSTANCE METHODS
+	protected Trail trail;
 
 	/**
 	 * Creates a Prog starting execution with argument "goal"
@@ -95,14 +93,47 @@ public class Prog extends Source implements Runnable
 			orStack.push(new Unfolder(goal, this));
 		}
 
-		if (null == Init.default_db)
+		// TODO: not the proper way for errors
+		if (database == null)
 		{
 			IO.assertion("null Init.bboard");
 		}
-		if (null == Init.builtinDict)
+		if (builtins == null)
 		{
 			IO.assertion("null Init.builtinDict");
 		}
+	}
+
+	/**
+	 * @return the builtins
+	 */
+	public Builtins getBuiltins()
+	{
+		if (builtins != null)
+		{
+			return builtins;
+		}
+		else if (parent != null)
+		{
+			return parent.getBuiltins();
+		}
+		return null;
+	}
+
+	/**
+	 * @return the database
+	 */
+	public DataBase getDatabase()
+	{
+		if (database != null)
+		{
+			return database;
+		}
+		else if (parent != null)
+		{
+			return parent.getDatabase();
+		}
+		return null;
 	}
 
 	@Override

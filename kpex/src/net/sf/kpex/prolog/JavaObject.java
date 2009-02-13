@@ -47,11 +47,4 @@ public class JavaObject<T> extends SystemObject
 	{
 		return value;
 	}
-
-	/*
-	 * private boolean available; synchronized public void suspend() {
-	 * available=false; while(!available) { try { wait(); }
-	 * catch(InterruptedException e) {} } } synchronized public void resume() {
-	 * available=true; notifyAll(); }
-	 */
 }

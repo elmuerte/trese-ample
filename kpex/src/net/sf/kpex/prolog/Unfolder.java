@@ -21,7 +21,6 @@ package net.sf.kpex.prolog;
 
 import java.util.Enumeration;
 
-import net.sf.kpex.Init;
 import net.sf.kpex.io.IO;
 
 /**
@@ -58,7 +57,7 @@ public class Unfolder extends Source
 			if (null != first)
 			{
 				oldtop = prog.getTrail().size();
-				e = Init.default_db.toEnumerationFor(first.getKey());
+				e = p.getDatabase().toEnumerationFor(first.getKey());
 				if (!e.hasMoreElements())
 				{
 					trace_nomatch(first);
