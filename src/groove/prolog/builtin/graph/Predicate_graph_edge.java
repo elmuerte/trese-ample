@@ -18,7 +18,6 @@
  */
 package groove.prolog.builtin.graph;
 
-import gnu.prolog.term.CompoundTerm;
 import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
 import gnu.prolog.vm.Environment;
@@ -27,17 +26,17 @@ import gnu.prolog.vm.PrologCode;
 import gnu.prolog.vm.PrologException;
 import groove.graph.Graph;
 import groove.graph.GraphShape;
+import groove.prolog.builtin.PrologCollectionIterator;
 import groove.prolog.builtin.PrologUtils;
 
 /**
- * Get the complete node set of the graph.
- * <code>node_set(Graph,Node,NodeSet)</code>
+ * Get an edge from the graph. <code>graph_edge(Graph,Edge)</code>
  * 
  * @author Michiel Hendriks
  */
-public class Predicate_node_set implements PrologCode
+public class Predicate_graph_edge implements PrologCode
 {
-	public Predicate_node_set()
+	public Predicate_graph_edge()
 	{}
 
 	/*
@@ -47,22 +46,32 @@ public class Predicate_node_set implements PrologCode
 	 */
 	public int execute(Interpreter interpreter, boolean backtrackMode, Term[] args) throws PrologException
 	{
-		GraphShape graph = null;
-		if (args[0] instanceof JavaObjectTerm)
+		if (backtrackMode)
 		{
-			JavaObjectTerm jot = (JavaObjectTerm) args[0];
-			if (!(jot.value instanceof Graph))
-			{
-				PrologException.domainError(PrologUtils.GRAPH_ATOM, args[0]);
-			}
-			graph = (Graph) jot.value;
+			PrologCollectionIterator it = (PrologCollectionIterator) interpreter.popBacktrackInfo();
+			interpreter.undo(it.getUndoPosition());
+			return it.nextSolution(interpreter);
 		}
 		else
 		{
-			PrologException.typeError(PrologUtils.GRAPH_ATOM, args[0]);
+			GraphShape graph = null;
+			if (args[0] instanceof JavaObjectTerm)
+			{
+				JavaObjectTerm jot = (JavaObjectTerm) args[0];
+				if (!(jot.value instanceof Graph))
+				{
+					PrologException.domainError(PrologUtils.GRAPH_ATOM, args[0]);
+				}
+				graph = (Graph) jot.value;
+			}
+			else
+			{
+				PrologException.typeError(PrologUtils.GRAPH_ATOM, args[0]);
+			}
+			PrologCollectionIterator it = new PrologCollectionIterator(graph.edgeSet(), args[1], interpreter
+					.getUndoPosition());
+			return it.nextSolution(interpreter);
 		}
-		Term nodeSetTerm = CompoundTerm.getList(PrologUtils.createJOTlist(graph.nodeSet()));
-		return interpreter.unify(nodeSetTerm, args[1]);
 	}
 
 	/*

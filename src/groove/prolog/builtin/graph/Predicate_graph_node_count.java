@@ -34,9 +34,9 @@ import groove.prolog.builtin.PrologUtils;
  * 
  * @author Michiel Hendriks
  */
-public class Predicate_node_count implements PrologCode
+public class Predicate_graph_node_count implements PrologCode
 {
-	public Predicate_node_count()
+	public Predicate_graph_node_count()
 	{}
 
 	/*
