@@ -58,7 +58,7 @@ public class Predicate_edge_count implements PrologCode
 		}
 		else
 		{
-			PrologException.domainError(PrologUtils.GRAPH_ATOM, args[0]);
+			PrologException.typeError(PrologUtils.GRAPH_ATOM, args[0]);
 		}
 
 		Term edgeCountTerm = new IntegerTerm(graph.edgeCount());

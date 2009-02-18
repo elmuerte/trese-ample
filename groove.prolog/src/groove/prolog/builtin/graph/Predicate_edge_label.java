@@ -57,7 +57,7 @@ public class Predicate_edge_label implements PrologCode
 		}
 		else
 		{
-			PrologException.domainError(PrologUtils.EDGE_ATOM, args[0]);
+			PrologException.typeError(PrologUtils.EDGE_ATOM, args[0]);
 		}
 		Term labelTerm = AtomTerm.get(edge.label().text());
 		return interpreter.unify(args[1], labelTerm);

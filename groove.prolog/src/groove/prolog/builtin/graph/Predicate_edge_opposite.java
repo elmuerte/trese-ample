@@ -56,7 +56,7 @@ public class Predicate_edge_opposite implements PrologCode
 		}
 		else
 		{
-			PrologException.domainError(PrologUtils.EDGE_ATOM, args[0]);
+			PrologException.typeError(PrologUtils.EDGE_ATOM, args[0]);
 		}
 		Term nodeTerm = new JavaObjectTerm(edge.opposite());
 		return interpreter.unify(args[1], nodeTerm);

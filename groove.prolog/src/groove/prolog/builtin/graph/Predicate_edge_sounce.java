@@ -56,7 +56,7 @@ public class Predicate_edge_sounce implements PrologCode
 		}
 		else
 		{
-			PrologException.domainError(PrologUtils.EDGE_ATOM, args[0]);
+			PrologException.typeError(PrologUtils.EDGE_ATOM, args[0]);
 		}
 		Term nodeTerm = new JavaObjectTerm(edge.source());
 		return interpreter.unify(args[1], nodeTerm);

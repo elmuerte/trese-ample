@@ -57,7 +57,7 @@ public class Predicate_edge_ends implements PrologCode
 		}
 		else
 		{
-			PrologException.domainError(PrologUtils.EDGE_ATOM, args[0]);
+			PrologException.typeError(PrologUtils.EDGE_ATOM, args[0]);
 		}
 		Term nodeSetTerm = CompoundTerm.getList(PrologUtils.createJOTlist(edge.ends()));
 		return interpreter.unify(nodeSetTerm, args[1]);
