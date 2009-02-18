@@ -18,7 +18,7 @@
  */
 package groove.prolog.builtin.graph;
 
-import gnu.prolog.term.IntegerTerm;
+import gnu.prolog.term.CompoundTerm;
 import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
 import gnu.prolog.vm.Environment;
@@ -30,13 +30,13 @@ import groove.graph.GraphShape;
 import groove.prolog.builtin.PrologUtils;
 
 /**
- * Get the number of edges in a graph. <code>edge_count(Graph,Count)</code>
+ * Get a set of edges from either a graph. <code>edge_set(Graph,EdgeSet)</code>
  * 
  * @author Michiel Hendriks
  */
-public class Predicate_edge_count implements PrologCode
+public class Predicate_graph_edge_set implements PrologCode
 {
-	public Predicate_edge_count()
+	public Predicate_graph_edge_set()
 	{}
 
 	/*
@@ -60,9 +60,8 @@ public class Predicate_edge_count implements PrologCode
 		{
 			PrologException.typeError(PrologUtils.GRAPH_ATOM, args[0]);
 		}
-
-		Term edgeCountTerm = new IntegerTerm(graph.edgeCount());
-		return interpreter.unify(edgeCountTerm, args[1]);
+		Term edgeSetTerm = CompoundTerm.getList(PrologUtils.createJOTlist(graph.edgeSet()));
+		return interpreter.unify(edgeSetTerm, args[1]);
 	}
 
 	/*

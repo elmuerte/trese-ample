@@ -29,6 +29,7 @@ import gnu.prolog.term.AtomTerm;
 import gnu.prolog.term.CompoundTerm;
 import gnu.prolog.term.Term;
 import gnu.prolog.vm.Interpreter;
+import gnu.prolog.vm.PrologCode;
 import gnu.prolog.vm.PrologException;
 import gnu.prolog.vm.Interpreter.Goal;
 import groove.graph.Graph;
@@ -106,20 +107,26 @@ public class PrologQuery
 		try
 		{
 			Term goalTerm = termReader.readTermEof(readOpts);
-			query(goalTerm);
-
-			TermWriter out = new TermWriter(new OutputStreamWriter(System.out));
-			WriteOptions wr_ops = new WriteOptions();
-			wr_ops.operatorSet = new OperatorSet();
-			Iterator ivars = readOpts.variableNames.keySet().iterator();
-			while (ivars.hasNext())
+			Goal goal = interpreter.prepareGoal(goalTerm);
+			int result;
+			do
 			{
-				String name = (String) ivars.next();
-				out.print(name + " = ");
-				out.print(wr_ops, ((Term) readOpts.variableNames.get(name)).dereference());
-				out.print("; ");
-			}
-			out.flush();
+				result = interpreter.execute(goal);
+				TermWriter out = new TermWriter(new OutputStreamWriter(System.out));
+				WriteOptions wr_ops = new WriteOptions();
+				wr_ops.operatorSet = new OperatorSet();
+				Iterator ivars = readOpts.variableNames.keySet().iterator();
+				while (ivars.hasNext())
+				{
+					String name = (String) ivars.next();
+					out.print(name + " = ");
+					out.print(wr_ops, ((Term) readOpts.variableNames.get(name)).dereference());
+					out.print("; ");
+					out.println();
+				}
+				out.println();
+				out.flush();
+			} while (result != PrologCode.SUCCESS);
 
 			return null;
 		}
@@ -127,52 +134,9 @@ public class PrologQuery
 		{
 			throw new GroovePrologException(e);
 		}
-	}
-
-	/**
-	 * Execute a prolog query
-	 * 
-	 * @param term
-	 * @return
-	 * @throws GroovePrologException
-	 */
-	public Object query(Term term) throws GroovePrologException
-	{
-		if (!initialized)
-		{
-			init();
-		}
-		try
-		{
-			return query(interpreter.prepareGoal(term));
-		}
 		catch (PrologException e)
 		{
 			throw new GroovePrologException(e);
 		}
-	}
-
-	/**
-	 * Execute a prolog query
-	 * 
-	 * @param goal
-	 * @return
-	 * @throws GroovePrologException
-	 */
-	public Object query(Goal goal) throws GroovePrologException
-	{
-		if (!initialized)
-		{
-			init();
-		}
-		try
-		{
-			int result = interpreter.execute(goal);
-		}
-		catch (PrologException e)
-		{
-			throw new GroovePrologException(e);
-		}
-		return null;
 	}
 }

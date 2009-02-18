@@ -18,24 +18,26 @@
  */
 package groove.prolog.builtin.graph;
 
-import gnu.prolog.term.CompoundTerm;
 import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
 import gnu.prolog.vm.Environment;
 import gnu.prolog.vm.Interpreter;
 import gnu.prolog.vm.PrologCode;
 import gnu.prolog.vm.PrologException;
-import groove.graph.Edge;
+import groove.graph.Graph;
+import groove.graph.GraphShape;
+import groove.graph.Node;
+import groove.prolog.builtin.PrologCollectionIterator;
 import groove.prolog.builtin.PrologUtils;
 
 /**
- * Get all ends for an edge (usually 2) <code>edge_ends(Edge,NodeSet)</code>
+ * A single outgoing edge for a node <code>node_out_edge(Graph,Node,Edge)</code>
  * 
  * @author Michiel Hendriks
  */
-public class Predicate_edge_ends implements PrologCode
+public class Predicate_node_out_edge implements PrologCode
 {
-	public Predicate_edge_ends()
+	public Predicate_node_out_edge()
 	{}
 
 	/*
@@ -45,22 +47,48 @@ public class Predicate_edge_ends implements PrologCode
 	 */
 	public int execute(Interpreter interpreter, boolean backtrackMode, Term[] args) throws PrologException
 	{
-		Edge edge = null;
-		if (args[0] instanceof JavaObjectTerm)
+		if (backtrackMode)
 		{
-			JavaObjectTerm jot = (JavaObjectTerm) args[0];
-			if (!(jot.value instanceof Edge))
-			{
-				PrologException.domainError(PrologUtils.EDGE_ATOM, args[0]);
-			}
-			edge = (Edge) jot.value;
+			PrologCollectionIterator it = (PrologCollectionIterator) interpreter.popBacktrackInfo();
+			interpreter.undo(it.getUndoPosition());
+			return it.nextSolution(interpreter);
 		}
 		else
 		{
-			PrologException.typeError(PrologUtils.EDGE_ATOM, args[0]);
+			GraphShape graph = null;
+			if (args[0] instanceof JavaObjectTerm)
+			{
+				JavaObjectTerm jot = (JavaObjectTerm) args[0];
+				if (!(jot.value instanceof Graph))
+				{
+					PrologException.domainError(PrologUtils.GRAPH_ATOM, args[0]);
+				}
+				graph = (Graph) jot.value;
+			}
+			else
+			{
+				PrologException.typeError(PrologUtils.GRAPH_ATOM, args[0]);
+			}
+
+			Node node = null;
+			if (args[1] instanceof JavaObjectTerm)
+			{
+				JavaObjectTerm jot = (JavaObjectTerm) args[1];
+				if (!(jot.value instanceof Node))
+				{
+					PrologException.domainError(PrologUtils.NODE_ATOM, args[1]);
+				}
+				node = (Node) jot.value;
+			}
+			else
+			{
+				PrologException.typeError(PrologUtils.NODE_ATOM, args[1]);
+			}
+
+			PrologCollectionIterator it = new PrologCollectionIterator(graph.outEdgeSet(node), args[2], interpreter
+					.getUndoPosition());
+			return it.nextSolution(interpreter);
 		}
-		Term nodeSetTerm = CompoundTerm.getList(PrologUtils.createJOTlist(edge.ends()));
-		return interpreter.unify(nodeSetTerm, args[1]);
 	}
 
 	/*

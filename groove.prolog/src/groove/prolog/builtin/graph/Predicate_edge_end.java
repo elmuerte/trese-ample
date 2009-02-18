@@ -33,7 +33,7 @@ import groove.prolog.builtin.PrologUtils;
 
 /**
  * Get the node or position of a given end.
- * <code>edge_end(Edge,Position,Node)</code>
+ * <code>edge_end(Edge,Node,Position)</code>
  * 
  * @author Michiel Hendriks
  */
@@ -68,22 +68,27 @@ public class Predicate_edge_end implements PrologCode
 	{
 		while (bi.idx < bi.edge.endCount())
 		{
-			Term nextPos = new IntegerTerm(bi.idx);
-			int rc = interpreter.unify(bi.posTerm, nextPos);
+			Term nextEnd = new JavaObjectTerm(bi.edge.end(bi.idx));
+			int rc = interpreter.unify(bi.nodeTerm, nextEnd);
 			if (rc == FAIL)
 			{
 				interpreter.undo(bi.startUndoPosition);
+				++bi.idx;
 				continue;
 			}
-			Term nextEnd = new JavaObjectTerm(bi.edge.end(bi.idx++));
-			rc = interpreter.unify(bi.nodeTerm, nextEnd);
-			if (rc == FAIL)
+			if (bi.posTerm != null)
 			{
-				interpreter.undo(bi.startUndoPosition);
-				continue;
+				Term nextPos = new IntegerTerm(bi.idx);
+				rc = interpreter.unify(bi.posTerm, nextPos);
+				if (rc == FAIL)
+				{
+					interpreter.undo(bi.startUndoPosition);
+					++bi.idx;
+					continue;
+				}
 			}
 			interpreter.pushBacktrackInfo(bi);
-			return rc;
+			return SUCCESS;
 		}
 		return FAIL;
 	}
@@ -122,34 +127,34 @@ public class Predicate_edge_end implements PrologCode
 			}
 
 			Node node = null;
-			if (args[2] instanceof JavaObjectTerm)
+			if (args[1] instanceof JavaObjectTerm)
 			{
-				JavaObjectTerm jot = (JavaObjectTerm) args[2];
+				JavaObjectTerm jot = (JavaObjectTerm) args[1];
 				if (!(jot.value instanceof Node))
 				{
-					PrologException.domainError(PrologUtils.NODE_ATOM, args[2]);
+					PrologException.domainError(PrologUtils.NODE_ATOM, args[1]);
 				}
 				node = (Node) jot.value;
 			}
-			else if (args[2] instanceof VariableTerm)
+			else if (args[1] instanceof VariableTerm)
 			{
 				// resolve the Node for a position
 			}
 			else
 			{
-				PrologException.typeError(PrologUtils.NODE_ATOM, args[2]);
+				PrologException.typeError(PrologUtils.NODE_ATOM, args[1]);
 			}
 
-			if (node != null)
+			if (node != null && args.length > 2)
 			{
 				// unify the position
 				IntegerTerm nodePos = new IntegerTerm(edge.endIndex(node));
-				return interpreter.unify(args[1], nodePos);
+				return interpreter.unify(args[2], nodePos);
 			}
-			else if (args[1] instanceof IntegerTerm)
+			else if (args.length > 2 && args[2] instanceof IntegerTerm)
 			{
 				// find the node
-				int pos = ((IntegerTerm) args[1]).value;
+				int pos = ((IntegerTerm) args[2]).value;
 				if (pos < 0 || pos >= edge.endCount())
 				{
 					// out of bounds
@@ -162,15 +167,18 @@ public class Predicate_edge_end implements PrologCode
 					return FAIL;
 				}
 				JavaObjectTerm nodeTerm = new JavaObjectTerm(node);
-				return interpreter.unify(args[2], nodeTerm);
+				return interpreter.unify(args[1], nodeTerm);
 			}
 			else
 			{
 				// return node + index
 				EdgeEndBacktrackInfo bi = new EdgeEndBacktrackInfo();
 				bi.edge = edge;
-				bi.posTerm = args[1];
-				bi.nodeTerm = args[2];
+				bi.nodeTerm = args[1];
+				if (args.length > 2)
+				{
+					bi.posTerm = args[2];
+				}
 				bi.idx = 0;
 				bi.startUndoPosition = interpreter.getUndoPosition();
 				return nextSolution(interpreter, bi);
