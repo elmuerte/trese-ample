@@ -58,8 +58,14 @@ public class PrologQuery
 	 */
 	protected boolean initialized;
 
+	/**
+	 * The used environment
+	 */
 	protected GrooveEnvironment env;
 
+	/**
+	 * duh
+	 */
 	protected Interpreter interpreter;
 
 	public PrologQuery(Graph queryGraph)
@@ -106,27 +112,37 @@ public class PrologQuery
 		TermReader termReader = new TermReader(new StringReader(term));
 		try
 		{
+			TermWriter out = new TermWriter(new OutputStreamWriter(System.out));
 			Term goalTerm = termReader.readTermEof(readOpts);
 			Goal goal = interpreter.prepareGoal(goalTerm);
 			int result;
 			do
 			{
+				long startTime = System.nanoTime();
 				result = interpreter.execute(goal);
-				TermWriter out = new TermWriter(new OutputStreamWriter(System.out));
-				WriteOptions wr_ops = new WriteOptions();
-				wr_ops.operatorSet = new OperatorSet();
-				Iterator ivars = readOpts.variableNames.keySet().iterator();
-				while (ivars.hasNext())
+				long stopTime = System.nanoTime();
+				System.out.println("Execution time: " + (stopTime - startTime) / 1000000.0 + "ms");
+
+				if (result != PrologCode.FAIL)
 				{
-					String name = (String) ivars.next();
-					out.print(name + " = ");
-					out.print(wr_ops, ((Term) readOpts.variableNames.get(name)).dereference());
-					out.print("; ");
-					out.println();
+					WriteOptions wr_ops = new WriteOptions();
+					wr_ops.operatorSet = new OperatorSet();
+					Iterator ivars = readOpts.variableNames.keySet().iterator();
+					while (ivars.hasNext())
+					{
+						String name = (String) ivars.next();
+						out.print(name + " = ");
+						out.print(wr_ops, ((Term) readOpts.variableNames.get(name)).dereference());
+						out.println();
+					}
+				}
+				else
+				{
+					out.print("No more results");
 				}
 				out.println();
 				out.flush();
-			} while (result != PrologCode.SUCCESS);
+			} while (result == PrologCode.SUCCESS);
 
 			return null;
 		}
