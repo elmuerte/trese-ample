@@ -24,17 +24,17 @@ import gnu.prolog.vm.Environment;
 import gnu.prolog.vm.Interpreter;
 import gnu.prolog.vm.PrologCode;
 import gnu.prolog.vm.PrologException;
-import groove.graph.Graph;
-import groove.prolog.GrooveEnvironment;
+import groove.graph.Edge;
+import groove.prolog.builtin.PrologUtils;
 
 /**
- * Retrieve the current graph. <code>graph(Graph)</code>
+ * Get the source node of an edge. <code>edge_source(Edge,Node)</code>
  * 
  * @author Michiel Hendriks
  */
-public class Predicate_graph implements PrologCode
+public class Predicate_edge_sounce implements PrologCode
 {
-	public Predicate_graph()
+	public Predicate_edge_sounce()
 	{}
 
 	/*
@@ -44,13 +44,22 @@ public class Predicate_graph implements PrologCode
 	 */
 	public int execute(Interpreter interpreter, boolean backtrackMode, Term[] args) throws PrologException
 	{
-		if (!(interpreter.environment instanceof GrooveEnvironment))
+		Edge edge = null;
+		if (args[0] instanceof JavaObjectTerm)
 		{
-			GrooveEnvironment.invalidEnvironment();
+			JavaObjectTerm jot = (JavaObjectTerm) args[0];
+			if (!(jot.value instanceof Edge))
+			{
+				PrologException.domainError(PrologUtils.EDGE_ATOM, args[0]);
+			}
+			edge = (Edge) jot.value;
 		}
-		Graph graph = ((GrooveEnvironment) interpreter.environment).getGraph();
-		Term value = new JavaObjectTerm(graph);
-		return interpreter.unify(args[0], value);
+		else
+		{
+			PrologException.domainError(PrologUtils.EDGE_ATOM, args[0]);
+		}
+		Term nodeTerm = new JavaObjectTerm(edge.source());
+		return interpreter.unify(args[1], nodeTerm);
 	}
 
 	/*

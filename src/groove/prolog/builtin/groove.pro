@@ -33,11 +33,10 @@ node_set(N):-graph(G),node_set(G,N).
 :-build_in(node_count/2,'groove.prolog.builtin.graph.Predicate_node_count').
 node_count(N):-graph(G),node_count(G,N).
 
-% Get a set of edges from either a graph or a single node
+% Get a set of edges from either a graph
 % @param the graph or node
 % @param the list of edges
 % @see groove.graph.GraphShape#edgeSet()
-% @see groove.graph.GraphShape#edgeSet(Node)
 :-build_in(edge_set/2,'groove.prolog.builtin.graph.Predicate_edge_set').
 edge_set(E):-graph(G),edge_set(G,E).
 
@@ -48,24 +47,29 @@ edge_set(E):-graph(G),edge_set(G,E).
 :-build_in(edge_count/2,'groove.prolog.builtin.graph.Predicate_edge_count').
 edge_count(E):-graph(G),edge_count(G,E).
 
-% Get a set of edges from a single node
+% Get the set of edges from a single node. Both incoming and outgoing.
+% @param the graph
 % @param the node
 % @param the list of edges
-% @see groove.graph.GraphShape#edgeSet(Node)
-:-build_in(node_edge_set/2,'groove.prolog.builtin.graph.Predicate_node_edge_set').
+% @see groove.graph.GraphShape#edgeSet(Node,int)
+:-build_in(node_edge_set/3,'groove.prolog.builtin.graph.Predicate_node_edge_set').
+node_edge_set(N,E):-graph(G),node_edge_set(G,N,E).
 
 % Get a certain set of edges for a node
+% @param the graph
 % @param the node 
 % @param the position of the edge (integer)
 % @param the list of edges
 % @see groove.graph.GraphShape#edgeSet(Node,int)
-:-build_in(node_edge_set/3,'groove.prolog.builtin.graph.Predicate_node_edge_set').
+:-build_in(node_edge_set/4,'groove.prolog.builtin.graph.Predicate_node_edge_set_pos').
 
 % Get the outgoing edges for a given node
+% @param the graph
 % @param the node
 % @param list of outgoing edges
 % @see groove.graph.GraphShape#outEdgeSet(Node)
-:-build_in(out_edge_set/2,'groove.prolog.builtin.graph.Predicate_out_edge_set').
+:-build_in(out_edge_set/3,'groove.prolog.builtin.graph.Predicate_out_edge_set').
+out_edge_set(N,E):-graph(G),out_edge_set(G,N,E).
 
 % Get the edge set of a graph with a given label
 % @param the graph
@@ -73,5 +77,48 @@ edge_count(E):-graph(G),edge_count(G,E).
 % @param the list of edges
 % @see groove.graph.GraphShape#labelEdgeSet(int,Label)
 :-build_in(label_edge_set/3,'groove.prolog.builtin.graph.Predicate_label_edge_set').
-label_edge_set(L,E):-graph(G),label_edge_set(L,E).
+label_edge_set(L,E):-graph(G),label_edge_set(G,L,E).
 
+% Get all ends for an edge (usually 2)
+% @param the edge
+% @param the set of nodes
+% @see groove.graph.Edge#ends()
+:-build_in(edge_ends/2,'groove.prolog.builtin.graph.Predicate_edge_ends').
+
+% Get the node of a given end
+% @param the edge
+% @param the position
+% @param the node
+% @see groove.graph.Edge#end(int)
+% @see groove.graph.Edge#endIndex(Node)
+:-build_in(edge_end/3,'groove.prolog.builtin.graph.Predicate_edge_end').
+
+% Get the number of ends for an edge (usually 2)
+% @param the edge
+% @param the the number of ends
+% @see groove.graph.Edge#ends()
+:-build_in(edge_end_count/2,'groove.prolog.builtin.graph.Predicate_edge_end_count').
+
+% Will be success when the edge has the node as an end point. Fail otherwise
+% @param the edge
+% @param the node
+% @see groove.graph.Edge#hasEnd(Node)
+:-build_in(has_end/2,'groove.prolog.builtin.graph.Predicate_has_end').
+
+% Get the source node of an edge
+% @param the edge
+% @param the node
+% @see groove.graph.Edge#source()
+:-build_in(edge_source/2,'groove.prolog.builtin.graph.Predicate_edge_sounce').
+
+% Get the destination node of an edge (opposite of the source)
+% @param the edge
+% @param the node
+% @see groove.graph.Edge#opposite()
+:-build_in(edge_opposite/2,'groove.prolog.builtin.graph.Predicate_edge_opposite').
+
+% Get the label of the edge
+% @param the edge
+% @param the label/Atom
+% @see groove.graph.Edge#label()
+:-build_in(edge_label/2,'groove.prolog.builtin.graph.Predicate_edge_label').

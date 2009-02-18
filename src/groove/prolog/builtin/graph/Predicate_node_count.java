@@ -26,11 +26,11 @@ import gnu.prolog.vm.Interpreter;
 import gnu.prolog.vm.PrologCode;
 import gnu.prolog.vm.PrologException;
 import groove.graph.Graph;
-import groove.prolog.GrooveEnvironment;
-import groove.prolog.builtin.TermConstants;
+import groove.graph.GraphShape;
+import groove.prolog.builtin.PrologUtils;
 
 /**
- * 
+ * Get the number of nodes in the graph. <code>node_count(Graph,Count)</code>
  * 
  * @author Michiel Hendriks
  */
@@ -46,25 +46,19 @@ public class Predicate_node_count implements PrologCode
 	 */
 	public int execute(Interpreter interpreter, boolean backtrackMode, Term[] args) throws PrologException
 	{
-		if (!(interpreter.environment instanceof GrooveEnvironment))
-		{
-			GrooveEnvironment.invalidEnvironment();
-		}
-
-		Graph graph = null;
-
+		GraphShape graph = null;
 		if (args[0] instanceof JavaObjectTerm)
 		{
 			JavaObjectTerm jot = (JavaObjectTerm) args[0];
 			if (!(jot.value instanceof Graph))
 			{
-				PrologException.typeError(TermConstants.IN_GRAPH, args[0]);
+				PrologException.domainError(PrologUtils.GRAPH_ATOM, args[0]);
 			}
 			graph = (Graph) jot.value;
 		}
 		else
 		{
-			PrologException.typeError(TermConstants.IN_GRAPH, args[0]);
+			PrologException.domainError(PrologUtils.GRAPH_ATOM, args[0]);
 		}
 
 		Term nodeCountTerm = new IntegerTerm(graph.nodeCount());

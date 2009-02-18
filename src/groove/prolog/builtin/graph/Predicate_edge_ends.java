@@ -18,23 +18,24 @@
  */
 package groove.prolog.builtin.graph;
 
+import gnu.prolog.term.CompoundTerm;
 import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
 import gnu.prolog.vm.Environment;
 import gnu.prolog.vm.Interpreter;
 import gnu.prolog.vm.PrologCode;
 import gnu.prolog.vm.PrologException;
-import groove.graph.Graph;
-import groove.prolog.GrooveEnvironment;
+import groove.graph.Edge;
+import groove.prolog.builtin.PrologUtils;
 
 /**
- * Retrieve the current graph. <code>graph(Graph)</code>
+ * Get all ends for an edge (usually 2) <code>edge_ends(Edge,NodeSet)</code>
  * 
  * @author Michiel Hendriks
  */
-public class Predicate_graph implements PrologCode
+public class Predicate_edge_ends implements PrologCode
 {
-	public Predicate_graph()
+	public Predicate_edge_ends()
 	{}
 
 	/*
@@ -44,13 +45,22 @@ public class Predicate_graph implements PrologCode
 	 */
 	public int execute(Interpreter interpreter, boolean backtrackMode, Term[] args) throws PrologException
 	{
-		if (!(interpreter.environment instanceof GrooveEnvironment))
+		Edge edge = null;
+		if (args[0] instanceof JavaObjectTerm)
 		{
-			GrooveEnvironment.invalidEnvironment();
+			JavaObjectTerm jot = (JavaObjectTerm) args[0];
+			if (!(jot.value instanceof Edge))
+			{
+				PrologException.domainError(PrologUtils.EDGE_ATOM, args[0]);
+			}
+			edge = (Edge) jot.value;
 		}
-		Graph graph = ((GrooveEnvironment) interpreter.environment).getGraph();
-		Term value = new JavaObjectTerm(graph);
-		return interpreter.unify(args[0], value);
+		else
+		{
+			PrologException.domainError(PrologUtils.EDGE_ATOM, args[0]);
+		}
+		Term nodeSetTerm = CompoundTerm.getList(PrologUtils.createJOTlist(edge.ends()));
+		return interpreter.unify(nodeSetTerm, args[1]);
 	}
 
 	/*

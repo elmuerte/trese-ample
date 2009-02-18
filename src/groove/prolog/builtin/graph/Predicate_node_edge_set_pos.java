@@ -18,23 +18,29 @@
  */
 package groove.prolog.builtin.graph;
 
+import gnu.prolog.term.CompoundTerm;
+import gnu.prolog.term.IntegerTerm;
 import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
 import gnu.prolog.vm.Environment;
 import gnu.prolog.vm.Interpreter;
 import gnu.prolog.vm.PrologCode;
 import gnu.prolog.vm.PrologException;
+import gnu.prolog.vm.TermConstants;
 import groove.graph.Graph;
-import groove.prolog.GrooveEnvironment;
+import groove.graph.GraphShape;
+import groove.graph.Node;
+import groove.prolog.builtin.PrologUtils;
 
 /**
- * Retrieve the current graph. <code>graph(Graph)</code>
+ * Get a certain set of edges for a node.
+ * <code>node_edge_set(Graph,Node,Position,EdgeSet)</code>
  * 
  * @author Michiel Hendriks
  */
-public class Predicate_graph implements PrologCode
+public class Predicate_node_edge_set_pos implements PrologCode
 {
-	public Predicate_graph()
+	public Predicate_node_edge_set_pos()
 	{}
 
 	/*
@@ -44,13 +50,48 @@ public class Predicate_graph implements PrologCode
 	 */
 	public int execute(Interpreter interpreter, boolean backtrackMode, Term[] args) throws PrologException
 	{
-		if (!(interpreter.environment instanceof GrooveEnvironment))
+		GraphShape graph = null;
+		if (args[0] instanceof JavaObjectTerm)
 		{
-			GrooveEnvironment.invalidEnvironment();
+			JavaObjectTerm jot = (JavaObjectTerm) args[0];
+			if (!(jot.value instanceof Graph))
+			{
+				PrologException.domainError(PrologUtils.GRAPH_ATOM, args[0]);
+			}
+			graph = (Graph) jot.value;
 		}
-		Graph graph = ((GrooveEnvironment) interpreter.environment).getGraph();
-		Term value = new JavaObjectTerm(graph);
-		return interpreter.unify(args[0], value);
+		else
+		{
+			PrologException.typeError(PrologUtils.GRAPH_ATOM, args[0]);
+		}
+
+		Node node = null;
+		if (args[1] instanceof JavaObjectTerm)
+		{
+			JavaObjectTerm jot = (JavaObjectTerm) args[1];
+			if (!(jot.value instanceof Node))
+			{
+				PrologException.domainError(PrologUtils.NODE_ATOM, args[1]);
+			}
+			node = (Node) jot.value;
+		}
+		else
+		{
+			PrologException.domainError(PrologUtils.NODE_ATOM, args[1]);
+		}
+
+		int position = -1;
+		if (args[2] instanceof IntegerTerm)
+		{
+			position = ((IntegerTerm) args[2]).value;
+		}
+		else
+		{
+			PrologException.domainError(TermConstants.integerAtom, args[2]);
+		}
+
+		Term edgeSetTerm = CompoundTerm.getList(PrologUtils.createJOTlist(graph.edgeSet(node, position)));
+		return interpreter.unify(edgeSetTerm, args[3]);
 	}
 
 	/*

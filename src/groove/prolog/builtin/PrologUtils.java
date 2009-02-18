@@ -27,13 +27,15 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * 
+ * Utility class
  * 
  * @author Michiel Hendriks
  */
-public class TermConstants
+public class PrologUtils
 {
-	public static final AtomTerm IN_GRAPH = AtomTerm.get("in_graph");
+	public static final AtomTerm GRAPH_ATOM = AtomTerm.get("graph");
+	public static final AtomTerm NODE_ATOM = AtomTerm.get("node");
+	public static final AtomTerm EDGE_ATOM = AtomTerm.get("edge");
 
 	/**
 	 * Create a list of JavaObjectTerms from the given collection
@@ -50,4 +52,23 @@ public class TermConstants
 		}
 		return result;
 	}
+
+	/**
+	 * Create a list of JavaObjectTerms from the given collection
+	 * 
+	 * @param elements
+	 * @return
+	 */
+	public static final List<Term> createJOTlist(Object[] elements)
+	{
+		List<Term> result = new ArrayList<Term>();
+		for (Object o : elements)
+		{
+			result.add(new JavaObjectTerm(o));
+		}
+		return result;
+	}
+
+	private PrologUtils()
+	{}
 }
