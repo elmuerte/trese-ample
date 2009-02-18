@@ -18,29 +18,27 @@
  */
 package groove.prolog.builtin.graph;
 
+import gnu.prolog.term.CompoundTerm;
+import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
 import gnu.prolog.vm.Environment;
 import gnu.prolog.vm.Interpreter;
 import gnu.prolog.vm.PrologCode;
 import gnu.prolog.vm.PrologException;
 import groove.graph.Graph;
-import groove.prolog.GrooveEnvironment;
+import groove.graph.GraphShape;
+import groove.graph.Node;
+import groove.prolog.builtin.PrologUtils;
 
 /**
- * 
+ * Get all edges for a node. <code>node_edge_set(Graph,Node,EdgeSet)</code>
  * 
  * @author Michiel Hendriks
  */
 public class Predicate_node_edge_set implements PrologCode
 {
-
-	/**
-	 * 
-	 */
 	public Predicate_node_edge_set()
-	{
-	// TODO Auto-generated constructor stub
-	}
+	{}
 
 	/*
 	 * (non-Javadoc)
@@ -49,12 +47,38 @@ public class Predicate_node_edge_set implements PrologCode
 	 */
 	public int execute(Interpreter interpreter, boolean backtrackMode, Term[] args) throws PrologException
 	{
-		if (!(interpreter.environment instanceof GrooveEnvironment))
+		GraphShape graph = null;
+		if (args[0] instanceof JavaObjectTerm)
 		{
-			GrooveEnvironment.invalidEnvironment();
+			JavaObjectTerm jot = (JavaObjectTerm) args[0];
+			if (!(jot.value instanceof Graph))
+			{
+				PrologException.domainError(PrologUtils.GRAPH_ATOM, args[0]);
+			}
+			graph = (Graph) jot.value;
 		}
-		Graph graph = ((GrooveEnvironment) interpreter.environment).getGraph();
-		return 0;
+		else
+		{
+			PrologException.typeError(PrologUtils.GRAPH_ATOM, args[0]);
+		}
+
+		Node node = null;
+		if (args[1] instanceof JavaObjectTerm)
+		{
+			JavaObjectTerm jot = (JavaObjectTerm) args[1];
+			if (!(jot.value instanceof Node))
+			{
+				PrologException.domainError(PrologUtils.NODE_ATOM, args[1]);
+			}
+			node = (Node) jot.value;
+		}
+		else
+		{
+			PrologException.domainError(PrologUtils.NODE_ATOM, args[1]);
+		}
+
+		Term edgeSetTerm = CompoundTerm.getList(PrologUtils.createJOTlist(graph.edgeSet(node)));
+		return interpreter.unify(edgeSetTerm, args[2]);
 	}
 
 	/*
@@ -62,19 +86,12 @@ public class Predicate_node_edge_set implements PrologCode
 	 * @see gnu.prolog.vm.PrologCode#install(gnu.prolog.vm.Environment)
 	 */
 	public void install(Environment env)
-	{
-	// TODO Auto-generated method stub
-
-	}
+	{}
 
 	/*
 	 * (non-Javadoc)
 	 * @see gnu.prolog.vm.PrologCode#uninstall(gnu.prolog.vm.Environment)
 	 */
 	public void uninstall(Environment env)
-	{
-	// TODO Auto-generated method stub
-
-	}
-
+	{}
 }

@@ -26,11 +26,12 @@ import gnu.prolog.vm.Interpreter;
 import gnu.prolog.vm.PrologCode;
 import gnu.prolog.vm.PrologException;
 import groove.graph.Graph;
-import groove.prolog.GrooveEnvironment;
-import groove.prolog.builtin.TermConstants;
+import groove.graph.GraphShape;
+import groove.prolog.builtin.PrologUtils;
 
 /**
- * Get the complete node set of the graph
+ * Get the complete node set of the graph.
+ * <code>node_set(Graph,Node,NodeSet)</code>
  * 
  * @author Michiel Hendriks
  */
@@ -46,26 +47,21 @@ public class Predicate_node_set implements PrologCode
 	 */
 	public int execute(Interpreter interpreter, boolean backtrackMode, Term[] args) throws PrologException
 	{
-		if (!(interpreter.environment instanceof GrooveEnvironment))
-		{
-			GrooveEnvironment.invalidEnvironment();
-		}
-
-		Graph graph = null;
+		GraphShape graph = null;
 		if (args[0] instanceof JavaObjectTerm)
 		{
 			JavaObjectTerm jot = (JavaObjectTerm) args[0];
 			if (!(jot.value instanceof Graph))
 			{
-				PrologException.typeError(TermConstants.IN_GRAPH, args[0]);
+				PrologException.domainError(PrologUtils.GRAPH_ATOM, args[0]);
 			}
 			graph = (Graph) jot.value;
 		}
 		else
 		{
-			PrologException.typeError(TermConstants.IN_GRAPH, args[0]);
+			PrologException.domainError(PrologUtils.GRAPH_ATOM, args[0]);
 		}
-		Term nodeSetTerm = CompoundTerm.getList(TermConstants.createJOTlist(graph.nodeSet()));
+		Term nodeSetTerm = CompoundTerm.getList(PrologUtils.createJOTlist(graph.nodeSet()));
 		return interpreter.unify(nodeSetTerm, args[1]);
 	}
 
