@@ -109,7 +109,7 @@ public class Predicate_has_end implements PrologCode
 			}
 			else
 			{
-				PrologException.domainError(PrologUtils.EDGE_ATOM, args[0]);
+				PrologException.typeError(PrologUtils.EDGE_ATOM, args[0]);
 			}
 
 			Node node = null;
@@ -141,7 +141,7 @@ public class Predicate_has_end implements PrologCode
 			}
 			else
 			{
-				PrologException.domainError(PrologUtils.NODE_ATOM, args[2]);
+				PrologException.typeError(PrologUtils.NODE_ATOM, args[2]);
 			}
 		}
 		return FAIL;

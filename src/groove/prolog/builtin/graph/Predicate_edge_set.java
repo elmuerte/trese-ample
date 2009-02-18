@@ -58,7 +58,7 @@ public class Predicate_edge_set implements PrologCode
 		}
 		else
 		{
-			PrologException.domainError(PrologUtils.GRAPH_ATOM, args[0]);
+			PrologException.typeError(PrologUtils.GRAPH_ATOM, args[0]);
 		}
 		Term edgeSetTerm = CompoundTerm.getList(PrologUtils.createJOTlist(graph.edgeSet()));
 		return interpreter.unify(edgeSetTerm, args[1]);

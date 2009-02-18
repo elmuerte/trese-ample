@@ -62,7 +62,7 @@ public class Predicate_label_edge_set implements PrologCode
 		}
 		else
 		{
-			PrologException.domainError(PrologUtils.GRAPH_ATOM, args[0]);
+			PrologException.typeError(PrologUtils.GRAPH_ATOM, args[0]);
 		}
 
 		String label = null;

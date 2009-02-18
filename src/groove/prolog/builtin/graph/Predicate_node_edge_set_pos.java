@@ -77,7 +77,7 @@ public class Predicate_node_edge_set_pos implements PrologCode
 		}
 		else
 		{
-			PrologException.domainError(PrologUtils.NODE_ATOM, args[1]);
+			PrologException.typeError(PrologUtils.NODE_ATOM, args[1]);
 		}
 
 		int position = -1;
@@ -87,7 +87,7 @@ public class Predicate_node_edge_set_pos implements PrologCode
 		}
 		else
 		{
-			PrologException.domainError(TermConstants.integerAtom, args[2]);
+			PrologException.typeError(TermConstants.integerAtom, args[2]);
 		}
 
 		Term edgeSetTerm = CompoundTerm.getList(PrologUtils.createJOTlist(graph.edgeSet(node, position)));

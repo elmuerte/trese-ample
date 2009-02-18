@@ -60,7 +60,7 @@ public class Predicate_out_edge_set implements PrologCode
 		}
 		else
 		{
-			PrologException.domainError(PrologUtils.GRAPH_ATOM, args[0]);
+			PrologException.typeError(PrologUtils.GRAPH_ATOM, args[0]);
 		}
 
 		Node node = null;
@@ -75,7 +75,7 @@ public class Predicate_out_edge_set implements PrologCode
 		}
 		else
 		{
-			PrologException.domainError(PrologUtils.NODE_ATOM, args[1]);
+			PrologException.typeError(PrologUtils.NODE_ATOM, args[1]);
 		}
 
 		Term edgeSetTerm = CompoundTerm.getList(PrologUtils.createJOTlist(graph.outEdgeSet(node)));

@@ -20,6 +20,7 @@ package groove.prolog;
 
 import gnu.prolog.term.AtomTerm;
 import gnu.prolog.term.CompoundTerm;
+import gnu.prolog.term.CompoundTermTag;
 import gnu.prolog.vm.Environment;
 import gnu.prolog.vm.PrologException;
 import groove.graph.Graph;
@@ -38,7 +39,8 @@ public class GrooveEnvironment extends Environment
 	 */
 	public static void invalidEnvironment() throws PrologException
 	{
-		throw new PrologException(new CompoundTerm(PrologException.errorTag, GrooveEnvironment.NO_GROOVE_ENV,
+		throw new PrologException(new CompoundTerm(PrologException.errorTag, new CompoundTerm(CompoundTermTag.get(
+				"system_error", 1), GrooveEnvironment.NO_GROOVE_ENV, PrologException.errorAtom),
 				PrologException.errorAtom));
 	}
 

@@ -57,7 +57,7 @@ public class Predicate_edge_end_count implements PrologCode
 		}
 		else
 		{
-			PrologException.domainError(PrologUtils.EDGE_ATOM, args[0]);
+			PrologException.typeError(PrologUtils.EDGE_ATOM, args[0]);
 		}
 		Term countTerm = new IntegerTerm(edge.endCount());
 		return interpreter.unify(countTerm, args[1]);

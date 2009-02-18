@@ -59,7 +59,7 @@ public class Predicate_node_set implements PrologCode
 		}
 		else
 		{
-			PrologException.domainError(PrologUtils.GRAPH_ATOM, args[0]);
+			PrologException.typeError(PrologUtils.GRAPH_ATOM, args[0]);
 		}
 		Term nodeSetTerm = CompoundTerm.getList(PrologUtils.createJOTlist(graph.nodeSet()));
 		return interpreter.unify(nodeSetTerm, args[1]);
