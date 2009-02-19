@@ -15,6 +15,15 @@
 % License along with this library; if not, write to the Free Software
 % Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
+% Fail if the first argument is not a Groove Graph
+:-build_in(is_graph/1,'groove.prolog.builtin.graph.Predicate_is_graph').
+
+% Fail if the first argument is not a Groove Node
+:-build_in(is_node/1,'groove.prolog.builtin.graph.Predicate_is_node').
+
+% Fail if the first argument is not a Groove Edge
+:-build_in(is_edge/1,'groove.prolog.builtin.graph.Predicate_is_edge').
+
 % Retrieve the current graph
 % @param the graph
 :-build_in(graph/1,'groove.prolog.builtin.graph.Predicate_graph').
@@ -74,7 +83,7 @@ node_edge(N,E):-graph(G),node_edge(G,N,E).
 % @param the node
 % @param the list of edges
 % @see groove.graph.GraphShape#edgeSet(Node,int)
-:-build_in(node_edge_set/3,'groove.prolog.builtin.graph.Predicate_node_edge_set').
+:-build_in(node_edge_set__/3,'groove.prolog.builtin.graph.Predicate_node_edge_set').
 node_edge_set(N,E):-graph(G),node_edge_set(G,N,E).
 
 % Get a certain set of edges for a node
@@ -84,6 +93,11 @@ node_edge_set(N,E):-graph(G),node_edge_set(G,N,E).
 % @param the list of edges
 % @see groove.graph.GraphShape#edgeSet(Node,int)
 :-build_in(node_edge_set/4,'groove.prolog.builtin.graph.Predicate_node_edge_set_pos').
+
+node_edge_set(GN,A1,A2):-
+	is_node(GN) -> graph(G), !, call(node_edge_set(G,GN,A1,A2)).
+node_edge_set(GN,A1,A2):-
+	call(node_edge_set__(GN,A1,A2)).
 
 % Get an outgoing edge from a node
 % @param the graph
