@@ -90,8 +90,20 @@ public class Predicate_node_edge_set_pos implements PrologCode
 			PrologException.typeError(TermConstants.integerAtom, args[2]);
 		}
 
-		Term edgeSetTerm = CompoundTerm.getList(PrologUtils.createJOTlist(graph.edgeSet(node, position)));
-		return interpreter.unify(edgeSetTerm, args[3]);
+		if (position < 0)
+		{
+			return FAIL;
+		}
+
+		try
+		{
+			Term edgeSetTerm = CompoundTerm.getList(PrologUtils.createJOTlist(graph.edgeSet(node, position)));
+			return interpreter.unify(edgeSetTerm, args[3]);
+		}
+		catch (IllegalArgumentException e)
+		{
+			return FAIL;
+		}
 	}
 
 	/*

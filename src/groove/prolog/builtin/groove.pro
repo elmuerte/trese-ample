@@ -51,7 +51,7 @@ graph_edge(E):-graph(G),graph_edge(G,E).
 % @param the graph 
 % @param the list of edges
 % @see groove.graph.GraphShape#edgeSet()
-:-build_in(grap_edge_set/2,'groove.prolog.builtin.graph.Predicate_graph_edge_set').
+:-build_in(graph_edge_set/2,'groove.prolog.builtin.graph.Predicate_graph_edge_set').
 graph_edge_set(E):-graph(G),graph_edge_set(G,E).
 
 % Get the number of edges in a graph
