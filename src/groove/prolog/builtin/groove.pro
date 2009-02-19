@@ -84,7 +84,7 @@ node_edge(N,E):-graph(G),node_edge(G,N,E).
 % @param the list of edges
 % @see groove.graph.GraphShape#edgeSet(Node,int)
 :-build_in(node_edge_set__/3,'groove.prolog.builtin.graph.Predicate_node_edge_set').
-node_edge_set(N,E):-graph(G),node_edge_set(G,N,E).
+node_edge_set(N,E):-graph(G),node_edge_set__(G,N,E).
 
 % Get a certain set of edges for a node
 % @param the graph
@@ -94,6 +94,7 @@ node_edge_set(N,E):-graph(G),node_edge_set(G,N,E).
 % @see groove.graph.GraphShape#edgeSet(Node,int)
 :-build_in(node_edge_set/4,'groove.prolog.builtin.graph.Predicate_node_edge_set_pos').
 
+% Call either node_edge_set__/3 or node_edge_set/4 depending on the first argument
 node_edge_set(GN,A1,A2):-
 	is_node(GN) -> graph(G), !, call(node_edge_set(G,GN,A1,A2)).
 node_edge_set(GN,A1,A2):-
