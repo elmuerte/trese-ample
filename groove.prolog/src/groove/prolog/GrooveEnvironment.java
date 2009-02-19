@@ -24,6 +24,7 @@ import gnu.prolog.term.CompoundTermTag;
 import gnu.prolog.vm.Environment;
 import gnu.prolog.vm.PrologException;
 import groove.graph.Graph;
+import groove.lts.GraphState;
 
 /**
  * 
@@ -49,6 +50,11 @@ public class GrooveEnvironment extends Environment
 	 */
 	protected Graph graph;
 
+	/**
+	 * The graph state currently under inspection. Can be null.
+	 */
+	protected GraphState graphState;
+
 	public GrooveEnvironment()
 	{
 		super();
@@ -71,4 +77,20 @@ public class GrooveEnvironment extends Environment
 		return graph;
 	}
 
+	/**
+	 * @param value
+	 *            the graphState to set
+	 */
+	public void setGraphState(GraphState value)
+	{
+		graphState = value;
+	}
+
+	/**
+	 * @return the graphState
+	 */
+	public GraphState getGraphState()
+	{
+		return graphState;
+	}
 }

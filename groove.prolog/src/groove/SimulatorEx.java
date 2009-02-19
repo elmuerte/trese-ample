@@ -16,37 +16,21 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package groove.prolog;
+package groove;
 
-import groove.graph.Graph;
-import groove.io.AspectGxl;
-
-import java.io.File;
 
 /**
  * 
  * 
  * @author Michiel Hendriks
  */
-public class Test
+public final class SimulatorEx
 {
-
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args)
 	{
-		AspectGxl gxl = new AspectGxl();
-		try
-		{
-			Graph graph = gxl.unmarshalGraph(new File(args[0]));
-			PrologQuery pq = new PrologQuery(graph);
-			pq.newQuery(args[1]);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace(System.err);
-		}
+		groove.gui.SimulatorEx.main(args);
 	}
-
 }
