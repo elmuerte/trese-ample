@@ -37,6 +37,11 @@ public class PrologUtils
 	public static final AtomTerm NODE_ATOM = AtomTerm.get("node");
 	public static final AtomTerm EDGE_ATOM = AtomTerm.get("edge");
 
+	public static final AtomTerm GRAPHSTATE_ATOM = AtomTerm.get("graph_state");
+	public static final AtomTerm TRANSITION_ATOM = AtomTerm.get("transition");
+	public static final AtomTerm RULEEVENT_ATOM = AtomTerm.get("rule_event");
+	public static final AtomTerm RULE_ATOM = AtomTerm.get("rule");
+
 	/**
 	 * Create a list of JavaObjectTerms from the given collection
 	 * 

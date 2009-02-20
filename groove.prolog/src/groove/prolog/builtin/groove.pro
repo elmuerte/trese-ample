@@ -96,7 +96,7 @@ node_edge_set(N,E):-graph(G),node_edge_set__(G,N,E).
 
 % Call either node_edge_set__/3 or node_edge_set/4 depending on the first argument
 node_edge_set(GN,A1,A2):-
-	is_node(GN) -> graph(G), !, call(node_edge_set(G,GN,A1,A2)).
+	is_node(GN), graph(G), call(node_edge_set(G,GN,A1,A2)).
 node_edge_set(GN,A1,A2):-
 	call(node_edge_set__(GN,A1,A2)).
 
@@ -175,3 +175,82 @@ label_edge_set(L,E):-graph(G),label_edge_set(G,L,E).
 % @param the label/Atom
 % @see groove.graph.Edge#label()
 :-build_in(edge_label/2,'groove.prolog.builtin.graph.Predicate_edge_label').
+
+% Success if the argument is a JavaObjectTerm with a GraphState
+:-build_in(is_graphstate/1,'groove.prolog.builtin.graphstate.Predicate_is_graphstate').
+
+% Success if the argument is a JavaObjectTerm with a Transition
+:-build_in(is_transition/1,'groove.prolog.builtin.graphstate.Predicate_is_transition').
+
+% Success if the argument is a JavaObjectTerm with a Location
+:-build_in(is_location/1,'groove.prolog.builtin.graphstate.Predicate_is_location').
+
+% Success if the argument is a JavaObjectTerm with a Location
+:-build_in(is_ruleevent/1,'groove.prolog.builtin.graphstate.Predicate_is_ruleevent').
+
+% Success if the argument is a JavaObjectTerm with a Location
+:-build_in(is_rulematch/1,'groove.prolog.builtin.graphstate.Predicate_is_rulematch').
+
+% The current graph state. Might not always be available.
+% @param the graph state
+:-build_in(graphstate/1,'groove.prolog.builtin.graphstate.Predicate_graphstate').
+
+% The graph of a graph state
+% @param the graph state
+% @param the graph 
+:-build_in(graphstate_graph/2,'groove.prolog.builtin.graphstate.Predicate_graphstate_graph').
+graphstate_graph(G):-graphstate(GS),graphstate_graph(GS,G).
+
+% Success if the graph state is closed (i.e. all transitions have been found)
+% @param the graph state
+:-build_in(graphstate_is_closed/1,'groove.prolog.builtin.graphstate.Predicate_graphstate_is_closed').
+graphstate_is_closed:-graphstate(GS),graphstate_is_closed(GS).
+
+% The location of a graph state
+% @param the graph state
+:-build_in(graphstate_location/2,'groove.prolog.builtin.graphstate.Predicate_graphstate_location').
+graphstate_location(L):-graphstate(GS),graphstate_location(GS,L).
+
+% A transition in a state
+% @param the state
+% @param the transition
+:-build_in(graphstate_transition/2,'groove.prolog.builtin.graphstate.Predicate_graphstate_transition').
+graphstate_transition(T):-graphstate(GS),graphstate_transition(GS,T).
+
+% All current transitions in a state
+% @param the state
+% @param the transition set
+:-build_in(graphstate_transition_set/2,'groove.prolog.builtin.graphstate.Predicate_graphstate_transition_set').
+graphstate_transition_set(T):-graphstate(GS),graphstate_transition_set(GS,T).
+
+% A next state from this state
+% @param the state
+% @param the next state
+:-build_in(graphstate_next/2,'groove.prolog.builtin.graphstate.Predicate_graphstate_next').
+graphstate_next(T):-graphstate(GS),graphstate_next(GS,T).
+
+% All next states from this state
+% @param the state
+% @param the next state set
+:-build_in(graphstate_next_set/2,'groove.prolog.builtin.graphstate.Predicate_graphstate_next_set').
+graphstate_next_set(T):-graphstate(GS),graphstate_next_set(GS,T).
+
+% The source of a transition
+% @param the transition
+% @param the source state
+:-build_in(transition_source/2,'groove.prolog.builtin.graphstate.Predicate_transition_source').
+
+% The target of a transition
+% @param the transition
+% @param the target state
+:-build_in(transition_target/2,'groove.prolog.builtin.graphstate.Predicate_transition_target').
+
+% The rule event that caused this transition
+% @param the transition
+% @param the rule event
+:-build_in(transition_event/2,'groove.prolog.builtin.graphstate.Predicate_transition_event').
+
+% The rule match that caused this transition
+% @param the transition
+% @param the rule match
+:-build_in(transition_match/2,'groove.prolog.builtin.graphstate.Predicate_transition_match').
