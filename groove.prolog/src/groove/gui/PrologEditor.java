@@ -18,12 +18,11 @@
  */
 package groove.gui;
 
-import gnu.prolog.io.TermWriter;
-import gnu.prolog.term.Term;
-import gnu.prolog.vm.PrologCode;
+import groove.lts.GTS;
 import groove.lts.GraphState;
 import groove.prolog.GroovePrologException;
 import groove.prolog.PrologQuery;
+import groove.prolog.QueryResult;
 import groove.util.Groove;
 
 import java.awt.BorderLayout;
@@ -31,8 +30,8 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.PrintWriter;
+import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.swing.ButtonGroup;
@@ -45,6 +44,8 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 /**
  * 
@@ -61,11 +62,13 @@ public class PrologEditor extends JPanel
 	protected Simulator sim;
 	protected PrologQuery prolog;
 	protected QueryMode mode = QueryMode.GRAPH_STATE;
+	protected boolean consultUserCode = false;
 
 	protected JTextField query;
 	protected JTextPane editor;
 	protected JTextArea results;
 	protected JButton nextResultBtn;
+	protected JButton consultBtn;
 
 	public PrologEditor(Simulator simulator)
 	{
@@ -129,11 +132,57 @@ public class PrologEditor extends JPanel
 		queryPane.add(query, BorderLayout.CENTER);
 		queryPane.add(execQuery, BorderLayout.EAST);
 
+		toolBar = new JToolBar();
+		toolBar.setFloatable(false);
+
+		JButton saveButton = new JButton("Save");
+		saveButton.setEnabled(false);
+		toolBar.add(saveButton);
+
+		JButton loadButton = new JButton("Load");
+		loadButton.setEnabled(false);
+		toolBar.add(loadButton);
+
+		toolBar.addSeparator();
+
+		consultBtn = new JButton("Consult");
+		consultBtn.setToolTipText("Reconsult the prolog code. This will cancel the current active query.");
+		consultBtn.setEnabled(false);
+		consultBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0)
+			{
+				consultBtn.setEnabled(false);
+				consultUserCode();
+			}
+		});
+		toolBar.add(consultBtn);
+
 		editor = new JTextPane();
 		editor.setFont(editFont);
 		editor.setText("");
 		editor.setEditable(true);
 		editor.setEnabled(true);
+		editor.getDocument().addDocumentListener(new DocumentListener() {
+
+			public void changedUpdate(DocumentEvent arg0)
+			{
+				consultBtn.setEnabled(true);
+			}
+
+			public void insertUpdate(DocumentEvent arg0)
+			{
+				consultBtn.setEnabled(true);
+			}
+
+			public void removeUpdate(DocumentEvent arg0)
+			{
+				consultBtn.setEnabled(true);
+			}
+		});
+
+		JPanel editorPane = new JPanel(new BorderLayout());
+		editorPane.add(toolBar, BorderLayout.NORTH);
+		editorPane.add(new JScrollPane(editor), BorderLayout.CENTER);
 
 		results = new JTextArea();
 		results.setFont(editFont);
@@ -158,7 +207,7 @@ public class PrologEditor extends JPanel
 
 		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		splitPane.setOneTouchExpandable(true);
-		splitPane.setTopComponent(new JScrollPane(editor));
+		splitPane.setTopComponent(editorPane);
 		splitPane.setBottomComponent(resultsPane);
 		splitPane.setDividerLocation(0);
 
@@ -171,6 +220,23 @@ public class PrologEditor extends JPanel
 		executeQuery(query.getText());
 	}
 
+	protected boolean ensureProlog()
+	{
+		if (prolog == null)
+		{
+			prolog = new PrologQuery();
+			if (consultUserCode)
+			{
+				String userCode = editor.getText();
+				if (userCode != null && userCode.length() > 0)
+				{
+					prolog.init(new StringReader(userCode), "usercode");
+				}
+			}
+		}
+		return false;
+	}
+
 	public void executeQuery(String queryString)
 	{
 		if (queryString == null || queryString.length() == 0)
@@ -179,19 +245,31 @@ public class PrologEditor extends JPanel
 		}
 		results.setText("?- " + queryString + (queryString.endsWith(".") ? "\n" : ".\n"));
 
-		GraphState gs = sim.getCurrentState();
-		if (gs == null)
+		if (!ensureProlog())
 		{
-			results.append("Error: no graph");
 			return;
 		}
-		if (prolog == null)
+
+		switch (mode)
 		{
-			prolog = new PrologQuery(gs);
-		}
-		else
-		{
-			prolog.setGraphState(gs);
+			case GRAPH_STATE:
+				GraphState gs = sim.getCurrentState();
+				if (gs == null)
+				{
+					results.append("Error: no graph");
+					return;
+				}
+				prolog.setGraphState(gs);
+				break;
+			case LTS:
+				GTS gts = sim.getCurrentGTS();
+				if (gts == null)
+				{
+					results.append("Error: no GTS");
+					return;
+				}
+				results.append("LTL not supported yet");
+				return;
 		}
 
 		try
@@ -228,35 +306,44 @@ public class PrologEditor extends JPanel
 	/**
 	 * @param newQuery
 	 */
-	protected void processResults(Map<String, Term> queryResults)
+	protected void processResults(QueryResult queryResult)
 	{
-		if (queryResults == null)
+		if (queryResult == null)
 		{
 			return;
 		}
-		switch (prolog.lastReturnValue())
+		switch (queryResult.getReturnValue())
 		{
-			case PrologCode.SUCCESS:
-			case PrologCode.SUCCESS_LAST:
-				for (Entry<String, Term> entry : queryResults.entrySet())
+			case SUCCESS:
+			case SUCCESS_LAST:
+				for (Entry<String, Object> entry : queryResult.getVariables().entrySet())
 				{
 					results.append(entry.getKey());
 					results.append(" = ");
-					results.append(TermWriter.toString(entry.getValue().dereference()));
+					results.append("" + entry.getValue());
 					results.append("\n");
 				}
 				results.append("Yes\n");
 				break;
-			case PrologCode.FAIL:
+			case FAIL:
 				results.append("No\n");
 				break;
 			default:
-				results.append(String.format("Unexpected return value: %d", prolog.lastReturnValue()));
+				results.append(String.format("Unexpected return value: %s", prolog.lastReturnValue().toString()));
 		}
 		nextResultBtn.setVisible(prolog.hasNext());
 		if (nextResultBtn.isVisible())
 		{
 			nextResultBtn.grabFocus();
 		}
+	}
+
+	protected void consultUserCode()
+	{
+		prolog = null;
+		consultUserCode = true;
+		nextResultBtn.setVisible(false);
+		results.setText("");
+		ensureProlog();
 	}
 }

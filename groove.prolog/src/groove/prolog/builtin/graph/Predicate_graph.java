@@ -25,7 +25,7 @@ import gnu.prolog.vm.Interpreter;
 import gnu.prolog.vm.PrologCode;
 import gnu.prolog.vm.PrologException;
 import groove.graph.Graph;
-import groove.prolog.GrooveEnvironment;
+import groove.prolog.engine.GrooveEnvironment;
 
 /**
  * Retrieve the current graph. <code>graph(Graph)</code>
