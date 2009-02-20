@@ -26,13 +26,16 @@ import gnu.prolog.term.AtomTerm;
 import gnu.prolog.term.CompoundTerm;
 import gnu.prolog.term.Term;
 import gnu.prolog.vm.Interpreter;
-import gnu.prolog.vm.PrologCode;
 import gnu.prolog.vm.PrologException;
 import gnu.prolog.vm.Interpreter.Goal;
 import groove.graph.Graph;
 import groove.lts.GraphState;
+import groove.prolog.engine.GrooveEnvironment;
 
+import java.io.Reader;
 import java.io.StringReader;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,8 +47,6 @@ import java.util.Map;
 public class PrologQuery
 {
 	public static final String GROOVE_PRO = "/groove/prolog/builtin/groove.pro";
-
-	private static final int NOT_RUN = -255;
 
 	/**
 	 * The graph that will be queried.
@@ -75,7 +76,10 @@ public class PrologQuery
 	/**
 	 * The current result of the query
 	 */
-	protected QueryResult currentResult;
+	protected InternalQueryResult currentResult;
+
+	public PrologQuery()
+	{}
 
 	/**
 	 * @param queryGraph
@@ -91,6 +95,14 @@ public class PrologQuery
 	public PrologQuery(GraphState queryGraphState)
 	{
 		setGraphState(queryGraphState);
+	}
+
+	/**
+	 * @return the initialized
+	 */
+	public boolean isInitialized()
+	{
+		return initialized;
 	}
 
 	/**
@@ -119,7 +131,20 @@ public class PrologQuery
 	/**
 	 * Initialize the environment
 	 */
-	protected void init()
+	public void init()
+	{
+		init(null, null);
+	}
+
+	/**
+	 * Initialize the environment
+	 * 
+	 * @param initStream
+	 *            TODO
+	 * @param streamName
+	 *            TODO
+	 */
+	public void init(Reader initStream, String streamName)
 	{
 		if (initialized)
 		{
@@ -131,6 +156,10 @@ public class PrologQuery
 		env.setGraph(graph);
 		CompoundTerm term = new CompoundTerm(AtomTerm.get("resource"), new Term[] { AtomTerm.get(GROOVE_PRO) });
 		env.ensureLoaded(term);
+		if (initStream != null)
+		{
+			env.loadStream(initStream, streamName);
+		}
 		interpreter = env.createInterpreter();
 		env.runIntialization(interpreter);
 		for (PrologTextLoaderError err : (List<PrologTextLoaderError>) env.getLoadingErrors())
@@ -148,7 +177,7 @@ public class PrologQuery
 	 * @return
 	 * @throws GroovePrologException
 	 */
-	public Map<String, Term> newQuery(String term) throws GroovePrologException
+	public QueryResult newQuery(String term) throws GroovePrologException
 	{
 		if (!initialized)
 		{
@@ -157,9 +186,9 @@ public class PrologQuery
 		if (currentResult != null)
 		{
 			// terminate the previous goal
-			if (currentResult.returnValue == PrologCode.SUCCESS)
+			if (currentResult.getReturnValue() == QueryReturnValue.SUCCESS)
 			{
-				interpreter.stop(currentResult.goal);
+				interpreter.stop(currentResult.getGoal());
 			}
 		}
 		ReadOptions readOpts = new ReadOptions();
@@ -169,41 +198,9 @@ public class PrologQuery
 		{
 			Term goalTerm = termReader.readTermEof(readOpts);
 			Goal goal = interpreter.prepareGoal(goalTerm);
-			currentResult = new QueryResult(goal);
-			currentResult.variables = readOpts.variableNames;
+			currentResult = new InternalQueryResult(goal, term);
+			currentResult.rawVars = readOpts.variableNames;
 			return next();
-			// int result;
-			// do
-			// {
-			// long startTime = System.nanoTime();
-			// result = interpreter.execute(goal);
-			// long stopTime = System.nanoTime();
-			// System.out.println("Execution time: " + (stopTime - startTime) /
-			// 1000000.0 + "ms");
-			//
-			// if (result != PrologCode.FAIL)
-			// {
-			// WriteOptions wr_ops = new WriteOptions();
-			// wr_ops.operatorSet = new OperatorSet();
-			// Iterator ivars = readOpts.variableNames.keySet().iterator();
-			// while (ivars.hasNext())
-			// {
-			// String name = (String) ivars.next();
-			// out.print(name + " = ");
-			// out.print(wr_ops, ((Term)
-			// readOpts.variableNames.get(name)).dereference());
-			// out.println();
-			// }
-			// }
-			// else
-			// {
-			// out.print("No more results");
-			// }
-			// out.println();
-			// out.flush();
-			// } while (result == PrologCode.SUCCESS);
-			//
-			// return null;
 		}
 		catch (ParseException e)
 		{
@@ -215,14 +212,19 @@ public class PrologQuery
 		}
 	}
 
-	public Map<String, Term> next() throws GroovePrologException
+	public QueryResult current()
+	{
+		return currentResult;
+	}
+
+	public QueryResult next() throws GroovePrologException
 	{
 		if (currentResult == null)
 		{
 			// TODO: error
 			return null;
 		}
-		if (currentResult.returnValue != PrologCode.SUCCESS && currentResult.returnValue != NOT_RUN)
+		if (currentResult.isLastResult())
 		{
 			// no more results
 			return null;
@@ -239,13 +241,17 @@ public class PrologQuery
 			throw new GroovePrologException(e);
 		}
 		long stopTime = System.nanoTime();
-		if (currentResult.returnValue != NOT_RUN)
+		if (currentResult.getReturnValue() != QueryReturnValue.NOT_RUN)
 		{
-			currentResult = new QueryResult(currentResult);
+			currentResult = new InternalQueryResult(currentResult);
 		}
-		currentResult.returnValue = rc;
-		currentResult.time = stopTime - startTime;
-		return currentResult.variables;
+		currentResult.setReturnValue(QueryReturnValue.fromInt(rc));
+		currentResult.setExecutionTime(stopTime - startTime);
+		if (currentResult.getReturnValue() != QueryReturnValue.FAIL)
+		{
+			currentResult.setVariables(TermConverter.convert(currentResult.rawVars));
+		}
+		return currentResult;
 	}
 
 	/**
@@ -253,83 +259,153 @@ public class PrologQuery
 	 */
 	public boolean hasNext()
 	{
-		return (currentResult != null) && (lastReturnValue() == PrologCode.SUCCESS);
+		return (currentResult != null) && !currentResult.isLastResult();
 	}
 
 	/**
 	 * @return The last return code
 	 */
-	public int lastReturnValue()
+	public QueryReturnValue lastReturnValue()
 	{
 		if (currentResult != null)
 		{
-			return currentResult.returnValue;
+			return currentResult.getReturnValue();
 		}
-		return NOT_RUN;
+		return QueryReturnValue.NOT_RUN;
 	}
 
 	/**
-	 * @return The time in nano seconds the last query took
+	 * The result object returned on {@link PrologQuery#newQuery(String)} and
+	 * {@link PrologQuery#next()}
+	 * 
+	 * @author Michiel Hendriks
 	 */
-	public long lastExecutionTime()
+	protected static class InternalQueryResult implements QueryResult
 	{
-		if (currentResult != null)
+		protected Goal goal;
+		protected String query = "";
+		protected QueryReturnValue returnValue = QueryReturnValue.NOT_RUN;
+		protected long executionTime = -1;
+		protected InternalQueryResult previousResult;
+		protected InternalQueryResult nextResult;
+		protected Map<String, Object> variables = new HashMap<String, Object>();
+
+		/**
+		 * Unprocessed variables
+		 */
+		protected Map<String, Term> rawVars;
+
+		protected InternalQueryResult(Goal queryQoal, String queryString)
 		{
-			return currentResult.time;
-		}
-		return -1;
-	}
-
-	public/*
-		 * Result data store.
-		 * @author Michiel Hendriks
-		 */
-	class QueryResult
-	{
-		/**
-		 * The previous result
-		 */
-		QueryResult previous;
-
-		/**
-		 * The next result
-		 */
-		QueryResult next;
-
-		/**
-		 * The goal which is being executed
-		 */
-		Goal goal;
-
-		/**
-		 * The last result value
-		 */
-		int returnValue = NOT_RUN;
-
-		/**
-		 * The time taken to calculate the result (in nano seconds)
-		 */
-		long time = 0;
-
-		/**
-		 * The variables in the query
-		 */
-		Map<String, Term> variables;
-
-		/**
-		 * @param queryGoal
-		 */
-		public QueryResult(Goal queryGoal)
-		{
-			goal = queryGoal;
+			goal = queryQoal;
+			query = queryString;
 		}
 
-		public QueryResult(QueryResult previousResult)
+		protected InternalQueryResult(InternalQueryResult previous)
 		{
-			this(previousResult.goal);
-			previous = previousResult;
-			previous.next = this;
-			variables = previousResult.variables;
+			previousResult = previous;
+			previousResult.nextResult = this;
+			goal = previousResult.goal;
+			query = previousResult.query;
+			rawVars = previousResult.rawVars;
+		}
+
+		/**
+		 * @return
+		 */
+		protected Goal getGoal()
+		{
+			return goal;
+		}
+
+		/**
+		 * @param value
+		 *            the executionTime to set
+		 */
+		protected void setExecutionTime(long value)
+		{
+			executionTime = value;
+		}
+
+		/**
+		 * @param value
+		 *            the returnValue to set
+		 */
+		protected void setReturnValue(QueryReturnValue value)
+		{
+			returnValue = value;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see groove.prolog.QueryResult#getExecutionTime()
+		 */
+		public long getExecutionTime()
+		{
+			return executionTime;
+		}
+
+		/**
+		 * @param values
+		 *            the variables to set
+		 */
+		public void setVariables(Map<String, Object> values)
+		{
+			variables = new HashMap<String, Object>(values);
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see groove.prolog.QueryResult#getReturnValue()
+		 */
+		public QueryReturnValue getReturnValue()
+		{
+			return returnValue;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see groove.prolog.QueryResult#getVariables()
+		 */
+		public Map<String, Object> getVariables()
+		{
+			return Collections.unmodifiableMap(variables);
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see groove.prolog.QueryResult#isLastResult()
+		 */
+		public boolean isLastResult()
+		{
+			return returnValue == QueryReturnValue.SUCCESS_LAST || returnValue == QueryReturnValue.FAIL;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see groove.prolog.QueryResult#nextResult()
+		 */
+		public QueryResult getNextResult()
+		{
+			return nextResult;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see groove.prolog.QueryResult#previousResult()
+		 */
+		public QueryResult getPreviousResult()
+		{
+			return previousResult;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see groove.prolog.QueryResult#queryString()
+		 */
+		public String getQuery()
+		{
+			return query;
 		}
 	}
 }

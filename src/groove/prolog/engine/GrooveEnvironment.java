@@ -16,7 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package groove.prolog;
+package groove.prolog.engine;
 
 import gnu.prolog.term.AtomTerm;
 import gnu.prolog.term.CompoundTerm;
@@ -25,6 +25,8 @@ import gnu.prolog.vm.Environment;
 import gnu.prolog.vm.PrologException;
 import groove.graph.Graph;
 import groove.lts.GraphState;
+
+import java.io.Reader;
 
 /**
  * 
@@ -92,5 +94,15 @@ public class GrooveEnvironment extends Environment
 	public GraphState getGraphState()
 	{
 		return graphState;
+	}
+
+	/** ensure that prolog text designated by term is loaded */
+	public synchronized void loadStream(Reader stream, String streamName)
+	{
+		if (isInitialized())
+		{
+			throw new IllegalStateException("no files can be loaded after inializtion was run");
+		}
+		new PrologStreamLoader(getPrologTextLoaderState(), stream, streamName);
 	}
 }
