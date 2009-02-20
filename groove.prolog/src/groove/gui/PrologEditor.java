@@ -21,8 +21,10 @@ package groove.gui;
 import groove.lts.GTS;
 import groove.lts.GraphState;
 import groove.prolog.GroovePrologException;
+import groove.prolog.GroovePrologLoadingException;
 import groove.prolog.PrologQuery;
 import groove.prolog.QueryResult;
+import groove.prolog.engine.GrooveState;
 import groove.util.Groove;
 
 import java.awt.BorderLayout;
@@ -35,7 +37,9 @@ import java.io.StringWriter;
 import java.util.Map.Entry;
 
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -69,6 +73,8 @@ public class PrologEditor extends JPanel
 	protected JTextArea results;
 	protected JButton nextResultBtn;
 	protected JButton consultBtn;
+	protected JLabel userCodeConsulted;
+	protected JLabel statusBar;
 
 	public PrologEditor(Simulator simulator)
 	{
@@ -80,6 +86,9 @@ public class PrologEditor extends JPanel
 
 		JToolBar toolBar = new JToolBar();
 		toolBar.setFloatable(false);
+
+		toolBar.add(new JLabel("Query:"));
+		toolBar.addSeparator();
 
 		JToggleButton graphButton = new JToggleButton(Groove.GRAPH_FRAME_ICON, true);
 		toolBar.add(graphButton);
@@ -95,7 +104,7 @@ public class PrologEditor extends JPanel
 		JToggleButton ltsButton = new JToggleButton(Groove.LTS_FRAME_ICON);
 		toolBar.add(ltsButton);
 		ltsButton.setToolTipText("Query the LTS");
-		ltsButton.setEnabled(false);
+		ltsButton.setEnabled(true);
 		ltsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
@@ -135,13 +144,16 @@ public class PrologEditor extends JPanel
 		toolBar = new JToolBar();
 		toolBar.setFloatable(false);
 
-		JButton saveButton = new JButton("Save");
-		saveButton.setEnabled(false);
-		toolBar.add(saveButton);
+		toolBar.add(new JLabel("User code:"));
+		toolBar.addSeparator();
 
-		JButton loadButton = new JButton("Load");
+		JButton loadButton = new JButton(new ImageIcon(Groove.getResource("open.gif")));
 		loadButton.setEnabled(false);
 		toolBar.add(loadButton);
+
+		JButton saveButton = new JButton(new ImageIcon(Groove.getResource("save.gif")));
+		saveButton.setEnabled(false);
+		toolBar.add(saveButton);
 
 		toolBar.addSeparator();
 
@@ -156,6 +168,12 @@ public class PrologEditor extends JPanel
 			}
 		});
 		toolBar.add(consultBtn);
+
+		userCodeConsulted = new JLabel("User code consulted");
+		userCodeConsulted.setFont(userCodeConsulted.getFont().deriveFont(Font.BOLD));
+		userCodeConsulted.setVisible(false);
+		toolBar.addSeparator();
+		toolBar.add(userCodeConsulted);
 
 		editor = new JTextPane();
 		editor.setFont(editFont);
@@ -213,6 +231,9 @@ public class PrologEditor extends JPanel
 
 		add(queryPane, BorderLayout.NORTH);
 		add(splitPane, BorderLayout.CENTER);
+
+		statusBar = new JLabel(" ");
+		add(statusBar, BorderLayout.SOUTH);
 	}
 
 	protected void executeQuery()
@@ -222,6 +243,7 @@ public class PrologEditor extends JPanel
 
 	protected boolean ensureProlog()
 	{
+		statusBar.setText(" ");
 		if (prolog == null)
 		{
 			prolog = new PrologQuery();
@@ -230,11 +252,28 @@ public class PrologEditor extends JPanel
 				String userCode = editor.getText();
 				if (userCode != null && userCode.length() > 0)
 				{
-					prolog.init(new StringReader(userCode), "usercode");
+					try
+					{
+						prolog.init(new StringReader(userCode), "user code");
+						userCodeConsulted.setVisible(true);
+						statusBar.setText("User code accepted");
+					}
+					catch (GroovePrologLoadingException e)
+					{
+						results.append("\nError loading the prolog engine:\n");
+						results.append(e.getMessage());
+						prolog = null;
+						consultUserCode = false;
+						return false;
+					}
 				}
 			}
+			else
+			{
+				userCodeConsulted.setVisible(false);
+			}
 		}
-		return false;
+		return true;
 	}
 
 	public void executeQuery(String queryString)
@@ -259,17 +298,17 @@ public class PrologEditor extends JPanel
 					results.append("Error: no graph");
 					return;
 				}
-				prolog.setGraphState(gs);
+				prolog.setGrooveState(new GrooveState(gs));
 				break;
 			case LTS:
 				GTS gts = sim.getCurrentGTS();
 				if (gts == null)
 				{
-					results.append("Error: no GTS");
+					results.append("Error: no LTS");
 					return;
 				}
-				results.append("LTL not supported yet");
-				return;
+				prolog.setGrooveState(new GrooveState(gts));
+				break;
 		}
 
 		try
@@ -312,6 +351,7 @@ public class PrologEditor extends JPanel
 		{
 			return;
 		}
+		statusBar.setText(String.format("Executed in %fms", queryResult.getExecutionTime() / 1000000.0));
 		switch (queryResult.getReturnValue())
 		{
 			case SUCCESS:

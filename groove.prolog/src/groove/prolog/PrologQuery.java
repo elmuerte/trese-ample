@@ -18,7 +18,6 @@
  */
 package groove.prolog;
 
-import gnu.prolog.database.PrologTextLoaderError;
 import gnu.prolog.io.ParseException;
 import gnu.prolog.io.ReadOptions;
 import gnu.prolog.io.TermReader;
@@ -31,12 +30,12 @@ import gnu.prolog.vm.Interpreter.Goal;
 import groove.graph.Graph;
 import groove.lts.GraphState;
 import groove.prolog.engine.GrooveEnvironment;
+import groove.prolog.engine.GrooveState;
 
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -78,23 +77,30 @@ public class PrologQuery
 	 */
 	protected InternalQueryResult currentResult;
 
+	protected GrooveState grooveState;
+
 	public PrologQuery()
 	{}
 
 	/**
 	 * @param queryGraph
 	 */
-	public PrologQuery(Graph queryGraph)
+	public PrologQuery(GrooveState grooveState)
 	{
-		setGraph(queryGraph);
+		this();
+		setGrooveState(grooveState);
 	}
 
 	/**
-	 * @param queryGraphState
+	 * @param grooveState
 	 */
-	public PrologQuery(GraphState queryGraphState)
+	public void setGrooveState(GrooveState value)
 	{
-		setGraphState(queryGraphState);
+		grooveState = value;
+		if (env != null)
+		{
+			env.setGrooveState(grooveState);
+		}
 	}
 
 	/**
@@ -106,32 +112,11 @@ public class PrologQuery
 	}
 
 	/**
-	 * @param value
-	 *            the graph to set
-	 */
-	public void setGraph(Graph value)
-	{
-		graph = value;
-		if (env != null)
-		{
-			env.setGraph(value);
-		}
-	}
-
-	/**
-	 * @param value
-	 *            the graphState to set
-	 */
-	public void setGraphState(GraphState value)
-	{
-		graphState = value;
-		setGraph(value.getGraph());
-	}
-
-	/**
 	 * Initialize the environment
+	 * 
+	 * @throws GroovePrologLoadingException
 	 */
-	public void init()
+	public void init() throws GroovePrologLoadingException
 	{
 		init(null, null);
 	}
@@ -143,8 +128,9 @@ public class PrologQuery
 	 *            TODO
 	 * @param streamName
 	 *            TODO
+	 * @throws GroovePrologLoadingException
 	 */
-	public void init(Reader initStream, String streamName)
+	public void init(Reader initStream, String streamName) throws GroovePrologLoadingException
 	{
 		if (initialized)
 		{
@@ -153,7 +139,7 @@ public class PrologQuery
 		initialized = true;
 		currentResult = null;
 		env = new GrooveEnvironment();
-		env.setGraph(graph);
+		env.setGrooveState(grooveState);
 		CompoundTerm term = new CompoundTerm(AtomTerm.get("resource"), new Term[] { AtomTerm.get(GROOVE_PRO) });
 		env.ensureLoaded(term);
 		if (initStream != null)
@@ -162,11 +148,10 @@ public class PrologQuery
 		}
 		interpreter = env.createInterpreter();
 		env.runIntialization(interpreter);
-		for (PrologTextLoaderError err : (List<PrologTextLoaderError>) env.getLoadingErrors())
+
+		if (!env.getLoadingErrors().isEmpty())
 		{
-			// TODO: make invalid
-			System.err.println(err);
-			// err.printStackTrace();
+			throw new GroovePrologLoadingException(env.getLoadingErrors());
 		}
 	}
 
@@ -182,6 +167,10 @@ public class PrologQuery
 		if (!initialized)
 		{
 			init();
+		}
+		if (env.getGrooveState() == null)
+		{
+			throw new GroovePrologException("No Groove state");
 		}
 		if (currentResult != null)
 		{

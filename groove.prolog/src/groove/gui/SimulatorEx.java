@@ -18,17 +18,10 @@
  */
 package groove.gui;
 
-import groove.lts.GraphState;
-import groove.prolog.GroovePrologException;
-import groove.prolog.PrologQuery;
-
 import java.awt.Component;
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 
-import javax.swing.AbstractAction;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
@@ -75,8 +68,6 @@ public class SimulatorEx extends Simulator
 		if (!exInit)
 		{
 			exInit = true;
-			addExternalAction(new PrologAction());
-
 			getGraphViewsPanel().addTab("Prolog", getPrologEditor());
 		}
 		return result;
@@ -89,55 +80,6 @@ public class SimulatorEx extends Simulator
 	{
 		JPanel pe = new PrologEditor(this);
 		return pe;
-	}
-
-	public class PrologAction extends AbstractAction
-	{
-		private static final long serialVersionUID = -4553547545109639961L;
-
-		public PrologAction()
-		{
-			super("Prolog");
-		}
-
-		protected PrologQuery pq;
-
-		/*
-		 * (non-Javadoc)
-		 * @see
-		 * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent
-		 * )
-		 */
-		public void actionPerformed(ActionEvent event)
-		{
-			GraphState gs = getCurrentState();
-			if (gs == null)
-			{
-				return;
-			}
-			String inputValue = JOptionPane.showInputDialog(null, "Enter a prolog query", "Query the graph",
-					JOptionPane.QUESTION_MESSAGE);
-			if (inputValue == null || inputValue.length() == 0)
-			{
-				return;
-			}
-			if (pq == null)
-			{
-				pq = new PrologQuery(gs);
-			}
-			else
-			{
-				pq.setGraphState(gs);
-			}
-			try
-			{
-				pq.newQuery(inputValue);
-			}
-			catch (GroovePrologException e)
-			{
-				e.printStackTrace();
-			}
-		}
 	}
 
 	public static void main(String[] args)

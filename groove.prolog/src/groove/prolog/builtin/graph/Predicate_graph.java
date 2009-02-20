@@ -24,7 +24,7 @@ import gnu.prolog.vm.Environment;
 import gnu.prolog.vm.Interpreter;
 import gnu.prolog.vm.PrologCode;
 import gnu.prolog.vm.PrologException;
-import groove.graph.Graph;
+import groove.graph.GraphShape;
 import groove.prolog.engine.GrooveEnvironment;
 
 /**
@@ -48,7 +48,7 @@ public class Predicate_graph implements PrologCode
 		{
 			GrooveEnvironment.invalidEnvironment();
 		}
-		Graph graph = ((GrooveEnvironment) interpreter.environment).getGraph();
+		GraphShape graph = ((GrooveEnvironment) interpreter.environment).getGrooveState().getGraph();
 		Term value = new JavaObjectTerm(graph);
 		return interpreter.unify(args[0], value);
 	}

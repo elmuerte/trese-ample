@@ -23,8 +23,6 @@ import gnu.prolog.term.CompoundTerm;
 import gnu.prolog.term.CompoundTermTag;
 import gnu.prolog.vm.Environment;
 import gnu.prolog.vm.PrologException;
-import groove.graph.Graph;
-import groove.lts.GraphState;
 
 import java.io.Reader;
 
@@ -47,15 +45,7 @@ public class GrooveEnvironment extends Environment
 				PrologException.errorAtom));
 	}
 
-	/**
-	 * The graph currently under inspection
-	 */
-	protected Graph graph;
-
-	/**
-	 * The graph state currently under inspection. Can be null.
-	 */
-	protected GraphState graphState;
+	protected GrooveState grooveState;
 
 	public GrooveEnvironment()
 	{
@@ -63,37 +53,20 @@ public class GrooveEnvironment extends Environment
 	}
 
 	/**
-	 * @param value
-	 *            the graph to set
+	 * @return the grooveState
 	 */
-	public void setGraph(Graph value)
+	public GrooveState getGrooveState()
 	{
-		graph = value;
+		return grooveState;
 	}
 
 	/**
-	 * @return the graph
+	 * @param grooveState
+	 *            the grooveState to set
 	 */
-	public Graph getGraph()
+	public void setGrooveState(GrooveState grooveState)
 	{
-		return graph;
-	}
-
-	/**
-	 * @param value
-	 *            the graphState to set
-	 */
-	public void setGraphState(GraphState value)
-	{
-		graphState = value;
-	}
-
-	/**
-	 * @return the graphState
-	 */
-	public GraphState getGraphState()
-	{
-		return graphState;
+		this.grooveState = grooveState;
 	}
 
 	/** ensure that prolog text designated by term is loaded */

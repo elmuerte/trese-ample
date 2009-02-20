@@ -25,7 +25,6 @@ import gnu.prolog.vm.Environment;
 import gnu.prolog.vm.Interpreter;
 import gnu.prolog.vm.PrologCode;
 import gnu.prolog.vm.PrologException;
-import groove.graph.Graph;
 import groove.graph.GraphShape;
 import groove.graph.Node;
 import groove.prolog.builtin.PrologUtils;
@@ -51,11 +50,11 @@ public class Predicate_node_edge_set implements PrologCode
 		if (args[0] instanceof JavaObjectTerm)
 		{
 			JavaObjectTerm jot = (JavaObjectTerm) args[0];
-			if (!(jot.value instanceof Graph))
+			if (!(jot.value instanceof GraphShape))
 			{
 				PrologException.domainError(PrologUtils.GRAPH_ATOM, args[0]);
 			}
-			graph = (Graph) jot.value;
+			graph = (GraphShape) jot.value;
 		}
 		else
 		{
