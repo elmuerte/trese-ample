@@ -159,19 +159,16 @@ public class PrologEditor extends JPanel
 
 		consultBtn = new JButton("Consult");
 		consultBtn.setToolTipText("Reconsult the prolog code. This will cancel the current active query.");
-		consultBtn.setEnabled(false);
 		consultBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0)
 			{
-				consultBtn.setEnabled(false);
 				consultUserCode();
 			}
 		});
 		toolBar.add(consultBtn);
 
-		userCodeConsulted = new JLabel("User code consulted");
+		userCodeConsulted = new JLabel("");
 		userCodeConsulted.setFont(userCodeConsulted.getFont().deriveFont(Font.BOLD));
-		userCodeConsulted.setVisible(false);
 		toolBar.addSeparator();
 		toolBar.add(userCodeConsulted);
 
@@ -184,17 +181,17 @@ public class PrologEditor extends JPanel
 
 			public void changedUpdate(DocumentEvent arg0)
 			{
-				consultBtn.setEnabled(true);
+				userCodeConsulted.setText("Modified");
 			}
 
 			public void insertUpdate(DocumentEvent arg0)
 			{
-				consultBtn.setEnabled(true);
+				userCodeConsulted.setText("Modified");
 			}
 
 			public void removeUpdate(DocumentEvent arg0)
 			{
-				consultBtn.setEnabled(true);
+				userCodeConsulted.setText("Modified");
 			}
 		});
 
@@ -255,11 +252,12 @@ public class PrologEditor extends JPanel
 					try
 					{
 						prolog.init(new StringReader(userCode), "user code");
-						userCodeConsulted.setVisible(true);
+						userCodeConsulted.setText("User code consulted");
 						statusBar.setText("User code accepted");
 					}
 					catch (GroovePrologLoadingException e)
 					{
+						userCodeConsulted.setText("Error");
 						results.append("\nError loading the prolog engine:\n");
 						results.append(e.getMessage());
 						prolog = null;
@@ -282,7 +280,7 @@ public class PrologEditor extends JPanel
 		{
 			return;
 		}
-		results.setText("?- " + queryString + (queryString.endsWith(".") ? "\n" : ".\n"));
+		results.setText("?- " + queryString + "\n");
 
 		if (!ensureProlog())
 		{
