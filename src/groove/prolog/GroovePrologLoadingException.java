@@ -18,35 +18,53 @@
  */
 package groove.prolog;
 
-import groove.graph.Graph;
-import groove.io.AspectGxl;
+import gnu.prolog.database.PrologTextLoaderError;
 
-import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 
  * 
  * @author Michiel Hendriks
  */
-public class Test
+public class GroovePrologLoadingException extends GroovePrologException
 {
+	private static final long serialVersionUID = -657457775489441336L;
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args)
+	protected List<PrologTextLoaderError> errors;
+
+	public GroovePrologLoadingException(List<PrologTextLoaderError> loadingErrors)
 	{
-		AspectGxl gxl = new AspectGxl();
-		try
-		{
-			Graph graph = gxl.unmarshalGraph(new File(args[0]));
-			PrologQuery pq = new PrologQuery(graph);
-			pq.newQuery(args[1]);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace(System.err);
-		}
+		super();
+		errors = new ArrayList<PrologTextLoaderError>(loadingErrors);
 	}
 
+	/**
+	 * @return the errors
+	 */
+	public List<PrologTextLoaderError> getLoadingErrors()
+	{
+		return Collections.unmodifiableList(errors);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Throwable#getMessage()
+	 */
+	@Override
+	public String getMessage()
+	{
+		StringBuilder sb = new StringBuilder();
+		for (PrologTextLoaderError error : errors)
+		{
+			if (sb.length() > 0)
+			{
+				sb.append("\n");
+			}
+			sb.append(error.toString());
+		}
+		return sb.toString();
+	}
 }

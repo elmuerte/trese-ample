@@ -28,7 +28,6 @@ import gnu.prolog.vm.PrologCode;
 import gnu.prolog.vm.PrologException;
 import gnu.prolog.vm.TermConstants;
 import groove.graph.DefaultLabel;
-import groove.graph.Graph;
 import groove.graph.GraphShape;
 import groove.prolog.builtin.PrologUtils;
 
@@ -54,11 +53,11 @@ public class Predicate_label_edge_set implements PrologCode
 		if (args[0] instanceof JavaObjectTerm)
 		{
 			JavaObjectTerm jot = (JavaObjectTerm) args[0];
-			if (!(jot.value instanceof Graph))
+			if (!(jot.value instanceof GraphShape))
 			{
 				PrologException.domainError(PrologUtils.GRAPH_ATOM, args[0]);
 			}
-			graph = (Graph) jot.value;
+			graph = (GraphShape) jot.value;
 		}
 		else
 		{
