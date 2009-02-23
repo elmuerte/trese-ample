@@ -25,7 +25,6 @@ import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
 import gnu.prolog.vm.Environment;
 import gnu.prolog.vm.Interpreter;
-import gnu.prolog.vm.PrologCode;
 import gnu.prolog.vm.PrologException;
 import groove.algebra.Algebra;
 import groove.algebra.BigDoubleAlgebra;
@@ -34,17 +33,18 @@ import groove.algebra.JavaDoubleAlgebra;
 import groove.algebra.JavaIntAlgebra;
 import groove.algebra.StringAlgebra;
 import groove.graph.algebra.ValueNode;
-import groove.prolog.builtin.PrologUtils;
 
 /**
  * <code>convert_valuenode(ValueNode,Term)</code>
  * 
  * @author Michiel Hendriks
  */
-public class Predicate_convert_valuenode implements PrologCode
+public class Predicate_convert_valuenode extends AlgebraPrologCode
 {
 	public Predicate_convert_valuenode()
-	{}
+	{
+		super();
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -53,20 +53,7 @@ public class Predicate_convert_valuenode implements PrologCode
 	 */
 	public int execute(Interpreter interpreter, boolean backtrackMode, Term[] args) throws PrologException
 	{
-		ValueNode node = null;
-		if (args[0] instanceof JavaObjectTerm)
-		{
-			JavaObjectTerm jot = (JavaObjectTerm) args[0];
-			if (!(jot.value instanceof ValueNode))
-			{
-				PrologException.domainError(PrologUtils.VALUENODE_ATOM, args[0]);
-			}
-			node = (ValueNode) jot.value;
-		}
-		else
-		{
-			PrologException.typeError(PrologUtils.VALUENODE_ATOM, args[0]);
-		}
+		ValueNode node = getValueNode(args[0]);
 
 		Term result = null;
 		Algebra<?> alg = node.getAlgebra();
@@ -95,6 +82,7 @@ public class Predicate_convert_valuenode implements PrologCode
 	 * (non-Javadoc)
 	 * @see gnu.prolog.vm.PrologCode#install(gnu.prolog.vm.Environment)
 	 */
+	@Override
 	public void install(Environment env)
 	{}
 
@@ -102,6 +90,7 @@ public class Predicate_convert_valuenode implements PrologCode
 	 * (non-Javadoc)
 	 * @see gnu.prolog.vm.PrologCode#uninstall(gnu.prolog.vm.Environment)
 	 */
+	@Override
 	public void uninstall(Environment env)
 	{}
 }

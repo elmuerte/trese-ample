@@ -18,38 +18,42 @@
  */
 package groove.prolog.builtin.algebra;
 
+import gnu.prolog.term.AtomTerm;
 import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
-import gnu.prolog.vm.Interpreter;
 import gnu.prolog.vm.PrologException;
 import groove.graph.algebra.ValueNode;
+import groove.prolog.builtin.graph.GraphPrologCode;
 
 /**
- * <code>is_value_node(Node)</code>
+ * 
  * 
  * @author Michiel Hendriks
  */
-public class Predicate_is_valuenode extends AlgebraPrologCode
+public abstract class AlgebraPrologCode extends GraphPrologCode
 {
-	public Predicate_is_valuenode()
+	public static final AtomTerm VALUENODE_ATOM = AtomTerm.get("valuenode");
+
+	protected AlgebraPrologCode()
 	{
 		super();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see gnu.prolog.vm.PrologCode#execute(gnu.prolog.vm.Interpreter, boolean,
-	 * gnu.prolog.term.Term[])
-	 */
-	public int execute(Interpreter interpreter, boolean backtrackMode, Term[] args) throws PrologException
+	public static final ValueNode getValueNode(Term term) throws PrologException
 	{
-		if (args[0] instanceof JavaObjectTerm)
+		if (term instanceof JavaObjectTerm)
 		{
-			if (((JavaObjectTerm) args[0]).value instanceof ValueNode)
+			JavaObjectTerm jot = (JavaObjectTerm) term;
+			if (!(jot.value instanceof ValueNode))
 			{
-				return SUCCESS_LAST;
+				PrologException.domainError(VALUENODE_ATOM, term);
 			}
+			return (ValueNode) jot.value;
 		}
-		return FAIL;
+		else
+		{
+			PrologException.typeError(VALUENODE_ATOM, term);
+		}
+		return null;
 	}
 }
