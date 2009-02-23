@@ -294,6 +294,14 @@ gts_final_state(GS):-gts(G),gts_final_state(G,GS).
 :-build_in(gts_final_state_set/2,'groove.prolog.builtin.lts.Predicate_gts_final_state_set').
 gts_final_state_set(GS):-gts(G),gts_final_state_set(G,GS).
 
+% Get a matching rule event for a given graph state
+% @param the gts
+% @param the graphstate
+% @param the ruleevent
+:-build_in(gts_match/3,'groove.prolog.builtin.lts.Predicate_gts_match').
+gts_match(GS,RE):-gts(G),gts_match(G,GS,RE).
+gts_match(RE):-gts(G),graphstate(GS),gts_match(G,GS,RE).
+
 % Succeeds if the given term is a value node
 :-build_in(is_valuenode/1,'groove.prolog.builtin.algebra.Predicate_is_valuenode').
 

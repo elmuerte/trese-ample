@@ -50,13 +50,13 @@ public class Predicate_gts_final_state_set implements PrologCode
 			JavaObjectTerm jot = (JavaObjectTerm) args[0];
 			if (!(jot.value instanceof LTS))
 			{
-				PrologException.domainError(PrologUtils.GRAPHSTATE_ATOM, args[0]);
+				PrologException.domainError(PrologUtils.GTS_ATOM, args[0]);
 			}
 			lts = (LTS) jot.value;
 		}
 		else
 		{
-			PrologException.typeError(PrologUtils.GRAPHSTATE_ATOM, args[0]);
+			PrologException.typeError(PrologUtils.GTS_ATOM, args[0]);
 		}
 		Term resultSet = new JavaObjectTerm(PrologUtils.createJOTlist(PrologUtils.createJOTlist(lts.getFinalStates())));
 		return interpreter.unify(args[1], resultSet);

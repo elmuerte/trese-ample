@@ -41,6 +41,7 @@ public class PrologUtils
 	public static final AtomTerm TRANSITION_ATOM = AtomTerm.get("transition");
 	public static final AtomTerm RULEEVENT_ATOM = AtomTerm.get("rule_event");
 	public static final AtomTerm RULE_ATOM = AtomTerm.get("rule");
+	public static final AtomTerm GTS_ATOM = AtomTerm.get("gts");
 
 	public static final AtomTerm VALUENODE_ATOM = AtomTerm.get("valuenode");
 

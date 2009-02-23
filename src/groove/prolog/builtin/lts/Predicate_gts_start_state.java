@@ -50,13 +50,13 @@ public class Predicate_gts_start_state implements PrologCode
 			JavaObjectTerm jot = (JavaObjectTerm) args[0];
 			if (!(jot.value instanceof LTS))
 			{
-				PrologException.domainError(PrologUtils.GRAPHSTATE_ATOM, args[0]);
+				PrologException.domainError(PrologUtils.GTS_ATOM, args[0]);
 			}
 			lts = (LTS) jot.value;
 		}
 		else
 		{
-			PrologException.typeError(PrologUtils.GRAPHSTATE_ATOM, args[0]);
+			PrologException.typeError(PrologUtils.GTS_ATOM, args[0]);
 		}
 		Term result = new JavaObjectTerm(lts.startState());
 		return interpreter.unify(args[1], result);

@@ -50,6 +50,12 @@ public class GrooveState
 		graph = gts = forGTS;
 	}
 
+	public GrooveState(GTS forGTS, GraphState currentState)
+	{
+		this(forGTS);
+		state = currentState;
+	}
+
 	/**
 	 * @return the graph
 	 */
