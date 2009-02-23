@@ -266,10 +266,6 @@ public class PrologEditor extends JPanel
 					}
 				}
 			}
-			else
-			{
-				userCodeConsulted.setVisible(false);
-			}
 		}
 		return true;
 	}
