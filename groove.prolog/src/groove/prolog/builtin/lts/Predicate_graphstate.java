@@ -20,9 +20,7 @@ package groove.prolog.builtin.lts;
 
 import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
-import gnu.prolog.vm.Environment;
 import gnu.prolog.vm.Interpreter;
-import gnu.prolog.vm.PrologCode;
 import gnu.prolog.vm.PrologException;
 import groove.lts.GraphState;
 import groove.prolog.engine.GrooveEnvironment;
@@ -32,10 +30,12 @@ import groove.prolog.engine.GrooveEnvironment;
  * 
  * @author Michiel Hendriks
  */
-public class Predicate_graphstate implements PrologCode
+public class Predicate_graphstate extends LtsPrologCode
 {
 	public Predicate_graphstate()
-	{}
+	{
+		super();
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -56,18 +56,4 @@ public class Predicate_graphstate implements PrologCode
 		Term value = new JavaObjectTerm(graphState);
 		return interpreter.unify(args[0], value);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see gnu.prolog.vm.PrologCode#install(gnu.prolog.vm.Environment)
-	 */
-	public void install(Environment env)
-	{}
-
-	/*
-	 * (non-Javadoc)
-	 * @see gnu.prolog.vm.PrologCode#uninstall(gnu.prolog.vm.Environment)
-	 */
-	public void uninstall(Environment env)
-	{}
 }

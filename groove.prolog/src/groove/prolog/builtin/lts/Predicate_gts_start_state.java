@@ -20,22 +20,21 @@ package groove.prolog.builtin.lts;
 
 import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
-import gnu.prolog.vm.Environment;
 import gnu.prolog.vm.Interpreter;
-import gnu.prolog.vm.PrologCode;
 import gnu.prolog.vm.PrologException;
 import groove.lts.LTS;
-import groove.prolog.builtin.PrologUtils;
 
 /**
  * <code>graphstate_next(GraphState,GraphState)</code>
  * 
  * @author Michiel Hendriks
  */
-public class Predicate_gts_start_state implements PrologCode
+public class Predicate_gts_start_state extends LtsPrologCode
 {
 	public Predicate_gts_start_state()
-	{}
+	{
+		super();
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -44,36 +43,8 @@ public class Predicate_gts_start_state implements PrologCode
 	 */
 	public int execute(Interpreter interpreter, boolean backtrackMode, Term[] args) throws PrologException
 	{
-		LTS lts = null;
-		if (args[0] instanceof JavaObjectTerm)
-		{
-			JavaObjectTerm jot = (JavaObjectTerm) args[0];
-			if (!(jot.value instanceof LTS))
-			{
-				PrologException.domainError(PrologUtils.GTS_ATOM, args[0]);
-			}
-			lts = (LTS) jot.value;
-		}
-		else
-		{
-			PrologException.typeError(PrologUtils.GTS_ATOM, args[0]);
-		}
+		LTS lts = getLTS(args[0]);
 		Term result = new JavaObjectTerm(lts.startState());
 		return interpreter.unify(args[1], result);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see gnu.prolog.vm.PrologCode#install(gnu.prolog.vm.Environment)
-	 */
-	public void install(Environment env)
-	{}
-
-	/*
-	 * (non-Javadoc)
-	 * @see gnu.prolog.vm.PrologCode#uninstall(gnu.prolog.vm.Environment)
-	 */
-	public void uninstall(Environment env)
-	{}
-
 }
