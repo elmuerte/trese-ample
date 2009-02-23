@@ -24,7 +24,7 @@ import gnu.prolog.vm.Environment;
 import gnu.prolog.vm.Interpreter;
 import gnu.prolog.vm.PrologCode;
 import gnu.prolog.vm.PrologException;
-import groove.lts.LTS;
+import groove.lts.GTS;
 
 /**
  * <code>is_gts(GTS)</code>
@@ -45,7 +45,7 @@ public class Predicate_is_gts implements PrologCode
 	{
 		if (args[0] instanceof JavaObjectTerm)
 		{
-			if (((JavaObjectTerm) args[0]).value instanceof LTS)
+			if (((JavaObjectTerm) args[0]).value instanceof GTS)
 			{
 				return SUCCESS_LAST;
 			}

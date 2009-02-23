@@ -301,7 +301,7 @@ public class PrologEditor extends JPanel
 					results.append("Error: no LTS");
 					return;
 				}
-				prolog.setGrooveState(new GrooveState(gts));
+				prolog.setGrooveState(new GrooveState(gts, sim.getCurrentState()));
 				break;
 		}
 

@@ -20,22 +20,57 @@ package groove.prolog.builtin.lts;
 
 import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
+import gnu.prolog.vm.BacktrackInfo;
 import gnu.prolog.vm.Environment;
 import gnu.prolog.vm.Interpreter;
 import gnu.prolog.vm.PrologCode;
 import gnu.prolog.vm.PrologException;
-import groove.lts.LTS;
-import groove.prolog.builtin.PrologCollectionIterator;
+import groove.explore.util.ExploreCache;
+import groove.explore.util.MatchesIterator;
+import groove.lts.GTS;
+import groove.lts.GraphState;
 import groove.prolog.builtin.PrologUtils;
+import groove.trans.RuleEvent;
+
+import java.util.Iterator;
 
 /**
- * <code>graphstate_next(GraphState,GraphState)</code>
+ * 
  * 
  * @author Michiel Hendriks
  */
-public class Predicate_gts_final_state implements PrologCode
+public class Predicate_gts_match implements PrologCode
 {
-	public Predicate_gts_final_state()
+	private class GtsMatchBacktrackInfo extends BacktrackInfo
+	{
+		Iterator<RuleEvent> it;
+		Term dest;
+		int startUndoPosition;
+
+		GtsMatchBacktrackInfo()
+		{
+			super(-1, -1);
+		}
+	}
+
+	private static int nextSolution(Interpreter interpreter, GtsMatchBacktrackInfo bi) throws PrologException
+	{
+		while (bi.it.hasNext())
+		{
+			Term res = new JavaObjectTerm(bi.it.next());
+			int rc = interpreter.unify(bi.dest, res);
+			if (rc == FAIL)
+			{
+				interpreter.undo(bi.startUndoPosition);
+				continue;
+			}
+			interpreter.pushBacktrackInfo(bi);
+			return SUCCESS;
+		}
+		return FAIL;
+	}
+
+	public Predicate_gts_match()
 	{}
 
 	/*
@@ -47,29 +82,49 @@ public class Predicate_gts_final_state implements PrologCode
 	{
 		if (backtrackMode)
 		{
-			PrologCollectionIterator bi = (PrologCollectionIterator) interpreter.popBacktrackInfo();
-			interpreter.undo(bi.getUndoPosition());
-			return bi.nextSolution(interpreter);
+			GtsMatchBacktrackInfo bi = (GtsMatchBacktrackInfo) interpreter.popBacktrackInfo();
+			interpreter.undo(bi.startUndoPosition);
+			return nextSolution(interpreter, bi);
 		}
 		else
 		{
-			LTS lts = null;
+			GTS gts = null;
 			if (args[0] instanceof JavaObjectTerm)
 			{
 				JavaObjectTerm jot = (JavaObjectTerm) args[0];
-				if (!(jot.value instanceof LTS))
+				if (!(jot.value instanceof GTS))
 				{
 					PrologException.domainError(PrologUtils.GTS_ATOM, args[0]);
 				}
-				lts = (LTS) jot.value;
+				gts = (GTS) jot.value;
 			}
 			else
 			{
 				PrologException.typeError(PrologUtils.GTS_ATOM, args[0]);
 			}
-			PrologCollectionIterator it = new PrologCollectionIterator(lts.getFinalStates(), args[1], interpreter
-					.getUndoPosition());
-			return it.nextSolution(interpreter);
+			GraphState graphState = null;
+			if (args[1] instanceof JavaObjectTerm)
+			{
+				JavaObjectTerm jot = (JavaObjectTerm) args[1];
+				if (!(jot.value instanceof GraphState))
+				{
+					PrologException.domainError(PrologUtils.GRAPHSTATE_ATOM, args[1]);
+				}
+				graphState = (GraphState) jot.value;
+			}
+			else
+			{
+				PrologException.typeError(PrologUtils.GRAPHSTATE_ATOM, args[1]);
+			}
+
+			ExploreCache cache = gts.getRecord().createCache(graphState, true, false);
+			Iterator<RuleEvent> it = new MatchesIterator(graphState, cache, gts.getRecord());
+
+			GtsMatchBacktrackInfo bi = new GtsMatchBacktrackInfo();
+			bi.it = it;
+			bi.dest = args[2];
+			bi.startUndoPosition = interpreter.getUndoPosition();
+			return nextSolution(interpreter, bi);
 		}
 	}
 
@@ -86,5 +141,4 @@ public class Predicate_gts_final_state implements PrologCode
 	 */
 	public void uninstall(Environment env)
 	{}
-
 }
