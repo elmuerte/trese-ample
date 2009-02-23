@@ -16,7 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package groove.prolog.builtin.lts;
+package groove.prolog.builtin.trans;
 
 import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
@@ -29,7 +29,7 @@ import groove.trans.RuleMatch;
  * 
  * @author Michiel Hendriks
  */
-public class Predicate_is_rulematch extends LtsPrologCode
+public class Predicate_is_rulematch extends TransPrologCode
 {
 	public Predicate_is_rulematch()
 	{

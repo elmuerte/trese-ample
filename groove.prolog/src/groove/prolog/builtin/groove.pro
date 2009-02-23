@@ -186,10 +186,10 @@ label_edge_set(L,E):-graph(G),label_edge_set(G,L,E).
 :-build_in(is_location/1,'groove.prolog.builtin.lts.Predicate_is_location').
 
 % Success if the argument is a JavaObjectTerm with a Location
-:-build_in(is_ruleevent/1,'groove.prolog.builtin.lts.Predicate_is_ruleevent').
+:-build_in(is_ruleevent/1,'groove.prolog.builtin.trans.Predicate_is_ruleevent').
 
 % Success if the argument is a JavaObjectTerm with a Location
-:-build_in(is_rulematch/1,'groove.prolog.builtin.lts.Predicate_is_rulematch').
+:-build_in(is_rulematch/1,'groove.prolog.builtin.trans.Predicate_is_rulematch').
 
 % The current graph state. Might not always be available.
 % @param the graph state
