@@ -18,11 +18,10 @@
  */
 package groove.prolog.builtin.trans;
 
-import gnu.prolog.term.AtomTerm;
 import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
+import gnu.prolog.vm.Interpreter;
 import gnu.prolog.vm.PrologException;
-import groove.prolog.builtin.graph.GraphPrologCode;
 import groove.trans.RuleEvent;
 
 /**
@@ -30,32 +29,23 @@ import groove.trans.RuleEvent;
  * 
  * @author Michiel Hendriks
  */
-public abstract class TransPrologCode extends GraphPrologCode
+public class Predicate_ruleevent_match extends TransPrologCode
 {
-	public static final AtomTerm RULEEVENT_ATOM = AtomTerm.get("rule_event");
-
-	public static final RuleEvent getRuleEvent(Term term) throws PrologException
-	{
-		if (term instanceof JavaObjectTerm)
-		{
-			JavaObjectTerm jot = (JavaObjectTerm) term;
-			if (!(jot.value instanceof RuleEvent))
-			{
-				PrologException.domainError(RULEEVENT_ATOM, term);
-			}
-			return (RuleEvent) jot.value;
-		}
-		else
-		{
-			PrologException.typeError(RULEEVENT_ATOM, term);
-		}
-		return null;
-
-	}
-
-	protected TransPrologCode()
+	public Predicate_ruleevent_match()
 	{
 		super();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see gnu.prolog.vm.PrologCode#execute(gnu.prolog.vm.Interpreter, boolean,
+	 * gnu.prolog.term.Term[])
+	 */
+	public int execute(Interpreter interpreter, boolean backtrackMode, Term[] args) throws PrologException
+	{
+		RuleEvent re = getRuleEvent(args[0]);
+		Term res = new JavaObjectTerm(re.getMatch(source));
+		return 0;
 	}
 
 }

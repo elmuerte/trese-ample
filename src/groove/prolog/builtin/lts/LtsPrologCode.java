@@ -36,7 +36,6 @@ public abstract class LtsPrologCode extends GraphPrologCode
 {
 	public static final AtomTerm GRAPHSTATE_ATOM = AtomTerm.get("graph_state");
 	public static final AtomTerm TRANSITION_ATOM = AtomTerm.get("transition");
-	public static final AtomTerm RULEEVENT_ATOM = AtomTerm.get("rule_event");
 	public static final AtomTerm RULE_ATOM = AtomTerm.get("rule");
 	public static final AtomTerm GTS_ATOM = AtomTerm.get("gts");
 

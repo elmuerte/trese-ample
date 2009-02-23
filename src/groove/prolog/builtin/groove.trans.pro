@@ -20,3 +20,22 @@
 
 % Success if the argument is a JavaObjectTerm with a Location
 :-build_in(is_rulematch/1,'groove.prolog.builtin.trans.Predicate_is_rulematch').
+
+% The label of a rule event
+% @param the rule event
+% @param the label
+% @see groove.trans.RuleEvent#getLabel()
+:-build_in(ruleevent_label/2,'groove.prolog.builtin.trans.Predicate_ruleevent_label').
+
+% The rule associated with this event
+% @param the rule event
+% @param the rule
+% @see groove.trans.RuleEvent#getRule()
+:-build_in(ruleevent_rule/2,'groove.prolog.builtin.trans.Predicate_ruleevent_rule').
+
+% The rule match
+% @param the rule event
+% @param the rule match
+% @see groove.trans.RuleEvent#getMatch()
+:-build_in(ruleevent_match/2,'groove.prolog.builtin.trans.Predicate_ruleevent_match').
+

@@ -58,6 +58,11 @@ import javax.swing.event.DocumentListener;
  */
 public class PrologEditor extends JPanel
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1728208313657610091L;
+
 	public enum QueryMode
 	{
 		GRAPH_STATE, LTS
