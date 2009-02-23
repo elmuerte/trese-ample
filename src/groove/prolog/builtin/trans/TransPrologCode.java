@@ -16,40 +16,19 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package groove.prolog.builtin.lts;
+package groove.prolog.builtin.trans;
 
-import gnu.prolog.term.JavaObjectTerm;
-import gnu.prolog.term.Term;
-import gnu.prolog.vm.Interpreter;
-import gnu.prolog.vm.PrologException;
-import groove.trans.RuleEvent;
+import groove.prolog.builtin.graph.GraphPrologCode;
 
 /**
- * <code>is_rulevent(X)</code>
+ * 
  * 
  * @author Michiel Hendriks
  */
-public class Predicate_is_ruleevent extends LtsPrologCode
+public abstract class TransPrologCode extends GraphPrologCode
 {
-	public Predicate_is_ruleevent()
+	protected TransPrologCode()
 	{
 		super();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see gnu.prolog.vm.PrologCode#execute(gnu.prolog.vm.Interpreter, boolean,
-	 * gnu.prolog.term.Term[])
-	 */
-	public int execute(Interpreter interpreter, boolean backtrackMode, Term[] args) throws PrologException
-	{
-		if (args[0] instanceof JavaObjectTerm)
-		{
-			if (((JavaObjectTerm) args[0]).value instanceof RuleEvent)
-			{
-				return SUCCESS_LAST;
-			}
-		}
-		return FAIL;
 	}
 }
