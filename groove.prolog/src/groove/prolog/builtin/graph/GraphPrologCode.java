@@ -18,6 +18,7 @@
  */
 package groove.prolog.builtin.graph;
 
+import gnu.prolog.term.AtomTerm;
 import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
 import gnu.prolog.vm.Environment;
@@ -26,7 +27,6 @@ import gnu.prolog.vm.PrologException;
 import groove.graph.Edge;
 import groove.graph.GraphShape;
 import groove.graph.Node;
-import groove.prolog.builtin.PrologUtils;
 
 /**
  * 
@@ -49,13 +49,13 @@ public abstract class GraphPrologCode implements PrologCode
 			JavaObjectTerm jot = (JavaObjectTerm) term;
 			if (!(jot.value instanceof GraphShape))
 			{
-				PrologException.domainError(PrologUtils.GRAPH_ATOM, term);
+				PrologException.domainError(GraphPrologCode.GRAPH_ATOM, term);
 			}
 			return (GraphShape) jot.value;
 		}
 		else
 		{
-			PrologException.typeError(PrologUtils.GRAPH_ATOM, term);
+			PrologException.typeError(GraphPrologCode.GRAPH_ATOM, term);
 		}
 		return null;
 	}
@@ -74,13 +74,13 @@ public abstract class GraphPrologCode implements PrologCode
 			JavaObjectTerm jot = (JavaObjectTerm) term;
 			if (!(jot.value instanceof Edge))
 			{
-				PrologException.domainError(PrologUtils.EDGE_ATOM, term);
+				PrologException.domainError(GraphPrologCode.EDGE_ATOM, term);
 			}
 			return (Edge) jot.value;
 		}
 		else
 		{
-			PrologException.typeError(PrologUtils.EDGE_ATOM, term);
+			PrologException.typeError(GraphPrologCode.EDGE_ATOM, term);
 		}
 		return null;
 	}
@@ -99,16 +99,20 @@ public abstract class GraphPrologCode implements PrologCode
 			JavaObjectTerm jot = (JavaObjectTerm) term;
 			if (!(jot.value instanceof Node))
 			{
-				PrologException.domainError(PrologUtils.NODE_ATOM, term);
+				PrologException.domainError(GraphPrologCode.NODE_ATOM, term);
 			}
 			return (Node) jot.value;
 		}
 		else
 		{
-			PrologException.typeError(PrologUtils.NODE_ATOM, term);
+			PrologException.typeError(GraphPrologCode.NODE_ATOM, term);
 		}
 		return null;
 	}
+
+	public static final AtomTerm GRAPH_ATOM = AtomTerm.get("graph");
+	public static final AtomTerm NODE_ATOM = AtomTerm.get("node");
+	public static final AtomTerm EDGE_ATOM = AtomTerm.get("edge");
 
 	protected GraphPrologCode()
 	{

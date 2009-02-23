@@ -18,13 +18,13 @@
  */
 package groove.prolog.builtin.lts;
 
+import gnu.prolog.term.AtomTerm;
 import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
 import gnu.prolog.vm.PrologException;
 import groove.lts.GraphState;
 import groove.lts.GraphTransition;
 import groove.lts.LTS;
-import groove.prolog.builtin.PrologUtils;
 import groove.prolog.builtin.graph.GraphPrologCode;
 
 /**
@@ -34,6 +34,12 @@ import groove.prolog.builtin.graph.GraphPrologCode;
  */
 public abstract class LtsPrologCode extends GraphPrologCode
 {
+	public static final AtomTerm GRAPHSTATE_ATOM = AtomTerm.get("graph_state");
+	public static final AtomTerm TRANSITION_ATOM = AtomTerm.get("transition");
+	public static final AtomTerm RULEEVENT_ATOM = AtomTerm.get("rule_event");
+	public static final AtomTerm RULE_ATOM = AtomTerm.get("rule");
+	public static final AtomTerm GTS_ATOM = AtomTerm.get("gts");
+
 	protected LtsPrologCode()
 	{
 		super();
@@ -46,13 +52,13 @@ public abstract class LtsPrologCode extends GraphPrologCode
 			JavaObjectTerm jot = (JavaObjectTerm) term;
 			if (!(jot.value instanceof GraphState))
 			{
-				PrologException.domainError(PrologUtils.GRAPHSTATE_ATOM, term);
+				PrologException.domainError(LtsPrologCode.GRAPHSTATE_ATOM, term);
 			}
 			return (GraphState) jot.value;
 		}
 		else
 		{
-			PrologException.typeError(PrologUtils.GRAPHSTATE_ATOM, term);
+			PrologException.typeError(LtsPrologCode.GRAPHSTATE_ATOM, term);
 		}
 		return null;
 	}
@@ -64,13 +70,13 @@ public abstract class LtsPrologCode extends GraphPrologCode
 			JavaObjectTerm jot = (JavaObjectTerm) term;
 			if (!(jot.value instanceof LTS))
 			{
-				PrologException.domainError(PrologUtils.GTS_ATOM, term);
+				PrologException.domainError(LtsPrologCode.GTS_ATOM, term);
 			}
 			return (LTS) jot.value;
 		}
 		else
 		{
-			PrologException.typeError(PrologUtils.GTS_ATOM, term);
+			PrologException.typeError(LtsPrologCode.GTS_ATOM, term);
 		}
 		return null;
 	}
@@ -82,13 +88,13 @@ public abstract class LtsPrologCode extends GraphPrologCode
 			JavaObjectTerm jot = (JavaObjectTerm) term;
 			if (!(jot.value instanceof GraphTransition))
 			{
-				PrologException.domainError(PrologUtils.TRANSITION_ATOM, term);
+				PrologException.domainError(LtsPrologCode.TRANSITION_ATOM, term);
 			}
 			return (GraphTransition) jot.value;
 		}
 		else
 		{
-			PrologException.typeError(PrologUtils.TRANSITION_ATOM, term);
+			PrologException.typeError(LtsPrologCode.TRANSITION_ATOM, term);
 		}
 		return null;
 	}
