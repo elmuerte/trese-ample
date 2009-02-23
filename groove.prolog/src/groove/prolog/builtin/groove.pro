@@ -293,3 +293,16 @@ gts_final_state(GS):-gts(G),gts_final_state(G,GS).
 % @see groove.lts.LTS#getFinalStates()
 :-build_in(gts_final_state_set/2,'groove.prolog.builtin.lts.Predicate_gts_final_state_set').
 gts_final_state_set(GS):-gts(G),gts_final_state_set(G,GS).
+
+% Succeeds if the given term is a value node
+:-build_in(is_valuenode/1,'groove.prolog.builtin.algebra.Predicate_is_valuenode').
+
+% Converts the value node's value to a prolog term. A string value is converted to an 
+% AtomicTerm, and integer and double value are converted to a IntegerTerm and FloatTerm
+% respectively. All other values are converted to a JavaObjectTerm 
+% @param the value node
+% @param the term
+:-build_in(convert_valuenode/2,'groove.prolog.builtin.algebra.Predicate_convert_valuenode').
+
+% Only convert when it is a value node
+try_convert_valuenode(Node,Term):-(is_valuenode(Node) -> convert_valuenode(Node,Term)).
