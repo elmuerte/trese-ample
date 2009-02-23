@@ -20,9 +20,7 @@ package groove.prolog.builtin.graph;
 
 import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
-import gnu.prolog.vm.Environment;
 import gnu.prolog.vm.Interpreter;
-import gnu.prolog.vm.PrologCode;
 import gnu.prolog.vm.PrologException;
 import groove.graph.Edge;
 
@@ -31,10 +29,12 @@ import groove.graph.Edge;
  * 
  * @author Michiel Hendriks
  */
-public class Predicate_is_edge implements PrologCode
+public class Predicate_is_edge extends GraphPrologCode
 {
 	public Predicate_is_edge()
-	{}
+	{
+		super();
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -52,18 +52,4 @@ public class Predicate_is_edge implements PrologCode
 		}
 		return FAIL;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see gnu.prolog.vm.PrologCode#install(gnu.prolog.vm.Environment)
-	 */
-	public void install(Environment env)
-	{}
-
-	/*
-	 * (non-Javadoc)
-	 * @see gnu.prolog.vm.PrologCode#uninstall(gnu.prolog.vm.Environment)
-	 */
-	public void uninstall(Environment env)
-	{}
 }
