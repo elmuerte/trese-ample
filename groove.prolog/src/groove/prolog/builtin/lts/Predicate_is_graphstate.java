@@ -16,7 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package groove.prolog.builtin.graphstate;
+package groove.prolog.builtin.lts;
 
 import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
@@ -25,16 +25,15 @@ import gnu.prolog.vm.Interpreter;
 import gnu.prolog.vm.PrologCode;
 import gnu.prolog.vm.PrologException;
 import groove.lts.GraphState;
-import groove.prolog.builtin.PrologUtils;
 
 /**
- * <code>graphstate_is_closed(GraphState)</code>
+ * <code>is_graphstate(X)</code>
  * 
  * @author Michiel Hendriks
  */
-public class Predicate_graphstate_is_closed implements PrologCode
+public class Predicate_is_graphstate implements PrologCode
 {
-	public Predicate_graphstate_is_closed()
+	public Predicate_is_graphstate()
 	{}
 
 	/*
@@ -44,23 +43,12 @@ public class Predicate_graphstate_is_closed implements PrologCode
 	 */
 	public int execute(Interpreter interpreter, boolean backtrackMode, Term[] args) throws PrologException
 	{
-		GraphState graphState = null;
 		if (args[0] instanceof JavaObjectTerm)
 		{
-			JavaObjectTerm jot = (JavaObjectTerm) args[0];
-			if (!(jot.value instanceof GraphState))
+			if (((JavaObjectTerm) args[0]).value instanceof GraphState)
 			{
-				PrologException.domainError(PrologUtils.GRAPHSTATE_ATOM, args[0]);
+				return SUCCESS_LAST;
 			}
-			graphState = (GraphState) jot.value;
-		}
-		else
-		{
-			PrologException.typeError(PrologUtils.GRAPHSTATE_ATOM, args[0]);
-		}
-		if (graphState.isClosed())
-		{
-			return SUCCESS_LAST;
 		}
 		return FAIL;
 	}

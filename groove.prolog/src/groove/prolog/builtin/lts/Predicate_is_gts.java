@@ -16,7 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package groove.prolog.builtin.graphstate;
+package groove.prolog.builtin.lts;
 
 import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
@@ -24,16 +24,16 @@ import gnu.prolog.vm.Environment;
 import gnu.prolog.vm.Interpreter;
 import gnu.prolog.vm.PrologCode;
 import gnu.prolog.vm.PrologException;
-import groove.lts.GraphState;
+import groove.lts.LTS;
 
 /**
- * <code>is_graphstate(X)</code>
+ * <code>is_gts(GTS)</code>
  * 
  * @author Michiel Hendriks
  */
-public class Predicate_is_graphstate implements PrologCode
+public class Predicate_is_gts implements PrologCode
 {
-	public Predicate_is_graphstate()
+	public Predicate_is_gts()
 	{}
 
 	/*
@@ -45,7 +45,7 @@ public class Predicate_is_graphstate implements PrologCode
 	{
 		if (args[0] instanceof JavaObjectTerm)
 		{
-			if (((JavaObjectTerm) args[0]).value instanceof GraphState)
+			if (((JavaObjectTerm) args[0]).value instanceof LTS)
 			{
 				return SUCCESS_LAST;
 			}

@@ -16,7 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package groove.prolog.builtin.graphstate;
+package groove.prolog.builtin.lts;
 
 import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
@@ -24,17 +24,17 @@ import gnu.prolog.vm.Environment;
 import gnu.prolog.vm.Interpreter;
 import gnu.prolog.vm.PrologCode;
 import gnu.prolog.vm.PrologException;
-import groove.lts.GraphTransition;
+import groove.lts.GraphState;
 import groove.prolog.builtin.PrologUtils;
 
 /**
- * <code>transition_target(Transition,GraphState)</code>
+ * <code>graphstate_is_closed(GraphState)</code>
  * 
  * @author Michiel Hendriks
  */
-public class Predicate_transition_event implements PrologCode
+public class Predicate_graphstate_is_closed implements PrologCode
 {
-	public Predicate_transition_event()
+	public Predicate_graphstate_is_closed()
 	{}
 
 	/*
@@ -44,22 +44,25 @@ public class Predicate_transition_event implements PrologCode
 	 */
 	public int execute(Interpreter interpreter, boolean backtrackMode, Term[] args) throws PrologException
 	{
-		GraphTransition transition = null;
+		GraphState graphState = null;
 		if (args[0] instanceof JavaObjectTerm)
 		{
 			JavaObjectTerm jot = (JavaObjectTerm) args[0];
-			if (!(jot.value instanceof GraphTransition))
+			if (!(jot.value instanceof GraphState))
 			{
-				PrologException.domainError(PrologUtils.TRANSITION_ATOM, args[0]);
+				PrologException.domainError(PrologUtils.GRAPHSTATE_ATOM, args[0]);
 			}
-			transition = (GraphTransition) jot.value;
+			graphState = (GraphState) jot.value;
 		}
 		else
 		{
-			PrologException.typeError(PrologUtils.TRANSITION_ATOM, args[0]);
+			PrologException.typeError(PrologUtils.GRAPHSTATE_ATOM, args[0]);
 		}
-		Term result = new JavaObjectTerm(transition.getEvent());
-		return interpreter.unify(args[1], result);
+		if (graphState.isClosed())
+		{
+			return SUCCESS_LAST;
+		}
+		return FAIL;
 	}
 
 	/*
@@ -75,5 +78,4 @@ public class Predicate_transition_event implements PrologCode
 	 */
 	public void uninstall(Environment env)
 	{}
-
 }
