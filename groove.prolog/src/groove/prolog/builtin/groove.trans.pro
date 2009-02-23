@@ -15,7 +15,8 @@
 % License along with this library; if not, write to the Free Software
 % Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-:-ensure_loaded(resource('/groove/prolog/builtin/groove.graph.pro')).
-:-ensure_loaded(resource('/groove/prolog/builtin/groove.lts.pro')).
-:-ensure_loaded(resource('/groove/prolog/builtin/groove.trans.pro')).
-:-ensure_loaded(resource('/groove/prolog/builtin/groove.algebra.pro')).
+% Success if the argument is a JavaObjectTerm with a Location
+:-build_in(is_ruleevent/1,'groove.prolog.builtin.trans.Predicate_is_ruleevent').
+
+% Success if the argument is a JavaObjectTerm with a Location
+:-build_in(is_rulematch/1,'groove.prolog.builtin.trans.Predicate_is_rulematch').
