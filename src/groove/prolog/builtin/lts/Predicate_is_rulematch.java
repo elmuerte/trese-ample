@@ -20,9 +20,7 @@ package groove.prolog.builtin.lts;
 
 import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
-import gnu.prolog.vm.Environment;
 import gnu.prolog.vm.Interpreter;
-import gnu.prolog.vm.PrologCode;
 import gnu.prolog.vm.PrologException;
 import groove.trans.RuleMatch;
 
@@ -31,10 +29,12 @@ import groove.trans.RuleMatch;
  * 
  * @author Michiel Hendriks
  */
-public class Predicate_is_rulematch implements PrologCode
+public class Predicate_is_rulematch extends LtsPrologCode
 {
 	public Predicate_is_rulematch()
-	{}
+	{
+		super();
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -52,18 +52,4 @@ public class Predicate_is_rulematch implements PrologCode
 		}
 		return FAIL;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see gnu.prolog.vm.PrologCode#install(gnu.prolog.vm.Environment)
-	 */
-	public void install(Environment env)
-	{}
-
-	/*
-	 * (non-Javadoc)
-	 * @see gnu.prolog.vm.PrologCode#uninstall(gnu.prolog.vm.Environment)
-	 */
-	public void uninstall(Environment env)
-	{}
 }

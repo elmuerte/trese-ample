@@ -18,24 +18,22 @@
  */
 package groove.prolog.builtin.lts;
 
-import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
-import gnu.prolog.vm.Environment;
 import gnu.prolog.vm.Interpreter;
-import gnu.prolog.vm.PrologCode;
 import gnu.prolog.vm.PrologException;
 import groove.lts.GraphState;
-import groove.prolog.builtin.PrologUtils;
 
 /**
  * <code>graphstate_is_closed(GraphState)</code>
  * 
  * @author Michiel Hendriks
  */
-public class Predicate_graphstate_is_closed implements PrologCode
+public class Predicate_graphstate_is_closed extends LtsPrologCode
 {
 	public Predicate_graphstate_is_closed()
-	{}
+	{
+		super();
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -44,38 +42,11 @@ public class Predicate_graphstate_is_closed implements PrologCode
 	 */
 	public int execute(Interpreter interpreter, boolean backtrackMode, Term[] args) throws PrologException
 	{
-		GraphState graphState = null;
-		if (args[0] instanceof JavaObjectTerm)
-		{
-			JavaObjectTerm jot = (JavaObjectTerm) args[0];
-			if (!(jot.value instanceof GraphState))
-			{
-				PrologException.domainError(PrologUtils.GRAPHSTATE_ATOM, args[0]);
-			}
-			graphState = (GraphState) jot.value;
-		}
-		else
-		{
-			PrologException.typeError(PrologUtils.GRAPHSTATE_ATOM, args[0]);
-		}
+		GraphState graphState = getGraphState(args[0]);
 		if (graphState.isClosed())
 		{
 			return SUCCESS_LAST;
 		}
 		return FAIL;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see gnu.prolog.vm.PrologCode#install(gnu.prolog.vm.Environment)
-	 */
-	public void install(Environment env)
-	{}
-
-	/*
-	 * (non-Javadoc)
-	 * @see gnu.prolog.vm.PrologCode#uninstall(gnu.prolog.vm.Environment)
-	 */
-	public void uninstall(Environment env)
-	{}
 }

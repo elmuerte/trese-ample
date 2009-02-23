@@ -21,15 +21,12 @@ package groove.prolog.builtin.lts;
 import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
 import gnu.prolog.vm.BacktrackInfo;
-import gnu.prolog.vm.Environment;
 import gnu.prolog.vm.Interpreter;
-import gnu.prolog.vm.PrologCode;
 import gnu.prolog.vm.PrologException;
 import groove.explore.util.ExploreCache;
 import groove.explore.util.MatchesIterator;
 import groove.lts.GTS;
 import groove.lts.GraphState;
-import groove.prolog.builtin.PrologUtils;
 import groove.trans.RuleEvent;
 
 import java.util.Iterator;
@@ -39,7 +36,7 @@ import java.util.Iterator;
  * 
  * @author Michiel Hendriks
  */
-public class Predicate_gts_match implements PrologCode
+public class Predicate_gts_match extends LtsPrologCode
 {
 	private class GtsMatchBacktrackInfo extends BacktrackInfo
 	{
@@ -71,7 +68,9 @@ public class Predicate_gts_match implements PrologCode
 	}
 
 	public Predicate_gts_match()
-	{}
+	{
+		super();
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -88,34 +87,8 @@ public class Predicate_gts_match implements PrologCode
 		}
 		else
 		{
-			GTS gts = null;
-			if (args[0] instanceof JavaObjectTerm)
-			{
-				JavaObjectTerm jot = (JavaObjectTerm) args[0];
-				if (!(jot.value instanceof GTS))
-				{
-					PrologException.domainError(PrologUtils.GTS_ATOM, args[0]);
-				}
-				gts = (GTS) jot.value;
-			}
-			else
-			{
-				PrologException.typeError(PrologUtils.GTS_ATOM, args[0]);
-			}
-			GraphState graphState = null;
-			if (args[1] instanceof JavaObjectTerm)
-			{
-				JavaObjectTerm jot = (JavaObjectTerm) args[1];
-				if (!(jot.value instanceof GraphState))
-				{
-					PrologException.domainError(PrologUtils.GRAPHSTATE_ATOM, args[1]);
-				}
-				graphState = (GraphState) jot.value;
-			}
-			else
-			{
-				PrologException.typeError(PrologUtils.GRAPHSTATE_ATOM, args[1]);
-			}
+			GTS gts = (GTS) getLTS(args[0]);
+			GraphState graphState = getGraphState(args[1]);
 
 			ExploreCache cache = gts.getRecord().createCache(graphState, true, false);
 			Iterator<RuleEvent> it = new MatchesIterator(graphState, cache, gts.getRecord());
@@ -127,18 +100,4 @@ public class Predicate_gts_match implements PrologCode
 			return nextSolution(interpreter, bi);
 		}
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see gnu.prolog.vm.PrologCode#install(gnu.prolog.vm.Environment)
-	 */
-	public void install(Environment env)
-	{}
-
-	/*
-	 * (non-Javadoc)
-	 * @see gnu.prolog.vm.PrologCode#uninstall(gnu.prolog.vm.Environment)
-	 */
-	public void uninstall(Environment env)
-	{}
 }
