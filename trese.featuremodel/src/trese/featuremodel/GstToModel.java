@@ -56,7 +56,7 @@ public final class GstToModel
 			String featureDesc = null;
 			for (Edge outEdge : graph.outEdgeSet(featureNode))
 			{
-				if (edge.label().text().equals(FeatureGraphCreator.LABEL_ID))
+				if (outEdge.label().text().equals(FeatureGraphCreator.LABEL_ID))
 				{
 					Node nameNode = outEdge.opposite();
 					for (Edge e : graph.outEdgeSet(nameNode))
@@ -76,7 +76,7 @@ public final class GstToModel
 						}
 					}
 				}
-				else if (edge.label().text().equals(FeatureGraphCreator.LABEL_DESCRIPTION))
+				else if (outEdge.label().text().equals(FeatureGraphCreator.LABEL_DESCRIPTION))
 				{
 					Node nameNode = outEdge.opposite();
 					for (Edge e : graph.outEdgeSet(nameNode))
