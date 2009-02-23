@@ -19,24 +19,22 @@
 package groove.prolog.builtin.graph;
 
 import gnu.prolog.term.IntegerTerm;
-import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
-import gnu.prolog.vm.Environment;
 import gnu.prolog.vm.Interpreter;
-import gnu.prolog.vm.PrologCode;
 import gnu.prolog.vm.PrologException;
 import groove.graph.GraphShape;
-import groove.prolog.builtin.PrologUtils;
 
 /**
  * Get the number of edges in a graph. <code>edge_count(Graph,Count)</code>
  * 
  * @author Michiel Hendriks
  */
-public class Predicate_graph_edge_count implements PrologCode
+public class Predicate_graph_edge_count extends GraphPrologCode
 {
 	public Predicate_graph_edge_count()
-	{}
+	{
+		super();
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -45,36 +43,8 @@ public class Predicate_graph_edge_count implements PrologCode
 	 */
 	public int execute(Interpreter interpreter, boolean backtrackMode, Term[] args) throws PrologException
 	{
-		GraphShape graph = null;
-		if (args[0] instanceof JavaObjectTerm)
-		{
-			JavaObjectTerm jot = (JavaObjectTerm) args[0];
-			if (!(jot.value instanceof GraphShape))
-			{
-				PrologException.domainError(PrologUtils.GRAPH_ATOM, args[0]);
-			}
-			graph = (GraphShape) jot.value;
-		}
-		else
-		{
-			PrologException.typeError(PrologUtils.GRAPH_ATOM, args[0]);
-		}
-
+		GraphShape graph = getGraphShape(args[0]);
 		Term edgeCountTerm = new IntegerTerm(graph.edgeCount());
 		return interpreter.unify(edgeCountTerm, args[1]);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see gnu.prolog.vm.PrologCode#install(gnu.prolog.vm.Environment)
-	 */
-	public void install(Environment env)
-	{}
-
-	/*
-	 * (non-Javadoc)
-	 * @see gnu.prolog.vm.PrologCode#uninstall(gnu.prolog.vm.Environment)
-	 */
-	public void uninstall(Environment env)
-	{}
 }

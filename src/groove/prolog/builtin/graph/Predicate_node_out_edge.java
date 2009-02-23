@@ -18,26 +18,24 @@
  */
 package groove.prolog.builtin.graph;
 
-import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
-import gnu.prolog.vm.Environment;
 import gnu.prolog.vm.Interpreter;
-import gnu.prolog.vm.PrologCode;
 import gnu.prolog.vm.PrologException;
 import groove.graph.GraphShape;
 import groove.graph.Node;
 import groove.prolog.builtin.PrologCollectionIterator;
-import groove.prolog.builtin.PrologUtils;
 
 /**
  * A single outgoing edge for a node <code>node_out_edge(Graph,Node,Edge)</code>
  * 
  * @author Michiel Hendriks
  */
-public class Predicate_node_out_edge implements PrologCode
+public class Predicate_node_out_edge extends GraphPrologCode
 {
 	public Predicate_node_out_edge()
-	{}
+	{
+		super();
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -54,53 +52,11 @@ public class Predicate_node_out_edge implements PrologCode
 		}
 		else
 		{
-			GraphShape graph = null;
-			if (args[0] instanceof JavaObjectTerm)
-			{
-				JavaObjectTerm jot = (JavaObjectTerm) args[0];
-				if (!(jot.value instanceof GraphShape))
-				{
-					PrologException.domainError(PrologUtils.GRAPH_ATOM, args[0]);
-				}
-				graph = (GraphShape) jot.value;
-			}
-			else
-			{
-				PrologException.typeError(PrologUtils.GRAPH_ATOM, args[0]);
-			}
-
-			Node node = null;
-			if (args[1] instanceof JavaObjectTerm)
-			{
-				JavaObjectTerm jot = (JavaObjectTerm) args[1];
-				if (!(jot.value instanceof Node))
-				{
-					PrologException.domainError(PrologUtils.NODE_ATOM, args[1]);
-				}
-				node = (Node) jot.value;
-			}
-			else
-			{
-				PrologException.typeError(PrologUtils.NODE_ATOM, args[1]);
-			}
-
+			GraphShape graph = getGraphShape(args[0]);
+			Node node = getNode(args[1]);
 			PrologCollectionIterator it = new PrologCollectionIterator(graph.outEdgeSet(node), args[2], interpreter
 					.getUndoPosition());
 			return it.nextSolution(interpreter);
 		}
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see gnu.prolog.vm.PrologCode#install(gnu.prolog.vm.Environment)
-	 */
-	public void install(Environment env)
-	{}
-
-	/*
-	 * (non-Javadoc)
-	 * @see gnu.prolog.vm.PrologCode#uninstall(gnu.prolog.vm.Environment)
-	 */
-	public void uninstall(Environment env)
-	{}
 }

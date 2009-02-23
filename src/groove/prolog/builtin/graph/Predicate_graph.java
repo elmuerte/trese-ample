@@ -20,9 +20,7 @@ package groove.prolog.builtin.graph;
 
 import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
-import gnu.prolog.vm.Environment;
 import gnu.prolog.vm.Interpreter;
-import gnu.prolog.vm.PrologCode;
 import gnu.prolog.vm.PrologException;
 import groove.graph.GraphShape;
 import groove.prolog.engine.GrooveEnvironment;
@@ -32,10 +30,12 @@ import groove.prolog.engine.GrooveEnvironment;
  * 
  * @author Michiel Hendriks
  */
-public class Predicate_graph implements PrologCode
+public class Predicate_graph extends GraphPrologCode
 {
 	public Predicate_graph()
-	{}
+	{
+		super();
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -52,18 +52,4 @@ public class Predicate_graph implements PrologCode
 		Term value = new JavaObjectTerm(graph);
 		return interpreter.unify(args[0], value);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see gnu.prolog.vm.PrologCode#install(gnu.prolog.vm.Environment)
-	 */
-	public void install(Environment env)
-	{}
-
-	/*
-	 * (non-Javadoc)
-	 * @see gnu.prolog.vm.PrologCode#uninstall(gnu.prolog.vm.Environment)
-	 */
-	public void uninstall(Environment env)
-	{}
 }

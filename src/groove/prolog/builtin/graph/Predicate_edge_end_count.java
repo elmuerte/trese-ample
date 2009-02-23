@@ -19,24 +19,22 @@
 package groove.prolog.builtin.graph;
 
 import gnu.prolog.term.IntegerTerm;
-import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
-import gnu.prolog.vm.Environment;
 import gnu.prolog.vm.Interpreter;
-import gnu.prolog.vm.PrologCode;
 import gnu.prolog.vm.PrologException;
 import groove.graph.Edge;
-import groove.prolog.builtin.PrologUtils;
 
 /**
  * Get the number of ends in an edge. <code>edge_end_count(Edge,Count)</code>
  * 
  * @author Michiel Hendriks
  */
-public class Predicate_edge_end_count implements PrologCode
+public class Predicate_edge_end_count extends GraphPrologCode
 {
 	public Predicate_edge_end_count()
-	{}
+	{
+		super();
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -45,35 +43,8 @@ public class Predicate_edge_end_count implements PrologCode
 	 */
 	public int execute(Interpreter interpreter, boolean backtrackMode, Term[] args) throws PrologException
 	{
-		Edge edge = null;
-		if (args[0] instanceof JavaObjectTerm)
-		{
-			JavaObjectTerm jot = (JavaObjectTerm) args[0];
-			if (!(jot.value instanceof Edge))
-			{
-				PrologException.domainError(PrologUtils.EDGE_ATOM, args[0]);
-			}
-			edge = (Edge) jot.value;
-		}
-		else
-		{
-			PrologException.typeError(PrologUtils.EDGE_ATOM, args[0]);
-		}
+		Edge edge = getEdge(args[0]);
 		Term countTerm = new IntegerTerm(edge.endCount());
 		return interpreter.unify(countTerm, args[1]);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see gnu.prolog.vm.PrologCode#install(gnu.prolog.vm.Environment)
-	 */
-	public void install(Environment env)
-	{}
-
-	/*
-	 * (non-Javadoc)
-	 * @see gnu.prolog.vm.PrologCode#uninstall(gnu.prolog.vm.Environment)
-	 */
-	public void uninstall(Environment env)
-	{}
 }
