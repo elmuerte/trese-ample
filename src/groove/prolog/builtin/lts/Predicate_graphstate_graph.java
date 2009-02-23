@@ -16,7 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package groove.prolog.builtin.graphstate;
+package groove.prolog.builtin.lts;
 
 import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
@@ -28,13 +28,14 @@ import groove.lts.GraphState;
 import groove.prolog.builtin.PrologUtils;
 
 /**
- * <code>graphstate_next_set(GraphState,GraphStateSet)</code>
+ * The graph of a given graph state
+ * <code>graphstate_graph(GraphState,Graph)</code>
  * 
  * @author Michiel Hendriks
  */
-public class Predicate_graphstate_next_set implements PrologCode
+public class Predicate_graphstate_graph implements PrologCode
 {
-	public Predicate_graphstate_next_set()
+	public Predicate_graphstate_graph()
 	{}
 
 	/*
@@ -58,8 +59,9 @@ public class Predicate_graphstate_next_set implements PrologCode
 		{
 			PrologException.typeError(PrologUtils.GRAPHSTATE_ATOM, args[0]);
 		}
-		Term resultSet = new JavaObjectTerm(PrologUtils.createJOTlist(graphState.getNextStateSet()));
-		return interpreter.unify(args[1], resultSet);
+
+		Term value = new JavaObjectTerm(graphState.getGraph());
+		return interpreter.unify(args[1], value);
 	}
 
 	/*
@@ -75,5 +77,4 @@ public class Predicate_graphstate_next_set implements PrologCode
 	 */
 	public void uninstall(Environment env)
 	{}
-
 }

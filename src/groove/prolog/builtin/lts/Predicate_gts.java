@@ -16,7 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package groove.prolog.builtin.graphstate;
+package groove.prolog.builtin.lts;
 
 import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
@@ -24,18 +24,17 @@ import gnu.prolog.vm.Environment;
 import gnu.prolog.vm.Interpreter;
 import gnu.prolog.vm.PrologCode;
 import gnu.prolog.vm.PrologException;
-import groove.lts.GraphState;
-import groove.prolog.builtin.PrologCollectionIterator;
-import groove.prolog.builtin.PrologUtils;
+import groove.lts.LTS;
+import groove.prolog.engine.GrooveEnvironment;
 
 /**
- * <code>graphstate_transition(GraphState,Transition)</code>
+ * Retrieve the current graph. <code>graphstate(GraphState)</code>
  * 
  * @author Michiel Hendriks
  */
-public class Predicate_graphstate_next implements PrologCode
+public class Predicate_gts implements PrologCode
 {
-	public Predicate_graphstate_next()
+	public Predicate_gts()
 	{}
 
 	/*
@@ -45,23 +44,17 @@ public class Predicate_graphstate_next implements PrologCode
 	 */
 	public int execute(Interpreter interpreter, boolean backtrackMode, Term[] args) throws PrologException
 	{
-		GraphState graphState = null;
-		if (args[0] instanceof JavaObjectTerm)
+		if (!(interpreter.environment instanceof GrooveEnvironment))
 		{
-			JavaObjectTerm jot = (JavaObjectTerm) args[0];
-			if (!(jot.value instanceof GraphState))
-			{
-				PrologException.domainError(PrologUtils.GRAPHSTATE_ATOM, args[0]);
-			}
-			graphState = (GraphState) jot.value;
+			GrooveEnvironment.invalidEnvironment();
 		}
-		else
+		LTS lts = ((GrooveEnvironment) interpreter.environment).getGrooveState().getGts();
+		if (lts == null)
 		{
-			PrologException.typeError(PrologUtils.GRAPHSTATE_ATOM, args[0]);
+			return FAIL;
 		}
-		PrologCollectionIterator it = new PrologCollectionIterator(graphState.getNextStateSet(), args[1], interpreter
-				.getUndoPosition());
-		return it.nextSolution(interpreter);
+		Term value = new JavaObjectTerm(lts);
+		return interpreter.unify(args[0], value);
 	}
 
 	/*
@@ -77,5 +70,4 @@ public class Predicate_graphstate_next implements PrologCode
 	 */
 	public void uninstall(Environment env)
 	{}
-
 }

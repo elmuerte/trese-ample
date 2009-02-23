@@ -16,7 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package groove.prolog.builtin.graphstate;
+package groove.prolog.builtin.lts;
 
 import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
@@ -28,13 +28,13 @@ import groove.lts.GraphTransition;
 import groove.prolog.builtin.PrologUtils;
 
 /**
- * <code>transition_source(Transition,GraphState)</code>
+ * <code>transition_target(Transition,GraphState)</code>
  * 
  * @author Michiel Hendriks
  */
-public class Predicate_transition_source implements PrologCode
+public class Predicate_transition_target implements PrologCode
 {
-	public Predicate_transition_source()
+	public Predicate_transition_target()
 	{}
 
 	/*
@@ -58,7 +58,7 @@ public class Predicate_transition_source implements PrologCode
 		{
 			PrologException.typeError(PrologUtils.TRANSITION_ATOM, args[0]);
 		}
-		Term result = new JavaObjectTerm(transition.source());
+		Term result = new JavaObjectTerm(transition.target());
 		return interpreter.unify(args[1], result);
 	}
 
