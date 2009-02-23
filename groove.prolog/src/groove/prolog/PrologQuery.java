@@ -248,7 +248,7 @@ public class PrologQuery
 	 */
 	public boolean hasNext()
 	{
-		return (currentResult != null) && !currentResult.isLastResult();
+		return currentResult != null && !currentResult.isLastResult();
 	}
 
 	/**
