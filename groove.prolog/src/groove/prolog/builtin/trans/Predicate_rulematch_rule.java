@@ -22,17 +22,16 @@ import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
 import gnu.prolog.vm.Interpreter;
 import gnu.prolog.vm.PrologException;
-import groove.graph.Graph;
-import groove.trans.RuleEvent;
+import groove.trans.RuleMatch;
 
 /**
  * 
  * 
  * @author Michiel Hendriks
  */
-public class Predicate_ruleevent_match extends TransPrologCode
+public class Predicate_rulematch_rule extends TransPrologCode
 {
-	public Predicate_ruleevent_match()
+	public Predicate_rulematch_rule()
 	{
 		super();
 	}
@@ -44,10 +43,9 @@ public class Predicate_ruleevent_match extends TransPrologCode
 	 */
 	public int execute(Interpreter interpreter, boolean backtrackMode, Term[] args) throws PrologException
 	{
-		RuleEvent re = getRuleEvent(args[0]);
-		Graph graph = getGraph(args[1]);
-		Term res = new JavaObjectTerm(re.getMatch(graph));
-		return interpreter.unify(args[2], res);
+		RuleMatch re = getRuleMatch(args[0]);
+		Term res = new JavaObjectTerm(re.getRule());
+		return interpreter.unify(args[1], res);
 	}
 
 }

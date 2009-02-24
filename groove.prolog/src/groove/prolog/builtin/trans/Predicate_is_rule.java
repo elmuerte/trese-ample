@@ -22,17 +22,16 @@ import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
 import gnu.prolog.vm.Interpreter;
 import gnu.prolog.vm.PrologException;
-import groove.graph.Graph;
-import groove.trans.RuleEvent;
+import groove.trans.Rule;
 
 /**
- * 
+ * <code>is_rulevent(X)</code>
  * 
  * @author Michiel Hendriks
  */
-public class Predicate_ruleevent_match extends TransPrologCode
+public class Predicate_is_rule extends TransPrologCode
 {
-	public Predicate_ruleevent_match()
+	public Predicate_is_rule()
 	{
 		super();
 	}
@@ -44,10 +43,13 @@ public class Predicate_ruleevent_match extends TransPrologCode
 	 */
 	public int execute(Interpreter interpreter, boolean backtrackMode, Term[] args) throws PrologException
 	{
-		RuleEvent re = getRuleEvent(args[0]);
-		Graph graph = getGraph(args[1]);
-		Term res = new JavaObjectTerm(re.getMatch(graph));
-		return interpreter.unify(args[2], res);
+		if (args[0] instanceof JavaObjectTerm)
+		{
+			if (((JavaObjectTerm) args[0]).value instanceof Rule)
+			{
+				return SUCCESS_LAST;
+			}
+		}
+		return FAIL;
 	}
-
 }
