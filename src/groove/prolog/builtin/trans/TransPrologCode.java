@@ -24,6 +24,7 @@ import gnu.prolog.term.Term;
 import gnu.prolog.vm.PrologException;
 import groove.prolog.builtin.graph.GraphPrologCode;
 import groove.trans.RuleEvent;
+import groove.trans.RuleMatch;
 
 /**
  * 
@@ -33,6 +34,7 @@ import groove.trans.RuleEvent;
 public abstract class TransPrologCode extends GraphPrologCode
 {
 	public static final AtomTerm RULEEVENT_ATOM = AtomTerm.get("rule_event");
+	public static final AtomTerm RULEMATCH_ATOM = AtomTerm.get("rule_match");
 
 	public static final RuleEvent getRuleEvent(Term term) throws PrologException
 	{
@@ -48,6 +50,25 @@ public abstract class TransPrologCode extends GraphPrologCode
 		else
 		{
 			PrologException.typeError(RULEEVENT_ATOM, term);
+		}
+		return null;
+
+	}
+
+	public static final RuleMatch getRuleMatch(Term term) throws PrologException
+	{
+		if (term instanceof JavaObjectTerm)
+		{
+			JavaObjectTerm jot = (JavaObjectTerm) term;
+			if (!(jot.value instanceof RuleMatch))
+			{
+				PrologException.domainError(RULEMATCH_ATOM, term);
+			}
+			return (RuleMatch) jot.value;
+		}
+		else
+		{
+			PrologException.typeError(RULEMATCH_ATOM, term);
 		}
 		return null;
 

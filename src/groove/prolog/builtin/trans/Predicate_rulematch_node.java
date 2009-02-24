@@ -18,21 +18,20 @@
  */
 package groove.prolog.builtin.trans;
 
-import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
 import gnu.prolog.vm.Interpreter;
 import gnu.prolog.vm.PrologException;
-import groove.graph.Graph;
-import groove.trans.RuleEvent;
+import groove.prolog.builtin.PrologCollectionIterator;
+import groove.trans.RuleMatch;
 
 /**
  * 
  * 
  * @author Michiel Hendriks
  */
-public class Predicate_ruleevent_match extends TransPrologCode
+public class Predicate_rulematch_node extends TransPrologCode
 {
-	public Predicate_ruleevent_match()
+	public Predicate_rulematch_node()
 	{
 		super();
 	}
@@ -44,10 +43,19 @@ public class Predicate_ruleevent_match extends TransPrologCode
 	 */
 	public int execute(Interpreter interpreter, boolean backtrackMode, Term[] args) throws PrologException
 	{
-		RuleEvent re = getRuleEvent(args[0]);
-		Graph graph = getGraph(args[1]);
-		Term res = new JavaObjectTerm(re.getMatch(graph));
-		return interpreter.unify(args[2], res);
+		if (backtrackMode)
+		{
+			PrologCollectionIterator it = (PrologCollectionIterator) interpreter.popBacktrackInfo();
+			interpreter.undo(it.getUndoPosition());
+			return it.nextSolution(interpreter);
+		}
+		else
+		{
+			RuleMatch rm = getRuleMatch(args[0]);
+			PrologCollectionIterator it = new PrologCollectionIterator(rm.getNodeValues(), args[1], interpreter
+					.getUndoPosition());
+			return it.nextSolution(interpreter);
+		}
 	}
 
 }

@@ -25,6 +25,7 @@ import gnu.prolog.vm.Environment;
 import gnu.prolog.vm.PrologCode;
 import gnu.prolog.vm.PrologException;
 import groove.graph.Edge;
+import groove.graph.Graph;
 import groove.graph.GraphShape;
 import groove.graph.Node;
 
@@ -52,6 +53,31 @@ public abstract class GraphPrologCode implements PrologCode
 				PrologException.domainError(GraphPrologCode.GRAPH_ATOM, term);
 			}
 			return (GraphShape) jot.value;
+		}
+		else
+		{
+			PrologException.typeError(GraphPrologCode.GRAPH_ATOM, term);
+		}
+		return null;
+	}
+
+	/**
+	 * Get an edge from the given term
+	 * 
+	 * @param term
+	 * @return
+	 * @throws PrologException
+	 */
+	public static final Graph getGraph(Term term) throws PrologException
+	{
+		if (term instanceof JavaObjectTerm)
+		{
+			JavaObjectTerm jot = (JavaObjectTerm) term;
+			if (!(jot.value instanceof Graph))
+			{
+				PrologException.domainError(GraphPrologCode.GRAPH_ATOM, term);
+			}
+			return (Graph) jot.value;
 		}
 		else
 		{
