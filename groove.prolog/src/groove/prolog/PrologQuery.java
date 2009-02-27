@@ -32,6 +32,7 @@ import groove.lts.GraphState;
 import groove.prolog.engine.GrooveEnvironment;
 import groove.prolog.engine.GrooveState;
 
+import java.io.OutputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.Collections;
@@ -79,6 +80,8 @@ public class PrologQuery
 
 	protected GrooveState grooveState;
 
+	protected OutputStream userOutput;
+
 	public PrologQuery()
 	{}
 
@@ -89,6 +92,15 @@ public class PrologQuery
 	{
 		this();
 		setGrooveState(grooveState);
+	}
+
+	/**
+	 * @param userOutput
+	 *            the userOutput to set
+	 */
+	public void setUserOutput(OutputStream userOutput)
+	{
+		this.userOutput = userOutput;
 	}
 
 	/**
@@ -138,7 +150,7 @@ public class PrologQuery
 		}
 		initialized = true;
 		currentResult = null;
-		env = new GrooveEnvironment();
+		env = new GrooveEnvironment(null, userOutput);
 		env.setGrooveState(grooveState);
 		CompoundTerm term = new CompoundTerm(AtomTerm.get("resource"), new Term[] { AtomTerm.get(GROOVE_PRO) });
 		env.ensureLoaded(term);

@@ -24,6 +24,8 @@ import gnu.prolog.term.CompoundTermTag;
 import gnu.prolog.vm.Environment;
 import gnu.prolog.vm.PrologException;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Reader;
 
 /**
@@ -50,6 +52,11 @@ public class GrooveEnvironment extends Environment
 	public GrooveEnvironment()
 	{
 		super();
+	}
+
+	public GrooveEnvironment(InputStream stdin, OutputStream stdout)
+	{
+		super(stdin, stdout);
 	}
 
 	/**

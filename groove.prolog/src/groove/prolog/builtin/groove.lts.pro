@@ -16,19 +16,24 @@
 % Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 % Success if the argument is a JavaObjectTerm with a GraphState
+% is_graphstate(@State)
 :-build_in(is_graphstate/1,'groove.prolog.builtin.lts.Predicate_is_graphstate').
 
 % Success if the argument is a JavaObjectTerm with a Transition
+% is_transition(@Trans)
 :-build_in(is_transition/1,'groove.prolog.builtin.lts.Predicate_is_transition').
 
 % Success if the argument is a JavaObjectTerm with a Location
+% is_location(@Loc)
 :-build_in(is_location/1,'groove.prolog.builtin.lts.Predicate_is_location').
 
 % The current graph state. Might not always be available.
+% graphstate(-State)
 % @param the graph state
 :-build_in(graphstate/1,'groove.prolog.builtin.lts.Predicate_graphstate').
 
 % The graph of a graph state
+% graphstate_graph(+State,?Graph)
 % @param the graph state
 % @param the graph 
 % @groove.lts.GraphState#getGraph()
@@ -36,18 +41,22 @@
 graphstate_graph(G):-graphstate(GS),graphstate_graph(GS,G).
 
 % Success if the graph state is closed (i.e. all transitions have been found)
+% graphstate_is_closed(+State)
 % @param the graph state
 % @groove.lts.GraphState#isClosed()
 :-build_in(graphstate_is_closed/1,'groove.prolog.builtin.lts.Predicate_graphstate_is_closed').
 graphstate_is_closed:-graphstate(GS),graphstate_is_closed(GS).
 
 % The location of a graph state
+% graphstate_location(+State,?Loc)
 % @param the graph state
+% @param the location
 % @groove.lts.GraphState#getLocation()
 :-build_in(graphstate_location/2,'groove.prolog.builtin.lts.Predicate_graphstate_location').
 graphstate_location(L):-graphstate(GS),graphstate_location(GS,L).
 
 % A transition in a state
+% graphstate_transition(+State,?Trans)
 % @param the state
 % @param the transition
 % @groove.lts.GraphState#getTransitionSet()
@@ -55,6 +64,7 @@ graphstate_location(L):-graphstate(GS),graphstate_location(GS,L).
 graphstate_transition(T):-graphstate(GS),graphstate_transition(GS,T).
 
 % All current transitions in a state
+% graphstate_transition(+State,?TransSet)
 % @param the state
 % @param the transition set
 % @groove.lts.GraphState#getTransitionSet()
@@ -62,6 +72,7 @@ graphstate_transition(T):-graphstate(GS),graphstate_transition(GS,T).
 graphstate_transition_set(T):-graphstate(GS),graphstate_transition_set(GS,T).
 
 % A next state from this state
+% graphstate_next(+State,?NextState)
 % @param the state
 % @param the next state
 % @groove.lts.GraphState#getNextState()
@@ -69,6 +80,7 @@ graphstate_transition_set(T):-graphstate(GS),graphstate_transition_set(GS,T).
 graphstate_next(T):-graphstate(GS),graphstate_next(GS,T).
 
 % All next states from this state
+% graphstate_next_set(+State,?NextStateSet)
 % @param the state
 % @param the next state set
 % @groove.lts.GraphState#getNextState()
@@ -76,36 +88,43 @@ graphstate_next(T):-graphstate(GS),graphstate_next(GS,T).
 graphstate_next_set(T):-graphstate(GS),graphstate_next_set(GS,T).
 
 % The source of a transition
+% transition_source(+Trans,?State)
 % @param the transition
 % @param the source state
 % @groove.lts.GraphTransition#source()
 :-build_in(transition_source/2,'groove.prolog.builtin.lts.Predicate_transition_source').
 
 % The target of a transition
+% transition_target(+Trans,?State)
 % @param the transition
 % @param the target state
 % @groove.lts.GraphTransition#target()
 :-build_in(transition_target/2,'groove.prolog.builtin.lts.Predicate_transition_target').
 
 % The rule event that caused this transition
+% transition_event(+Trans,?RuleEvent)
 % @param the transition
 % @param the rule event
 % @see groove.lts.GraphTransition#getEvent()
 :-build_in(transition_event/2,'groove.prolog.builtin.lts.Predicate_transition_event').
 
 % The rule match that caused this transition
+% transition_match(+Trans,?RuleMatch)
 % @param the transition
 % @param the rule match
 % @see groove.lts.GraphTransition#getMatch()
 :-build_in(transition_match/2,'groove.prolog.builtin.lts.Predicate_transition_match').
 
 % Success if the object is a GTS
+% is_gts(@GTS)
 :-build_in(is_gts/1,'groove.prolog.builtin.lts.Predicate_is_gts').
 
 % Get the current GTS. This can fail when not GTS is active.
+% gts(-GTS)
 :-build_in(gts/1,'groove.prolog.builtin.lts.Predicate_gts').
 
 % The start graph state of a GTS
+% gts_start_state(+GTS,?State)
 % @param the gts
 % @param the start GraphState
 % @see groove.lts.LTS#startState()
@@ -113,6 +132,7 @@ graphstate_next_set(T):-graphstate(GS),graphstate_next_set(GS,T).
 gts_start_state(GS):-gts(G),gts_start_state(G,GS).
 
 % The final states of a GTS
+% gts_final_state(+GTS,?State)
 % @param the gts
 % @param the start GraphState
 % @see groove.lts.LTS#getFinalStates()
@@ -121,6 +141,7 @@ gts_start_state(GS):-gts(G),gts_start_state(G,GS).
 gts_final_state(GS):-gts(G),gts_final_state(G,GS).
 
 % The final states of a GTS
+% gts_final_state_set(+GTS,?StateSet)
 % @param the gts
 % @param the start GraphState
 % @see groove.lts.LTS#getFinalStates()
@@ -128,6 +149,7 @@ gts_final_state(GS):-gts(G),gts_final_state(G,GS).
 gts_final_state_set(GS):-gts(G),gts_final_state_set(G,GS).
 
 % Get a matching rule event for a given graph state
+% gts_match(+GTS,?RuleEvent)
 % @param the gts
 % @param the graphstate
 % @param the ruleevent

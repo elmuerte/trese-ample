@@ -16,14 +16,17 @@
 % Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 % Succeeds if the given term is a value node
+% is_valuenode(@Node)
 :-build_in(is_valuenode/1,'groove.prolog.builtin.algebra.Predicate_is_valuenode').
 
 % Converts the value node's value to a prolog term. A string value is converted to an 
 % AtomicTerm, and integer and double value are converted to a IntegerTerm and FloatTerm
 % respectively. All other values are converted to a JavaObjectTerm 
+% convert_valuenode(+Node,?Term)
 % @param the value node
 % @param the term
 :-build_in(convert_valuenode/2,'groove.prolog.builtin.algebra.Predicate_convert_valuenode').
 
-% Only convert when it is a value node
+% Only convert when it is a value node. Will never fail.
+% try_convert_valuenode(+Node,?Term)
 try_convert_valuenode(Node,Term):-(is_valuenode(Node) -> convert_valuenode(Node,Term)).

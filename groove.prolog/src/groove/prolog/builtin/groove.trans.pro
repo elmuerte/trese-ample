@@ -16,27 +16,33 @@
 % Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 % Success if the argument is a JavaObjectTerm with a RuleEvent
+% is_ruleevent(@RuleEvent)
 :-build_in(is_ruleevent/1,'groove.prolog.builtin.trans.Predicate_is_ruleevent').
 
 % Success if the argument is a JavaObjectTerm with a RuleMatch
+% is_ruleevent(@RuleMatch)
 :-build_in(is_rulematch/1,'groove.prolog.builtin.trans.Predicate_is_rulematch').
 
 % Success if the argument is a JavaObjectTerm with a Rule
+% is_ruleevent(@Rule)
 :-build_in(is_rule/1,'groove.prolog.builtin.trans.Predicate_is_rule').
 
 % The label of a rule event
+% ruleevent_label(+RuleEvent,?Label)
 % @param the rule event
 % @param the label
 % @see groove.trans.RuleEvent#getLabel()
 :-build_in(ruleevent_label/2,'groove.prolog.builtin.trans.Predicate_ruleevent_label').
 
 % The rule associated with this event
+% ruleevent_rule(+RuleEvent,?Rule)
 % @param the rule event
 % @param the rule
 % @see groove.trans.RuleEvent#getRule()
 :-build_in(ruleevent_rule/2,'groove.prolog.builtin.trans.Predicate_ruleevent_rule').
 
 % The rule match
+% ruleevent_match(+RuleEvent,+Graph,?RuleMatch)
 % @param the rule event
 % @param the graph to match against
 % @param the rule match
@@ -48,16 +54,19 @@ ruleevent_match(RE,RM):-graphstate(GS),graphstate_graph(GS,G),ruleevent_match(RE
 rulematch(RM):-gts(GTS),graphstate(GS),graphstate_graph(GS,G),gts_match(GTS,GS,RE),ruleevent_match(RE,G,RM).
 
 % The edges in a rule match
+% rulematch_edge(+RuleMatch,?Edge)
 % @param the rulematch
 % @param the edge in the match
 :-build_in(rulematch_edge/2,'groove.prolog.builtin.trans.Predicate_rulematch_edge').
 
 % The nodes in a rule match
+% rulematch_node(+RuleMatch,?Node)
 % @param the rulematch
 % @param the node in the match
 :-build_in(rulematch_node/2,'groove.prolog.builtin.trans.Predicate_rulematch_node').
 
 % The rule which was used in this match
+% rulematch_rule(+RuleMatch,?Rule)
 % @param the rulematch
 % @param the rule
 :-build_in(rulematch_rule/2,'groove.prolog.builtin.trans.Predicate_rulematch_rule').
