@@ -18,6 +18,8 @@
  */
 package groove.gui;
 
+import groove.io.ExtensionFilter;
+import groove.io.GrooveFileChooser;
 import groove.lts.GTS;
 import groove.lts.GraphState;
 import groove.prolog.GroovePrologException;
@@ -31,6 +33,9 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -41,7 +46,9 @@ import java.util.Map.Entry;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -50,6 +57,7 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -73,7 +81,7 @@ public class PrologEditor extends JPanel
 	protected Simulator sim;
 	protected PrologQuery prolog;
 	protected QueryMode mode = QueryMode.GRAPH_STATE;
-	protected boolean consultUserCode = false;
+	protected boolean doConsultUserCode = false;
 
 	protected JTextField query;
 	protected JTextPane editor;
@@ -83,6 +91,7 @@ public class PrologEditor extends JPanel
 	protected JLabel userCodeConsulted;
 	protected JLabel statusBar;
 	protected OutputStream userOutput;
+	protected JFileChooser prologFileChooser;
 
 	public PrologEditor(Simulator simulator)
 	{
@@ -156,11 +165,71 @@ public class PrologEditor extends JPanel
 		toolBar.addSeparator();
 
 		JButton loadButton = new JButton(new ImageIcon(Groove.getResource("open.gif")));
-		loadButton.setEnabled(false);
+		loadButton.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e)
+			{
+				int result = getPrologFileChooser().showOpenDialog(sim.getFrame());
+				// now load, if so required
+				if (result == JFileChooser.APPROVE_OPTION)
+				{
+					File fl = getPrologFileChooser().getSelectedFile();
+					try
+					{
+						FileInputStream fis = new FileInputStream(fl);
+						editor.read(fis, null);
+						SwingUtilities.invokeLater(new Runnable() {
+							public void run()
+							{
+								setEditorListeners();
+								consultUserCode();
+							}
+						});
+					}
+					catch (IOException eex)
+					{}
+				}
+			}
+		});
 		toolBar.add(loadButton);
 
 		JButton saveButton = new JButton(new ImageIcon(Groove.getResource("save.gif")));
-		saveButton.setEnabled(false);
+		saveButton.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e)
+			{
+				do
+				{
+					int result = getPrologFileChooser().showSaveDialog(sim.getFrame());
+					// now load, if so required
+					if (result == JFileChooser.APPROVE_OPTION)
+					{
+						File fl = getPrologFileChooser().getSelectedFile();
+						if (fl.exists())
+						{
+							int overwrite = JOptionPane.showConfirmDialog(sim.getFrame(), "Overwrite existing file \""
+									+ fl.getName() + "\"?");
+							if (overwrite == JOptionPane.NO_OPTION)
+							{
+								continue;
+							}
+							else if (overwrite == JOptionPane.CANCEL_OPTION)
+							{
+								return;
+							}
+						}
+						try
+						{
+							editor.write(new FileWriter(fl));
+						}
+						catch (IOException eex)
+						{}
+						return;
+					}
+					return;
+				} while (true);
+			}
+		});
 		toolBar.add(saveButton);
 
 		toolBar.addSeparator();
@@ -185,23 +254,7 @@ public class PrologEditor extends JPanel
 		editor.setText("");
 		editor.setEditable(true);
 		editor.setEnabled(true);
-		editor.getDocument().addDocumentListener(new DocumentListener() {
-
-			public void changedUpdate(DocumentEvent arg0)
-			{
-				userCodeConsulted.setText("Modified");
-			}
-
-			public void insertUpdate(DocumentEvent arg0)
-			{
-				userCodeConsulted.setText("Modified");
-			}
-
-			public void removeUpdate(DocumentEvent arg0)
-			{
-				userCodeConsulted.setText("Modified");
-			}
-		});
+		setEditorListeners();
 
 		JPanel editorPane = new JPanel(new BorderLayout());
 		editorPane.add(toolBar, BorderLayout.NORTH);
@@ -242,6 +295,46 @@ public class PrologEditor extends JPanel
 		add(statusBar, BorderLayout.SOUTH);
 	}
 
+	/**
+	 * 
+	 */
+	protected void setEditorListeners()
+	{
+		editor.getDocument().addDocumentListener(new DocumentListener() {
+
+			public void changedUpdate(DocumentEvent arg0)
+			{
+				userCodeConsulted.setText("Modified");
+			}
+
+			public void insertUpdate(DocumentEvent arg0)
+			{
+				userCodeConsulted.setText("Modified");
+			}
+
+			public void removeUpdate(DocumentEvent arg0)
+			{
+				userCodeConsulted.setText("Modified");
+			}
+		});
+	}
+
+	/**
+	 * 
+	 */
+	JFileChooser getPrologFileChooser()
+	{
+		if (prologFileChooser == null)
+		{
+			prologFileChooser = new GrooveFileChooser();
+			ExtensionFilter prologFilter = new ExtensionFilter("Prolog files", ".pro");
+			prologFileChooser.addChoosableFileFilter(prologFilter);
+			prologFileChooser.addChoosableFileFilter(new ExtensionFilter("Prolog files", ".pl"));
+			prologFileChooser.setFileFilter(prologFilter);
+		}
+		return prologFileChooser;
+	}
+
 	protected void executeQuery()
 	{
 		executeQuery(query.getText());
@@ -254,14 +347,14 @@ public class PrologEditor extends JPanel
 		{
 			prolog = new PrologQuery();
 			prolog.setUserOutput(userOutput);
-			if (consultUserCode)
+			if (doConsultUserCode)
 			{
 				String userCode = editor.getText();
 				if (userCode != null && userCode.length() > 0)
 				{
 					try
 					{
-						prolog.init(new StringReader(userCode), "user code");
+						prolog.init(new StringReader(userCode), "user_input");
 						userCodeConsulted.setText("User code consulted");
 						statusBar.setText("User code accepted");
 					}
@@ -271,7 +364,7 @@ public class PrologEditor extends JPanel
 						results.append("\nError loading the prolog engine:\n");
 						results.append(e.getMessage());
 						prolog = null;
-						consultUserCode = false;
+						doConsultUserCode = false;
 						return false;
 					}
 				}
@@ -403,7 +496,7 @@ public class PrologEditor extends JPanel
 	protected void consultUserCode()
 	{
 		prolog = null;
-		consultUserCode = true;
+		doConsultUserCode = true;
 		nextResultBtn.setVisible(false);
 		results.setText("");
 		ensureProlog();
