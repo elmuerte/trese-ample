@@ -31,6 +31,8 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -80,6 +82,7 @@ public class PrologEditor extends JPanel
 	protected JButton consultBtn;
 	protected JLabel userCodeConsulted;
 	protected JLabel statusBar;
+	protected OutputStream userOutput;
 
 	public PrologEditor(Simulator simulator)
 	{
@@ -210,6 +213,7 @@ public class PrologEditor extends JPanel
 		results.setEditable(false);
 		results.setEnabled(true);
 		results.setBackground(null);
+		userOutput = new JTextAreaOutputStream(results);
 
 		nextResultBtn = new JButton("More?");
 		nextResultBtn.setFont(nextResultBtn.getFont().deriveFont(Font.BOLD));
@@ -249,6 +253,7 @@ public class PrologEditor extends JPanel
 		if (prolog == null)
 		{
 			prolog = new PrologQuery();
+			prolog.setUserOutput(userOutput);
 			if (consultUserCode)
 			{
 				String userCode = editor.getText();
@@ -316,6 +321,12 @@ public class PrologEditor extends JPanel
 		}
 		catch (GroovePrologException e)
 		{
+			try
+			{
+				userOutput.flush();
+			}
+			catch (IOException e1)
+			{}
 			StringWriter sw = new StringWriter();
 			e.printStackTrace(new PrintWriter(sw));
 			results.append(sw.toString());
@@ -335,6 +346,12 @@ public class PrologEditor extends JPanel
 		}
 		catch (GroovePrologException e)
 		{
+			try
+			{
+				userOutput.flush();
+			}
+			catch (IOException e1)
+			{}
 			StringWriter sw = new StringWriter();
 			e.printStackTrace(new PrintWriter(sw));
 			results.append(sw.toString());
@@ -346,6 +363,12 @@ public class PrologEditor extends JPanel
 	 */
 	protected void processResults(QueryResult queryResult)
 	{
+		try
+		{
+			userOutput.flush();
+		}
+		catch (IOException e)
+		{}
 		if (queryResult == null)
 		{
 			return;
@@ -384,5 +407,48 @@ public class PrologEditor extends JPanel
 		nextResultBtn.setVisible(false);
 		results.setText("");
 		ensureProlog();
+	}
+
+	static class JTextAreaOutputStream extends OutputStream
+	{
+		JTextArea dest;
+
+		int[] buffer = new int[1024];
+		int pos = 0;
+
+		JTextAreaOutputStream(JTextArea toArea)
+		{
+			dest = toArea;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see java.io.OutputStream#write(int)
+		 */
+		@Override
+		public void write(int arg0) throws IOException
+		{
+			buffer[pos++] = arg0;
+			if (pos >= buffer.length)
+			{
+				flush();
+			}
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see java.io.OutputStream#flush()
+		 */
+		@Override
+		public void flush() throws IOException
+		{
+			if (pos == 0)
+			{
+				return;
+			}
+			dest.append(new String(buffer, 0, pos));
+			buffer = new int[1024];
+			pos = 0;
+		}
 	}
 }

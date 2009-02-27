@@ -15,6 +15,12 @@
 % License along with this library; if not, write to the Free Software
 % Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
+% Documentation reading guide:
+% + 	The argument shall be instantiated.
+% ? 	The argument shall be instantiated or a variable.
+% @ 	The argument shall remain unaltered.
+% - 	The argument shall be a variable that will be instantiated
+
 :-ensure_loaded(resource('/groove/prolog/builtin/groove.graph.pro')).
 :-ensure_loaded(resource('/groove/prolog/builtin/groove.lts.pro')).
 :-ensure_loaded(resource('/groove/prolog/builtin/groove.trans.pro')).
