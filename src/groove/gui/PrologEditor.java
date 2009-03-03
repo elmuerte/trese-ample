@@ -375,9 +375,18 @@ public class PrologEditor extends JPanel
 
 	public void executeQuery(String queryString)
 	{
-		if (queryString == null || queryString.length() == 0)
+		if (queryString == null)
 		{
 			return;
+		}
+		queryString = queryString.trim();
+		if (queryString.length() == 0)
+		{
+			return;
+		}
+		if (queryString.endsWith("."))
+		{
+			queryString = queryString.substring(0, queryString.length() - 1);
 		}
 		results.setText("?- " + queryString + "\n");
 

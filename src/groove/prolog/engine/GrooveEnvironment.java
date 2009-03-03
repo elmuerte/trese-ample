@@ -44,7 +44,7 @@ public class GrooveEnvironment extends Environment
 	{
 		throw new PrologException(new CompoundTerm(PrologException.errorTag, new CompoundTerm(CompoundTermTag.get(
 				"system_error", 1), GrooveEnvironment.NO_GROOVE_ENV, PrologException.errorAtom),
-				PrologException.errorAtom));
+				PrologException.errorAtom), null);
 	}
 
 	protected GrooveState grooveState;

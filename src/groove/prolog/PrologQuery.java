@@ -380,7 +380,8 @@ public class PrologQuery
 		 */
 		public boolean isLastResult()
 		{
-			return returnValue == QueryReturnValue.SUCCESS_LAST || returnValue == QueryReturnValue.FAIL;
+			return returnValue == QueryReturnValue.SUCCESS_LAST || returnValue == QueryReturnValue.FAIL
+					|| returnValue == QueryReturnValue.HALT;
 		}
 
 		/*
