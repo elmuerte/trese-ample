@@ -42,7 +42,11 @@ public enum QueryReturnValue
 	/**
 	 * The query faild
 	 */
-	FAIL;
+	FAIL,
+	/**
+	 * The interpreter was halted
+	 */
+	HALT;
 
 	/**
 	 * Return the correct enum value based on the PrologCode constants
@@ -60,6 +64,8 @@ public enum QueryReturnValue
 				return SUCCESS;
 			case PrologCode.SUCCESS_LAST:
 				return SUCCESS_LAST;
+			case PrologCode.HALT:
+				return HALT;
 		}
 		throw new IllegalArgumentException(String.format("Unknown return value %d", value));
 	}

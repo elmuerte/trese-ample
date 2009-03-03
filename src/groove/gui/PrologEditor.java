@@ -483,6 +483,9 @@ public class PrologEditor extends JPanel
 			case FAIL:
 				results.append("No\n");
 				break;
+			case HALT:
+				results.append("Interpreter was halted\n");
+				break;
 			default:
 				results.append(String.format("Unexpected return value: %s", prolog.lastReturnValue().toString()));
 		}
