@@ -248,7 +248,8 @@ public class PrologQuery
 		}
 		currentResult.setReturnValue(QueryReturnValue.fromInt(rc));
 		currentResult.setExecutionTime(stopTime - startTime);
-		if (currentResult.getReturnValue() != QueryReturnValue.FAIL)
+		if (currentResult.getReturnValue() != QueryReturnValue.FAIL
+				&& currentResult.getReturnValue() != QueryReturnValue.HALT)
 		{
 			currentResult.setVariables(TermConverter.convert(currentResult.rawVars));
 		}
