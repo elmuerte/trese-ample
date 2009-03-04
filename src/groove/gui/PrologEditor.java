@@ -73,6 +73,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
@@ -308,6 +309,7 @@ public class PrologEditor extends JPanel
 		mainPane.add(splitPane, BorderLayout.CENTER);
 
 		predRootNode = new DefaultMutableTreeNode("Predicates", true);
+		predRootNode.add(new DefaultMutableTreeNode("Press 'consult' to load the predicates"));
 		predicateTree = new JTree(predRootNode);
 		predicateTree.setRootVisible(false);
 		predicateTree.setShowsRootHandles(true);
@@ -365,6 +367,10 @@ public class PrologEditor extends JPanel
 			public void mouseReleased(MouseEvent e)
 			{}
 		});
+		DefaultTreeCellRenderer renderer = (DefaultTreeCellRenderer) predicateTree.getCellRenderer();
+		renderer.setLeafIcon(null);
+		renderer.setClosedIcon(null);
+		renderer.setOpenIcon(null);
 
 		JSplitPane sp2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		sp2.setResizeWeight(0.3);
