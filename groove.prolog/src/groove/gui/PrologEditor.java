@@ -22,6 +22,11 @@ import gnu.prolog.database.Module;
 import gnu.prolog.term.AtomTerm;
 import gnu.prolog.term.CompoundTermTag;
 import gnu.prolog.vm.PrologException;
+import groove.explore.Scenario;
+import groove.explore.ScenarioFactory;
+import groove.explore.result.Acceptor;
+import groove.explore.result.PrologCondition;
+import groove.explore.strategy.ConditionalBFSStrategy;
 import groove.io.ExtensionFilter;
 import groove.io.GrooveFileChooser;
 import groove.lts.GTS;
@@ -39,6 +44,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
@@ -54,9 +60,11 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Map.Entry;
 
+import javax.swing.Action;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -64,7 +72,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
@@ -95,8 +102,9 @@ public class PrologEditor extends JPanel
 	protected PrologQuery prolog;
 	protected QueryMode mode = QueryMode.GRAPH_STATE;
 	protected boolean doConsultUserCode = false;
+	protected PrologCondition prologCondition;
 
-	protected JTextField query;
+	protected JComboBox query;
 	protected JTextPane editor;
 	protected JTextArea results;
 	protected JButton nextResultBtn;
@@ -148,15 +156,19 @@ public class PrologEditor extends JPanel
 		modeSelection.add(graphButton);
 		modeSelection.add(ltsButton);
 
-		query = new JTextField();
+		query = new JComboBox();
 		query.setFont(editFont);
-		query.setText("");
+		query.setEditable(true);
 		query.setEditable(true);
 		query.setEnabled(true);
 		query.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0)
+			public void actionPerformed(ActionEvent e)
 			{
-				executeQuery();
+				System.out.println(e.getActionCommand());
+				if ("comboBoxEdited".equals(e.getActionCommand()))
+				{
+					executeQuery();
+				}
 			}
 		});
 
@@ -259,6 +271,10 @@ public class PrologEditor extends JPanel
 		});
 		toolBar.add(consultBtn);
 
+		JButton exploreBtn = new JButton(createExploreAction());
+		exploreBtn.setToolTipText("Explore the LTL for each state which has a result with the given query.");
+		toolBar.add(exploreBtn);
+
 		userCodeConsulted = new JLabel("");
 		userCodeConsulted.setFont(userCodeConsulted.getFont().deriveFont(Font.BOLD));
 		toolBar.addSeparator();
@@ -329,7 +345,7 @@ public class PrologEditor extends JPanel
 							if (o instanceof CompoundTermTag)
 							{
 								CompoundTermTag tag = (CompoundTermTag) o;
-								StringBuilder sb = new StringBuilder(query.getText());
+								StringBuilder sb = new StringBuilder(query.getSelectedItem().toString());
 								if (sb.length() > 0 && !sb.toString().endsWith(","))
 								{
 									sb.append(',');
@@ -348,7 +364,7 @@ public class PrologEditor extends JPanel
 									}
 									sb.append(')');
 								}
-								query.setText(sb.toString());
+								query.setSelectedItem(sb.toString());
 							}
 						}
 					}
@@ -384,6 +400,59 @@ public class PrologEditor extends JPanel
 
 		statusBar = new JLabel(" ");
 		add(statusBar, BorderLayout.SOUTH);
+	}
+
+	/**
+	 * @return
+	 */
+	protected Action createExploreAction()
+	{
+		ConditionalBFSStrategy strat = new ConditionalBFSStrategy();
+		prologCondition = new PrologCondition();
+		strat.setExploreCondition(prologCondition);
+		Scenario scen = ScenarioFactory.getScenario(strat, new Acceptor(),
+				"Explore using the current query to accept states.", "Explore");
+		final Action innerAct = sim.createLaunchScenarioAction(scen);
+		Action act = new Action() {
+
+			public void addPropertyChangeListener(PropertyChangeListener listener)
+			{
+				innerAct.addPropertyChangeListener(listener);
+			}
+
+			public Object getValue(String key)
+			{
+				return innerAct.getValue(key);
+			}
+
+			public boolean isEnabled()
+			{
+				return innerAct.isEnabled();
+			}
+
+			public void putValue(String key, Object value)
+			{
+				innerAct.putValue(key, value);
+			}
+
+			public void removePropertyChangeListener(PropertyChangeListener listener)
+			{
+				innerAct.removePropertyChangeListener(listener);
+			}
+
+			public void setEnabled(boolean b)
+			{
+				innerAct.setEnabled(b);
+			}
+
+			public void actionPerformed(ActionEvent e)
+			{
+				prologCondition.setCondition(query.getSelectedItem().toString());
+				prologCondition.setUsercode(editor.getText());
+				innerAct.actionPerformed(e);
+			}
+		};
+		return act;
 	}
 
 	/**
@@ -428,7 +497,7 @@ public class PrologEditor extends JPanel
 
 	protected void executeQuery()
 	{
-		executeQuery(query.getText());
+		executeQuery(query.getSelectedItem().toString());
 	}
 
 	protected boolean ensureProlog()
@@ -533,6 +602,10 @@ public class PrologEditor extends JPanel
 		if (queryString.endsWith("."))
 		{
 			queryString = queryString.substring(0, queryString.length() - 1);
+		}
+		if (query.getSelectedIndex() == -1)
+		{
+			query.insertItemAt(queryString, 0);
 		}
 		results.setText("?- " + queryString + "\n");
 
