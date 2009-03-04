@@ -24,6 +24,7 @@ import gnu.prolog.io.TermReader;
 import gnu.prolog.term.AtomTerm;
 import gnu.prolog.term.CompoundTerm;
 import gnu.prolog.term.Term;
+import gnu.prolog.vm.Environment;
 import gnu.prolog.vm.Interpreter;
 import gnu.prolog.vm.PrologException;
 import gnu.prolog.vm.Interpreter.Goal;
@@ -410,5 +411,14 @@ public class PrologQuery
 		{
 			return query;
 		}
+	}
+
+	public Environment getEnvironment() throws GroovePrologLoadingException
+	{
+		if (!initialized)
+		{
+			init();
+		}
+		return env;
 	}
 }

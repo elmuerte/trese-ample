@@ -18,6 +18,10 @@
  */
 package groove.gui;
 
+import gnu.prolog.database.Module;
+import gnu.prolog.term.AtomTerm;
+import gnu.prolog.term.CompoundTermTag;
+import gnu.prolog.vm.PrologException;
 import groove.io.ExtensionFilter;
 import groove.io.GrooveFileChooser;
 import groove.lts.GTS;
@@ -33,6 +37,8 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
@@ -41,6 +47,11 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.Map.Entry;
 
 import javax.swing.ButtonGroup;
@@ -57,9 +68,13 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
+import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 
 /**
  * 
@@ -68,9 +83,6 @@ import javax.swing.event.DocumentListener;
  */
 public class PrologEditor extends JPanel
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1728208313657610091L;
 
 	public enum QueryMode
@@ -92,6 +104,8 @@ public class PrologEditor extends JPanel
 	protected JLabel statusBar;
 	protected OutputStream userOutput;
 	protected JFileChooser prologFileChooser;
+	protected JTree predicateTree;
+	protected DefaultMutableTreeNode predRootNode;
 
 	public PrologEditor(Simulator simulator)
 	{
@@ -283,13 +297,84 @@ public class PrologEditor extends JPanel
 		resultsPane.add(nextResultBtn, BorderLayout.SOUTH);
 
 		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		splitPane.setBorder(null);
 		splitPane.setOneTouchExpandable(true);
 		splitPane.setTopComponent(editorPane);
 		splitPane.setBottomComponent(resultsPane);
 		splitPane.setDividerLocation(0);
 
-		add(queryPane, BorderLayout.NORTH);
-		add(splitPane, BorderLayout.CENTER);
+		JPanel mainPane = new JPanel(new BorderLayout());
+		mainPane.add(queryPane, BorderLayout.NORTH);
+		mainPane.add(splitPane, BorderLayout.CENTER);
+
+		predRootNode = new DefaultMutableTreeNode("Predicates", true);
+		predicateTree = new JTree(predRootNode);
+		predicateTree.setRootVisible(false);
+		predicateTree.setShowsRootHandles(true);
+		predicateTree.addMouseListener(new MouseListener() {
+
+			public void mouseClicked(MouseEvent e)
+			{
+				if (e.getClickCount() > 1 && e.getButton() == MouseEvent.BUTTON1)
+				{
+					TreePath sel = predicateTree.getSelectionPath();
+					if (sel != null)
+					{
+						Object o = sel.getLastPathComponent();
+						if (o instanceof DefaultMutableTreeNode)
+						{
+							o = ((DefaultMutableTreeNode) o).getUserObject();
+							if (o instanceof CompoundTermTag)
+							{
+								CompoundTermTag tag = (CompoundTermTag) o;
+								StringBuilder sb = new StringBuilder(query.getText());
+								if (sb.length() > 0 && !sb.toString().endsWith(","))
+								{
+									sb.append(',');
+								}
+								sb.append(tag.functor.value);
+								if (tag.arity > 0)
+								{
+									sb.append('(');
+									for (int i = 0; i < tag.arity; i++)
+									{
+										if (i > 0)
+										{
+											sb.append(',');
+										}
+										sb.append('_');
+									}
+									sb.append(')');
+								}
+								query.setText(sb.toString());
+							}
+						}
+					}
+				}
+			}
+
+			public void mouseEntered(MouseEvent e)
+			{}
+
+			public void mouseExited(MouseEvent e)
+			{}
+
+			public void mousePressed(MouseEvent e)
+			{}
+
+			public void mouseReleased(MouseEvent e)
+			{}
+		});
+
+		JSplitPane sp2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+		sp2.setResizeWeight(0.3);
+		sp2.setBorder(null);
+		sp2.setOneTouchExpandable(true);
+		sp2.setRightComponent(new JScrollPane(predicateTree));
+		sp2.setLeftComponent(mainPane);
+		sp2.setDividerLocation(Integer.MAX_VALUE);
+
+		add(sp2, BorderLayout.CENTER);
 
 		statusBar = new JLabel(" ");
 		add(statusBar, BorderLayout.SOUTH);
@@ -369,8 +454,63 @@ public class PrologEditor extends JPanel
 					}
 				}
 			}
+			try
+			{
+				updatePredicateTree(prolog.getEnvironment().getModule());
+			}
+			catch (GroovePrologLoadingException e)
+			{
+				results.append("\nError loading the prolog engine:\n");
+				results.append(e.getMessage());
+				prolog = null;
+				return false;
+			}
 		}
 		return true;
+	}
+
+	/**
+	 * @param module
+	 */
+	protected void updatePredicateTree(Module module)
+	{
+		predRootNode.removeAllChildren();
+		Map<AtomTerm, DefaultMutableTreeNode> nodes = new HashMap<AtomTerm, DefaultMutableTreeNode>();
+		SortedSet<CompoundTermTag> tags = new TreeSet<CompoundTermTag>(new Comparator<CompoundTermTag>() {
+
+			public int compare(CompoundTermTag o1, CompoundTermTag o2)
+			{
+				int rc = o1.functor.value.compareTo(o2.functor.value);
+				if (rc == 0)
+				{
+					rc = o1.arity - o2.arity;
+				}
+				return rc;
+			}
+		});
+		tags.addAll(module.getPredicateTags());
+		for (CompoundTermTag tag : tags)
+		{
+			DefaultMutableTreeNode baseNode = nodes.get(tag.functor);
+			if (baseNode == null)
+			{
+				baseNode = new DefaultMutableTreeNode(tag);
+				predRootNode.add(baseNode);
+				nodes.put(tag.functor, baseNode);
+			}
+			else
+			{
+				if (baseNode.getChildCount() == 0)
+				{
+					baseNode.add(new DefaultMutableTreeNode(baseNode.getUserObject()));
+					baseNode.setUserObject(tag.functor.value);
+				}
+				DefaultMutableTreeNode predNode = new DefaultMutableTreeNode(tag);
+				baseNode.add(predNode);
+			}
+		}
+		((DefaultTreeModel) predicateTree.getModel()).reload();
+		predicateTree.expandPath(new TreePath(predRootNode.getPath()));
 	}
 
 	public void executeQuery(String queryString)
@@ -429,9 +569,16 @@ public class PrologEditor extends JPanel
 			}
 			catch (IOException e1)
 			{}
-			StringWriter sw = new StringWriter();
-			e.printStackTrace(new PrintWriter(sw));
-			results.append(sw.toString());
+			if (e.getCause() instanceof PrologException)
+			{
+				results.append(e.getCause().getMessage());
+			}
+			else
+			{
+				StringWriter sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				results.append(sw.toString());
+			}
 		}
 	}
 
