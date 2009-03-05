@@ -199,3 +199,23 @@ label_edge_set(L,E):-graph(G),label_edge_set(G,L,E).
 % @param the label/Atom
 % @see groove.graph.Edge#label()
 :-build_in(edge_label/2,'groove.prolog.builtin.graph.Predicate_edge_label').
+
+% Helper predicate, stop processing when the start node is reached
+node_path(Graph,From,From,[]).
+
+% Get the path from one node to an other
+% node_path(+Graph,+Node,+Node,?Path)
+% @param the graph that contains the nodes
+% @param the starting node
+% @param the destination node
+% @param list of edges that define the path
+node_path(Graph,From,To,[E|Path]):-
+	node_out_edge(Graph,From,E),
+	\+ member(E,Path),
+	edge_opposite(E,N),
+	From \= N, % to abolish self edges
+	node_path(Graph,N,To,Path).
+
+% Short hand to operate on the current graph
+node_path(From,To,Path):-
+	graph(G),node_path(G,From,To,Path).

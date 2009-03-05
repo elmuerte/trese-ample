@@ -109,7 +109,8 @@ public final class TermConverter
 					}
 					else
 					{
-						// something weird?
+						// anonymous list tail
+						compound.add(SpecialValue.ANONUMOUS_LIST_TAIL);
 						break;
 					}
 				}
@@ -119,4 +120,13 @@ public final class TermConverter
 		return null;
 	}
 
+	/**
+	 * A special result value
+	 * 
+	 * @author Michiel Hendriks
+	 */
+	public static enum SpecialValue
+	{
+		ANONUMOUS_LIST_TAIL
+	}
 }
