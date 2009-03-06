@@ -110,7 +110,7 @@ public final class TermConverter
 					else
 					{
 						// anonymous list tail
-						compound.add(SpecialValue.ANONUMOUS_LIST_TAIL);
+						compound.add(SpecialValue.ANONYMOUS_LIST_TAIL);
 						break;
 					}
 				}
@@ -127,6 +127,6 @@ public final class TermConverter
 	 */
 	public static enum SpecialValue
 	{
-		ANONUMOUS_LIST_TAIL
+		ANONYMOUS_LIST_TAIL
 	}
 }
