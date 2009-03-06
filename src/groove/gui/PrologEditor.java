@@ -164,7 +164,6 @@ public class PrologEditor extends JPanel
 		query.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				System.out.println(e.getActionCommand());
 				if ("comboBoxEdited".equals(e.getActionCommand()))
 				{
 					executeQuery();
@@ -642,23 +641,34 @@ public class PrologEditor extends JPanel
 		}
 		catch (GroovePrologException e)
 		{
-			try
-			{
-				userOutput.flush();
-			}
-			catch (IOException e1)
-			{}
-			if (e.getCause() instanceof PrologException)
+			handelPrologException(e);
+		}
+	}
+
+	protected void handelPrologException(Throwable e)
+	{
+		try
+		{
+			userOutput.flush();
+		}
+		catch (IOException e1)
+		{}
+		if (e.getCause() instanceof PrologException)
+		{
+			PrologException pe = (PrologException) e.getCause();
+			if (pe.getCause() == null)
 			{
 				results.append(e.getCause().getMessage());
+				return;
 			}
 			else
 			{
-				StringWriter sw = new StringWriter();
-				e.printStackTrace(new PrintWriter(sw));
-				results.append(sw.toString());
+				e = pe;
 			}
 		}
+		StringWriter sw = new StringWriter();
+		e.printStackTrace(new PrintWriter(sw));
+		results.append(sw.toString());
 	}
 
 	public void nextResults()
@@ -674,15 +684,7 @@ public class PrologEditor extends JPanel
 		}
 		catch (GroovePrologException e)
 		{
-			try
-			{
-				userOutput.flush();
-			}
-			catch (IOException e1)
-			{}
-			StringWriter sw = new StringWriter();
-			e.printStackTrace(new PrintWriter(sw));
-			results.append(sw.toString());
+			handelPrologException(e);
 		}
 	}
 

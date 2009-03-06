@@ -201,7 +201,15 @@ label_edge_set(L,E):-graph(G),label_edge_set(G,L,E).
 :-build_in(edge_label/2,'groove.prolog.builtin.graph.Predicate_edge_label').
 
 % Helper predicate, stop processing when the start node is reached
-node_path(Graph,From,From,[]).
+node_path(Graph,From,From,[],_).
+
+% Internal predicate which odes all the processing
+node_path(Graph,From,To,[E|Path],Visited):-
+	node_out_edge(Graph,From,E),
+	\+ member(E,Visited),
+	edge_opposite(E,N),
+	From \= N, % to abolish self edges
+	node_path(Graph,N,To,Path,[E|Visited]).
 
 % Get the path from one node to an other
 % node_path(+Graph,+Node,+Node,?Path)
@@ -209,13 +217,9 @@ node_path(Graph,From,From,[]).
 % @param the starting node
 % @param the destination node
 % @param list of edges that define the path
-node_path(Graph,From,To,[E|Path]):-
-	node_out_edge(Graph,From,E),
-	\+ member(E,Path),
-	edge_opposite(E,N),
-	From \= N, % to abolish self edges
-	node_path(Graph,N,To,Path).
+node_path(Graph,From,To,Path):-
+	node_path(Graph,From,To,Path,[]).
 
 % Short hand to operate on the current graph
 node_path(From,To,Path):-
-	graph(G),node_path(G,From,To,Path).
+	graph(G),node_path(G,From,To,Path,[]).
