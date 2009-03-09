@@ -156,6 +156,11 @@ public class PrologEditor extends JPanel
 		modeSelection.add(graphButton);
 		modeSelection.add(ltsButton);
 
+		JButton exploreBtn = new JButton(createExploreAction());
+		exploreBtn.setToolTipText("Explore the LTL for each state which has a result with the given query.");
+		toolBar.addSeparator();
+		toolBar.add(exploreBtn);
+
 		query = new JComboBox();
 		query.setFont(editFont);
 		query.setEditable(true);
@@ -269,10 +274,6 @@ public class PrologEditor extends JPanel
 			}
 		});
 		toolBar.add(consultBtn);
-
-		JButton exploreBtn = new JButton(createExploreAction());
-		exploreBtn.setToolTipText("Explore the LTL for each state which has a result with the given query.");
-		toolBar.add(exploreBtn);
 
 		userCodeConsulted = new JLabel("");
 		userCodeConsulted.setFont(userCodeConsulted.getFont().deriveFont(Font.BOLD));
@@ -446,6 +447,10 @@ public class PrologEditor extends JPanel
 
 			public void actionPerformed(ActionEvent e)
 			{
+				if (query.getSelectedItem() == null)
+				{
+					return;
+				}
 				prologCondition.setCondition(query.getSelectedItem().toString());
 				prologCondition.setUsercode(editor.getText());
 				innerAct.actionPerformed(e);
