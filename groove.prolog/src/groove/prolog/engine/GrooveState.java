@@ -22,6 +22,10 @@ import groove.graph.Graph;
 import groove.graph.GraphShape;
 import groove.lts.GTS;
 import groove.lts.GraphState;
+import groove.trans.RuleEvent;
+
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * The current state in groove.
@@ -33,6 +37,7 @@ public class GrooveState
 	protected GraphShape graph;
 	protected GraphState state;
 	protected GTS gts;
+	protected Set<RuleEvent> ruleEvents;
 
 	public GrooveState(Graph forGraph)
 	{
@@ -57,6 +62,15 @@ public class GrooveState
 	}
 
 	/**
+	 * @param startState
+	 * @param matches
+	 */
+	public GrooveState(GraphState startState, Set<RuleEvent> matches)
+	{
+		this(startState);
+	}
+
+	/**
 	 * @return the graph
 	 */
 	public GraphShape getGraph()
@@ -78,5 +92,17 @@ public class GrooveState
 	public GTS getGts()
 	{
 		return gts;
+	}
+
+	public Set<RuleEvent> getRuleEvents()
+	{
+		if (ruleEvents == null)
+		{
+			return Collections.emptySet();
+		}
+		else
+		{
+			return Collections.unmodifiableSet(ruleEvents);
+		}
 	}
 }

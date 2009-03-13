@@ -19,8 +19,11 @@
 package groove.explore.strategy;
 
 import groove.explore.util.ExploreCache;
+import groove.prolog.GroovePrologException;
 import groove.prolog.GroovePrologLoadingException;
 import groove.prolog.PrologQuery;
+import groove.prolog.QueryResult;
+import groove.prolog.engine.GrooveState;
 import groove.trans.RuleEvent;
 
 import java.io.StringReader;
@@ -104,14 +107,36 @@ public class ExploreStatePrologStrategy extends AbstractStrategy implements Prol
 		{
 			initializeProlog();
 		}
-		// TODO: call prolog engine to filter the list
-		// - set the prolog state
-		// - retrieve the update list of events
+		prolog.setGrooveState(new GrooveState(startState(), matches));
+		QueryResult result;
+		try
+		{
+			result = prolog.newQuery(query);
+		}
+		catch (GroovePrologException e)
+		{
+			// TODO make nice
+			e.printStackTrace();
+			setClosed(startState());
+			return false;
+		}
+		switch (result.getReturnValue())
+		{
+			case FAIL:
+			case HALT:
+				matches.clear();
+				break;
+			case SUCCESS:
+			case SUCCESS_LAST:
+				matches.clear();
+				// get the results
+				break;
+			case NOT_RUN:
+			default:
+				matches.clear();
+				// not possble
+		}
 
-		// done when setClosed is called
-		// if (!matchesIter.hasNext()) {
-		// this.getGTS().setFinal(this.startState());
-		// }
 		for (RuleEvent re : matches)
 		{
 			getGenerator().applyMatch(startState(), re, cache);
