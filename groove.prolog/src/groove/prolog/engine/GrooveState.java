@@ -68,6 +68,7 @@ public class GrooveState
 	public GrooveState(GraphState startState, Set<RuleEvent> matches)
 	{
 		this(startState);
+		ruleEvents = matches;
 	}
 
 	/**

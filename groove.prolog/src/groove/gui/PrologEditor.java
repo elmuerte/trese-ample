@@ -27,6 +27,7 @@ import groove.explore.ScenarioFactory;
 import groove.explore.result.Acceptor;
 import groove.explore.result.PrologCondition;
 import groove.explore.strategy.ConditionalBFSStrategy;
+import groove.explore.strategy.ExploreStatePrologStrategy;
 import groove.io.ExtensionFilter;
 import groove.io.GrooveFileChooser;
 import groove.lts.GTS;
@@ -39,9 +40,13 @@ import groove.prolog.engine.GrooveState;
 import groove.util.Groove;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.beans.PropertyChangeListener;
@@ -67,8 +72,10 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
@@ -79,6 +86,7 @@ import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.JTextComponent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
@@ -105,6 +113,7 @@ public class PrologEditor extends JPanel
 	protected PrologCondition prologCondition;
 
 	protected JComboBox query;
+	protected JTextComponent queryEdit;
 	protected JTextPane editor;
 	protected JTextArea results;
 	protected JButton nextResultBtn;
@@ -156,20 +165,55 @@ public class PrologEditor extends JPanel
 		modeSelection.add(graphButton);
 		modeSelection.add(ltsButton);
 
-		JButton exploreBtn = new JButton(createExploreAction());
+		final JPopupMenu explorePopup = new JPopupMenu();
+		explorePopup.add(new JMenuItem(createExploreGraphStateAction()));
+		explorePopup.add(new JMenuItem(createExploreRuleEventsAction()));
+
+		JButton exploreBtn = new JButton("Explore");
 		exploreBtn.setToolTipText("Explore the LTL for each state which has a result with the given query.");
+		exploreBtn.addMouseListener(new MouseAdapter() {
+			void postToolbarMenu(MouseEvent e)
+			{
+				if (e.isPopupTrigger())
+				{
+					Component c = (Component) e.getSource();
+					explorePopup.show(c, 0, c.getHeight());
+				}
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e)
+			{
+				postToolbarMenu(e);
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e)
+			{
+				postToolbarMenu(e);
+			}
+		});
+		exploreBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				Component c = (Component) e.getSource();
+				explorePopup.show(c, 0, c.getHeight());
+			}
+		});
+
 		toolBar.addSeparator();
 		toolBar.add(exploreBtn);
 
 		query = new JComboBox();
 		query.setFont(editFont);
 		query.setEditable(true);
-		query.setEditable(true);
 		query.setEnabled(true);
-		query.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e)
+		queryEdit = (JTextComponent) query.getEditor().getEditorComponent();
+		queryEdit.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e)
 			{
-				if ("comboBoxEdited".equals(e.getActionCommand()))
+				if (e.getKeyCode() == KeyEvent.VK_ENTER)
 				{
 					executeQuery();
 				}
@@ -405,16 +449,13 @@ public class PrologEditor extends JPanel
 	/**
 	 * @return
 	 */
-	protected Action createExploreAction()
+	protected Action createExploreRuleEventsAction()
 	{
-		ConditionalBFSStrategy strat = new ConditionalBFSStrategy();
-		prologCondition = new PrologCondition();
-		strat.setExploreCondition(prologCondition);
-		Scenario scen = ScenarioFactory.getScenario(strat, new Acceptor(),
-				"Explore using the current query to accept states.", "Explore");
+		final ExploreStatePrologStrategy strat = new ExploreStatePrologStrategy();
+		Scenario scen = ScenarioFactory.getScenario(strat, new Acceptor(), "Explore by accepting graph states.",
+				"Accept Rule Events Exploration");
 		final Action innerAct = sim.createLaunchScenarioAction(scen);
 		Action act = new Action() {
-
 			public void addPropertyChangeListener(PropertyChangeListener listener)
 			{
 				innerAct.addPropertyChangeListener(listener);
@@ -447,11 +488,74 @@ public class PrologEditor extends JPanel
 
 			public void actionPerformed(ActionEvent e)
 			{
-				if (query.getSelectedItem() == null)
+				if (queryEdit.getText().length() == 0)
 				{
 					return;
 				}
-				prologCondition.setCondition(query.getSelectedItem().toString());
+				if (sim.getCurrentState() == null)
+				{
+					return;
+				}
+				strat.setPrologQuery(null, queryEdit.getText(), editor.getText());
+				innerAct.actionPerformed(e);
+			}
+		};
+		return act;
+	}
+
+	/**
+	 * @return
+	 */
+	protected Action createExploreGraphStateAction()
+	{
+		ConditionalBFSStrategy strat = new ConditionalBFSStrategy();
+		prologCondition = new PrologCondition();
+		strat.setExploreCondition(prologCondition);
+		Scenario scen = ScenarioFactory.getScenario(strat, new Acceptor(), "Explore by accepting graph states.",
+				"Accept State Exploration");
+		final Action innerAct = sim.createLaunchScenarioAction(scen);
+		Action act = new Action() {
+			public void addPropertyChangeListener(PropertyChangeListener listener)
+			{
+				innerAct.addPropertyChangeListener(listener);
+			}
+
+			public Object getValue(String key)
+			{
+				return innerAct.getValue(key);
+			}
+
+			public boolean isEnabled()
+			{
+				return innerAct.isEnabled();
+			}
+
+			public void putValue(String key, Object value)
+			{
+				innerAct.putValue(key, value);
+			}
+
+			public void removePropertyChangeListener(PropertyChangeListener listener)
+			{
+				innerAct.removePropertyChangeListener(listener);
+			}
+
+			public void setEnabled(boolean b)
+			{
+				innerAct.setEnabled(b);
+			}
+
+			public void actionPerformed(ActionEvent e)
+			{
+				if (queryEdit.getText().length() == 0)
+				{
+					return;
+				}
+				if (sim.getCurrentState() == null)
+				{
+					return;
+				}
+				prologCondition.setCondition(queryEdit.getText());
 				prologCondition.setUsercode(editor.getText());
 				innerAct.actionPerformed(e);
 			}
@@ -501,7 +605,7 @@ public class PrologEditor extends JPanel
 
 	protected void executeQuery()
 	{
-		executeQuery(query.getSelectedItem().toString());
+		executeQuery(queryEdit.getText());
 	}
 
 	protected boolean ensureProlog()
@@ -607,10 +711,13 @@ public class PrologEditor extends JPanel
 		{
 			queryString = queryString.substring(0, queryString.length() - 1);
 		}
-		if (query.getSelectedIndex() == -1)
-		{
-			query.insertItemAt(queryString, 0);
-		}
+		// if (query.getSelectedIndex() == -1)
+		// {
+		// query.insertItemAt(queryString, 0);
+		// }
+		query.removeItem(queryString);
+		query.insertItemAt(queryString, 0);
+		query.setSelectedIndex(0);
 		results.setText("?- " + queryString + "\n");
 
 		if (!ensureProlog())

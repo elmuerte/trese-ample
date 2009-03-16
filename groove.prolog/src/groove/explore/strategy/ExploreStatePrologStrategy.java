@@ -19,6 +19,9 @@
 package groove.explore.strategy;
 
 import groove.explore.util.ExploreCache;
+import groove.explore.util.RandomNewStateChooser;
+import groove.lts.GTS;
+import groove.lts.GraphState;
 import groove.prolog.GroovePrologException;
 import groove.prolog.GroovePrologLoadingException;
 import groove.prolog.PrologQuery;
@@ -27,6 +30,7 @@ import groove.prolog.engine.GrooveState;
 import groove.trans.RuleEvent;
 
 import java.io.StringReader;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -47,8 +51,22 @@ public class ExploreStatePrologStrategy extends AbstractStrategy implements Prol
 
 	protected PrologQuery prolog;
 
+	protected final RandomNewStateChooser collector = new RandomNewStateChooser();
+
 	public ExploreStatePrologStrategy()
 	{}
+
+	/*
+	 * (non-Javadoc)
+	 * @see groove.explore.strategy.AbstractStrategy#prepare(groove.lts.GTS,
+	 * groove.lts.GraphState)
+	 */
+	@Override
+	public void prepare(GTS gts, GraphState state)
+	{
+		super.prepare(gts, state);
+		gts.addGraphListener(collector);
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -57,7 +75,19 @@ public class ExploreStatePrologStrategy extends AbstractStrategy implements Prol
 	@Override
 	protected void updateAtState()
 	{
-	// unused
+		// TODO pick the first state
+		if (collector.pickRandomNewState() != null)
+		{
+			atState = collector.pickRandomNewState();
+			return;
+		}
+		// backtracking
+		GraphState s = atState;
+		do
+		{
+			s = parentOf(s);
+			atState = s == null ? null : getFirstOpenSuccessor(s);
+		} while (s != null && atState == null);
 	}
 
 	/*
@@ -78,6 +108,10 @@ public class ExploreStatePrologStrategy extends AbstractStrategy implements Prol
 	 */
 	public boolean setPrologQuery(String resultTerm, String query, String usercode)
 	{
+		if (resultTerm == null || resultTerm.length() == 0)
+		{
+			resultTerm = "Result";
+		}
 		this.resultTerm = resultTerm;
 		this.query = query;
 		this.usercode = usercode;
@@ -90,61 +124,85 @@ public class ExploreStatePrologStrategy extends AbstractStrategy implements Prol
 	 */
 	public boolean next()
 	{
-		if (!getGTS().isOpen(startState()))
+		if (getAtState() == null)
 		{
+			getGTS().removeGraphListener(collector);
 			return false;
 		}
 		// rule might have been interrupted
-		ExploreCache cache = getCache(true, false);
+		ExploreCache cache = getCache(false, false);
 		Iterator<RuleEvent> matchesIter = getMatchesIterator(cache);
+		collector.reset();
 		Set<RuleEvent> matches = new HashSet<RuleEvent>();
 		while (matchesIter.hasNext())
 		{
 			matches.add(matchesIter.next());
 		}
 
-		if (prolog == null)
+		if (query != null && query.length() > 0)
 		{
-			initializeProlog();
-		}
-		prolog.setGrooveState(new GrooveState(startState(), matches));
-		QueryResult result;
-		try
-		{
-			result = prolog.newQuery(query);
-		}
-		catch (GroovePrologException e)
-		{
-			// TODO make nice
-			e.printStackTrace();
-			setClosed(startState());
-			return false;
-		}
-		switch (result.getReturnValue())
-		{
-			case FAIL:
-			case HALT:
-				matches.clear();
-				break;
-			case SUCCESS:
-			case SUCCESS_LAST:
-				matches.clear();
-				// get the results
-				break;
-			case NOT_RUN:
-			default:
-				matches.clear();
-				// not possble
+			if (prolog == null)
+			{
+				initializeProlog();
+			}
+			prolog.setGrooveState(new GrooveState(getAtState(), matches));
+			QueryResult result;
+			try
+			{
+				result = prolog.newQuery(query);
+			}
+			catch (GroovePrologException e)
+			{
+				// TODO make nice
+				e.printStackTrace();
+				setClosed(startState());
+				return false;
+			}
+			switch (result.getReturnValue())
+			{
+				case FAIL:
+				case HALT:
+					matches.clear();
+					break;
+				case SUCCESS:
+				case SUCCESS_LAST:
+					matches.clear();
+					Object res = result.getVariables().get(resultTerm);
+					if (res instanceof Collection)
+					{
+						for (Object o : (Collection<?>) res)
+						{
+							if (o instanceof RuleEvent)
+							{
+								matches.add((RuleEvent) o);
+							}
+						}
+					}
+					else if (res instanceof RuleEvent)
+					{
+						matches.add((RuleEvent) res);
+					}
+					else
+					{
+						// nothing
+					}
+					break;
+				case NOT_RUN:
+				default:
+					matches.clear();
+					// not possble
+			}
 		}
 
 		for (RuleEvent re : matches)
 		{
-			getGenerator().applyMatch(startState(), re, cache);
+			getGenerator().applyMatch(getAtState(), re, cache);
 		}
 		// the current state has been fully explored
 		// therefore we can close it
-		setClosed(startState());
-		return false;
+		setClosed(getAtState());
+		updateAtState();
+		return true;
 	}
 
 	/**

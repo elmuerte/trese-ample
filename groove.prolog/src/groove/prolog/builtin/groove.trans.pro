@@ -27,6 +27,18 @@
 % is_ruleevent(@Rule)
 :-build_in(is_rule/1,'groove.prolog.builtin.trans.Predicate_is_rule').
 
+% Get the current rule events. This only returns results during exploration based
+% on selection of rule events. Otherwise it will simply fail.
+% ruleevent(?RuleEvent)
+% @param the rule event
+:-build_in(ruleevent/1,'groove.prolog.builtin.trans.Predicate_ruleevent').
+
+% Get the current rule events. This only returns results during exploration based
+% on selection of rule events. Otherwise it will simply return an empty set.
+% ruleevent_label(?RuleEventSet)
+% @param the rule event set
+:-build_in(ruleevent_set/1,'groove.prolog.builtin.trans.Predicate_ruleevent_set').
+
 % The label of a rule event
 % ruleevent_label(+RuleEvent,?Label)
 % @param the rule event
