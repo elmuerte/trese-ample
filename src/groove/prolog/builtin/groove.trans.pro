@@ -62,6 +62,13 @@
 :-build_in(ruleevent_match/3,'groove.prolog.builtin.trans.Predicate_ruleevent_match').
 ruleevent_match(RE,RM):-graphstate(GS),graphstate_graph(GS,G),ruleevent_match(RE,G,RM).
 
+% Fail if the ruleevents do not conflict
+% ruleevent_conflicts(+RuleEvent,+RuleEvent)
+% @param a rule event
+% @param a rule event
+% @see groove.trans.RuleEvent#conflicts(RuleEvent)
+:-build_in(ruleevent_conflicts/2, 'groove.prolog.builtin.trans.Predicate_ruleevent_conflicts').
+
 % Get all current rule matches
 rulematch(RM):-gts(GTS),graphstate(GS),graphstate_graph(GS,G),gts_match(GTS,GS,RE),ruleevent_match(RE,G,RM).
 
@@ -82,3 +89,32 @@ rulematch(RM):-gts(GTS),graphstate(GS),graphstate_graph(GS,G),gts_match(GTS,GS,R
 % @param the rulematch
 % @param the rule
 :-build_in(rulematch_rule/2,'groove.prolog.builtin.trans.Predicate_rulematch_rule').
+
+% The name of the rule
+% rule_name(+Rule, ?Name)
+% @param the rule
+% @param the name
+% @see groove.trans.Rule#getName()
+:-build_in(rule_name/2, 'groove.prolog.builtin.trans.Predicate_rule_name').
+
+% The priority of the rule
+% rule_priority(+Rule, ?Integer)
+% @param the rule
+% @param the priority
+% @see groove.trans.Rule#getPriority()
+:-build_in(rule_priority/2, 'groove.prolog.builtin.trans.Predicate_rule_priority').
+
+% The left hand side of this Rule
+% rule_lhs(+Rule, ?Graph)
+% @param the rule
+% @param the graph
+% @see groove.trans.Rule#getLhs()
+:-build_in(rule_lhs/2, 'groove.prolog.builtin.trans.Predicate_rule_lhs').
+
+% The right hand side of this Rule
+% rule_rhs(+Rule, ?Graph)
+% @param the rule
+% @param the graph
+% @see groove.trans.Rule#getRhs()
+:-build_in(rule_rhs/2, 'groove.prolog.builtin.trans.Predicate_rule_rhs').
+
