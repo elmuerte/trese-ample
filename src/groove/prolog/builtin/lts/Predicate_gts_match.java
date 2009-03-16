@@ -38,7 +38,7 @@ import java.util.Iterator;
  */
 public class Predicate_gts_match extends LtsPrologCode
 {
-	private class GtsMatchBacktrackInfo extends BacktrackInfo
+	private static class GtsMatchBacktrackInfo extends BacktrackInfo
 	{
 		Iterator<RuleEvent> it;
 		Term dest;
