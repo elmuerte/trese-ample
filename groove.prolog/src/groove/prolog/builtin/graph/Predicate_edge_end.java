@@ -41,7 +41,7 @@ public class Predicate_edge_end extends GraphPrologCode
 	 * 
 	 * @author Michiel Hendriks
 	 */
-	private class EdgeEndBacktrackInfo extends BacktrackInfo
+	private static class EdgeEndBacktrackInfo extends BacktrackInfo
 	{
 		Edge edge;
 		Term posTerm;
