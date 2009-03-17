@@ -21,6 +21,7 @@ package groove.gui;
 import gnu.prolog.database.Module;
 import gnu.prolog.term.AtomTerm;
 import gnu.prolog.term.CompoundTermTag;
+import gnu.prolog.vm.Environment;
 import gnu.prolog.vm.PrologException;
 import groove.explore.Scenario;
 import groove.explore.ScenarioFactory;
@@ -342,6 +343,7 @@ public class PrologEditor extends JPanel
 		results.setEnabled(true);
 		results.setBackground(null);
 		userOutput = new JTextAreaOutputStream(results);
+		Environment.setDefaultOutputStream(userOutput);
 
 		nextResultBtn = new JButton("More?");
 		nextResultBtn.setFont(nextResultBtn.getFont().deriveFont(Font.BOLD));
@@ -496,6 +498,7 @@ public class PrologEditor extends JPanel
 				{
 					return;
 				}
+				results.setText("");
 				strat.setPrologQuery(null, queryEdit.getText(), editor.getText());
 				innerAct.actionPerformed(e);
 			}
@@ -555,6 +558,7 @@ public class PrologEditor extends JPanel
 				{
 					return;
 				}
+				results.setText("");
 				prologCondition.setCondition(queryEdit.getText());
 				prologCondition.setUsercode(editor.getText());
 				innerAct.actionPerformed(e);
@@ -614,7 +618,6 @@ public class PrologEditor extends JPanel
 		if (prolog == null)
 		{
 			prolog = new PrologQuery();
-			prolog.setUserOutput(userOutput);
 			if (doConsultUserCode)
 			{
 				String userCode = editor.getText();
@@ -858,7 +861,8 @@ public class PrologEditor extends JPanel
 	{
 		JTextArea dest;
 
-		int[] buffer = new int[1024];
+		static final int BUFFER_SIZE = 512;
+		int[] buffer = new int[BUFFER_SIZE];
 		int pos = 0;
 
 		JTextAreaOutputStream(JTextArea toArea)
@@ -892,7 +896,7 @@ public class PrologEditor extends JPanel
 				return;
 			}
 			dest.append(new String(buffer, 0, pos));
-			buffer = new int[1024];
+			buffer = new int[BUFFER_SIZE];
 			pos = 0;
 		}
 	}
