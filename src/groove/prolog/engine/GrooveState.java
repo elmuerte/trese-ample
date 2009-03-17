@@ -65,9 +65,10 @@ public class GrooveState
 	 * @param startState
 	 * @param matches
 	 */
-	public GrooveState(GraphState startState, Set<RuleEvent> matches)
+	public GrooveState(GTS forGTS, GraphState currentState, Set<RuleEvent> matches)
 	{
-		this(startState);
+		this(forGTS);
+		state = currentState;
 		ruleEvents = matches;
 	}
 
