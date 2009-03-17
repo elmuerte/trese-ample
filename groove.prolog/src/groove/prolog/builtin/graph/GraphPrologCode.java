@@ -28,6 +28,7 @@ import groove.graph.Edge;
 import groove.graph.Graph;
 import groove.graph.GraphShape;
 import groove.graph.Node;
+import groove.lts.GraphState;
 
 /**
  * 
@@ -48,11 +49,15 @@ public abstract class GraphPrologCode implements PrologCode
 		if (term instanceof JavaObjectTerm)
 		{
 			JavaObjectTerm jot = (JavaObjectTerm) term;
-			if (!(jot.value instanceof GraphShape))
+			if (jot.value instanceof GraphState)
 			{
-				PrologException.domainError(GraphPrologCode.GRAPH_ATOM, term);
+				return ((GraphState) jot.value).getGraph();
 			}
-			return (GraphShape) jot.value;
+			if (jot.value instanceof GraphShape)
+			{
+				return (GraphShape) jot.value;
+			}
+			PrologException.domainError(GraphPrologCode.GRAPH_ATOM, term);
 		}
 		else
 		{
@@ -73,11 +78,15 @@ public abstract class GraphPrologCode implements PrologCode
 		if (term instanceof JavaObjectTerm)
 		{
 			JavaObjectTerm jot = (JavaObjectTerm) term;
-			if (!(jot.value instanceof Graph))
+			if (jot.value instanceof GraphState)
 			{
-				PrologException.domainError(GraphPrologCode.GRAPH_ATOM, term);
+				return ((GraphState) jot.value).getGraph();
 			}
-			return (Graph) jot.value;
+			if (jot.value instanceof Graph)
+			{
+				return (Graph) jot.value;
+			}
+			PrologException.domainError(GraphPrologCode.GRAPH_ATOM, term);
 		}
 		else
 		{

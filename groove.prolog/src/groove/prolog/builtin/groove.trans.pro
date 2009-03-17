@@ -53,6 +53,26 @@
 % @see groove.trans.RuleEvent#getRule()
 :-build_in(ruleevent_rule/2,'groove.prolog.builtin.trans.Predicate_ruleevent_rule').
 
+% Translate a node/edge in the rule's graphs to a node/edge in the ruleevent's graph.
+% Fails when the node/edge does not have a mapping
+% ruleevent_transpose(+RuleEvent,+NodeEdge,?NodeEdge)
+% @param the rule event
+% @param node/edge as used in the rule's graph
+% @param node/edge in the graph
+:-build_in(ruleevent_rule/3,'groove.prolog.builtin.trans.Predicate_ruleevent_transpose').
+
+% Node anchors in this event according to the rule
+% ruleevent_node(+RuleEvent,?Node)
+% @param the rule event
+% @param the node
+:-build_in(ruleevent_node/2,'groove.prolog.builtin.trans.Predicate_ruleevent_node').
+
+% Edge anchors in this event according to the rule
+% ruleevent_edge(+RuleEvent,?Edge)
+% @param the rule event
+% @param the edge
+:-build_in(ruleevent_edge/2,'groove.prolog.builtin.trans.Predicate_ruleevent_edge').
+
 % The rule match
 % ruleevent_match(+RuleEvent,+Graph,?RuleMatch)
 % @param the rule event
@@ -104,14 +124,16 @@ rulematch(RM):-gts(GTS),graphstate(GS),graphstate_graph(GS,G),gts_match(GTS,GS,R
 % @see groove.trans.Rule#getPriority()
 :-build_in(rule_priority/2, 'groove.prolog.builtin.trans.Predicate_rule_priority').
 
-% The left hand side of this Rule
+% The left hand side of this Rule. The start graph. Note: this does not use the same
+% nodes as the current graph.
 % rule_lhs(+Rule, ?Graph)
 % @param the rule
 % @param the graph
 % @see groove.trans.Rule#getLhs()
 :-build_in(rule_lhs/2, 'groove.prolog.builtin.trans.Predicate_rule_lhs').
 
-% The right hand side of this Rule
+% The right hand side of this Rule. The target graph. Note: this does not use the same
+% nodes as the current graph.
 % rule_rhs(+Rule, ?Graph)
 % @param the rule
 % @param the graph
