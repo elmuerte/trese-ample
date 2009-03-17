@@ -452,8 +452,8 @@ public class PrologEditor extends JPanel
 	protected Action createExploreRuleEventsAction()
 	{
 		final ExploreStatePrologStrategy strat = new ExploreStatePrologStrategy();
-		Scenario scen = ScenarioFactory.getScenario(strat, new Acceptor(), "Explore by accepting graph states.",
-				"Accept Rule Events Exploration");
+		Scenario scen = ScenarioFactory.getScenario(strat, new Acceptor(), "Explore by selecting rule events.",
+				"Select Rule Events Exploration");
 		final Action innerAct = sim.createLaunchScenarioAction(scen);
 		Action act = new Action() {
 			public void addPropertyChangeListener(PropertyChangeListener listener)
