@@ -145,7 +145,7 @@ public class ExploreStatePrologStrategy extends AbstractStrategy implements Prol
 			{
 				initializeProlog();
 			}
-			prolog.setGrooveState(new GrooveState(getAtState(), matches));
+			prolog.setGrooveState(new GrooveState(getGTS(), getAtState(), matches));
 			QueryResult result;
 			try
 			{
