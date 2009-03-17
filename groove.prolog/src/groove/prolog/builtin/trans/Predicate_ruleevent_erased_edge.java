@@ -23,16 +23,15 @@ import gnu.prolog.vm.Interpreter;
 import gnu.prolog.vm.PrologException;
 import groove.prolog.builtin.PrologCollectionIterator;
 import groove.trans.RuleEvent;
-import groove.trans.SPOEvent;
 
 /**
  * 
  * 
  * @author Michiel Hendriks
  */
-public class Predicate_ruleevent_node extends TransPrologCode
+public class Predicate_ruleevent_erased_edge extends TransPrologCode
 {
-	public Predicate_ruleevent_node()
+	public Predicate_ruleevent_erased_edge()
 	{}
 
 	/*
@@ -51,13 +50,8 @@ public class Predicate_ruleevent_node extends TransPrologCode
 		else
 		{
 			RuleEvent re = getRuleEvent(args[0]);
-			if (!(re instanceof SPOEvent))
-			{
-				PrologException.domainError(RULEEVENT_ATOM, args[0]);
-			}
-			SPOEvent spo = (SPOEvent) re;
-			PrologCollectionIterator it = new PrologCollectionIterator(spo.getAnchorMap().nodeMap().values(), args[1],
-					interpreter.getUndoPosition());
+			PrologCollectionIterator it = new PrologCollectionIterator(re.getSimpleErasedEdges(), args[1], interpreter
+					.getUndoPosition());
 			return it.nextSolution(interpreter);
 		}
 	}

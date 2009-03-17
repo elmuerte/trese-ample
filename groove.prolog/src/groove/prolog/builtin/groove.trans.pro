@@ -61,17 +61,29 @@
 % @param node/edge in the graph
 :-build_in(ruleevent_rule/3,'groove.prolog.builtin.trans.Predicate_ruleevent_transpose').
 
-% Node anchors in this event according to the rule
-% ruleevent_node(+RuleEvent,?Node)
+% Node anchors in this event. Anchors are the 
+% ruleevent_anchor_node(+RuleEvent,?Node)
 % @param the rule event
 % @param the node
-:-build_in(ruleevent_node/2,'groove.prolog.builtin.trans.Predicate_ruleevent_node').
+:-build_in(ruleevent_anchor_node/2,'groove.prolog.builtin.trans.Predicate_ruleevent_anchor_node').
 
 % Edge anchors in this event according to the rule
-% ruleevent_edge(+RuleEvent,?Edge)
+% ruleevent_anchor_edge(+RuleEvent,?Edge)
 % @param the rule event
 % @param the edge
-:-build_in(ruleevent_edge/2,'groove.prolog.builtin.trans.Predicate_ruleevent_edge').
+:-build_in(ruleevent_anchor_edge/2,'groove.prolog.builtin.trans.Predicate_ruleevent_anchor_edge').
+
+% Erased edges in this event
+% ruleevent_erased_edge(+RuleEvent,?Edge)
+% @param the rule event
+% @param the edge
+:-build_in(ruleevent_erased_edge/2,'groove.prolog.builtin.trans.Predicate_ruleevent_erased_edge').
+
+% Created edges in this event
+% ruleevent_created_edge(+RuleEvent,?Edge)
+% @param the rule event
+% @param the edge
+:-build_in(ruleevent_created_edge/2,'groove.prolog.builtin.trans.Predicate_ruleevent_created_edge').
 
 % The rule match
 % ruleevent_match(+RuleEvent,+Graph,?RuleMatch)

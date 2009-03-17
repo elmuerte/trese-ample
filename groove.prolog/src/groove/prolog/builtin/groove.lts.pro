@@ -149,7 +149,7 @@ gts_final_state(GS):-gts(G),gts_final_state(G,GS).
 gts_final_state_set(GS):-gts(G),gts_final_state_set(G,GS).
 
 % Get a matching rule event for a given graph state
-% gts_match(+GTS,?RuleEvent)
+% gts_match(+GTS,+GraphState,?RuleEvent)
 % @param the gts
 % @param the graphstate
 % @param the ruleevent

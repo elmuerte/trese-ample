@@ -30,9 +30,9 @@ import groove.trans.SPOEvent;
  * 
  * @author Michiel Hendriks
  */
-public class Predicate_ruleevent_edge extends TransPrologCode
+public class Predicate_ruleevent_anchor_node extends TransPrologCode
 {
-	public Predicate_ruleevent_edge()
+	public Predicate_ruleevent_anchor_node()
 	{}
 
 	/*
@@ -56,7 +56,7 @@ public class Predicate_ruleevent_edge extends TransPrologCode
 				PrologException.domainError(RULEEVENT_ATOM, args[0]);
 			}
 			SPOEvent spo = (SPOEvent) re;
-			PrologCollectionIterator it = new PrologCollectionIterator(spo.getAnchorMap().edgeMap().values(), args[1],
+			PrologCollectionIterator it = new PrologCollectionIterator(spo.getAnchorMap().nodeMap().values(), args[1],
 					interpreter.getUndoPosition());
 			return it.nextSolution(interpreter);
 		}
