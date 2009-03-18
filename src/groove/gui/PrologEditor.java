@@ -515,7 +515,7 @@ public class PrologEditor extends JPanel
 		prologCondition = new PrologCondition();
 		strat.setExploreCondition(prologCondition);
 		Scenario scen = ScenarioFactory.getScenario(strat, new Acceptor(), "Explore by accepting graph states.",
-				"Accept State Exploration");
+				"Accept Graph State Exploration");
 		final Action innerAct = sim.createLaunchScenarioAction(scen);
 		Action act = new Action() {
 			public void addPropertyChangeListener(PropertyChangeListener listener)

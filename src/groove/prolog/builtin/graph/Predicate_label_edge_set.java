@@ -26,7 +26,10 @@ import gnu.prolog.vm.PrologException;
 import gnu.prolog.vm.TermConstants;
 import groove.graph.DefaultLabel;
 import groove.graph.GraphShape;
+import groove.graph.Label;
+import groove.lts.GTS;
 import groove.prolog.builtin.PrologUtils;
+import groove.trans.NameLabel;
 
 /**
  * Get the edge set of a graph with a given label.
@@ -50,18 +53,24 @@ public class Predicate_label_edge_set extends GraphPrologCode
 	{
 		GraphShape graph = getGraphShape(args[0]);
 
-		String label = null;
+		Label label = null;
 		if (args[1] instanceof AtomTerm)
 		{
-			label = ((AtomTerm) args[1]).value;
+			if (graph instanceof GTS)
+			{
+				label = new NameLabel(((AtomTerm) args[1]).value);
+			}
+			else
+			{
+				label = DefaultLabel.createLabel(((AtomTerm) args[1]).value);
+			}
 		}
 		else
 		{
 			PrologException.typeError(TermConstants.atomAtom, args[1]);
 		}
 
-		Term edgeSetTerm = CompoundTerm.getList(PrologUtils.createJOTlist(graph.labelEdgeSet(2, DefaultLabel
-				.createLabel(label))));
+		Term edgeSetTerm = CompoundTerm.getList(PrologUtils.createJOTlist(graph.labelEdgeSet(2, label)));
 		return interpreter.unify(edgeSetTerm, args[2]);
 
 	}

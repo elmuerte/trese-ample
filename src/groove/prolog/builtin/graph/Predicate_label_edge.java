@@ -26,7 +26,9 @@ import gnu.prolog.vm.TermConstants;
 import groove.graph.DefaultLabel;
 import groove.graph.GraphShape;
 import groove.graph.Label;
+import groove.lts.GTS;
 import groove.prolog.builtin.PrologCollectionIterator;
+import groove.trans.NameLabel;
 
 /**
  * Get an edge with a given label <code>label_edge(Graph,Label,Edge)</code>
@@ -60,7 +62,14 @@ public class Predicate_label_edge extends GraphPrologCode
 			Label label = null;
 			if (args[1] instanceof AtomTerm)
 			{
-				label = DefaultLabel.createLabel(((AtomTerm) args[1]).value);
+				if (graph instanceof GTS)
+				{
+					label = new NameLabel(((AtomTerm) args[1]).value);
+				}
+				else
+				{
+					label = DefaultLabel.createLabel(((AtomTerm) args[1]).value);
+				}
 			}
 			else
 			{
