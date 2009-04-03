@@ -17,13 +17,63 @@
             class="groove.gui.EclipseGraphViewer"
             default="true"
             extensions="gst"
-            icon="res/icons/groove-g-16x16.gif"
+            icon="icons/groove-blue-g-16x16.gif"
             id="groove.eclipse.ui.editor.graph"
             name="Graph Viewer">
          <contentTypeBinding
                contentTypeId="groove.file.gst">
          </contentTypeBinding>
       </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="groove.eclipse.ui.actionSet"
+            label="Groove"
+            visible="true">
+         <menu
+               id="grooveMenu"
+               label="&amp;Groove">
+            <separator
+                  name="grooveGroup">
+            </separator>
+            <separator
+                  name="additionsGroup">
+            </separator>
+         </menu>
+         <action
+               class="groove.gui.eclipse.actions.SimulatorAction"
+               icon="icons/groove-green-g-16x16.gif"
+               id="groove.gui.eclipse.actions.SimulatorAction"
+               label="&amp;Simulator"
+               menubarPath="grooveMenu/grooveGroup"
+               toolbarPath="grooveGroup"
+               tooltip="Start the Groove Simulator">
+         </action>
+         <action
+               class="groove.gui.eclipse.actions.EditorAction"
+               enablesFor="?"
+               icon="icons/groove-blue-g-16x16.gif"
+               id="groove.gui.eclipse.actions.EditorAction"
+               label="&amp;Editor"
+               menubarPath="grooveMenu/grooveGroup"
+               toolbarPath="grooveGroup"
+               tooltip="Start the Groove Editor">
+            <enablement>
+               <or>
+                  <not>
+                     <objectClass
+                           name="org.eclipse.core.resources.IFile">
+                     </objectClass>
+                  </not>
+                  <objectState
+                        name="contentTypeId"
+                        value="groove.file.gst">
+                  </objectState>
+               </or>
+            </enablement>
+         </action>
+      </actionSet>
    </extension>
 
 </plugin>
