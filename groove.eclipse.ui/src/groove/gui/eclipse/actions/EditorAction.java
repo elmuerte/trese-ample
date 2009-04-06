@@ -1,6 +1,7 @@
 package groove.gui.eclipse.actions;
 
 import groove.Editor;
+import groove.util.Groove;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
@@ -54,12 +55,20 @@ public class EditorAction implements IWorkbenchWindowActionDelegate {
 	 */
 	public void selectionChanged(IAction action, ISelection selection) {
 		selectedFile = null;
+		action.setToolTipText("Open the Groove Editor");
 		if (selection instanceof IStructuredSelection) {
 			Object o = ((IStructuredSelection) selection).getFirstElement();
 			if (o instanceof IFile) {
 				IPath loc = ((IFile) o).getLocation();
 				if (loc != null) {
-					selectedFile = loc.toOSString();
+					if (Groove.RULE_EXTENSION.equals("."
+							+ loc.getFileExtension())
+							|| Groove.STATE_EXTENSION.equals("."
+									+ loc.getFileExtension())) {
+						selectedFile = loc.toOSString();
+						action.setToolTipText(String.format(
+								"Open %s in the Groove Editor", selectedFile));
+					}
 				}
 			}
 		}

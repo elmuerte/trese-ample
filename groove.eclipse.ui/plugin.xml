@@ -59,19 +59,6 @@
                menubarPath="grooveMenu/grooveGroup"
                toolbarPath="grooveGroup"
                tooltip="Start the Groove Editor">
-            <enablement>
-               <or>
-                  <not>
-                     <objectClass
-                           name="org.eclipse.core.resources.IFile">
-                     </objectClass>
-                  </not>
-                  <objectState
-                        name="contentTypeId"
-                        value="groove.file.gst">
-                  </objectState>
-               </or>
-            </enablement>
          </action>
       </actionSet>
    </extension>

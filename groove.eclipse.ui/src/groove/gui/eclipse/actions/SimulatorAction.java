@@ -1,9 +1,13 @@
 package groove.gui.eclipse.actions;
 
 import groove.Simulator;
+import groove.util.Groove;
 
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
@@ -16,6 +20,9 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
  * @see IWorkbenchWindowActionDelegate
  */
 public class SimulatorAction implements IWorkbenchWindowActionDelegate {
+
+	protected String selectedPath;
+
 	/**
 	 * The constructor.
 	 */
@@ -29,7 +36,19 @@ public class SimulatorAction implements IWorkbenchWindowActionDelegate {
 	 * @see IWorkbenchWindowActionDelegate#run
 	 */
 	public void run(IAction action) {
-		Simulator.main(new String[0]);
+		String[] args;
+		if (selectedPath != null && false) {
+			/*
+			 * see bug
+			 * https://sourceforge.net/tracker/?func=detail&aid=2737601&group_id
+			 * =119225&atid=683352
+			 */
+			args = new String[1];
+			args[0] = selectedPath;
+		} else {
+			args = new String[0];
+		}
+		Simulator.main(args);
 	}
 
 	/**
@@ -40,6 +59,23 @@ public class SimulatorAction implements IWorkbenchWindowActionDelegate {
 	 * @see IWorkbenchWindowActionDelegate#selectionChanged
 	 */
 	public void selectionChanged(IAction action, ISelection selection) {
+		selectedPath = null;
+		action.setToolTipText("Open the Groove Simulator");
+		if (selection instanceof IStructuredSelection) {
+			Object o = ((IStructuredSelection) selection).getFirstElement();
+			if (o instanceof IFolder) {
+				IPath loc = ((IFolder) o).getLocation();
+				if (loc != null) {
+					if (Groove.RULE_SYSTEM_EXTENSION.equals("."
+							+ loc.getFileExtension())) {
+						selectedPath = loc.toOSString();
+						action.setToolTipText(String
+								.format("Open %s in the Groove Simulator",
+										selectedPath));
+					}
+				}
+			}
+		}
 	}
 
 	/**
