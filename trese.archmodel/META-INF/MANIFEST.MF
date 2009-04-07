@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: ArchModel
+Bundle-Name: CarmeQ ArchModel
 Bundle-SymbolicName: trese.archmodel;singleton:=true
 Bundle-Version: 0.5.2
-Bundle-Vendor: University of Twente
+Bundle-Vendor: Software Engineering Group; University of Twente
 Require-Bundle: edu.uci.isr.xarchlibs.apigen;bundle-version="4.1.50",
  groove;bundle-version="3.2.0"
 Export-Package: trese.archmodel,

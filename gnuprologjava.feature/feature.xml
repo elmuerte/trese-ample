@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="gnuprologjava"
+      label="GNU Prolog for Java"
+      version="0.2.0"
+      provider-name="Software Engineering Group; University of Twente">
+
+   <description>
+      This is a fork of the original GNU Prolog for Java. Several bugs have been fixed, and it has been extended at needed for the CarmeQ project ( http://trese.ewi.utwente.nl/ ).
+   </description>
+
+   <copyright url="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html">
+      GNU Prolog for Java
+Copyright (C) 2000  Constantine A. Plotnikov 
+Copyright (C) 2009  Michiel Hendriks, University of Twente
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU
+Lesser General Public License for more details.
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+02110-1301  USA
+   </copyright>
+
+   <url>
+      <update label="TRESE AMPLE Dev Update Site" url="http://eclipse.elmuerte.com/trese.ample.updatesite"/>
+      <discovery label="GNU Prolog for Java" url="http://sourceforge.net/projects/gnuprologjava"/>
+      <discovery label="Software Engineering Group, University of Twente" url="http://trese.ewi.utwente.nl"/>
+   </url>
+
+   <plugin
+         id="gnuprologjava"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+</feature>

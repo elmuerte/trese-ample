@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="trese.featuremodel.feature"
-      label="Feature Model (GFT)"
+      label="CarmeQ Feature Model (GFT)"
       version="0.5.2"
-      provider-name="University of Twente">
+      provider-name="Software Engineering Group; University of Twente">
 
    <description>
       [Enter Feature Description here.]
    </description>
 
    <copyright>
-      Copyright 2009 University of Twente
+      Copyright 2009 Software Engineering Group; University of Twente
    </copyright>
 
    <license>

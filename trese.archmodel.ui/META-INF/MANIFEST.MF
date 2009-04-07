@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: ArchModel UI
+Bundle-Name: CarmeQ ArchModel UI
 Bundle-SymbolicName: trese.archmodel.ui;singleton:=true
 Bundle-Version: 0.5.2
-Bundle-Vendor: University of Twente
+Bundle-Vendor: Software Engineering Group; University of Twente
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: edu.uci.isr.xarchlibs.apigen;bundle-version="4.1.50",
  trese.archmodel;bundle-version="0.5.2",
