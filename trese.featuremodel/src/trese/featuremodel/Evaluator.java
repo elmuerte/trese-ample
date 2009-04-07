@@ -12,6 +12,7 @@ import groove.graph.Node;
 import groove.graph.algebra.ValueNode;
 import groove.io.AspectualViewGps;
 import groove.io.URLLoaderFactory;
+import groove.lts.GTS;
 import groove.lts.GraphState;
 import groove.view.AspectualGraphView;
 import groove.view.DefaultGrammarView;
@@ -93,21 +94,36 @@ public class Evaluator
 		EvaluationResult base = new EvaluationResult(baseLine);
 		AspectGraph graph = FeatureGraphCreator.createGraph(base);
 
-		// if (true)
-		// {
-		// // debug export
-		// AspectGxl gxl = new AspectGxl();
-		// try
-		// {
-		// gxl.marshalGraph(graph, new File("./featureModel_"
-		// + baseLine.getDescription().replaceAll("[^0-9a-zA-Z]+", "_") +
-		// ".gst"));
-		// }
-		// catch (IOException e)
-		// {
-		// e.printStackTrace();
-		// }
-		// }
+		PrintStream stdout = System.out;
+		System.setOut(new PrintStream(new OutputStream() {
+			@Override
+			public void write(int b) throws IOException
+			{}
+		}));
+		try
+		{
+			Collection<GraphState> finalStates = executeRules(graph, findFirst);
+			return extractResults(finalStates, base);
+		}
+		finally
+		{
+			System.setOut(stdout);
+		}
+	}
+
+	/**
+	 * @param baseLine
+	 * @return
+	 * @throws FeatureModelException
+	 */
+	public GTS evaluateToGTS(Feature baseLine) throws FeatureModelException
+	{
+		if (!initialized)
+		{
+			initialize();
+		}
+		EvaluationResult base = new EvaluationResult(baseLine);
+		AspectGraph graph = FeatureGraphCreator.createGraph(base);
 
 		PrintStream stdout = System.out;
 		System.setOut(new PrintStream(new OutputStream() {
@@ -115,9 +131,22 @@ public class Evaluator
 			public void write(int b) throws IOException
 			{}
 		}));
-		Collection<GraphState> finalStates = executeRules(graph, findFirst);
-		System.setOut(stdout);
-		return extractResults(finalStates, base);
+
+		grammar.setStartGraph(new AspectualGraphView(graph, null));
+		try
+		{
+			FinalGraphCalc calc = new FinalGraphCalc(grammar.toGrammar());
+			calc.getAllFinal();
+			return calc.getGTS();
+		}
+		catch (FormatException e)
+		{
+			throw new FeatureModelException(e);
+		}
+		finally
+		{
+			System.setOut(stdout);
+		}
 	}
 
 	/**

@@ -8,4 +8,5 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ClassPath: trese.tracing.jar
 Require-Bundle: trese.archmodel;bundle-version="0.5.2",
  groove.prolog;bundle-version="3.2.1",
- groove;bundle-version="3.2.1"
+ groove;bundle-version="3.2.1",
+ trese.featuremodel;bundle-version="0.5.2"

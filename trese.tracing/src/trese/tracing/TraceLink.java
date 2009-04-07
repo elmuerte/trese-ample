@@ -53,4 +53,22 @@ public class TraceLink
 	{
 		return tracePath.getLast().target().getGraph();
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("[start] --> ");
+		for (GraphTransition gt : tracePath)
+		{
+			sb.append(gt.label().toString());
+			sb.append(" --> ");
+		}
+		sb.append("[end]");
+		return sb.toString();
+	}
 }
