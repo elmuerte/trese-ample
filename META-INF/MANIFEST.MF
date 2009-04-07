@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Prolog extention for Groove
+Bundle-Name: Prolog extensions for Groove
 Bundle-SymbolicName: groove.prolog;singleton:=true
 Bundle-Version: 3.2.1
 Export-Package: groove,
@@ -14,7 +14,7 @@ Export-Package: groove,
  groove.prolog.builtin.lts,
  groove.prolog.builtin.trans,
  groove.prolog.engine
-Bundle-Vendor: University of Twente
+Bundle-Vendor: Software Engineering Group; University of Twente
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: groove;bundle-version="3.2.1",
  gnuprologjava;bundle-version="0.2.0"
