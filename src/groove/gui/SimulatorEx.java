@@ -69,6 +69,7 @@ public class SimulatorEx extends Simulator
 		{
 			exInit = true;
 			getGraphViewsPanel().addTab("Prolog", getPrologEditor());
+			getGraphViewsPanel().addTab("System Output", new SystemOutput());
 		}
 		return result;
 	}
