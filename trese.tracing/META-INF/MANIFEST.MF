@@ -4,9 +4,15 @@ Bundle-Name: Tracing Plug-in
 Bundle-SymbolicName: trese.tracing;singleton:=true
 Bundle-Version: 0.5.3
 Bundle-Vendor: University of Twente
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ClassPath: trese.tracing.jar
-Require-Bundle: trese.archmodel;bundle-version="0.5.2",
+Require-Bundle: net.ample.contrib;bundle-version="0.2.1",
+ trese.archmodel;bundle-version="0.5.2",
  groove.prolog;bundle-version="3.2.1",
  groove;bundle-version="3.2.1",
- trese.featuremodel;bundle-version="0.5.2"
+ trese.featuremodel;bundle-version="0.5.2",
+ net.ample.tracing.core;bundle-version="0.2.1",
+ net.ample.tracing.frontend.core;bundle-version="0.1.5",
+ org.eclipse.core.runtime;bundle-version="3.4.0",
+ org.eclipse.core.resources;bundle-version="3.4.0",
+ edu.uci.isr.xarchlibs.apigen;bundle-version="4.1.50"
+Bundle-RequiredExecutionEnvironment: J2SE-1.5

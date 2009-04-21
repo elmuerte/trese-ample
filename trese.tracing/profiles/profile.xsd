@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.ample-project.net/atf" elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:atf="http://www.ample-project.net/atf">
+	<element name="profile" type="atf:repositoryProfile"></element>
+	<complexType name="repositoryProfile">
+		<sequence minOccurs="1" maxOccurs="1">
+			<element name="artefactTypes" type="atf:artefactTypes" minOccurs="1" maxOccurs="1"></element>
+			<element name="linkTypes" type="atf:linkTypes" minOccurs="1" maxOccurs="1"></element>
+		</sequence>
+	</complexType>
+	<complexType name="artefactTypes">
+		<sequence minOccurs="1" maxOccurs="1">
+			<element name="artefactType" type="atf:artefactType" minOccurs="0" maxOccurs="unbounded"></element>
+		</sequence>
+	</complexType>
+	<complexType name="linkTypes">
+		<sequence minOccurs="1" maxOccurs="1">
+			<element name="linkType" type="atf:linkType" minOccurs="0" maxOccurs="unbounded"></element>
+		</sequence>
+	</complexType>
+	<complexType name="artefactType">
+		<sequence>
+			<element name="properties" type="atf:artefactTypeProperties" minOccurs="1" maxOccurs="1"></element>
+			<element name="instanceProperties" type="atf:instanceProperties" minOccurs="1" maxOccurs="1"></element>
+			<element name="inheritance" minOccurs="1" maxOccurs="1">
+				<complexType>
+					<sequence minOccurs="0" maxOccurs="unbounded">
+						<choice>
+							<element name="typeRef" type="atf:typeRef"></element>
+							<element name="nameRef" type="atf:nameRef"></element>
+						</choice>
+					</sequence>
+				</complexType>
+			</element>
+		</sequence>
+		<attribute name="name" type="string" use="required"></attribute>
+		<attribute name="uuid" type="atf:uuid" use="optional"></attribute>
+	</complexType>
+	<complexType name="linkType">
+		<sequence>
+			<element name="properties" type="atf:linkTypeProperties" minOccurs="1" maxOccurs="1"></element>
+			<element name="instanceProperties" type="atf:instanceProperties" minOccurs="1" maxOccurs="1"></element>
+			<element name="inheritance" minOccurs="1" maxOccurs="1">
+				<complexType>
+					<sequence minOccurs="0" maxOccurs="unbounded">
+						<choice>
+							<element name="typeRef" type="atf:typeRef"></element>
+							<element name="nameRef" type="atf:nameRef"></element>
+						</choice>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="scope" type="atf:scope" minOccurs="1" maxOccurs="1"></element>
+		</sequence>
+		<attribute name="name" type="atf:identifier" use="required"></attribute>
+		<attribute name="uuid" type="atf:uuid" use="optional"></attribute>
+	</complexType>
+	<complexType name="scope">
+		<sequence minOccurs="1" maxOccurs="1">
+			<element name="scopeArea" type="atf:scopeArea" minOccurs="0" maxOccurs="unbounded"></element>
+		</sequence>
+	</complexType>
+	<complexType name="artefactTypeProperties">
+		<sequence minOccurs="1" maxOccurs="1">
+			<element name="property" type="atf:propertyDisplayName" minOccurs="1" maxOccurs="1"></element>
+			<element name="property" type="atf:property" minOccurs="0" maxOccurs="unbounded"></element>
+		</sequence>
+	</complexType>
+	<complexType name="linkTypeProperties">
+		<sequence minOccurs="1" maxOccurs="1">
+			<element name="property" type="atf:propertyForwardDisplayName" minOccurs="1" maxOccurs="1"></element>
+			<element name="property" type="atf:propertyBackwardDisplayName" minOccurs="1" maxOccurs="1"></element>
+			<element name="property" type="atf:property" minOccurs="0" maxOccurs="unbounded"></element>
+		</sequence>
+	</complexType>
+	<complexType name="instanceProperties">
+		<sequence minOccurs="1" maxOccurs="1">
+			<element name="propertyName" type="atf:propertyName" minOccurs="0" maxOccurs="unbounded"></element>
+		</sequence>
+	</complexType>
+	<simpleType name="identifier">
+		<restriction base="string">
+			<minLength value="1"></minLength>
+			<pattern value="[\w\.]+"></pattern>
+		</restriction>
+	</simpleType>
+	<simpleType name="displayable">
+		<restriction base="string">
+			<minLength value="1"></minLength>
+			<pattern value="[\w\.\s-]+"></pattern>
+		</restriction>
+	</simpleType>
+	<simpleType name="uuid">
+		<restriction base="string">
+			<pattern value="\w{8}(-)\w{4}(-)\w{4}(-)\w{4}(-)\w{12}"></pattern>
+		</restriction>
+	</simpleType>
+	<complexType name="scopeArea">
+		<sequence minOccurs="1" maxOccurs="1">
+			<element name="validSourceTypes" minOccurs="1" maxOccurs="1" type="atf:validTypes">			</element>
+			<element name="validTargetTypes" minOccurs="1" maxOccurs="1" type="atf:validTypes">			</element>
+		</sequence>
+	</complexType>
+	<!-- property definition -->
+	<complexType name="property">
+		<attribute name="name" type="atf:identifier" use="required"></attribute>
+		<attribute name="value" type="atf:displayable" use="required"></attribute>
+	</complexType>
+	<complexType name="propertyName">
+		<attribute name="name" type="atf:identifier" use="required"></attribute>
+	</complexType>
+	<!-- predefined properties -->
+	<complexType name="propertyDisplayName">
+		<complexContent>
+			<restriction base="atf:property">
+				<attribute name="name" type="atf:identifier" use="required" fixed="displayname"></attribute>
+				<attribute name="value" type="atf:displayable" use="required"></attribute>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="propertyBackwardDisplayName">
+		<complexContent>
+			<restriction base="atf:property">
+				<attribute name="name" type="atf:identifier" use="required" fixed="displayname.backward"></attribute>
+				<attribute name="value" type="atf:displayable" use="required"></attribute>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="propertyForwardDisplayName">
+		<complexContent>
+			<restriction base="atf:property">
+				<attribute name="name" type="atf:identifier" use="required" fixed="displayname.forward"></attribute>
+				<attribute name="value" type="atf:displayable" use="required"></attribute>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="validTypes">
+		<sequence minOccurs="0" maxOccurs="unbounded">
+			<choice>
+				<element name="typeRef" type="atf:typeRef"></element>
+				<element name="nameRef" type="atf:nameRef"></element>
+			</choice>
+		</sequence>
+	</complexType>
+	<complexType name="typeRef">
+		<attribute name="uuid" type="atf:uuid" use="required"></attribute>
+	</complexType>
+	<complexType name="nameRef">
+		<attribute name="name" type="string" use="required"></attribute>
+	</complexType>
+</schema>

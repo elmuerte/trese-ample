@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<atf:profile xmlns:atf="http://www.ample-project.net/atf"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.ample-project.net/atf profile.xsd ">
+	<atf:artefactTypes>
+		<atf:artefactType name="Component"
+			uuid="2936e730-2e57-11de-8c30-0800200c9a66">
+			<atf:properties>
+				<atf:property name="displayname" value="Component" />
+			</atf:properties>
+			<atf:instanceProperties />
+			<atf:inheritance />
+		</atf:artefactType>
+		<atf:artefactType name="Connector"
+			uuid="2936e731-2e57-11de-8c30-0800200c9a66">
+			<atf:properties>
+				<atf:property name="displayname" value="Connector" />
+			</atf:properties>
+			<atf:instanceProperties />
+			<atf:inheritance />
+		</atf:artefactType>
+		<atf:artefactType name="Interface"
+			uuid="2936e732-2e57-11de-8c30-0800200c9a66">
+			<atf:properties>
+				<atf:property name="displayname" value="Interface" />
+			</atf:properties>
+			<atf:instanceProperties />
+			<atf:inheritance />
+		</atf:artefactType>
+		<atf:artefactType name="ComponentType"
+			uuid="2936e733-2e57-11de-8c30-0800200c9a66">
+			<atf:properties>
+				<atf:property name="displayname" value="ComponentType" />
+			</atf:properties>
+			<atf:instanceProperties />
+			<atf:inheritance />
+		</atf:artefactType>
+		<atf:artefactType name="ConnectorType"
+			uuid="2936e734-2e57-11de-8c30-0800200c9a66">
+			<atf:properties>
+				<atf:property name="displayname" value="ConnectorType" />
+			</atf:properties>
+			<atf:instanceProperties />
+			<atf:inheritance />
+		</atf:artefactType>
+		<atf:artefactType name="InterfaceType"
+			uuid="2936e735-2e57-11de-8c30-0800200c9a66">
+			<atf:properties>
+				<atf:property name="displayname" value="InterfaceType" />
+			</atf:properties>
+			<atf:instanceProperties />
+			<atf:inheritance />
+		</atf:artefactType>
+	</atf:artefactTypes>
+	<atf:linkTypes>
+		<atf:linkType name="link" uuid="2936e736-2e57-11de-8c30-0800200c9a66">
+			<atf:properties>
+				<atf:property name="displayname.forward" value="connects to" />
+				<atf:property name="displayname.backward" value="connects to" />
+			</atf:properties>
+			<atf:instanceProperties />
+			<atf:inheritance />
+			<atf:scope>
+				<atf:scopeArea>
+					<atf:validSourceTypes>
+						<!-- Interface -->
+						<atf:typeRef uuid="2936e732-2e57-11de-8c30-0800200c9a66" />
+					</atf:validSourceTypes>
+					<atf:validTargetTypes>
+						<!-- Interface -->
+						<atf:typeRef uuid="2936e732-2e57-11de-8c30-0800200c9a66" />
+					</atf:validTargetTypes>
+				</atf:scopeArea>
+			</atf:scope>
+		</atf:linkType>
+		<atf:linkType name="type" uuid="2936e737-2e57-11de-8c30-0800200c9a66">
+			<atf:properties>
+				<atf:property name="displayname.forward" value="is of type" />
+				<atf:property name="displayname.backward" value="is implementation of" />
+			</atf:properties>
+			<atf:instanceProperties />
+			<atf:inheritance />
+			<atf:scope>
+				<atf:scopeArea>
+					<atf:validSourceTypes>
+						<!-- Connector -->
+						<atf:typeRef uuid="2936e731-2e57-11de-8c30-0800200c9a66" />
+					</atf:validSourceTypes>
+					<atf:validTargetTypes>
+						<!-- ConnectorType -->
+						<atf:typeRef uuid="2936e734-2e57-11de-8c30-0800200c9a66" />
+					</atf:validTargetTypes>
+				</atf:scopeArea>
+				<atf:scopeArea>
+					<atf:validSourceTypes>
+						<!-- Component -->
+						<atf:typeRef uuid="2936e730-2e57-11de-8c30-0800200c9a66" />
+					</atf:validSourceTypes>
+					<atf:validTargetTypes>
+						<!-- ComponentType -->
+						<atf:typeRef uuid="2936e733-2e57-11de-8c30-0800200c9a66" />
+					</atf:validTargetTypes>
+				</atf:scopeArea>
+				<atf:scopeArea>
+					<atf:validSourceTypes>
+						<!-- Interface -->
+						<atf:typeRef uuid="2936e732-2e57-11de-8c30-0800200c9a66" />
+					</atf:validSourceTypes>
+					<atf:validTargetTypes>
+						<!-- InterfaceType -->
+						<atf:typeRef uuid="2936e735-2e57-11de-8c30-0800200c9a66" />
+					</atf:validTargetTypes>
+				</atf:scopeArea>
+			</atf:scope>
+		</atf:linkType>
+	</atf:linkTypes>
+</atf:profile>
