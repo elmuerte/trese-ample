@@ -16,3 +16,6 @@ Require-Bundle: net.ample.contrib;bundle-version="0.2.1",
  org.eclipse.core.resources;bundle-version="3.4.0",
  edu.uci.isr.xarchlibs.apigen;bundle-version="4.1.50"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-Activator: trese.tracing.PluginActivator
+Bundle-ActivationPolicy: lazy
+Export-Package: trese.tracing.atf

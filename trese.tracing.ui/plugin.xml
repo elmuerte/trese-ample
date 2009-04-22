@@ -36,5 +36,13 @@
          </visibility>
       </objectContribution>
    </extension>
+   <extension
+         point="net.ample.tracing.core.traceExtractor">
+      <extractor
+            class="trese.tracing.atf.XADLExtractor"
+            description="CarmeQ xADL extractor"
+            id="trese.tracing.atf.xadlextractor">
+      </extractor>
+   </extension>
 
 </plugin>

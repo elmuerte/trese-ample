@@ -13,13 +13,6 @@
       </register>
    </extension>
    <extension
-         point="net.ample.tracing.core.traceExtractor">
-      <extractor
-            class="trese.tracing.atf.TraceExtractor"
-            id="CarmeQ">
-      </extractor>
-   </extension>
-   <extension
          point="net.ample.tracing.core.repositoryProfile">
       <profile
             id="trese.tracing.atf.xadlProfile">
