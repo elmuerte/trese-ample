@@ -11,15 +11,15 @@ import java.io.Reader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
+import java.util.UUID;
 
 import net.ample.tracing.core.AbstractTraceExtractor;
 import net.ample.tracing.core.RepositoryManager;
 import net.ample.tracing.core.TraceLinkType;
 import net.ample.tracing.core.TraceableArtefact;
 import net.ample.tracing.core.TraceableArtefactType;
+import net.ample.tracing.core.TypeManager;
 import net.ample.tracing.core.query.Constraints;
 import net.ample.tracing.core.query.Query;
 
@@ -52,15 +52,17 @@ import edu.uci.isr.xarch.types.IInterfaceType;
  */
 public abstract class AbstractXADLExtractor extends AbstractTraceExtractor
 {
-	public static final String TAT_ARCHSTRUCTURE = "ArchStructure";
-	public static final String TAT_COMPONENT = "Component";
-	public static final String TAT_CONNECTOR = "Connector";
-	public static final String TAT_INTERFACE = "Interface";
-	public static final String TAT_COMPONENT_TYPE = "ComponentType";
-	public static final String TAT_CONNECTOR_TYPE = "ConnectorType";
-	public static final String TAT_INTERFACE_TYPE = "InterfaceType";
+	public static final UUID TAT_ARCHSTRUCTURE = UUID.fromString("48128e30-2f23-11de-8c30-0800200c9a66");
+	public static final UUID TAT_COMPONENT = UUID.fromString("2936e730-2e57-11de-8c30-0800200c9a66");
+	public static final UUID TAT_CONNECTOR = UUID.fromString("2936e731-2e57-11de-8c30-0800200c9a66");
+	public static final UUID TAT_INTERFACE = UUID.fromString("2936e732-2e57-11de-8c30-0800200c9a66");
+	public static final UUID TAT_COMPONENT_TYPE = UUID.fromString("2936e733-2e57-11de-8c30-0800200c9a66");
+	public static final UUID TAT_CONNECTOR_TYPE = UUID.fromString("2936e734-2e57-11de-8c30-0800200c9a66");
+	public static final UUID TAT_INTERFACE_TYPE = UUID.fromString("2936e735-2e57-11de-8c30-0800200c9a66");
 
 	protected RepositoryManager manager;
+
+	protected Map<UUID, TraceableArtefactType> typeMap;
 
 	/**
 	 * A map from an xarchinstance:id to graph node
@@ -86,7 +88,7 @@ public abstract class AbstractXADLExtractor extends AbstractTraceExtractor
 				IXArch arch = getXArch(new InputStreamReader(xadlFile.getContents(true)));
 				extractArtifacts(arch);
 			}
-			catch (CoreException e)
+			catch (Exception e)
 			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -116,21 +118,6 @@ public abstract class AbstractXADLExtractor extends AbstractTraceExtractor
 	protected abstract IFile selectXADLFile();
 
 	/**
-	 * this method returns a type of traceable artifact existing in a
-	 * repository.
-	 * 
-	 * @param name
-	 *            the name of the type of traceable artifact.
-	 * @return the traceable artifact type.
-	 */
-	protected TraceableArtefactType getTraceableArtefactType(String name)
-	{
-		Query<TraceableArtefactType> query = manager.getQueryManager().queryOnArtefactTypes();
-		query.add(Constraints.hasName(name));
-		return query.executeUnique();
-	}
-
-	/**
 	 * this method returns a type of trace link existing in a repository.
 	 * 
 	 * @param name
@@ -146,7 +133,18 @@ public abstract class AbstractXADLExtractor extends AbstractTraceExtractor
 
 	protected void extractArtifacts(IXArch arch) throws CoreException
 	{
-		System.out.println("#@$@#$@$@$@$@$@$#");
+		TypeManager typeMan = manager.getTypeManager();
+		typeMap = new HashMap<UUID, TraceableArtefactType>();
+		typeMap.put(TAT_ARCHSTRUCTURE, typeMan.findArtefactTypeByUuid(TAT_ARCHSTRUCTURE));
+		typeMap.put(TAT_COMPONENT, typeMan.findArtefactTypeByUuid(TAT_COMPONENT));
+		typeMap.put(TAT_CONNECTOR, typeMan.findArtefactTypeByUuid(TAT_CONNECTOR));
+		typeMap.put(TAT_INTERFACE, typeMan.findArtefactTypeByUuid(TAT_INTERFACE));
+		typeMap.put(TAT_COMPONENT_TYPE, typeMan.findArtefactTypeByUuid(TAT_COMPONENT_TYPE));
+		typeMap.put(TAT_CONNECTOR_TYPE, typeMan.findArtefactTypeByUuid(TAT_CONNECTOR_TYPE));
+		typeMap.put(TAT_INTERFACE_TYPE, typeMan.findArtefactTypeByUuid(TAT_INTERFACE_TYPE));
+
+		manager.getPersistenceManager().begin();
+
 		idMap = new HashMap<String, TraceableArtefact>();
 		pending = new HashMap<TraceableArtefact, Object>();
 
@@ -154,11 +152,7 @@ public abstract class AbstractXADLExtractor extends AbstractTraceExtractor
 		createStructureNodes(arch);
 
 		// go through the pending items to finish them off
-		manager.getPersistenceManager().begin();
-		for (TraceableArtefact ta : pending.keySet())
-		{
-			manager.getPersistenceManager().add(ta);
-		}
+
 		try
 		{
 			manager.getPersistenceManager().commit();
@@ -193,18 +187,18 @@ public abstract class AbstractXADLExtractor extends AbstractTraceExtractor
 	 * @param description
 	 * @return
 	 */
-	protected TraceableArtefact createArtefact(String artType, String id, IDescription description)
+	protected TraceableArtefact createArtefact(UUID artType, String id, IDescription description)
 	{
-		TraceableArtefactType type = getTraceableArtefactType(artType);
 		String artName = id;
 		if (description != null && description.getValue() != null && description.getValue().length() != 0)
 		{
 			artName = description.getValue();
 		}
-		TraceableArtefact art = manager.getItemManager().createTraceableArtefact(type, artName);
+		TraceableArtefact art = manager.getItemManager().createTraceableArtefact(typeMap.get(artType), artName);
 		art.setResourceURI(uri);
 		art.getProperties().put("id", id);
 		idMap.put(id, art);
+		manager.getPersistenceManager().add(art);
 		return art;
 	}
 
