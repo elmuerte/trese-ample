@@ -15,6 +15,16 @@
 % License along with this library; if not, write to the Free Software
 % Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
+/*
+
+ValueNode (extends Node):
+	A value node is a special type of node which contains a value (usually 
+	a string or integer). A value node is used as the value of an 
+	attribute of an other node (like the value of a 'name' or 'id' assigned
+	to a node).
+
+*/
+
 % Succeeds if the given term is a value node
 % is_valuenode(@Node)
 :-build_in(is_valuenode/1,'groove.prolog.builtin.algebra.Predicate_is_valuenode').

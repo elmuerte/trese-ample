@@ -15,6 +15,35 @@
 % License along with this library; if not, write to the Free Software
 % Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
+/*
+
+GTS (extends Graph):
+	The GTS is the created graph when applying rules to the basic graph.
+	The nodes in a GTS are graph states. The edges transitions from
+	one state to the other.
+	
+Graphstate (extends Node):
+	A graphstate is a node in the GTS graph. It contains a reference
+	to the actual graph, and information about transitions to other
+	states.
+	
+Transition (extends Edge):
+	A transition is a special edge in the GTS. It contains information
+	about the rule which was applied to the source state in order to
+	get to the destination state.
+	
+Location:
+	This is a reference to a Location in the control automata (if the 
+	production system uses a control automata).
+	
+RuleEvent:
+	see groove.trans.pro
+	
+RuleMatch:
+	see groove.trans.pro
+
+*/
+
 % Success if the argument is a JavaObjectTerm with a GraphState
 % is_graphstate(@State)
 :-build_in(is_graphstate/1,'groove.prolog.builtin.lts.Predicate_is_graphstate').
