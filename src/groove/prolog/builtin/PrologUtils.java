@@ -18,12 +18,15 @@
  */
 package groove.prolog.builtin;
 
+import gnu.prolog.term.AtomTerm;
+import gnu.prolog.term.CompoundTerm;
 import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Utility class
@@ -62,6 +65,27 @@ public class PrologUtils
 			result.add(new JavaObjectTerm(o));
 		}
 		return result;
+	}
+
+	/** expand compound terms */
+	public static void getTermSet(Term term, Set<Term> set)
+	{
+		term = term.dereference();
+		if (term instanceof CompoundTerm)
+		{
+			CompoundTerm ct = (CompoundTerm) term;
+			for (int i = ct.tag.arity - 1; i >= 0; i--)
+			{
+				getTermSet(ct.args[i], set);
+			}
+		}
+		else
+		{
+			if (!AtomTerm.emptyList.equals(term))
+			{
+				set.add(term);
+			}
+		}
 	}
 
 	private PrologUtils()
