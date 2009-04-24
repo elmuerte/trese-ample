@@ -223,3 +223,34 @@ node_path(Graph,From,To,Path):-
 % Short hand to operate on the current graph
 node_path(From,To,Path):-
 	graph(G),node_path(G,From,To,Path,[]).
+
+% Nodes from the graph that contain self edges with labels from the list.
+% All the labels must be present, but more are allowed. 
+% node_self_edges(+Graph,?Node,?Labels)
+% example: graph(G),node_self_edges(G,Node,['Feature','includedFeature'])
+% @param the graph to query
+% @param the node
+% @param the list of labels of the self edges
+:-build_in(node_self_edges/3,'groove.prolog.builtin.graph.Predicate_node_self_edges').
+node_self_edges(Node,Labels):-graph(G),node_self_edges(G,Node,Labels).
+
+% Same as node_self_edges/3 except that that the list is exclusive, thus the node
+% may not contain more edges
+% node_self_edges(+Graph,?Node,?Labels)
+% @param the graph to query
+% @param the node
+% @param the list of labels of the self edges
+:-build_in(node_self_edges_excl/3,'groove.prolog.builtin.graph.Predicate_node_self_edges_excl').
+node_self_edges_excl(Node,Labels):-graph(G),node_self_edges_excl(G,Node,Labels).
+
+% Get the "internal" number of a node. Node numbers are volatile information,
+% "similar" nodes in different graph states do not share the same number. You should
+% not build algorithms around the usage of this predicate. Note, that all node
+% forms contain numbers, this completely depends on the Groove implementation 
+% node_number(+Node,?Integer)
+% @param the node
+% @param the node number
+:-build_in(node_number/2,'groove.prolog.builtin.graph.Predicate_node_number').
+
+% Useful predicate to find the node in the graph with a given number
+node_number(Graph,Node,Number):-graph_node(Graph,Node),node_number(Node,Number).

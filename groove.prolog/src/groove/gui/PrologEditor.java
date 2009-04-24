@@ -108,6 +108,7 @@ public class PrologEditor extends JPanel
 		GRAPH_STATE, LTS
 	}
 
+	protected int solutionCount;
 	protected Simulator sim;
 	protected PrologQuery prolog;
 	protected QueryMode mode = QueryMode.GRAPH_STATE;
@@ -756,6 +757,7 @@ public class PrologEditor extends JPanel
 
 		try
 		{
+			solutionCount = 0;
 			processResults(prolog.newQuery(queryString));
 		}
 		catch (GroovePrologException e)
@@ -822,11 +824,11 @@ public class PrologEditor extends JPanel
 		{
 			return;
 		}
-		statusBar.setText(String.format("Executed in %fms", queryResult.getExecutionTime() / 1000000.0));
 		switch (queryResult.getReturnValue())
 		{
 			case SUCCESS:
 			case SUCCESS_LAST:
+				++solutionCount;
 				for (Entry<String, Object> entry : queryResult.getVariables().entrySet())
 				{
 					results.append(entry.getKey());
@@ -850,6 +852,8 @@ public class PrologEditor extends JPanel
 		{
 			nextResultBtn.grabFocus();
 		}
+		statusBar.setText(String.format("%d solution(s); Executed in %fms", solutionCount, queryResult
+				.getExecutionTime() / 1000000.0));
 	}
 
 	protected void consultUserCode()
