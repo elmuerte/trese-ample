@@ -15,6 +15,23 @@
 % License along with this library; if not, write to the Free Software
 % Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
+/*
+
+RuleEvent:
+	A rule event is the instantiation of a rule for the current graph state.
+	It maps the current graph to a rule.	 
+
+RuleMatch:
+	...
+
+Rule:
+	This is the object representation of a rule as defined in the
+	production system. Rules never contain information about a current
+	graph, it is static information that never changes in the production
+	system.
+
+*/
+
 % Success if the argument is a JavaObjectTerm with a RuleEvent
 % is_ruleevent(@RuleEvent)
 :-build_in(is_ruleevent/1,'groove.prolog.builtin.trans.Predicate_is_ruleevent').
@@ -59,7 +76,7 @@
 % @param the rule event
 % @param node/edge as used in the rule's graph
 % @param node/edge in the graph
-:-build_in(ruleevent_rule/3,'groove.prolog.builtin.trans.Predicate_ruleevent_transpose').
+:-build_in(ruleevent_transpose/3,'groove.prolog.builtin.trans.Predicate_ruleevent_transpose').
 
 % Node anchors in this event. Anchors are the 
 % ruleevent_anchor_node(+RuleEvent,?Node)

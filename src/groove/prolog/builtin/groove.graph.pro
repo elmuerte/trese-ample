@@ -15,6 +15,25 @@
 % License along with this library; if not, write to the Free Software
 % Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
+/*
+
+Graph:
+	A graph is a collection of nodes and edges. There are different
+	graph types in Groove. There is the plain graph and the state space
+	graph (a.k.a. GTS).
+	
+Node:
+	A source and destination of edges. Nodes also come in different
+	forms. The plain graph contains simple nodes which do not contain
+	any information (except a internal number). The nodes in a GTS
+	are also graphstate objects.
+	
+Edge:
+	Edges contain more information, they contain the source and 
+	destination nodes, and a label. 
+
+*/
+
 % Fail if the first argument is not a Groove Graph
 % is_graph(@Graph)
 :-build_in(is_graph/1,'groove.prolog.builtin.graph.Predicate_is_graph').
