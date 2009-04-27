@@ -255,7 +255,7 @@ node_self_edges(Node,Labels):-graph(G),node_self_edges(G,Node,Labels).
 
 % Same as node_self_edges/3 except that that the list is exclusive, thus the node
 % may not contain more edges
-% node_self_edges(+Graph,?Node,?Labels)
+% node_self_edges_excl(+Graph,?Node,?Labels)
 % @param the graph to query
 % @param the node
 % @param the list of labels of the self edges
