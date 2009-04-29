@@ -22,13 +22,10 @@ import gnu.prolog.term.Term;
 import gnu.prolog.vm.Interpreter;
 import gnu.prolog.vm.PrologException;
 import groove.graph.Node;
-import groove.gxl.Edge;
 import groove.prolog.builtin.PrologCollectionIterator;
 import groove.trans.RuleEvent;
 import groove.trans.SPOEvent;
 
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -36,9 +33,9 @@ import java.util.Set;
  * 
  * @author Michiel Hendriks
  */
-public class Predicate_ruleevent_created_edge extends TransPrologCode
+public class Predicate_ruleevent_created_node extends TransPrologCode
 {
-	public Predicate_ruleevent_created_edge()
+	public Predicate_ruleevent_created_node()
 	{}
 
 	/*
@@ -56,23 +53,14 @@ public class Predicate_ruleevent_created_edge extends TransPrologCode
 		}
 		else
 		{
-			RuleEvent re = getRuleEvent(args[0]);
-			PrologCollectionIterator it;
-			if (re instanceof SPOEvent)
+			RuleEvent event = getRuleEvent(args[0]);
+			if (!(event instanceof SPOEvent))
 			{
-				SPOEvent se = (SPOEvent) re;
-				Set<Edge> edges = new HashSet<Edge>();
-				Set<Node> createdNodes = new HashSet<Node>();
-				createdNodes.addAll(se.getCreatedNodes(se.getAnchorMap().nodeMap().keySet()));
-				// combine the created edges from both new and old nodes
-				edges.addAll((Collection<? extends Edge>) se.getComplexCreatedEdges(createdNodes.iterator()));
-				edges.addAll((Collection<? extends Edge>) se.getSimpleCreatedEdges());
-				it = new PrologCollectionIterator(edges, args[1], interpreter.getUndoPosition());
+				return FAIL;
 			}
-			else
-			{
-				it = new PrologCollectionIterator(re.getSimpleCreatedEdges(), args[1], interpreter.getUndoPosition());
-			}
+			Set<? extends Node> filterNodes = ((SPOEvent) event).getAnchorMap().nodeMap().keySet();
+			PrologCollectionIterator it = new PrologCollectionIterator(event.getCreatedNodes(filterNodes), args[1],
+					interpreter.getUndoPosition());
 			return it.nextSolution(interpreter);
 		}
 	}

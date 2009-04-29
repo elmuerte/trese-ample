@@ -96,11 +96,17 @@ Rule:
 % @param the edge
 :-build_in(ruleevent_erased_edge/2,'groove.prolog.builtin.trans.Predicate_ruleevent_erased_edge').
 
-% Created edges in this event
+% Created edges in this event. 
 % ruleevent_created_edge(+RuleEvent,?Edge)
 % @param the rule event
 % @param the edge
 :-build_in(ruleevent_created_edge/2,'groove.prolog.builtin.trans.Predicate_ruleevent_created_edge').
+
+% Created nodes in this event. 
+% ruleevent_created_edge(+RuleEvent,?Node)
+% @param the rule event
+% @param the node
+:-build_in(ruleevent_created_node/2,'groove.prolog.builtin.trans.Predicate_ruleevent_created_node').
 
 % The rule match
 % ruleevent_match(+RuleEvent,+Graph,?RuleMatch)
