@@ -116,6 +116,14 @@ public final class TermConverter
 				}
 				return compound;
 			}
+			else if (ct.tag == CompoundTermTag.divide2)
+			{
+				return CompoundTermTag.get(ct).toString();
+			}
+			else
+			{
+				// TODO?
+			}
 		}
 		return null;
 	}
