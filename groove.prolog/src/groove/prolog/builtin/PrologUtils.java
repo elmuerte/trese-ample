@@ -18,10 +18,10 @@
  */
 package groove.prolog.builtin;
 
-import gnu.prolog.term.AtomTerm;
 import gnu.prolog.term.CompoundTerm;
 import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
+import gnu.prolog.vm.TermConstants;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -81,7 +81,7 @@ public class PrologUtils
 		}
 		else
 		{
-			if (!AtomTerm.emptyList.equals(term))
+			if (!TermConstants.emptyListAtom.equals(term))
 			{
 				set.add(term);
 			}
