@@ -25,6 +25,7 @@ import gnu.prolog.term.FloatTerm;
 import gnu.prolog.term.IntegerTerm;
 import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
+import gnu.prolog.vm.TermConstants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -79,13 +80,13 @@ public final class TermConverter
 		else if (value instanceof CompoundTerm)
 		{
 			CompoundTerm ct = (CompoundTerm) value;
-			if (ct.tag == CompoundTermTag.list)
+			if (ct.tag == TermConstants.listTag)
 			{
 				List<Object> compound = new ArrayList<Object>();
 				while (ct != null)
 				{
 					value = ct.args[0].dereference();
-					if (value == AtomTerm.emptyList)
+					if (value == TermConstants.emptyListAtom)
 					{
 						// nop
 					}
@@ -98,11 +99,11 @@ public final class TermConverter
 					{
 						value = value.dereference();
 					}
-					if (value == AtomTerm.emptyList)
+					if (value == TermConstants.emptyListAtom)
 					{
 						break;
 					}
-					else if (value instanceof CompoundTerm && ((CompoundTerm) value).tag == CompoundTermTag.list)
+					else if (value instanceof CompoundTerm && ((CompoundTerm) value).tag == TermConstants.listTag)
 					{
 						ct = (CompoundTerm) value;
 						continue;
