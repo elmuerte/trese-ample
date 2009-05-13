@@ -56,7 +56,6 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -725,8 +724,8 @@ public class PrologEditor extends JPanel
 		query.setSelectedIndex(0);
 		results.setText("?- " + queryString + "\n");
 
-		System.setOut(new PrintStream(userOutput));
-		System.setErr(new PrintStream(userOutput));
+		// System.setOut(new PrintStream(userOutput));
+		// System.setErr(new PrintStream(userOutput));
 
 		if (!ensureProlog())
 		{
@@ -823,6 +822,10 @@ public class PrologEditor extends JPanel
 		if (queryResult == null)
 		{
 			return;
+		}
+		if (!results.getText().endsWith("\n"))
+		{
+			results.append("\n");
 		}
 		switch (queryResult.getReturnValue())
 		{
