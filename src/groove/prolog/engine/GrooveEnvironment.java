@@ -49,6 +49,13 @@ public class GrooveEnvironment extends Environment
 
 	protected GrooveState grooveState;
 
+	{
+		// TODO: make this nicer
+		// initialize using our subclass, needed for better Eclipse support
+		// (i.e. to resolve resources)
+		prologTextLoaderState = new GroovePrologTextLoaderState();
+	}
+
 	public GrooveEnvironment()
 	{
 		super();
