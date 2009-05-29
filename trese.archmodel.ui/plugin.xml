@@ -13,6 +13,9 @@
             <separator
                   name="group1">
             </separator>
+            <separator
+                  name="group2">
+            </separator>
          </menu>
          <action
                class="trese.archmodel.ui.popup.actions.ExportGST"
@@ -29,6 +32,14 @@
                label="Export selected structures..."
                menubarPath="trese.archmodel.ui.archstudio/group1"
                tooltip="Export a subset of the architectures to a Groove GST">
+         </action>
+         <action
+               class="trese.archmodel.ui.popup.actions.DRWizard"
+               enablesFor="1"
+               id="trese.archmodel.ui.designrationale"
+               label="Design Ratonale..."
+               menubarPath="trese.archmodel.ui.archstudio/group2"
+               tooltip="Apply a design rationale on this architecture">
          </action>
          <visibility>
             <objectState
