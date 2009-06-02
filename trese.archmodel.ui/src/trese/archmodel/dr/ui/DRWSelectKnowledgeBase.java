@@ -4,7 +4,6 @@
  */
 package trese.archmodel.dr.ui;
 
-import gnu.prolog.vm.Environment;
 import groove.prolog.GroovePrologLoadingException;
 import groove.prolog.PrologQuery;
 
@@ -118,12 +117,22 @@ public class DRWSelectKnowledgeBase extends WizardPage
 				setErrorMessage(String.format("The file %s does not exist.", kbFile));
 				return;
 			}
-			PrologQuery pq = new PrologQuery();
+			PrologQuery pq;
+			try
+			{
+				pq = new PrologQuery(wizard.getGrooveState());
+			}
+			catch (Exception e1)
+			{
+				e1.printStackTrace();
+				setErrorMessage(e1.getMessage());
+				return;
+			}
 			pq.setUserOutput(wizard.getOutputMux());
 			wizard.getOutputMux().addStream(loadOutStream);
 			try
 			{
-				pq.init(new FileReader(kb), "user_code");
+				pq.init(new FileReader(kb), kb.toString());
 			}
 			catch (GroovePrologLoadingException e)
 			{

@@ -4,12 +4,22 @@
  */
 package trese.archmodel.dr.ui;
 
+import edu.uci.isr.xarch.IXArchImplementation;
+import edu.uci.isr.xarch.XArchUtils;
+import groove.graph.Graph;
 import groove.prolog.PrologQuery;
+import groove.prolog.engine.GrooveState;
 
+import java.io.InputStreamReader;
+
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
+
+import trese.archmodel.groove.XADL2Graph;
 
 /**
  * @author Michiel Hendriks
@@ -21,11 +31,19 @@ public class DesignRationaleWizard extends Wizard implements IWorkbenchWizard
 
 	protected PrologQuery prologQuery;
 
+	protected DRWExecuteKBQuery queryPage;
+
+	protected DRWReason reasonPage;
+
+	protected GrooveState grooveState;
+
+	protected IFile selectedFile;
+
 	public DesignRationaleWizard()
 	{
 		super();
 		setWindowTitle("Design Rationale");
-		setNeedsProgressMonitor(true);
+		// setNeedsProgressMonitor(true);
 		setHelpAvailable(false);
 		outputMux = new OutputStreamMux();
 	}
@@ -39,6 +57,26 @@ public class DesignRationaleWizard extends Wizard implements IWorkbenchWizard
 	{
 		super.addPages();
 		addPage(new DRWSelectKnowledgeBase(this));
+		queryPage = new DRWExecuteKBQuery(this);
+		addPage(queryPage);
+		reasonPage = new DRWReason(this);
+		addPage(reasonPage);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * org.eclipse.jface.wizard.Wizard#getNextPage(org.eclipse.jface.wizard.
+	 * IWizardPage)
+	 */
+	@Override
+	public IWizardPage getNextPage(IWizardPage page)
+	{
+		if (page == queryPage)
+		{
+			return null;
+		}
+		return super.getNextPage(page);
 	}
 
 	/*
@@ -48,7 +86,13 @@ public class DesignRationaleWizard extends Wizard implements IWorkbenchWizard
 	@Override
 	public boolean performFinish()
 	{
-		return true;
+		if (getContainer().getCurrentPage() != reasonPage)
+		{
+			getContainer().showPage(reasonPage);
+			reasonPage.executeQuery(queryPage.getQuery(), prologQuery, outputMux);
+			return false;
+		}
+		return getContainer().getCurrentPage() == reasonPage;
 	}
 
 	/*
@@ -58,7 +102,10 @@ public class DesignRationaleWizard extends Wizard implements IWorkbenchWizard
 	 */
 	public void init(IWorkbench workbench, IStructuredSelection selection)
 	{
-
+		if (selection.getFirstElement() instanceof IFile)
+		{
+			selectedFile = (IFile) selection.getFirstElement();
+		}
 	}
 
 	/**
@@ -83,5 +130,20 @@ public class DesignRationaleWizard extends Wizard implements IWorkbenchWizard
 	public PrologQuery getPrologQuery()
 	{
 		return prologQuery;
+	}
+
+	/**
+	 * @return the grooveState
+	 * @throws Exception
+	 */
+	public GrooveState getGrooveState() throws Exception
+	{
+		if (grooveState == null && selectedFile != null)
+		{
+			IXArchImplementation impl = XArchUtils.getDefaultXArchImplementation();
+			Graph graph = XADL2Graph.convert(impl.parse(new InputStreamReader(selectedFile.getContents())));
+			grooveState = new GrooveState(graph);
+		}
+		return grooveState;
 	}
 }
