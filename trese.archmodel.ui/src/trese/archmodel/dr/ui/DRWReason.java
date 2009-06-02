@@ -55,6 +55,7 @@ public class DRWReason extends WizardPage
 	 */
 	public void executeQuery(String query, PrologQuery prologQuery, OutputStreamMux outputMux)
 	{
+		setErrorMessage(null);
 		result.setText(String.format("-? %s.\n", query));
 		outputMux.addStream(resultStream);
 		try
