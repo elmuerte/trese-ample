@@ -20,3 +20,4 @@ Require-Bundle: groove;bundle-version="3.2.1",
  gnuprologjava;bundle-version="0.2.0"
 Bundle-ClassPath: grooveprolog.jar
 Bundle-ActivationPolicy: lazy
+Eclipse-RegisterBuddy: gnuprologjava
