@@ -59,18 +59,6 @@ public class GrooveEnvironment extends Environment
 		super(stdin, stdout);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see gnu.prolog.vm.Environment#createTextLoader()
-	 */
-	@Override
-	protected void createTextLoader()
-	{
-		// initialize using our subclass, needed for better Eclipse support
-		// (i.e. to resolve resources)
-		prologTextLoaderState = new GroovePrologTextLoaderState();
-	}
-
 	/**
 	 * @return the grooveState
 	 */
