@@ -16,3 +16,4 @@ Require-Bundle: edu.uci.isr.xarchlibs.apigen;bundle-version="4.1.50",
 Bundle-ClassPath: trese.archmodel.ui.jar
 Export-Package: trese.archmodel.ui.dialogs,
  trese.archmodel.ui.popup.actions
+Eclipse-RegisterBuddy: gnuprologjava

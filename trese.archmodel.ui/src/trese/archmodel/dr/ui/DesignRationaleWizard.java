@@ -6,7 +6,10 @@ package trese.archmodel.dr.ui;
 
 import edu.uci.isr.xarch.IXArchImplementation;
 import edu.uci.isr.xarch.XArchUtils;
+import gnu.prolog.database.Predicate;
+import gnu.prolog.term.CompoundTermTag;
 import groove.graph.Graph;
+import groove.prolog.GroovePrologLoadingException;
 import groove.prolog.PrologQuery;
 import groove.prolog.engine.GrooveState;
 
@@ -43,7 +46,7 @@ public class DesignRationaleWizard extends Wizard implements IWorkbenchWizard
 	{
 		super();
 		setWindowTitle("Design Rationale");
-		// setNeedsProgressMonitor(true);
+		setNeedsProgressMonitor(true);
 		setHelpAvailable(false);
 		outputMux = new OutputStreamMux();
 	}
@@ -122,6 +125,23 @@ public class DesignRationaleWizard extends Wizard implements IWorkbenchWizard
 	public void setPrologQuery(PrologQuery pq)
 	{
 		prologQuery = pq;
+		CompoundTermTag ctt = CompoundTermTag.get("designrationale_query", 1);
+		Predicate pred;
+		try
+		{
+			pred = prologQuery.getEnvironment().getModule().getDefinedPredicate(ctt);
+			if (pred == null)
+			{
+				pred = prologQuery.getEnvironment().getModule().createDefinedPredicate(ctt);
+				pred.setType(Predicate.BUILD_IN);
+				pred.setJavaClassName(Predicate_designrationale_query.class.getName());
+			}
+		}
+		catch (GroovePrologLoadingException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**

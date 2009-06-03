@@ -4,15 +4,17 @@
  */
 package trese.archmodel.dr.ui;
 
-import groove.prolog.GroovePrologLoadingException;
 import groove.prolog.PrologQuery;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -23,6 +25,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -76,7 +79,12 @@ public class DRWSelectKnowledgeBase extends WizardPage
 		kbFileField.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e)
 			{
-				updatePageComplete();
+				Display.getDefault().asyncExec(new Runnable() {
+					public void run()
+					{
+						updatePageComplete();
+					}
+				});
 			}
 		});
 		kbFileField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -111,54 +119,82 @@ public class DRWSelectKnowledgeBase extends WizardPage
 		String kbFile = kbFileField.getText();
 		if (kbFile != null && kbFile.length() > 0)
 		{
-			File kb = new File(kbFile);
+			final File kb = new File(kbFile);
 			if (!kb.exists())
 			{
 				setErrorMessage(String.format("The file %s does not exist.", kbFile));
 				return;
 			}
-			PrologQuery pq;
 			try
 			{
-				pq = new PrologQuery(wizard.getGrooveState());
+				getContainer().run(true, false, new IRunnableWithProgress() {
+					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException
+					{
+						createPrologQuery(kb);
+					}
+				});
 			}
-			catch (Exception e1)
+			catch (InvocationTargetException e)
 			{
-				e1.printStackTrace();
-				setErrorMessage(e1.getMessage());
-				return;
+				e.printStackTrace();
+				setErrorMessage(e.toString());
 			}
-			pq.setUserOutput(wizard.getOutputMux());
-			wizard.getOutputMux().addStream(loadOutStream);
+			catch (InterruptedException e)
+			{
+				e.printStackTrace();
+				setErrorMessage(e.toString());
+			}
 			try
 			{
-				pq.init(new FileReader(kb), kb.toString());
+				loadOutStream.flush();
 			}
-			catch (GroovePrologLoadingException e)
+			catch (IOException e)
 			{
 				setErrorMessage(e.getMessage());
-				return;
 			}
-			catch (FileNotFoundException e)
-			{
-				setErrorMessage(e.getMessage());
-				return;
-			}
-			finally
-			{
-				wizard.getOutputMux().removeStream(loadOutStream);
-				try
-				{
-					loadOutStream.flush();
-				}
-				catch (IOException e)
-				{
-					setErrorMessage(e.getMessage());
-				}
-			}
-			wizard.setPrologQuery(pq);
-			setPageComplete(true);
+			setPageComplete(wizard.getPrologQuery() != null);
 		}
+	}
+
+	/**
+	 * @param kb
+	 */
+	protected void createPrologQuery(File kb)
+	{
+		PrologQuery pq;
+		try
+		{
+			pq = new PrologQuery(wizard.getGrooveState());
+		}
+		catch (Exception e1)
+		{
+			e1.printStackTrace();
+			setErrorMessage(e1.getMessage());
+			return;
+		}
+		pq.setUserOutput(wizard.getOutputMux());
+		wizard.getOutputMux().addStream(loadOutStream);
+		try
+		{
+			pq.init(new FileReader(kb), kb.toString());
+		}
+		catch (Exception e)
+		{
+			final Exception except = e;
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run()
+				{
+					setErrorMessage(except.getMessage());
+					except.printStackTrace(new PrintStream(loadOutStream));
+				}
+			});
+			return;
+		}
+		finally
+		{
+			wizard.getOutputMux().removeStream(loadOutStream);
+		}
+		wizard.setPrologQuery(pq);
 	}
 
 	protected void browseFile()
