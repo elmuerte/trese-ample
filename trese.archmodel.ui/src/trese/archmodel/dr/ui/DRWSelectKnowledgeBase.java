@@ -4,6 +4,9 @@
  */
 package trese.archmodel.dr.ui;
 
+import gnu.prolog.database.Predicate;
+import gnu.prolog.term.CompoundTermTag;
+import groove.prolog.GroovePrologLoadingException;
 import groove.prolog.PrologQuery;
 
 import java.io.File;
@@ -165,6 +168,16 @@ public class DRWSelectKnowledgeBase extends WizardPage
 		try
 		{
 			pq = new PrologQuery(wizard.getGrooveState());
+			pq.setUserOutput(wizard.getOutputMux());
+			wizard.getOutputMux().addStream(loadOutStream);
+			CompoundTermTag ctt = CompoundTermTag.get("designrationale_query", 1);
+			Predicate pred = pq.getEnvironment().getModule().getDefinedPredicate(ctt);
+			if (pred == null)
+			{
+				pred = pq.getEnvironment().getModule().createDefinedPredicate(ctt);
+				pred.setType(Predicate.BUILD_IN);
+				pred.setJavaClassName(Predicate_designrationale_query.class.getName());
+			}
 		}
 		catch (Exception e1)
 		{
@@ -172,8 +185,6 @@ public class DRWSelectKnowledgeBase extends WizardPage
 			setErrorMessage(e1.getMessage());
 			return;
 		}
-		pq.setUserOutput(wizard.getOutputMux());
-		wizard.getOutputMux().addStream(loadOutStream);
 		try
 		{
 			pq.init(new FileReader(kb), kb.toString());

@@ -125,23 +125,6 @@ public class DesignRationaleWizard extends Wizard implements IWorkbenchWizard
 	public void setPrologQuery(PrologQuery pq)
 	{
 		prologQuery = pq;
-		CompoundTermTag ctt = CompoundTermTag.get("designrationale_query", 1);
-		Predicate pred;
-		try
-		{
-			pred = prologQuery.getEnvironment().getModule().getDefinedPredicate(ctt);
-			if (pred == null)
-			{
-				pred = prologQuery.getEnvironment().getModule().createDefinedPredicate(ctt);
-				pred.setType(Predicate.BUILD_IN);
-				pred.setJavaClassName(Predicate_designrationale_query.class.getName());
-			}
-		}
-		catch (GroovePrologLoadingException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	/**
