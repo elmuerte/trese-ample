@@ -151,10 +151,7 @@ public class PrologQuery
 		}
 		initialized = true;
 		currentResult = null;
-		env = new GrooveEnvironment(null, userOutput);
-		env.setGrooveState(grooveState);
-		CompoundTerm term = new CompoundTerm(AtomTerm.get("resource"), new Term[] { AtomTerm.get(GROOVE_PRO) });
-		env.ensureLoaded(term);
+		getEnvironment();
 		if (initStream != null)
 		{
 			env.loadStream(initStream, streamName);
@@ -415,9 +412,12 @@ public class PrologQuery
 
 	public Environment getEnvironment() throws GroovePrologLoadingException
 	{
-		if (!initialized)
+		if (env == null)
 		{
-			init();
+			env = new GrooveEnvironment(null, userOutput);
+			env.setGrooveState(grooveState);
+			CompoundTerm term = new CompoundTerm(AtomTerm.get("resource"), new Term[] { AtomTerm.get(GROOVE_PRO) });
+			env.ensureLoaded(term);
 		}
 		return env;
 	}
