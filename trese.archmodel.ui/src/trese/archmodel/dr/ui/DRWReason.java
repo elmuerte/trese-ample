@@ -4,10 +4,13 @@
  */
 package trese.archmodel.dr.ui;
 
+import gnu.prolog.io.TermWriter;
+import gnu.prolog.term.Term;
 import groove.prolog.PrologQuery;
 import groove.prolog.QueryResult;
 
 import java.io.OutputStream;
+import java.util.Map.Entry;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -31,6 +34,8 @@ public class DRWReason extends WizardPage
 	public DRWReason(DesignRationaleWizard parent)
 	{
 		super("drwreason");
+		setTitle("Design Rationale Reasoning");
+		setDescription("The result of the executed query. You can go back to execute a different query.");
 	}
 
 	/*
@@ -70,6 +75,20 @@ public class DRWReason extends WizardPage
 			{
 				case SUCCESS:
 				case SUCCESS_LAST:
+					for (Entry<String, Object> entry : qr.getVariables().entrySet())
+					{
+						result.append(entry.getKey());
+						result.append(" = ");
+						if (entry.getValue() instanceof Term)
+						{
+							result.append(TermWriter.toString((Term) entry.getValue()));
+						}
+						else
+						{
+							result.append("" + entry.getValue());
+						}
+						result.append("\n");
+					}
 					result.append("\nYes");
 					break;
 				default:
@@ -78,7 +97,7 @@ public class DRWReason extends WizardPage
 			}
 		}
 		catch (Exception e)
-		{			
+		{
 			setErrorMessage(e.getMessage());
 			if (!result.getText().endsWith("\n"))
 			{

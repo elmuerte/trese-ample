@@ -19,8 +19,10 @@
 package groove.gui;
 
 import gnu.prolog.database.Module;
+import gnu.prolog.io.TermWriter;
 import gnu.prolog.term.AtomTerm;
 import gnu.prolog.term.CompoundTermTag;
+import gnu.prolog.term.Term;
 import gnu.prolog.vm.Environment;
 import gnu.prolog.vm.PrologException;
 import groove.explore.Scenario;
@@ -836,7 +838,14 @@ public class PrologEditor extends JPanel
 				{
 					results.append(entry.getKey());
 					results.append(" = ");
-					results.append("" + entry.getValue());
+					if (entry.getValue() instanceof Term)
+					{
+						results.append(TermWriter.toString((Term) entry.getValue()));
+					}
+					else
+					{
+						results.append("" + entry.getValue());
+					}
 					results.append("\n");
 				}
 				results.append("Yes\n");
