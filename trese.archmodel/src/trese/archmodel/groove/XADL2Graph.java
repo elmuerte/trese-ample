@@ -36,8 +36,11 @@ import edu.uci.isr.xarch.variants.IVariantComponentType;
 import edu.uci.isr.xarch.variants.IVariantConnectorType;
 import groove.graph.DefaultGraph;
 import groove.graph.DefaultLabel;
+import groove.graph.Graph;
 import groove.graph.Label;
 import groove.graph.Node;
+import groove.view.AspectualGraphView;
+import groove.view.FormatException;
 import groove.view.aspect.AspectGraph;
 
 import java.net.URI;
@@ -65,7 +68,7 @@ public class XADL2Graph
 	 * @throws ConversionException
 	 *             thrown when an error was encountered during conversion
 	 */
-	public static final AspectGraph convert(IXArch arch) throws ConversionException
+	public static final Graph convert(IXArch arch) throws ConversionException
 	{
 		return convert(arch, null);
 	}
@@ -80,7 +83,7 @@ public class XADL2Graph
 	 * @throws ConversionException
 	 *             thrown when an error was encountered during conversion
 	 */
-	public static final AspectGraph convert(IXArch arch, Set<String> restrictTo) throws ConversionException
+	public static final Graph convert(IXArch arch, Set<String> restrictTo) throws ConversionException
 	{
 		XADL2Graph converter = new XADL2Graph(arch, restrictTo);
 		return converter.internalConvert();
@@ -187,10 +190,18 @@ public class XADL2Graph
 	 * @return
 	 * @throws ConversionException
 	 */
-	protected AspectGraph internalConvert() throws ConversionException
+	protected Graph internalConvert() throws ConversionException
 	{
 		internalConvert(new DefaultGraph());
-		return AspectGraph.getFactory().fromPlainGraph(graph);
+		AspectualGraphView view = new AspectualGraphView(AspectGraph.getFactory().fromPlainGraph(graph), null);
+		try
+		{
+			return view.toModel();
+		}
+		catch (FormatException e)
+		{
+			throw new ConversionException(e);
+		}
 	}
 
 	/**

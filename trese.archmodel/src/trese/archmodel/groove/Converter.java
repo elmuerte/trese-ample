@@ -14,8 +14,8 @@ import edu.uci.isr.xarch.IXArch;
 import edu.uci.isr.xarch.IXArchImplementation;
 import edu.uci.isr.xarch.XArchParseException;
 import edu.uci.isr.xarch.XArchUtils;
-import groove.io.AspectGxl;
-import groove.view.aspect.AspectGraph;
+import groove.graph.Graph;
+import groove.io.DefaultGxl;
 
 /**
  * A commandline converter
@@ -85,8 +85,8 @@ public class Converter
 	 */
 	public void convert(IXArch arch, Set<String> restrictToArchId, File dest) throws ConversionException, IOException
 	{
-		AspectGraph graph = XADL2Graph.convert(arch, restrictToArchId);
-		AspectGxl gxl = new AspectGxl();
+		Graph graph = XADL2Graph.convert(arch, restrictToArchId);
+		DefaultGxl gxl = new DefaultGxl();
 		gxl.marshalGraph(graph, dest);
 	}
 
