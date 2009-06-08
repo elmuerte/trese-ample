@@ -154,7 +154,7 @@ node_out_edge_set(N,E):-graph(G),node_out_edge_set(G,N,E).
 % label_edge(+Graph,+Label,?Edge)
 % @param the graph
 % @param the label
-% @param the list of edges
+% @param the edges
 % @see groove.graph.GraphShape#labelEdgeSet(int,Label)
 :-build_in(label_edge/3,'groove.prolog.builtin.graph.Predicate_label_edge').
 label_edge(L,E):-graph(G),label_edge(G,L,E).
