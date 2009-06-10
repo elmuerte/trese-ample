@@ -4,11 +4,22 @@
  */
 package trese.archmodel.dr.ui;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabFolder2Listener;
+import org.eclipse.swt.custom.CTabFolderEvent;
 import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -24,6 +35,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
+import org.eclipse.ui.part.FileEditorInput;
 
 /**
  * @author Michiel Hendriks
@@ -39,9 +51,11 @@ public class DREditor extends EditorPart
 	private Button btnExec = null;
 	private ToolBar toolBar = null;
 
+	protected Map<IEditorInput, CTabItem> editors;
+
 	public DREditor()
 	{
-	// TODO Auto-generated constructor stub
+		editors = new HashMap<IEditorInput, CTabItem>();
 	}
 
 	/*
@@ -146,6 +160,26 @@ public class DREditor extends EditorPart
 		gridData1.horizontalAlignment = GridData.FILL;
 		container = new CTabFolder(top, SWT.BORDER);
 		container.setLayoutData(gridData1);
+		container.addCTabFolder2Listener(new CTabFolder2Listener() {
+
+			public void close(CTabFolderEvent event)
+			{
+				editors.values().remove(event.item);
+			}
+
+			public void maximize(CTabFolderEvent event)
+			{}
+
+			public void minimize(CTabFolderEvent event)
+			{}
+
+			public void restore(CTabFolderEvent event)
+			{}
+
+			public void showList(CTabFolderEvent event)
+			{}
+		});
+
 		CTabItem cTabItem = new CTabItem(container, SWT.NONE);
 		cTabItem.setText("Output");
 		output = new Text(container, SWT.MULTI | SWT.V_SCROLL | SWT.READ_ONLY | SWT.H_SCROLL);
@@ -153,16 +187,19 @@ public class DREditor extends EditorPart
 		output.setFont(JFaceResources.getTextFont());
 		cTabItem.setControl(output);
 		container.setSelection(cTabItem);
-
-		addKnowledgeBase(null);
 	}
 
 	public void addKnowledgeBase(IEditorInput input)
 	{
+		if (editors.containsKey(input))
+		{
+			container.setSelection(editors.get(input));
+			return;
+		}
 		PrologEditor edit = new PrologEditor();
 		try
 		{
-			edit.init(getEditorSite(), getEditorInput());
+			edit.init(getEditorSite(), input);
 		}
 		catch (PartInitException e)
 		{
@@ -178,7 +215,9 @@ public class DREditor extends EditorPart
 		cTabItem.setText(edit.getTitle());
 		cTabItem.setToolTipText(edit.getTitleToolTip());
 		cTabItem.setControl(cont);
-		
+		container.setSelection(cTabItem);
+		editors.put(input, cTabItem);
+
 		// TODO reconsultAll()
 	}
 
@@ -226,6 +265,15 @@ public class DREditor extends EditorPart
 		toolBar = new ToolBar(top, SWT.FLAT);
 		ToolItem btnAdd = new ToolItem(toolBar, SWT.PUSH);
 		btnAdd.setText("Add Knowledge Base");
+		btnAdd.addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e)
+			{}
+
+			public void widgetSelected(SelectionEvent e)
+			{
+				selectKnowledgeBase();
+			}
+		});
 		ToolItem btnSave = new ToolItem(toolBar, SWT.PUSH);
 		btnSave.setText("Save");
 		ToolItem btnSaveAll = new ToolItem(toolBar, SWT.PUSH);
@@ -235,4 +283,26 @@ public class DREditor extends EditorPart
 		btnConsultAll.setText("Reconsult All");
 	}
 
+	protected void selectKnowledgeBase()
+	{
+		WorkbenchFileSelectionDialog dlg = new WorkbenchFileSelectionDialog(getSite().getShell(), Collections
+				.singleton("gnuprologjava.file.prolog"));
+		dlg.setInput(ResourcesPlugin.getWorkspace().getRoot());
+		dlg.setTitle("Select a knowledge base");
+		dlg.setMessage("Select one or more knowledge bases you want to include in the design rational.");
+		dlg.setAllowMultiple(true);
+		switch (dlg.open())
+		{
+			case Window.OK:
+				Object[] res = dlg.getResult();
+				for (Object obj : res)
+				{
+					if (obj instanceof IFile)
+					{
+						addKnowledgeBase(new FileEditorInput((IFile) obj));
+					}
+				}
+				break;
+		}
+	}
 } // @jve:decl-index=0:visual-constraint="10,10,483,264"
