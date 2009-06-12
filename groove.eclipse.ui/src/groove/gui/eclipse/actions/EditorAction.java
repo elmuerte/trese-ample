@@ -8,6 +8,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IEditorLauncher;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
@@ -19,7 +20,8 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
  * 
  * @see IWorkbenchWindowActionDelegate
  */
-public class EditorAction implements IWorkbenchWindowActionDelegate {
+public class EditorAction implements IWorkbenchWindowActionDelegate,
+		IEditorLauncher {
 
 	protected String selectedFile;
 
@@ -44,6 +46,7 @@ public class EditorAction implements IWorkbenchWindowActionDelegate {
 			args = new String[0];
 		}
 		Editor.main(args);
+		// TODO: check for changes in the files
 	}
 
 	/**
@@ -90,5 +93,10 @@ public class EditorAction implements IWorkbenchWindowActionDelegate {
 	 * @see IWorkbenchWindowActionDelegate#init
 	 */
 	public void init(IWorkbenchWindow window) {
+	}
+
+	public void open(IPath file) {
+		selectedFile = file.toOSString();
+		run(null);
 	}
 }

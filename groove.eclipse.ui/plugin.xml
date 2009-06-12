@@ -10,16 +10,42 @@
             name="Groove Start Graph"
             priority="normal">
       </content-type>
+      <content-type
+            base-type="org.eclipse.core.runtime.xml"
+            file-extensions="gpr"
+            id="groove.file.gpr"
+            name="Groove Production Rule"
+            priority="normal">
+      </content-type>
    </extension>
    <extension
          point="org.eclipse.ui.editors">
       <editor
             class="groove.gui.EclipseGraphViewer"
-            default="true"
-            extensions="gst"
+            default="false"
             icon="icons/groove-blue-g-16x16.gif"
             id="groove.eclipse.ui.editor.graph"
             name="Graph Viewer">
+         <contentTypeBinding
+               contentTypeId="groove.file.gst">
+         </contentTypeBinding>
+      </editor>
+      <editor
+            default="true"
+            icon="icons/rule-file.gif"
+            id="groove.eclipse.ui.gpreditor"
+            launcher="groove.gui.eclipse.actions.EditorAction"
+            name="Groove Rule Editor">
+         <contentTypeBinding
+               contentTypeId="groove.file.gpr">
+         </contentTypeBinding>
+      </editor>
+      <editor
+            default="true"
+            icon="icons/graph-file.gif"
+            id="groove.eclipse.ui.gsteditor"
+            launcher="groove.gui.eclipse.actions.EditorAction"
+            name="Graph Editor">
          <contentTypeBinding
                contentTypeId="groove.file.gst">
          </contentTypeBinding>
@@ -61,6 +87,51 @@
                tooltip="Start the Groove Editor">
          </action>
       </actionSet>
+   </extension>
+   <extension
+         point="org.eclipse.ui.decorators">
+      <decorator
+            adaptable="true"
+            class="groove.gui.eclipse.GpsDecorator"
+            icon="icons/gps.gif"
+            id="groove.eclipse.ui.decorator.gps"
+            label="Groove Production System"
+            lightweight="true"
+            location="BOTTOM_LEFT"
+            state="true">
+         <description>
+            Replaces the icon in the navigator for Groove Production Systems
+         </description>
+         <enablement>
+            <objectClass
+                  name="org.eclipse.core.resources.IFolder">
+            </objectClass>
+         </enablement>
+      </decorator>
+      <decorator
+            adaptable="true"
+            class="groove.gui.eclipse.GprDecorator"
+            id="groove.eclipse.ui.decorator.gpr"
+            label="Groove Production Rule"
+            lightweight="true"
+            state="true">
+         <description>
+            Shows additional information about Groove Production Rules in the navigator
+         </description>
+         <enablement>
+            <objectState
+                  name="contentTypeId"
+                  value="groove.file.gpr">
+            </objectState>
+         </enablement>
+      </decorator>
+   </extension>
+   <extension
+         point="org.eclipse.ui.ide.resourceFilters">
+      <filter
+            pattern="*.gp?.gl"
+            selected="true">
+      </filter>
    </extension>
 
 </plugin>

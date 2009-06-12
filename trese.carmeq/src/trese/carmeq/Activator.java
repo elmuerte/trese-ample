@@ -1,3 +1,8 @@
+/*
+ * !! LICENSE PENDING !! 
+ *
+ * Copyright (C) 2009 University of Twente.
+ */
 package trese.carmeq;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -14,6 +19,8 @@ public class Activator extends AbstractUIPlugin
 
 	// The shared instance
 	private static Activator plugin;
+
+	public static final String NATURE_ID = "trese.carmeq.project";
 
 	/**
 	 * The constructor
