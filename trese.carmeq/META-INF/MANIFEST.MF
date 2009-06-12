@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: CarmeQ
+Bundle-SymbolicName: trese.carmeq;singleton:=true
+Bundle-Version: 0.1.0
+Bundle-Activator: trese.carmeq.Activator
+Bundle-Vendor: Software Engineering Group; University of Twente
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: trese.carmeq.jar
+Eclipse-RegisterBuddy: gnuprologjava
