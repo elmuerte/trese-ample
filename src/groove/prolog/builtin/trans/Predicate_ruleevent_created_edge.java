@@ -21,13 +21,12 @@ package groove.prolog.builtin.trans;
 import gnu.prolog.term.Term;
 import gnu.prolog.vm.Interpreter;
 import gnu.prolog.vm.PrologException;
+import groove.graph.Edge;
 import groove.graph.Node;
-import groove.gxl.Edge;
 import groove.prolog.builtin.PrologCollectionIterator;
 import groove.trans.RuleEvent;
 import groove.trans.SPOEvent;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -65,8 +64,8 @@ public class Predicate_ruleevent_created_edge extends TransPrologCode
 				Set<Node> createdNodes = new HashSet<Node>();
 				createdNodes.addAll(se.getCreatedNodes(se.getAnchorMap().nodeMap().keySet()));
 				// combine the created edges from both new and old nodes
-				edges.addAll((Collection<? extends Edge>) se.getComplexCreatedEdges(createdNodes.iterator()));
-				edges.addAll((Collection<? extends Edge>) se.getSimpleCreatedEdges());
+				edges.addAll(se.getComplexCreatedEdges(createdNodes.iterator()));
+				edges.addAll(se.getSimpleCreatedEdges());
 				it = new PrologCollectionIterator(edges, args[1], interpreter.getUndoPosition());
 			}
 			else
