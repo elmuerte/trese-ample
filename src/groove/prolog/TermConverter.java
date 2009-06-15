@@ -49,7 +49,10 @@ public final class TermConverter
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		for (Entry<String, Term> entry : rawVars.entrySet())
 		{
-			result.put(entry.getKey(), convert(entry.getValue()));
+			if (entry.getKey().charAt(0) != '_')
+			{
+				result.put(entry.getKey(), convert(entry.getValue()));
+			}
 		}
 		return result;
 	}

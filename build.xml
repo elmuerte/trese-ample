@@ -1,12 +1,20 @@
 <?xml version="1.0"?>
 <project name="groove.prolog" default="build">
 
-	<target name="clean" description="Clean the project">
-		<delete dir="build" />
-		<delete dir="dist" />
+	<target name="-init-paths">
+		<property name="path.gnuprologjava" value="../gnuprologjava" />
+		<property name="path.groove" value="../groove" />
 	</target>
 
-	<target name="-init">
+	<target name="clean" depends="-init-paths" description="Clean the project">
+		<delete dir="build" />
+		<delete dir="dist" />
+		<ant dir="${path.gnuprologjava}" target="clean" inheritall="true" />
+	</target>
+
+	<target name="-init" depends="-init-paths">
+		<property name="ant.build.javac.target" value="1.5" />
+		<property name="ant.build.javac.source" value="1.5" />
 
 		<loadproperties srcFile="META-INF/MANIFEST.MF">
 			<filterchain>
@@ -18,13 +26,11 @@
 		</loadproperties>
 		<property name="groove.prolog.version" value="${mf.Bundle-Version}" />
 
-		<property name="path.groove" value="../groove" />
 		<fileset id="lib.groove" dir="${path.groove}">
 			<include name="lib/*.jar" />
 			<include name="bin/groove-*.jar" />
 		</fileset>
 
-		<property name="path.gnuprologjava" value="../gnuprologjava" />
 		<property file="${path.gnuprologjava}/src/gnu/prolog/version.properties" />
 		<property name="gnu.prolog.version" value="${gnu.prolog.version.major}.${gnu.prolog.version.minor}.${gnu.prolog.version.revision}" />
 		<property name="lib.gnuprologjava" value="${path.gnuprologjava}/build/gnuprolog-${gnu.prolog.version}.jar" />
@@ -36,7 +42,11 @@
 		<mkdir dir="dist/doc" />
 	</target>
 
-	<target name="build" depends="-init">
+	<target name="buildprolog">
+		<ant dir="${path.gnuprologjava}" target="build" inheritall="true" />
+	</target>
+
+	<target name="build" depends="-init,buildprolog">
 		<javac srcdir="src" destdir="build">
 			<classpath path="${lib.gnuprologjava}" />
 			<classpath>
