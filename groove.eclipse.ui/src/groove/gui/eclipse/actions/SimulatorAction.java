@@ -19,15 +19,16 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
  * 
  * @see IWorkbenchWindowActionDelegate
  */
-public class SimulatorAction implements IWorkbenchWindowActionDelegate {
+public class SimulatorAction implements IWorkbenchWindowActionDelegate
+{
 
 	protected String selectedPath;
 
 	/**
 	 * The constructor.
 	 */
-	public SimulatorAction() {
-	}
+	public SimulatorAction()
+	{}
 
 	/**
 	 * The action has been activated. The argument of the method represents the
@@ -35,9 +36,11 @@ public class SimulatorAction implements IWorkbenchWindowActionDelegate {
 	 * 
 	 * @see IWorkbenchWindowActionDelegate#run
 	 */
-	public void run(IAction action) {
+	public void run(IAction action)
+	{
 		String[] args;
-		if (selectedPath != null && false) {
+		if (selectedPath != null)
+		{
 			/*
 			 * see bug
 			 * https://sourceforge.net/tracker/?func=detail&aid=2737601&group_id
@@ -45,7 +48,9 @@ public class SimulatorAction implements IWorkbenchWindowActionDelegate {
 			 */
 			args = new String[1];
 			args[0] = selectedPath;
-		} else {
+		}
+		else
+		{
 			args = new String[0];
 		}
 		Simulator.main(args);
@@ -58,20 +63,22 @@ public class SimulatorAction implements IWorkbenchWindowActionDelegate {
 	 * 
 	 * @see IWorkbenchWindowActionDelegate#selectionChanged
 	 */
-	public void selectionChanged(IAction action, ISelection selection) {
+	public void selectionChanged(IAction action, ISelection selection)
+	{
 		selectedPath = null;
 		action.setToolTipText("Open the Groove Simulator");
-		if (selection instanceof IStructuredSelection) {
+		if (selection instanceof IStructuredSelection)
+		{
 			Object o = ((IStructuredSelection) selection).getFirstElement();
-			if (o instanceof IFolder) {
+			if (o instanceof IFolder)
+			{
 				IPath loc = ((IFolder) o).getLocation();
-				if (loc != null) {
-					if (Groove.RULE_SYSTEM_EXTENSION.equals("."
-							+ loc.getFileExtension())) {
+				if (loc != null)
+				{
+					if (Groove.RULE_SYSTEM_EXTENSION.equals("." + loc.getFileExtension()))
+					{
 						selectedPath = loc.toOSString();
-						action.setToolTipText(String
-								.format("Open %s in the Groove Simulator",
-										selectedPath));
+						action.setToolTipText(String.format("Open %s in the Groove Simulator", selectedPath));
 					}
 				}
 			}
@@ -84,8 +91,8 @@ public class SimulatorAction implements IWorkbenchWindowActionDelegate {
 	 * 
 	 * @see IWorkbenchWindowActionDelegate#dispose
 	 */
-	public void dispose() {
-	}
+	public void dispose()
+	{}
 
 	/**
 	 * We will cache window object in order to be able to provide parent shell
@@ -93,6 +100,6 @@ public class SimulatorAction implements IWorkbenchWindowActionDelegate {
 	 * 
 	 * @see IWorkbenchWindowActionDelegate#init
 	 */
-	public void init(IWorkbenchWindow window) {
-	}
+	public void init(IWorkbenchWindow window)
+	{}
 }
