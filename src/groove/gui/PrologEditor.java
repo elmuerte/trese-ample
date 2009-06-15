@@ -54,7 +54,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -82,7 +82,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextPane;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.JTree;
@@ -94,6 +93,9 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
+
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rtextarea.RTextScrollPane;
 
 /**
  * 
@@ -118,7 +120,7 @@ public class PrologEditor extends JPanel
 
 	protected JComboBox query;
 	protected JTextComponent queryEdit;
-	protected JTextPane editor;
+	protected RSyntaxTextArea editor;
 	protected JTextArea results;
 	protected JButton nextResultBtn;
 	protected JButton consultBtn;
@@ -255,7 +257,7 @@ public class PrologEditor extends JPanel
 					File fl = getPrologFileChooser().getSelectedFile();
 					try
 					{
-						FileInputStream fis = new FileInputStream(fl);
+						FileReader fis = new FileReader(fl);
 						editor.read(fis, null);
 						SwingUtilities.invokeLater(new Runnable() {
 							public void run()
@@ -328,16 +330,21 @@ public class PrologEditor extends JPanel
 		toolBar.addSeparator();
 		toolBar.add(userCodeConsulted);
 
-		editor = new JTextPane();
+		// RSyntaxDocument document = new RSyntaxDocument("pro");
+		// document.setSyntaxStyle(new PrologTokenMaker());
+
+		editor = new RSyntaxTextArea();
+		// editor.setDocument(document);
 		editor.setFont(editFont);
 		editor.setText("");
 		editor.setEditable(true);
 		editor.setEnabled(true);
+		editor.setTabSize(4);
 		setEditorListeners();
 
 		JPanel editorPane = new JPanel(new BorderLayout());
 		editorPane.add(toolBar, BorderLayout.NORTH);
-		editorPane.add(new JScrollPane(editor), BorderLayout.CENTER);
+		editorPane.add(new RTextScrollPane(300, 300, editor, true), BorderLayout.CENTER);
 
 		results = new JTextArea();
 		results.setFont(editFont);

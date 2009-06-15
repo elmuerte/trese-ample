@@ -7,7 +7,7 @@
 	</target>
 
 	<target name="-init">
-		<property name="groove.prolog.version" value="3.2.1" />
+		<property name="groove.prolog.version" value="3.2.2" />
 
 		<property name="path.groove" value="../groove" />
 		<fileset id="lib.groove" dir="${path.groove}">
