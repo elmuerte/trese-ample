@@ -7,7 +7,16 @@
 	</target>
 
 	<target name="-init">
-		<property name="groove.prolog.version" value="3.2.2" />
+
+		<loadproperties srcFile="META-INF/MANIFEST.MF">
+			<filterchain>
+				<linecontains>
+					<contains value="Bundle-Version:" />
+				</linecontains>
+				<prefixlines prefix="mf." />
+			</filterchain>
+		</loadproperties>
+		<property name="groove.prolog.version" value="${mf.Bundle-Version}" />
 
 		<property name="path.groove" value="../groove" />
 		<fileset id="lib.groove" dir="${path.groove}">
