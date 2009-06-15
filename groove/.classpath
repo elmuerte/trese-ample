@@ -15,6 +15,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/looks-2.1.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ltl2ba4j.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xerces-2_6_0-xercesImpl.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/groove-3_2_1.jar" sourcepath="lib/groove-3_2_1-src.zip"/>
+	<classpathentry kind="lib" path="bin/groove-3_2_2.jar" sourcepath="groove-3_2_2-src.zip"/>
+	<classpathentry kind="lib" path="lib/rsyntaxtextarea.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>

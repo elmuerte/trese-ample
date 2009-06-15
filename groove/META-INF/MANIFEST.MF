@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Groove
-Bundle-SymbolicName: groove
-Bundle-Version: 3.2.1
+Bundle-SymbolicName: groove;singleton:=true
+Bundle-Version: 3.2.2
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: groove,
  groove.abs;
@@ -29,16 +29,23 @@ Export-Package: groove,
    groove.explore",
  groove.control;uses:="groove.trans,groove.graph,groove.view",
  groove.control.parse;
-  uses:="groove.trans,
+  uses:="javax.swing.text,
    org.antlr.runtime.tree,
+   javax.swing.tree,
    org.antlr.runtime,
    groove.control,
+   org.fife.ui.rsyntaxtextarea,
+   groove.trans,
+   javax.swing,
+   javax.swing.event,
    groove.view",
  groove.explore;
   uses:="groove.gui,
    groove.explore.strategy,
    groove.lts,
    groove.explore.result",
+ groove.explore.chscenar;uses:="groove.explore.strategy,groove.explore.result",
+ groove.explore.chscenar.parser;uses:="org.antlr.runtime.tree,org.antlr.runtime,groove.explore.chscenar",
  groove.explore.result;
   uses:="groove.util,
    groove.trans,
@@ -69,11 +76,12 @@ Export-Package: groove,
  groove.gui;
   uses:="javax.swing.tree,
    groove.gui.layout,
+   org.fife.ui.rsyntaxtextarea,
    groove.lts,
    groove.abs,
    groove.io,
-   javax.swing,
    groove.view.aspect,
+   javax.swing,
    groove.graph,
    groove.gui.jgraph,
    groove.rel,
@@ -82,12 +90,26 @@ Export-Package: groove,
    groove.util,
    javax.swing.border,
    org.jgraph.graph,
+   groove.gui.dialog,
    groove.explore.strategy,
    new groove.gui,
    groove.explore,
    groove.trans,
-   javax.swing.table,
    org.jgraph.event",
+ groove.gui.chscenar;
+  uses:="groove.trans,
+   javax.swing.plaf.basic,
+   javax.swing,
+   groove.graph,
+   groove.explore.result,
+   groove.explore",
+ groove.gui.dialog;
+  uses:="groove.trans,
+   groove.gui,
+   javax.swing,
+   javax.swing.table,
+   javax.swing.event,
+   new groove.gui.dialog",
  groove.gui.jgraph;
   uses:="groove.gui.layout,
    groove.control,
@@ -190,11 +212,13 @@ Bundle-ClassPath: lib/antlr_3.1/antlr-2.7.7.jar,
  lib/antlr_3.1/stringtemplate-3.1.jar,
  lib/castor-0_9_5_2.jar,
  lib/epsgraphics-1.0.0.jar,
- lib/groove-3_2_1.jar,
  lib/groove-gxl-1_0.jar,
  lib/jgraph-5_10_1.jar,
  lib/jgraphaddons-1_0_4.jar,
  lib/layouts.jar,
  lib/looks-2.1.4.jar,
  lib/ltl2ba4j.jar,
- lib/xerces-2_6_0-xercesImpl.jar
+ lib/xerces-2_6_0-xercesImpl.jar,
+ lib/rsyntaxtextarea.jar,
+ bin/groove-3_2_2.jar
+Bundle-ActivationPolicy: lazy

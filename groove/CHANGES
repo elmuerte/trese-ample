@@ -1,0 +1,411 @@
+This document describes the major changes in the groove tool set
+
+Release 3.2.2, 11 May 2009
+==========================
+
+- All file choosers remember last location
+- Start graph sub-panel added
+- Option in Show/Hide menu to load labels from file
+- Improvements to ModelChecker command line tool
+- Rules can be declared confluent, to restrict exploration order
+- Drag-and-clone now works in the editor
+- Cut-and-paste across editors
+- LTS export from Simulator through dialog
+- Improvements to the Control editor
+- Final states are now those without outgoing *modifying* rules
+
+Release 3.2.1, 5 January 2009
+=============================
+
+- Start state loading from rule directory
+- Better error messaging for parameter nodes
+- "big" algebra family added (system property: algebraFamily)
+- Read support for .aut format (CADP)
+- Bug repair in anchor computation for nested rules
+
+
+Release 3.2.0, 21 November 2008
+===============================
+
+- Point algebra is now supported (system property: algebraFamily)
+- Extension for loading grammars from URLs
+- User preferences (automatically) for window positioning
+- Bug fix for saving graphs
+- Default name for property files is now grammar.properties
+- Default name for control files is now control.gcp
+
+
+Release 3.1.1, 12 November 2008
+===============================
+
+- Bug fix for saving rules and graphs
+
+
+Release 3.1.0, 11 November 2008
+===============================
+
+- Code cleanup
+- More user preferences stored
+- Isomorphism check improved
+- Grammar input from JAR files
+- Support for control extended
+
+Release 3.0.1, 17 June 2008
+===============================
+
+- Bug and other fixes
+
+
+Release 3.0.0, 18 March 2008
+===============================
+
+- New features:
+  * Support of control programs
+  * Possibility for defining parameters in rules, 
+    to be instantiated with data values by matchings
+  
+- New GUI feature:
+  * Some GUI preferences are saved into a preference file
+  
+- Refactoring
+  * Explore strategies replaced by exploration scenarios
+    ( scenario : combination of an exploration strategy and a goal to be reached ) 
+
+
+
+
+Release 2.0.3, 10 January 2008
+===============================
+
+- Some bug fixes 
+
+Release 2.0.2, 19 December 2007
+===============================
+
+- Some bug fixes 
+
+
+Release 2.0.0, 19 November 2007
+===============================
+
+- Format for regular expressions changed to braces (hence the major version increase)
+
+- Positive and negative guards for wildcards
+
+- GXL files versioned (attribute $version)
+
+- GUI performance improvements
+
+Release 1.8.0, 24 October 2007
+==========================
+
+- Quantified rules now supported! See samples.
+
+- Additional system properties:
+  * Checking for dangling edges
+  * Checking for creator edges
+  * Checking for RHS as NAC
+  * Global injectivity check
+  
+- Further performance improvements (due to search plan-based matching)
+
+- Isomorphism check can now be switched off (in system properties)
+
+- One-line remarks in rule and system properties
+
+Release 1.6.0, 5 June 2007
+==========================
+
+- New GUI features:
+  * Improved rule editing from Simulator (adding, deleting, renaming, disabling)
+  * New grammar and Save grammar actions in Simulator
+  * Support for Graph properties and Rule System properties 
+  * Support for user remarks in rules (prefix with "rem:")
+  * Attributes optionally shown as assignments in Simulator
+  * Label-based hiding ("filtering") of nodes and edges in Simulator view
+  * Improved graph format error handling in Editor
+  * Manhattan line style
+  * Additional key accelerators in Editor
+
+- Bugs in rule system nesting fixed
+
+- Value-related nodes displayed as ovals/diamonds
+
+- State graph layout and graying-out maintained during transformation
+
+- Refactorings:
+  * Exploration decoupled from GTS
+  * Graph decoupled from GraphState
+  * Aspect prefix handling unified
+  * GrammarView decoupled from GraphGrammar
+  
+Release 1.4.2, 15 March 2007
+============================
+
+- Model Checker integrated in Simulator GUI
+
+- Added eps support for exporting graphs and rules
+
+- Ported to JGraph 5.9.2
+
+- Options introduced for showing node identities
+
+- Bug in usage of independence relation between rules fixed (Generator)
+
+- Search plans introduced to speed up the matching process
+
+- Minor bugs resolved (emphasizing, etc.)
+
+Release 1.4.1, 1 February 2007
+============================
+- Depends on Java 5
+
+- Option in Simulator to show node numbers
+
+- Node numbers partitioned for ordinary nodes and algebra-nodes
+
+- Rule and Graph Factory bugs fixed, occurred when (re)loading a (different) grammar
+
+- Usage of RuleFactory more transparant
+
+- Error message occurs when loading a grammar not including the default start-graph
+
+- Attributed graph are dealt with more naturally (specialized Java-classes only at rule-level)
+
+- boolean constants changed to lower case (consistent with documenation)
+
+- Minor bugs resolved (especially in rule application)
+
+Release 1.4.0, 17 March 2006
+===========================
+
+- Attributed graphs supported
+
+- Minor bugs resolved
+
+Release 1.2.0, 14 June 2005
+===========================
+
+- Regular expression matching extended with inverse operator, wildcard (?) and variables (?=)
+
+- Second-level negations introduced (!= and !a)
+
+- Garbage collection monitoring in Generator supported: call java with -Xloggc:gc.log and the -l option in the Generator
+
+- Noticeable performance improvements (space and time) in the Graph hierarchy, in SPORule and in the Simulation hierarchy
+
+- Diverse bugs resolved (see SourceForge)
+
+- Single-quoted atoms in production rules now treated correctly 
+
+- Generator will now save final state(s)
+
+- Fairly extensive EditorMarquee refactoring; minor irritations in Editor resolved
+
+- Bug in "linear" exploration repaired (again :-()
+
+- Forest layout now takes selected node as suggestion for root; in LTS view it takes the initial state
+
+Release 1.1.2, 20 January 2005
+==============================
+
+- Documentation (format.pdf) rigorously overhauled
+
+- Regular expressions changed: optional postfix operator (?) removed, wildcard (?) and empty expression (=) constants added; use single quotes (') around literal atoms
+
+- Editor now starts with empty graph when invoked with non-existent file
+
+- Graph export added to editor and simulator (CTRL+ALS+S, in PNG or JPG formats); also respects hiding and emphasis
+
+Release 1.1.1, 13 January 2005
+==============================
+
+- Imager has received a GUI (invoke it without parameters)
+
+- label lists now distinguish between empty label lists and empty labels
+
+- several bug fixes 
+
+Release 1.1.0, 11 January 2005
+==============================
+
+This release involves a host of (major) changes to the GUI. We have moved to jgraph 5.2! Be sure to update your class path to the correct jar. The classes in groove.gui have changed, in some case drastically; apologies.
+
+Furthermore, there is now an extra utility "Imager", for creating images from a whole directory of rules and graphs at a time.
+
+Main GUI iprovements:
+
+- graph panels have an associated list of labels, through which nodes and
+  edges can be emphasized and hiding can be controlled better
+
+- layouting no longer affects the hidden parts of the graph
+
+- the editor can now be invoked directly from the simulator, so graphs and
+  rules can be edited more easily
+
+- node and edge label editing use a multiline editor
+
+- there is much better control over the routing and line stype of edges
+
+- production rule layout is stored more completely
+
+- the editor has received a menu bar
+
+
+Release 1.0.0, 25 October 2004
+==================
+
+Because of moving to SourceForge, we decided to bring out a new release. No features are added with respect to release 0.2.4
+
+Release 0.2.4, 13 July 2004
+==================
+
+- rule priorities: a file name of the form <number.text.gpr> is interpreted as a rule named <text>, with priority <number>. Lower priority rules can only be enabled if no higher priority rules are applicable. Rules with no priority in the name have priority 0 (the lowest).
+
+Release 0.2.3, 28 June 2004
+==================
+
+- further improvement in memory consumption
+
+Release 0.2.2, 24 May 2004
+============================
+
+- editor layouts are re-used in the simulator
+
+Release 0.2.1, 28 April 2004
+============================
+
+- the lts now supports final states
+
+- start, open and final states are indicated in the gxl format
+
+- many more exploration strategies:
+  * Invariant (halt when a given rule becomes enabled or disabled)
+  * Bounded (ignore states in which a given rule is enabled or disabled)
+  * Node-bounded (ignore states in which the node count exceeds a given bound)
+  * Edge-bounded (ignore states in which one or more edge counts exceed their given bounds)
+  * Live (halt when a final state is found)
+
+- a command line tool for state space generation, with many nice options: groove.util.Generator
+
+- huge performance improvements, esp. in space consumption
+
+Release 0.2.0, 24 March 2004
+============================
+
+- Migrated to jgraph 3.1
+  (resulting in an appreciable speedup of the GUI,
+   but now the spring layouting does no live preview of edges any more!)
+
+- Support for saving of LTS and states in the Simulator
+
+- Support for regular expressions in rules (reader and embargo edges)
+  Documentation not yet adapted!
+
+- Layout serialization format changed (necessitated by the move to jgraph 3.1). Old .gp layout files are no longer usable; however, use groove.io.Reformatter to get from old to new files
+
+Release 0.1.7, 9 March 2004
+===========================
+
+- Introduced "graying out" in the graph views using selection based on edges, including also regular expressions
+  
+- Repaired some bugs in the forest layouter and (especially) the editor
+
+Release 0.1.6, 29 February 2004
+==============================
+
+- Added a forest layout routine
+
+- Major restructuring of the gui package, in preparation for a migration of the underlying jgraph version to 3.1
+  
+Release 0.1.5, February 2004
+============================
+
+- Bug in Editor layouting repaired
+- Forest layouting now also takes care of edge points
+- Spring layouting cleaned up
+
+Release 0.1.4, February 2004
+============================
+
+- Forest layouting added
+- Added node merging
+
+Release 0.1.3, February 2004
+============================
+
+- Linear and branching state space exploration strategies added
+
+Release 0.1.1, 1 December 2003
+==============================
+
+- The GPS reader assumes an extension of .gps
+
+Release 0.1.0, 5 July 2003
+==========================
+
+I've made the following changes:
+
+1. Introduction of java.io
+2. Reading and writing GXL files now implemented in java.io.Gxl
+3. Conversion between graphs and rules now implemented in java.trans.RuleGraph
+4. Conversion methods in java.util.Converter deprecated
+5. Graph structure change: No more dangling edges allowed!
+6. Application java.io.Validator to test correct formatting of graph and rule files
+7. Preliminary setup graph.java
+
+1. Introduction of java.io
+------------------------
+
+This packege contains the following functionality:
+
+- The classes ExtensionFilter and GrooveFileView, previousy in groove.util
+- The class Gxl for marshalling and unmarshalling GXL documents (see below)
+- The new application java.io.Validator (see below)
+
+2. Reading and writing GXL files now implemented in java.io.Gxl
+-----------------------------------------------------------
+
+This setup relies on the org.w3c.dom interfaces, using javax.xml.parser and javax.xml.transform for the actual marshalling/unmarshalling. The class is programmed as an implementation of a more general interface Xml. 
+
+I expect this solution to be much more maintainable and flexible, for instance if another XML format for graphs is to be supported (there are several candidates).
+
+To read/write (unmarshal/marshal in OMG terms) a GXL-formatted document construct an instance of Gxl and call its methods for actual transformations. The Gxl instance itself is state-less.
+
+3. Conversion between graphs and rules now implemented in java.trans.RuleGraph
+---------------------------------------------------------------------------
+
+RuleGraph instances can be created either from (ordininary) graphs with not:, del:, new: and use:-prefixes to indicate the roles of the nodes and edges in the usual way (however, see below for a change in the allowed format) or from Rule instances. They also have methods to convert into Graphs or Rules. 
+
+In the meanwhile, RuleGraph instances are themselves graphs with nodes and edges of a special kind. This allows them to be displayed easily as production rules in Simulator and Editor (rule preview mode during save). As a consequence java.jgraph.RuleJModel has been simplified considerably, and might be simplified further in the future (I'm thinking to merge GraphJModel and JModel and make
+RuleJModel a subclass).
+
+I foresee that RuleGraphs will be the preferred method to generate production rules.
+
+4. Conversion methods in java.util.Converter deprecated
+----------------------------------------------------
+
+Due to the above improvements it is no longer intended to use groove.util.Converter for graph reading/writing in the future; in fact the class might disappear entirely. I've kept some of the existing methods as deprecated methods, primarily to show how the conversion should be done now.
+
+5. Graph structure change: No more dangling edges allowed!
+--------------------------------------------------------
+
+Up to now it was allowed to have dangling edges in graphs, especially rule graphs. These were abbreviations: the real meaning is that there is an end node with the same role (eraser, creator, embargo) as the edge itself. The main usage was for embargo edges: in fact, it was not even allowed to include embargo nodes.
+
+Along similar lines, it was allowed to specify edge sequences by specifying a "."-separated label sequence. Also here the intermediate nodes could be omitted. Again, this was mainly used for embargo edges.
+
+These abbreviations are no longer allowed. You should explicity include all intermediate and end nodes in rule graphs. Embargo nodes have been added so there is no loss of expressivity.
+
+I have adapted all samples provided under CVS to the new format.
+
+Reason: In the future I want to use dangling edges to model unary predicates. I might reintroduce label sequences, but maybe not: they were not used all that much and the "."-separated list notation is overloaded for qualified names.
+
+6. Application groove.io.Validator to test correct formatting of graph and rule files
+---------------------------------------------------------------------------------
+
+Change 5. above means that many of the graph and rule files you have are no longer formatted correctly. Obviously this is a pain. To help a little bit I have included a facility to validate the correctness of the graphs in a hierarchical file structure. It is called groove.io.Validator and should be run from the command line. Run it with option -h to get a synopsis of its capabilities.
+
+7. Preliminary setup graph.java
+-----------------------------
+
+The CVS head branch now includes a package graph.java, with a first version of the promised OperatorRule. Currently this does not yet compile. 
