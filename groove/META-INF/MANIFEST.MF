@@ -37,7 +37,14 @@ Export-Package: groove,
  groove.util,
  groove.verify,
  groove.view,
- groove.view.aspect
+ groove.view.aspect,
+ org.fife.io,
+ org.fife.print,
+ org.fife.ui.rsyntaxtextarea,
+ org.fife.ui.rsyntaxtextarea.modes,
+ org.fife.ui.rsyntaxtextarea.templates,
+ org.fife.ui.rtextarea,
+ org.fife.util
 Bundle-Vendor: University of Twente
 Bundle-ClassPath: lib/antlr_3.1/antlr-2.7.7.jar,
  lib/antlr_3.1/antlr-3.1b1.jar,

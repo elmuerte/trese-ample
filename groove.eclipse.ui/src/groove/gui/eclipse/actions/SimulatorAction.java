@@ -41,11 +41,6 @@ public class SimulatorAction implements IWorkbenchWindowActionDelegate
 		String[] args;
 		if (selectedPath != null)
 		{
-			/*
-			 * see bug
-			 * https://sourceforge.net/tracker/?func=detail&aid=2737601&group_id
-			 * =119225&atid=683352
-			 */
 			args = new String[1];
 			args[0] = selectedPath;
 		}
