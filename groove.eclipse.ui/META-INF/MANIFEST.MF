@@ -10,4 +10,4 @@ Require-Bundle: groove;bundle-version="3.2.0",
  org.eclipse.ui,
  org.eclipse.core.resources,
  org.eclipse.ui.ide
-Import-Package: org.eclipse.ui
+Bundle-ClassPath: groove.eclipse.ui.jar
