@@ -138,7 +138,7 @@ public class CarmeQEditor extends EditorPart
 		toolkit.adapt(proComp);
 		proSection.setClient(proComp);
 
-		List proFiles = new List(proComp, SWT.BORDER);
+		List proFiles = new List(proComp, SWT.BORDER + SWT.FILL);
 		toolkit.adapt(proFiles, true, true);
 		td = new TableWrapData(TableWrapData.FILL_GRAB);
 		td.rowspan = 10;
