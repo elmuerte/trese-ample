@@ -7,7 +7,9 @@ package trese.carmeq.editor;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.pde.internal.ui.parts.FormEntry;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.List;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
@@ -121,13 +123,34 @@ public class CarmeQEditor extends EditorPart
 		new FormEntry(mainComp, toolkit, "Query", null, false);
 
 		Section proSection = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR
-				+ ExpandableComposite.CLIENT_INDENT + ExpandableComposite.TREE_NODE + ExpandableComposite.EXPANDED);
+				+ ExpandableComposite.TREE_NODE + ExpandableComposite.EXPANDED);
 		proSection.setText("Prolog Files");
 		td = new TableWrapData(TableWrapData.FILL_GRAB);
 		proSection.setLayoutData(td);
 
+		Composite proComp = new Composite(proSection, 0);
+		layout = new TableWrapLayout();
+		layout.numColumns = 2;
+		proComp.setLayout(layout);
+		td = new TableWrapData(TableWrapData.FILL_GRAB);
+		td.colspan = 2;
+		proComp.setLayoutData(td);
+		toolkit.adapt(proComp);
+		proSection.setClient(proComp);
+
+		List proFiles = new List(proComp, SWT.BORDER);
+		toolkit.adapt(proFiles, true, true);
+		td = new TableWrapData(TableWrapData.FILL_GRAB);
+		td.rowspan = 10;
+		proFiles.setLayoutData(td);
+
+		toolkit.createButton(proComp, "Add...", SWT.PUSH).setLayoutData(new TableWrapData(TableWrapData.FILL));
+		toolkit.createButton(proComp, "Remove", SWT.PUSH).setLayoutData(new TableWrapData(TableWrapData.FILL));
+		toolkit.createButton(proComp, "Up", SWT.PUSH).setLayoutData(new TableWrapData(TableWrapData.FILL));
+		toolkit.createButton(proComp, "Down", SWT.PUSH).setLayoutData(new TableWrapData(TableWrapData.FILL));
+
 		Section grooveSection = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR
-				+ ExpandableComposite.CLIENT_INDENT + ExpandableComposite.TREE_NODE + ExpandableComposite.EXPANDED);
+				+ ExpandableComposite.TREE_NODE + ExpandableComposite.EXPANDED);
 		grooveSection.setText("Groove");
 		td = new TableWrapData(TableWrapData.FILL_GRAB);
 		grooveSection.setLayoutData(td);
