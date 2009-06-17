@@ -92,6 +92,7 @@ public class ToggleCarmeQNature implements IObjectActionDelegate
 			try
 			{
 				project.setDescription(description, null);
+				project.refreshLocal(0, null);
 			}
 			catch (CoreException e)
 			{

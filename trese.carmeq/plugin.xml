@@ -41,5 +41,27 @@
          </action>
       </objectContribution>
    </extension>
+   <extension
+         point="org.eclipse.core.runtime.contentTypes">
+      <content-type
+            file-extensions="carmeq"
+            id="trese.carmeq.file"
+            name="CarmeQ Query "
+            priority="normal">
+      </content-type>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="trese.carmeq.editor.CarmeQEditor"
+            default="true"
+            icon="icons/carmeq_file_obj.gif"
+            id="trese.carmeq.file.editor"
+            name="CarmeQ Editor">
+         <contentTypeBinding
+               contentTypeId="trese.carmeq.file">
+         </contentTypeBinding>
+      </editor>
+   </extension>
 
 </plugin>
