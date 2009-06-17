@@ -11,35 +11,46 @@
         <attr name="$version">
             <string>curly</string>
         </attr>
-        <node id="n27980"/>
-        <node id="n27981"/>
-        <node id="n27982"/>
-        <edge from="n27981" to="n27980">
+        <node id="n30862"/>
+        <node id="n30863"/>
+        <node id="n30864"/>
+        <node id="n30865"/>
+        <edge from="n30862" to="n30862">
             <attr name="label">
-                <string>alt</string>
+                <string>forallx:</string>
             </attr>
         </edge>
-        <edge from="n27981" to="n27982">
+        <edge from="n30863" to="n30863">
             <attr name="label">
-                <string>alt</string>
+                <string>featureIncluded</string>
             </attr>
         </edge>
-        <edge from="n27982" to="n27982">
+        <edge from="n30865" to="n30865">
+            <attr name="label">
+                <string>featureIncluded</string>
+            </attr>
+        </edge>
+        <edge from="n30864" to="n30864">
             <attr name="label">
                 <string>not:{featureIncluded|featureExcluded}</string>
             </attr>
         </edge>
-        <edge from="n27981" to="n27981">
+        <edge from="n30865" to="n30864">
             <attr name="label">
-                <string>featureIncluded</string>
+                <string>alt</string>
             </attr>
         </edge>
-        <edge from="n27980" to="n27980">
+        <edge from="n30865" to="n30863">
             <attr name="label">
-                <string>featureIncluded</string>
+                <string>alt</string>
             </attr>
         </edge>
-        <edge from="n27982" to="n27982">
+        <edge from="n30864" to="n30862">
+            <attr name="label">
+                <string>at</string>
+            </attr>
+        </edge>
+        <edge from="n30864" to="n30864">
             <attr name="label">
                 <string>new:featureExcluded</string>
             </attr>

@@ -7,19 +7,19 @@
         <attr name="$version">
             <string>curly</string>
         </attr>
-        <node id="n27656"/>
-        <node id="n27657"/>
-        <edge from="n27657" to="n27657">
-            <attr name="label">
-                <string>featureExcluded</string>
-            </attr>
-        </edge>
-        <edge from="n27657" to="n27656">
+        <node id="n31122"/>
+        <node id="n31123"/>
+        <edge from="n31122" to="n31123">
             <attr name="label">
                 <string>del:excludes</string>
             </attr>
         </edge>
-        <edge from="n27657" to="n27656">
+        <edge from="n31122" to="n31122">
+            <attr name="label">
+                <string>featureExcluded</string>
+            </attr>
+        </edge>
+        <edge from="n31122" to="n31123">
             <attr name="label">
                 <string>new:excluded</string>
             </attr>
