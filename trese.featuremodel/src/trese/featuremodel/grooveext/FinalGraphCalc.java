@@ -59,6 +59,7 @@ public class FinalGraphCalc extends groove.calc.DefaultGraphCalculator
 		return scenario;
 	}
 
+	@Override
 	public Collection<GraphState> getAllFinal()
 	{
 		Scenario scenario = createScenario(new BFSStrategy(), new FinalStateAcceptor());
@@ -66,11 +67,16 @@ public class FinalGraphCalc extends groove.calc.DefaultGraphCalculator
 		return scenario.play().getValue();
 	}
 
-	public Collection<GraphState> getFinal()
+	@Override
+	public GraphState getFinal()
 	{
 		Scenario scenario = createScenario(new DFSStrategy(), new FinalStateAcceptor(new Result(1)));
 		scenario.prepare(getGTS());
-		return scenario.play().getValue();
+		if (scenario.play().getValue().isEmpty())
+		{
+			return null;
+		}
+		return scenario.play().getValue().iterator().next();
 	}
 
 }

@@ -25,6 +25,7 @@ import java.io.PrintStream;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -163,7 +164,7 @@ public class Evaluator
 			FinalGraphCalc calc = new FinalGraphCalc(grammar.toGrammar());
 			if (findFirst)
 			{
-				return calc.getFinal();
+				return Collections.singleton(calc.getFinal());
 			}
 			return calc.getAllFinal();
 		}

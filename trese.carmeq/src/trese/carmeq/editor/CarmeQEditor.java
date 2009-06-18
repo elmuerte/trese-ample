@@ -5,11 +5,18 @@
  */
 package trese.carmeq.editor;
 
+import java.util.Collections;
+
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.pde.internal.ui.parts.FormEntry;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
@@ -21,6 +28,8 @@ import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.part.EditorPart;
 
+import trese.carmeq.ui.dialog.WorkbenchFileSelectionDialog;
+
 /**
  * 
  * 
@@ -30,6 +39,7 @@ public class CarmeQEditor extends EditorPart
 {
 	protected FormToolkit toolkit;
 	protected ScrolledForm form;
+	protected Table proFiles;
 
 	public CarmeQEditor()
 	{}
@@ -119,17 +129,42 @@ public class CarmeQEditor extends EditorPart
 		mainComp.setLayoutData(td);
 		toolkit.adapt(mainComp);
 
-		new FormEntry(mainComp, toolkit, "Architecture", "Browse...", false);
+		FormEntry arch = new FormEntry(mainComp, toolkit, "Architecture", "Browse...", false);
+		arch.getButton().addSelectionListener(new SelectionListener() {
+
+			public void widgetDefaultSelected(SelectionEvent e)
+			{}
+
+			public void widgetSelected(SelectionEvent e)
+			{
+				WorkbenchFileSelectionDialog dlg = new WorkbenchFileSelectionDialog(getSite().getShell(), Collections
+						.singleton(""));
+				dlg.setTitle("Architecture Selection");
+				dlg.setMessage("Select an architecture from the current project.");
+				dlg.setInput(ResourcesPlugin.getWorkspace().getRoot().);
+				dlg.setAllowMultiple(false);
+				dlg.open();
+			}
+		});
 		new FormEntry(mainComp, toolkit, "Query", null, false);
 
+		createPrologSection();
+		createGrooveSection();
+	}
+
+	/**
+	 * 
+	 */
+	protected void createPrologSection()
+	{
 		Section proSection = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR
 				+ ExpandableComposite.TREE_NODE + ExpandableComposite.EXPANDED);
-		proSection.setText("Prolog Files");
-		td = new TableWrapData(TableWrapData.FILL_GRAB);
+		proSection.setText("Prolog Knowledgebase");
+		TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB);
 		proSection.setLayoutData(td);
 
 		Composite proComp = new Composite(proSection, 0);
-		layout = new TableWrapLayout();
+		TableWrapLayout layout = new TableWrapLayout();
 		layout.numColumns = 2;
 		proComp.setLayout(layout);
 		td = new TableWrapData(TableWrapData.FILL_GRAB);
@@ -138,17 +173,44 @@ public class CarmeQEditor extends EditorPart
 		toolkit.adapt(proComp);
 		proSection.setClient(proComp);
 
-		List proFiles = new List(proComp, SWT.BORDER + SWT.FILL);
-		toolkit.adapt(proFiles, true, true);
-		td = new TableWrapData(TableWrapData.FILL_GRAB);
+		TableViewer tableViewer = new TableViewer(proComp, toolkit.getBorderStyle() | SWT.H_SCROLL | SWT.V_SCROLL);
+		td = new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB);
 		td.rowspan = 10;
-		proFiles.setLayoutData(td);
+		tableViewer.getTable().setLayoutData(td);
 
-		toolkit.createButton(proComp, "Add...", SWT.PUSH).setLayoutData(new TableWrapData(TableWrapData.FILL));
-		toolkit.createButton(proComp, "Remove", SWT.PUSH).setLayoutData(new TableWrapData(TableWrapData.FILL));
-		toolkit.createButton(proComp, "Up", SWT.PUSH).setLayoutData(new TableWrapData(TableWrapData.FILL));
-		toolkit.createButton(proComp, "Down", SWT.PUSH).setLayoutData(new TableWrapData(TableWrapData.FILL));
+		final Button btnProAdd = toolkit.createButton(proComp, "Add...", SWT.PUSH);
+		btnProAdd.setLayoutData(new TableWrapData(TableWrapData.FILL));
+		final Button btnProRemove = toolkit.createButton(proComp, "Remove", SWT.PUSH);
+		btnProRemove.setLayoutData(new TableWrapData(TableWrapData.FILL));
+		btnProRemove.setEnabled(false);
+		final Button btnProUp = toolkit.createButton(proComp, "Up", SWT.PUSH);
+		btnProUp.setLayoutData(new TableWrapData(TableWrapData.FILL));
+		btnProUp.setEnabled(false);
+		final Button btnProDown = toolkit.createButton(proComp, "Down", SWT.PUSH);
+		btnProDown.setLayoutData(new TableWrapData(TableWrapData.FILL));
+		btnProDown.setEnabled(false);
 
+		// proFiles.addSelectionListener(new SelectionListener() {
+		// public void widgetDefaultSelected(SelectionEvent e)
+		// {}
+		//
+		// public void widgetSelected(SelectionEvent e)
+		// {
+		// boolean selected = proFiles.getSelectionCount() > 0;
+		// btnProRemove.setEnabled(selected);
+		// btnProUp.setEnabled(selected && proFiles.getSelectionIndex() > 0);
+		// btnProDown.setEnabled(selected && proFiles.getSelectionIndex() <
+		// proFiles.getItemCount() - 1);
+		// }
+		// });
+	}
+
+	/**
+	 * 
+	 */
+	protected void createGrooveSection()
+	{
+		TableWrapData td;
 		Section grooveSection = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR
 				+ ExpandableComposite.TREE_NODE + ExpandableComposite.EXPANDED);
 		grooveSection.setText("Groove");
