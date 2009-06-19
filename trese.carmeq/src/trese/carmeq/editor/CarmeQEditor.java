@@ -7,9 +7,12 @@ package trese.carmeq.editor;
 
 import java.util.Collections;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.pde.internal.ui.parts.FormEntry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -19,6 +22,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -27,7 +31,9 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.part.EditorPart;
+import org.eclipse.ui.part.FileEditorInput;
 
+import trese.carmeq.CarmeQFile;
 import trese.carmeq.ui.dialog.WorkbenchFileSelectionDialog;
 
 /**
@@ -40,6 +46,7 @@ public class CarmeQEditor extends EditorPart
 	protected FormToolkit toolkit;
 	protected ScrolledForm form;
 	protected Table proFiles;
+	protected CarmeQFile carmeqFile;
 
 	public CarmeQEditor()
 	{}
@@ -52,8 +59,15 @@ public class CarmeQEditor extends EditorPart
 	@Override
 	public void doSave(IProgressMonitor monitor)
 	{
-	// TODO Auto-generated method stub
-
+		try
+		{
+			carmeqFile.save();
+		}
+		catch (CoreException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/*
@@ -75,9 +89,20 @@ public class CarmeQEditor extends EditorPart
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException
 	{
+		if (!(input instanceof IFileEditorInput)) throw new PartInitException("Invalid Input: Must be IFileEditorInput");
 		setSite(site);
 		setInput(input);
 		setPartName(input.getName());
+
+		carmeqFile = new CarmeQFile(((FileEditorInput) input).getFile());
+		try
+		{
+			carmeqFile.load();
+		}
+		catch (CoreException e)
+		{
+			new PartInitException(e.getStatus());
+		}
 	}
 
 	/*
@@ -87,8 +112,7 @@ public class CarmeQEditor extends EditorPart
 	@Override
 	public boolean isDirty()
 	{
-		// TODO Auto-generated method stub
-		return false;
+		return carmeqFile.isDirty();
 	}
 
 	/*
@@ -129,7 +153,7 @@ public class CarmeQEditor extends EditorPart
 		mainComp.setLayoutData(td);
 		toolkit.adapt(mainComp);
 
-		FormEntry arch = new FormEntry(mainComp, toolkit, "Architecture", "Browse...", false);
+		final FormEntry arch = new FormEntry(mainComp, toolkit, "Architecture", "Browse...", false);
 		arch.getButton().addSelectionListener(new SelectionListener() {
 
 			public void widgetDefaultSelected(SelectionEvent e)
@@ -138,12 +162,22 @@ public class CarmeQEditor extends EditorPart
 			public void widgetSelected(SelectionEvent e)
 			{
 				WorkbenchFileSelectionDialog dlg = new WorkbenchFileSelectionDialog(getSite().getShell(), Collections
-						.singleton(""));
+						.singleton("edu.uci.isr.archstudio4.xadlContentBinding"));
 				dlg.setTitle("Architecture Selection");
 				dlg.setMessage("Select an architecture from the current project.");
-				dlg.setInput(ResourcesPlugin.getWorkspace().getRoot().);
+				dlg.setInput(ResourcesPlugin.getWorkspace().getRoot());
 				dlg.setAllowMultiple(false);
-				dlg.open();
+				if (dlg.open() == Window.OK)
+				{
+					Object[] res = dlg.getResult();
+					if (res.length > 0)
+					{
+						IFile file = (IFile) res[0];
+						carmeqFile.setXADLFile(file);
+						arch.setValue(file.getFullPath().toString());
+						firePropertyChange(PROP_DIRTY);
+					}
+				}
 			}
 		});
 		new FormEntry(mainComp, toolkit, "Query", null, false);
