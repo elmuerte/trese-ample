@@ -19,9 +19,12 @@
 package groove.prolog.builtin.graph;
 
 import gnu.prolog.term.AtomTerm;
+import gnu.prolog.term.CompoundTerm;
+import gnu.prolog.term.CompoundTermTag;
 import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
 import gnu.prolog.vm.Environment;
+import gnu.prolog.vm.Interpreter;
 import gnu.prolog.vm.PrologCode;
 import gnu.prolog.vm.PrologException;
 import groove.graph.Edge;
@@ -143,6 +146,65 @@ public abstract class GraphPrologCode implements PrologCode
 			PrologException.typeError(GraphPrologCode.NODE_ATOM, term);
 		}
 		return null;
+	}
+
+	/**
+	 * @param input
+	 * @param opt
+	 * @param values
+	 * @return True if the input contains the option with the given values
+	 * @throws PrologException
+	 */
+	public static final boolean hasOption(Interpreter interpreter, Term input, CompoundTermTag opt, Term[] values)
+			throws PrologException
+	{
+		if (!(input instanceof CompoundTerm))
+		{
+			return false;
+		}
+		CompoundTerm ct = (CompoundTerm) input;
+		while (ct != null)
+		{
+			CompoundTerm entry = null;
+			if (CompoundTerm.isListPair(ct))
+			{
+				if (ct.args[0] instanceof CompoundTerm)
+				{
+					entry = (CompoundTerm) ct.args[0];
+				}
+				if (ct.args[1] instanceof CompoundTerm)
+				{
+					ct = (CompoundTerm) ct.args[1];
+				}
+				else
+				{
+					// end of list?
+					break;
+				}
+				if (entry == null)
+				{
+					// not option, continue
+					continue;
+				}
+			}
+			else
+			{
+				entry = ct;
+				ct = null;
+			}
+			if (entry.tag == opt)
+			{
+				for (int i = 0; i < opt.arity; i++)
+				{
+					if (interpreter.simple_unify(entry.args[i], values[i]) == FAIL)
+					{
+						return false;
+					}
+				}
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public static final AtomTerm GRAPH_ATOM = AtomTerm.get("graph");

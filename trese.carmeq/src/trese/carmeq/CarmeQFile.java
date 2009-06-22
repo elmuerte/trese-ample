@@ -117,4 +117,40 @@ public class CarmeQFile
 		}
 	}
 
+	/**
+	 * @return
+	 */
+	public List<IFile> getPrologFiles()
+	{
+		return prologFiles;
+	}
+
+	public boolean addPrologFile(IFile newFile)
+	{
+		if (prologFiles.contains(newFile))
+		{
+			return false;
+		}
+		if (prologFiles.add(newFile))
+		{
+			dirty = true;
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * @param o
+	 * @return
+	 */
+	public boolean removePrologFile(IFile value)
+	{
+		if (prologFiles.remove(value))
+		{
+			dirty = true;
+			return true;
+		}
+		return false;
+	}
+
 }

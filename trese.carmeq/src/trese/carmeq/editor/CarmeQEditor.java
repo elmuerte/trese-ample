@@ -5,13 +5,23 @@
  */
 package trese.carmeq.editor;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.IContentProvider;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.pde.internal.ui.parts.FormEntry;
 import org.eclipse.swt.SWT;
@@ -30,8 +40,10 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
+import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 import trese.carmeq.CarmeQFile;
 import trese.carmeq.ui.dialog.WorkbenchFileSelectionDialog;
@@ -43,10 +55,56 @@ import trese.carmeq.ui.dialog.WorkbenchFileSelectionDialog;
  */
 public class CarmeQEditor extends EditorPart
 {
+	/**
+	 * 
+	 * 
+	 * @author Michiel Hendriks
+	 */
+	public class PrologFileProvider implements IContentProvider, IStructuredContentProvider
+	{
+		/**
+		 * @param carmeqFile
+		 */
+		public PrologFileProvider()
+		{}
+
+		/*
+		 * (non-Javadoc)
+		 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
+		 */
+		public void dispose()
+		{}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse
+		 * .jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+		 */
+		public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
+		{}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * org.eclipse.jface.viewers.IStructuredContentProvider#getElements(
+		 * java.lang.Object)
+		 */
+		public Object[] getElements(Object inputElement)
+		{
+			if (inputElement instanceof CarmeQFile)
+			{
+				return ((CarmeQFile) inputElement).getPrologFiles().toArray();
+			}
+			return new Object[0];
+		}
+	}
+
 	protected FormToolkit toolkit;
 	protected ScrolledForm form;
 	protected Table proFiles;
 	protected CarmeQFile carmeqFile;
+	protected IProject project;
 
 	public CarmeQEditor()
 	{}
@@ -94,7 +152,9 @@ public class CarmeQEditor extends EditorPart
 		setInput(input);
 		setPartName(input.getName());
 
-		carmeqFile = new CarmeQFile(((FileEditorInput) input).getFile());
+		IFile inputFile = ((FileEditorInput) input).getFile();
+		project = inputFile.getProject();
+		carmeqFile = new CarmeQFile(inputFile);
 		try
 		{
 			carmeqFile.load();
@@ -140,6 +200,12 @@ public class CarmeQEditor extends EditorPart
 		form.setText("CarmeQ thingamajig"); // FIXME
 		toolkit.decorateFormHeading(form.getForm());
 
+		Action runAction = new Action("run", IAction.AS_PUSH_BUTTON) {};
+		runAction.setDescription("Execute this CarmeQ query");
+		runAction.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.ui.ide",
+				"icons/full/dtool16/build_exec.gif"));
+		form.getToolBarManager().add(runAction);
+
 		TableWrapLayout layout = new TableWrapLayout();
 		layout.numColumns = 2;
 		form.getBody().setLayout(layout);
@@ -165,7 +231,7 @@ public class CarmeQEditor extends EditorPart
 						.singleton("edu.uci.isr.archstudio4.xadlContentBinding"));
 				dlg.setTitle("Architecture Selection");
 				dlg.setMessage("Select an architecture from the current project.");
-				dlg.setInput(ResourcesPlugin.getWorkspace().getRoot());
+				dlg.setInput(project);
 				dlg.setAllowMultiple(false);
 				if (dlg.open() == Window.OK)
 				{
@@ -174,7 +240,7 @@ public class CarmeQEditor extends EditorPart
 					{
 						IFile file = (IFile) res[0];
 						carmeqFile.setXADLFile(file);
-						arch.setValue(file.getFullPath().toString());
+						arch.setValue(file.getProjectRelativePath().toString());
 						firePropertyChange(PROP_DIRTY);
 					}
 				}
@@ -207,16 +273,94 @@ public class CarmeQEditor extends EditorPart
 		toolkit.adapt(proComp);
 		proSection.setClient(proComp);
 
-		TableViewer tableViewer = new TableViewer(proComp, toolkit.getBorderStyle() | SWT.H_SCROLL | SWT.V_SCROLL);
+		final TableViewer tableViewer = new TableViewer(proComp, toolkit.getBorderStyle() | SWT.H_SCROLL | SWT.V_SCROLL);
 		td = new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB);
 		td.rowspan = 10;
 		tableViewer.getTable().setLayoutData(td);
+		tableViewer.setContentProvider(new PrologFileProvider());
+		tableViewer.setLabelProvider(WorkbenchLabelProvider.getDecoratingWorkbenchLabelProvider());
+		tableViewer.setInput(carmeqFile);
 
 		final Button btnProAdd = toolkit.createButton(proComp, "Add...", SWT.PUSH);
 		btnProAdd.setLayoutData(new TableWrapData(TableWrapData.FILL));
+		btnProAdd.addSelectionListener(new SelectionListener() {
+
+			public void widgetDefaultSelected(SelectionEvent e)
+			{}
+
+			public void widgetSelected(SelectionEvent e)
+			{
+				WorkbenchFileSelectionDialog dlg = new WorkbenchFileSelectionDialog(getSite().getShell(), Collections
+						.singleton("gnuprologjava.file.prolog"));
+				dlg.setTitle("Prolog Selection");
+				dlg.setMessage("Select one or more prolog files from the current project to add.");
+				dlg.setInput(project);
+				dlg.setAllowMultiple(true);
+				if (dlg.open() == Window.OK)
+				{
+					Object[] res = dlg.getResult();
+					boolean changed = false;
+					List<Object> items = new ArrayList<Object>();
+					for (Object o : res)
+					{
+						if (carmeqFile.addPrologFile((IFile) o))
+						{
+							tableViewer.add(o);
+							items.add(o);
+							changed |= true;
+							tableViewer.setSelection(new StructuredSelection(o), false);
+						}
+					}
+					if (changed)
+					{
+						// tableViewer.setSelection(new
+						// StructuredSelection(items), false);
+						// tableViewer.refresh();
+						tableViewer.getTable().setFocus();
+						firePropertyChange(PROP_DIRTY);
+					}
+				}
+			}
+		});
+
 		final Button btnProRemove = toolkit.createButton(proComp, "Remove", SWT.PUSH);
 		btnProRemove.setLayoutData(new TableWrapData(TableWrapData.FILL));
 		btnProRemove.setEnabled(false);
+		btnProRemove.addSelectionListener(new SelectionListener() {
+
+			public void widgetDefaultSelected(SelectionEvent e)
+			{}
+
+			public void widgetSelected(SelectionEvent e)
+			{
+				if (tableViewer.getSelection() instanceof StructuredSelection)
+				{
+					int index = tableViewer.getTable().getSelectionIndex();
+					boolean changed = false;
+					StructuredSelection sel = (StructuredSelection) tableViewer.getSelection();
+					for (Object o : sel.toArray())
+					{
+						if (o instanceof IFile)
+						{
+							if (carmeqFile.removePrologFile((IFile) o))
+							{
+								tableViewer.remove(o);
+								changed |= true;
+							}
+						}
+					}
+					if (changed)
+					{
+						List<IFile> profiles = carmeqFile.getPrologFiles();
+						tableViewer.setSelection(new StructuredSelection(profiles.get(index < profiles.size() ? index
+								: profiles.size() - 1)));
+						tableViewer.getTable().setFocus();
+						firePropertyChange(PROP_DIRTY);
+					}
+				}
+			}
+		});
+
 		final Button btnProUp = toolkit.createButton(proComp, "Up", SWT.PUSH);
 		btnProUp.setLayoutData(new TableWrapData(TableWrapData.FILL));
 		btnProUp.setEnabled(false);
@@ -224,19 +368,16 @@ public class CarmeQEditor extends EditorPart
 		btnProDown.setLayoutData(new TableWrapData(TableWrapData.FILL));
 		btnProDown.setEnabled(false);
 
-		// proFiles.addSelectionListener(new SelectionListener() {
-		// public void widgetDefaultSelected(SelectionEvent e)
-		// {}
-		//
-		// public void widgetSelected(SelectionEvent e)
-		// {
-		// boolean selected = proFiles.getSelectionCount() > 0;
-		// btnProRemove.setEnabled(selected);
-		// btnProUp.setEnabled(selected && proFiles.getSelectionIndex() > 0);
-		// btnProDown.setEnabled(selected && proFiles.getSelectionIndex() <
-		// proFiles.getItemCount() - 1);
-		// }
-		// });
+		tableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event)
+			{
+				boolean selected = !tableViewer.getSelection().isEmpty();
+				btnProRemove.setEnabled(selected);
+				btnProUp.setEnabled(selected && tableViewer.getTable().getSelectionIndex() > 0);
+				btnProDown.setEnabled(selected
+						&& tableViewer.getTable().getSelectionIndex() < tableViewer.getTable().getItemCount() - 1);
+			}
+		});
 	}
 
 	/**
@@ -244,12 +385,13 @@ public class CarmeQEditor extends EditorPart
 	 */
 	protected void createGrooveSection()
 	{
-		TableWrapData td;
-		Section grooveSection = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR
-				+ ExpandableComposite.TREE_NODE + ExpandableComposite.EXPANDED);
-		grooveSection.setText("Groove");
-		td = new TableWrapData(TableWrapData.FILL_GRAB);
-		grooveSection.setLayoutData(td);
+	// TableWrapData td;
+	// Section grooveSection = toolkit.createSection(form.getBody(),
+	// ExpandableComposite.TITLE_BAR
+	// + ExpandableComposite.TREE_NODE + ExpandableComposite.EXPANDED);
+	// grooveSection.setText("Groove");
+	// td = new TableWrapData(TableWrapData.FILL_GRAB);
+	// grooveSection.setLayoutData(td);
 	}
 
 	/*
