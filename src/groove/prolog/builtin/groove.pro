@@ -22,6 +22,7 @@
 % - 	The argument shall be a variable that will be instantiated
 
 :-ensure_loaded(resource('/groove/prolog/builtin/groove.graph.pro')).
+:-ensure_loaded(resource('/groove/prolog/builtin/groove.graph.mod.pro')).
 :-ensure_loaded(resource('/groove/prolog/builtin/groove.lts.pro')).
 :-ensure_loaded(resource('/groove/prolog/builtin/groove.trans.pro')).
 :-ensure_loaded(resource('/groove/prolog/builtin/groove.algebra.pro')).
