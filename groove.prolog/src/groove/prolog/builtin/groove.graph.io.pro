@@ -15,15 +15,18 @@
 % License along with this library; if not, write to the Free Software
 % Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-% Documentation reading guide:
-% + 	The argument shall be instantiated.
-% ? 	The argument shall be instantiated or a variable.
-% @ 	The argument shall remain unaltered.
-% - 	The argument shall be a variable that will be instantiated
+/*
+	Graph input/output
+*/
 
-:-ensure_loaded(resource('/groove/prolog/builtin/groove.graph.pro')).
-:-ensure_loaded(resource('/groove/prolog/builtin/groove.graph.mod.pro')).
-:-ensure_loaded(resource('/groove/prolog/builtin/groove.graph.io.pro')).
-:-ensure_loaded(resource('/groove/prolog/builtin/groove.lts.pro')).
-:-ensure_loaded(resource('/groove/prolog/builtin/groove.trans.pro')).
-:-ensure_loaded(resource('/groove/prolog/builtin/groove.algebra.pro')).
+% Save the graph to the disk. Throws an exception when loading fails.
+% graph_save(+Graph,+Location)
+% @param Graph the graph to save
+% @param Location the location to save the graph to
+:-build_in(graph_save/2,'groove.prolog.builtin.graph.io.Predicate_graph_save').
+
+% Load the graph from the disk. Throws an exception when loading fails.
+% graph_load(+Location,?Graph)
+% @param Location the location to save the graph to
+% @param Graph Will contain the loaded graph
+:-build_in(graph_load/2,'groove.prolog.builtin.graph.io.Predicate_graph_load').
