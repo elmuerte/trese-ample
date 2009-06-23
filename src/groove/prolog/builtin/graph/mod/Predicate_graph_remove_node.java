@@ -18,13 +18,10 @@
  */
 package groove.prolog.builtin.graph.mod;
 
-import gnu.prolog.term.AtomTerm;
 import gnu.prolog.term.CompoundTerm;
-import gnu.prolog.term.CompoundTermTag;
 import gnu.prolog.term.Term;
 import gnu.prolog.vm.Interpreter;
 import gnu.prolog.vm.PrologException;
-import groove.graph.Edge;
 import groove.graph.Graph;
 import groove.graph.Node;
 
@@ -37,12 +34,9 @@ import java.util.Set;
  * 
  * @author Michiel Hendriks
  */
-public class Predicate_graph_remove_edge extends GraphModPrologCode
+public class Predicate_graph_remove_node extends GraphModPrologCode
 {
-	public static final CompoundTermTag NODES_TAG = CompoundTermTag.get("nodes", 1);
-	public static final AtomTerm REMOVE_ATOM = AtomTerm.get("remove");
-
-	public Predicate_graph_remove_edge()
+	public Predicate_graph_remove_node()
 	{}
 
 	/*
@@ -57,39 +51,27 @@ public class Predicate_graph_remove_edge extends GraphModPrologCode
 		{
 			PrologException.domainError(GraphModPrologCode.READ_ONLY_GRAPH_ATOM, args[0]);
 		}
-		boolean removeNodes = hasOption(interpreter, args[2], NODES_TAG, new Term[] { REMOVE_ATOM });
 
-		Set<Edge> edges;
+		Set<Node> nodes;
 		if (CompoundTerm.isListPair(args[1]))
 		{
-			edges = new HashSet<Edge>();
+			nodes = new HashSet<Node>();
 			Set<Term> values = new HashSet<Term>();
 			CompoundTerm.toCollection(args[1], values);
 			for (Term val : values)
 			{
-				edges.add(getEdge(val));
+				nodes.add(getNode(val));
 			}
 		}
 		else
 		{
-			edges = Collections.singleton(getEdge(args[1]));
+			nodes = Collections.singleton(getNode(args[1]));
 		}
 
-		for (Edge edge : edges)
+		for (Node node : nodes)
 		{
-			Node[] ends = edge.ends();
-			if (graph.removeEdge(edge))
+			if (graph.removeNode(node))
 			{
-				if (removeNodes)
-				{
-					for (Node node : ends)
-					{
-						if (graph.edgeSet(node).isEmpty())
-						{
-							graph.removeNode(node);
-						}
-					}
-				}
 				return SUCCESS_LAST;
 			}
 		}

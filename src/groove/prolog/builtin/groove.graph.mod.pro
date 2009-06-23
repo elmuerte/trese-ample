@@ -76,7 +76,7 @@ graph_remove_edge(Edge):-graph(Graph),graph_remove_edge(Graph,Edge,[]).
 % graph_remove_node(+Graph,+Node,+Options)
 % @param Graph the Graph to update
 % @param Node the node(s) to remove
-% @param Options if it contains 'edges(keep)' it will keep the edges that point to these nodes
+% @param Options not used
 :-build_in(graph_remove_node/3,'groove.prolog.builtin.graph.mod.Predicate_graph_remove_node').
 graph_remove_node(Graph,Node):-graph_remove_node(Graph,Node,[]).
 graph_remove_node(Node):-graph(Graph),graph_remove_node(Graph,Node,[]).

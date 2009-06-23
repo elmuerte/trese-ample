@@ -16,33 +16,30 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package groove.prolog.builtin.graph.mod;
+package groove.prolog.builtin.graph.io;
 
 import gnu.prolog.term.AtomTerm;
-import gnu.prolog.term.CompoundTerm;
-import gnu.prolog.term.CompoundTermTag;
 import gnu.prolog.term.Term;
 import gnu.prolog.vm.Interpreter;
 import gnu.prolog.vm.PrologException;
-import groove.graph.Edge;
+import gnu.prolog.vm.TermConstants;
 import groove.graph.Graph;
-import groove.graph.Node;
+import groove.gui.Options;
+import groove.gui.jgraph.GraphJModel;
+import groove.io.DefaultGxl;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * 
  * 
  * @author Michiel Hendriks
  */
-public class Predicate_graph_remove_edge extends GraphModPrologCode
+public class Predicate_graph_save extends GraphIOPrologCode
 {
-	public static final CompoundTermTag NODES_TAG = CompoundTermTag.get("nodes", 1);
-	public static final AtomTerm REMOVE_ATOM = AtomTerm.get("remove");
-
-	public Predicate_graph_remove_edge()
+	public Predicate_graph_save()
 	{}
 
 	/*
@@ -53,47 +50,31 @@ public class Predicate_graph_remove_edge extends GraphModPrologCode
 	public int execute(Interpreter interpreter, boolean backtrackMode, Term[] args) throws PrologException
 	{
 		Graph graph = getGraph(args[0]);
-		if (graph.isFixed())
+		if (!(args[1] instanceof AtomTerm))
 		{
-			PrologException.domainError(GraphModPrologCode.READ_ONLY_GRAPH_ATOM, args[0]);
+			PrologException.typeError(TermConstants.atomAtom, args[1]);
 		}
-		boolean removeNodes = hasOption(interpreter, args[2], NODES_TAG, new Term[] { REMOVE_ATOM });
-
-		Set<Edge> edges;
-		if (CompoundTerm.isListPair(args[1]))
+		File file = new File(((AtomTerm) args[1]).value);
+		try
 		{
-			edges = new HashSet<Edge>();
-			Set<Term> values = new HashSet<Term>();
-			CompoundTerm.toCollection(args[1], values);
-			for (Term val : values)
+			GraphJModel model = GraphJModel.newInstance(graph, new Options());
+			DefaultGxl out = new DefaultGxl();
+			out.marshalGraph(model.toPlainGraph(), file);
+		}
+		catch (IOException e)
+		{
+			AtomTerm errorCode;
+			if (e instanceof FileNotFoundException)
 			{
-				edges.add(getEdge(val));
+				errorCode = AtomTerm.get("file_not_found");
 			}
-		}
-		else
-		{
-			edges = Collections.singleton(getEdge(args[1]));
-		}
-
-		for (Edge edge : edges)
-		{
-			Node[] ends = edge.ends();
-			if (graph.removeEdge(edge))
+			else
 			{
-				if (removeNodes)
-				{
-					for (Node node : ends)
-					{
-						if (graph.edgeSet(node).isEmpty())
-						{
-							graph.removeNode(node);
-						}
-					}
-				}
-				return SUCCESS_LAST;
+				errorCode = AtomTerm.get(e.getClass().getSimpleName());
 			}
+			PrologException.domainError(errorCode, args[1]);
 		}
-		return FAIL;
+		return SUCCESS_LAST;
 	}
 
 }
