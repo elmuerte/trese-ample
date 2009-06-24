@@ -36,7 +36,7 @@ graph_clone(NewGraph):-graph(Graph),graph_clone(Graph,NewGraph).
 % retrieved nodes and edges will become invalid.
 % set_graph(+Graph)
 % @param Graph make this graph the current graph
-%:-build_in(set_graph/1,'groove.prolog.builtin.graph.mod.Predicate_set_graph').
+:-build_in(set_graph/1,'groove.prolog.builtin.graph.mod.Predicate_set_graph').
 
 % Add an new edge with the given label and source and target nodes to the graph
 % graph_add_edge(+Graph,+SourceNode,+TargetNode,+Label,?Edge)
