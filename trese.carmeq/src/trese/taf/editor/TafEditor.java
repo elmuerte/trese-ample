@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2009 University of Twente.
  */
-package trese.carmeq.editor;
+package trese.taf.editor;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,15 +45,15 @@ import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
-import trese.carmeq.CarmeQFile;
-import trese.carmeq.ui.dialog.WorkbenchFileSelectionDialog;
+import trese.taf.TafFile;
+import trese.taf.ui.dialog.WorkbenchFileSelectionDialog;
 
 /**
  * 
  * 
  * @author Michiel Hendriks
  */
-public class CarmeQEditor extends EditorPart
+public class TafEditor extends EditorPart
 {
 	/**
 	 * 
@@ -63,7 +63,7 @@ public class CarmeQEditor extends EditorPart
 	public class PrologFileProvider implements IContentProvider, IStructuredContentProvider
 	{
 		/**
-		 * @param carmeqFile
+		 * @param tafFile
 		 */
 		public PrologFileProvider()
 		{}
@@ -92,9 +92,9 @@ public class CarmeQEditor extends EditorPart
 		 */
 		public Object[] getElements(Object inputElement)
 		{
-			if (inputElement instanceof CarmeQFile)
+			if (inputElement instanceof TafFile)
 			{
-				return ((CarmeQFile) inputElement).getPrologFiles().toArray();
+				return ((TafFile) inputElement).getPrologFiles().toArray();
 			}
 			return new Object[0];
 		}
@@ -103,10 +103,10 @@ public class CarmeQEditor extends EditorPart
 	protected FormToolkit toolkit;
 	protected ScrolledForm form;
 	protected Table proFiles;
-	protected CarmeQFile carmeqFile;
+	protected TafFile tafFile;
 	protected IProject project;
 
-	public CarmeQEditor()
+	public TafEditor()
 	{}
 
 	/*
@@ -119,7 +119,7 @@ public class CarmeQEditor extends EditorPart
 	{
 		try
 		{
-			carmeqFile.save();
+			tafFile.save();
 		}
 		catch (CoreException e)
 		{
@@ -154,10 +154,10 @@ public class CarmeQEditor extends EditorPart
 
 		IFile inputFile = ((FileEditorInput) input).getFile();
 		project = inputFile.getProject();
-		carmeqFile = new CarmeQFile(inputFile);
+		tafFile = new TafFile(inputFile);
 		try
 		{
-			carmeqFile.load();
+			tafFile.load();
 		}
 		catch (CoreException e)
 		{
@@ -172,7 +172,7 @@ public class CarmeQEditor extends EditorPart
 	@Override
 	public boolean isDirty()
 	{
-		return carmeqFile.isDirty();
+		return tafFile.isDirty();
 	}
 
 	/*
@@ -197,11 +197,11 @@ public class CarmeQEditor extends EditorPart
 	{
 		toolkit = new FormToolkit(parent.getDisplay());
 		form = toolkit.createScrolledForm(parent);
-		form.setText("CarmeQ thingamajig"); // FIXME
+		form.setText("Traceability Analysis Framework thingamajig"); // FIXME
 		toolkit.decorateFormHeading(form.getForm());
 
 		Action runAction = new Action("run", IAction.AS_PUSH_BUTTON) {};
-		runAction.setDescription("Execute this CarmeQ query");
+		runAction.setDescription("Execute this TAF query");
 		runAction.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.ui.ide",
 				"icons/full/dtool16/build_exec.gif"));
 		form.getToolBarManager().add(runAction);
@@ -239,7 +239,7 @@ public class CarmeQEditor extends EditorPart
 					if (res.length > 0)
 					{
 						IFile file = (IFile) res[0];
-						carmeqFile.setXADLFile(file);
+						tafFile.setXADLFile(file);
 						arch.setValue(file.getProjectRelativePath().toString());
 						firePropertyChange(PROP_DIRTY);
 					}
@@ -279,7 +279,7 @@ public class CarmeQEditor extends EditorPart
 		tableViewer.getTable().setLayoutData(td);
 		tableViewer.setContentProvider(new PrologFileProvider());
 		tableViewer.setLabelProvider(WorkbenchLabelProvider.getDecoratingWorkbenchLabelProvider());
-		tableViewer.setInput(carmeqFile);
+		tableViewer.setInput(tafFile);
 
 		final Button btnProAdd = toolkit.createButton(proComp, "Add...", SWT.PUSH);
 		btnProAdd.setLayoutData(new TableWrapData(TableWrapData.FILL));
@@ -303,7 +303,7 @@ public class CarmeQEditor extends EditorPart
 					List<Object> items = new ArrayList<Object>();
 					for (Object o : res)
 					{
-						if (carmeqFile.addPrologFile((IFile) o))
+						if (tafFile.addPrologFile((IFile) o))
 						{
 							tableViewer.add(o);
 							items.add(o);
@@ -342,7 +342,7 @@ public class CarmeQEditor extends EditorPart
 					{
 						if (o instanceof IFile)
 						{
-							if (carmeqFile.removePrologFile((IFile) o))
+							if (tafFile.removePrologFile((IFile) o))
 							{
 								tableViewer.remove(o);
 								changed |= true;
@@ -351,7 +351,7 @@ public class CarmeQEditor extends EditorPart
 					}
 					if (changed)
 					{
-						List<IFile> profiles = carmeqFile.getPrologFiles();
+						List<IFile> profiles = tafFile.getPrologFiles();
 						tableViewer.setSelection(new StructuredSelection(profiles.get(index < profiles.size() ? index
 								: profiles.size() - 1)));
 						tableViewer.getTable().setFocus();

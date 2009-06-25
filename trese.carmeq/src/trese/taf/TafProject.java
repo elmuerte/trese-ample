@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2009 University of Twente.
  */
-package trese.carmeq;
+package trese.taf;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectNature;
@@ -14,11 +14,11 @@ import org.eclipse.core.runtime.CoreException;
  * 
  * @author Michiel Hendriks
  */
-public class CarmeQProject implements IProjectNature
+public class TafProject implements IProjectNature
 {
 	protected IProject project;
 
-	public CarmeQProject()
+	public TafProject()
 	{}
 
 	/*

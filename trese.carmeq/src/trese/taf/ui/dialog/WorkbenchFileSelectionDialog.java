@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2008 University of Twente.
  */
-package trese.carmeq.ui.dialog;
+package trese.taf.ui.dialog;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,7 +23,7 @@ import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.views.navigator.ResourceComparator;
 
-import trese.carmeq.Activator;
+import trese.taf.Activator;
 
 /**
  * 

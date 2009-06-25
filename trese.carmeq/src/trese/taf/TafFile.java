@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2009 University of Twente.
  */
-package trese.carmeq;
+package trese.taf;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.IPath;
  * 
  * @author Michiel Hendriks
  */
-public class CarmeQFile
+public class TafFile
 {
 	/**
 	 * The source file
@@ -50,9 +50,9 @@ public class CarmeQFile
 	 */
 	protected String query;
 
-	public CarmeQFile(IFile carmeqFile)
+	public TafFile(IFile tafFile)
 	{
-		file = carmeqFile;
+		file = tafFile;
 	}
 
 	/**

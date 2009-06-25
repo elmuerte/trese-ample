@@ -2,64 +2,64 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         id="trese.carmeq.project"
-         name="CarmeQ Project"
+         id="trese.taf.project"
+         name="TAF Project"
          point="org.eclipse.core.resources.natures">
       <runtime>
          <run
-               class="trese.carmeq.CarmeQProject">
+               class="trese.taf.TafProject">
          </run>
       </runtime>
    </extension>
    <extension
          point="org.eclipse.ui.ide.projectNatureImages">
       <image
-            icon="icons/carmeq_obj.gif"
-            id="trese.carmeq.project,icon"
-            natureId="trese.carmeq.project">
+            icon="icons/taf_obj.gif"
+            id="trese.taf.project.icon"
+            natureId="trese.taf.project">
       </image>
    </extension>
    <extension
          point="org.eclipse.ui.popupMenus">
       <objectContribution
             adaptable="true"
-            id="trese.carmeq.projectContrib"
+            id="trese.taf.projectContrib"
             objectClass="org.eclipse.core.resources.IProject">
          <menu
-               id="trese.carmeq.projectMenu"
-               label="CarmeQ"
+               id="trese.taf.projectMenu"
+               label="TAF"
                path="additions">
             <separator
                   name="main">
             </separator>
          </menu>
          <action
-               class="trese.carmeq.ToggleCarmeQNature"
-               id="trese.carmeq.toggleNature"
-               label="Add/Remove CarmeQ Nature"
-               menubarPath="trese.carmeq.projectMenu/main">
+               class="trese.taf.ToggleTafNature"
+               id="trese.taf.toggleNature"
+               label="Add/Remove TAF Nature"
+               menubarPath="trese.taf.projectMenu/main">
          </action>
       </objectContribution>
    </extension>
    <extension
          point="org.eclipse.core.runtime.contentTypes">
       <content-type
-            file-extensions="carmeq"
-            id="trese.carmeq.file"
-            name="CarmeQ Query "
+            file-extensions="taf"
+            id="trese.taf.file"
+            name="TAF Query "
             priority="normal">
       </content-type>
    </extension>
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            class="trese.carmeq.editor.CarmeQEditor"
+            class="trese.taf.editor.TafEditor"
             default="true"
-            icon="icons/carmeq_file_obj.gif"
-            id="trese.carmeq.file.editor"
-            name="CarmeQ Editor">
+            icon="icons/taf_file_obj.gif"
+            id="trese.taf.file.editor"
+            name="TAF Editor">
          <contentTypeBinding
-               contentTypeId="trese.carmeq.file">
+               contentTypeId="trese.taf.file">
          </contentTypeBinding>
       </editor>
    </extension>

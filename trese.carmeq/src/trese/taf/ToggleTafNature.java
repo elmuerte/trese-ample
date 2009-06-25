@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2009 University of Twente.
  */
-package trese.carmeq;
+package trese.taf;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,11 +28,11 @@ import org.eclipse.ui.IWorkbenchPart;
  * 
  * @author Michiel Hendriks
  */
-public class ToggleCarmeQNature implements IObjectActionDelegate
+public class ToggleTafNature implements IObjectActionDelegate
 {
 	protected Set<IProject> projects;
 
-	public ToggleCarmeQNature()
+	public ToggleTafNature()
 	{
 		projects = new HashSet<IProject>();
 	}

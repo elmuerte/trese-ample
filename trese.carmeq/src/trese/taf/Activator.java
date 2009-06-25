@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2009 University of Twente.
  */
-package trese.carmeq;
+package trese.taf;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -15,12 +15,12 @@ public class Activator extends AbstractUIPlugin
 {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "trese.carmeq";
+	public static final String PLUGIN_ID = "trese.taf";
 
 	// The shared instance
 	private static Activator plugin;
 
-	public static final String NATURE_ID = "trese.carmeq.project";
+	public static final String NATURE_ID = "trese.taf.project";
 
 	/**
 	 * The constructor
