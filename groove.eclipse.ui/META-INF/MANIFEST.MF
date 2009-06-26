@@ -5,10 +5,9 @@ Bundle-SymbolicName: groove.eclipse.ui;singleton:=true
 Bundle-Version: 3.2.0
 Bundle-Vendor: Software Engineering Group; University of Twente
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Require-Bundle: groove;bundle-version="3.2.0",
+Require-Bundle: groove.prolog;bundle-version="3.2.2",
  org.eclipse.core.runtime,
  org.eclipse.ui,
  org.eclipse.core.resources,
- org.eclipse.ui.ide,
- groove.prolog;bundle-version="3.2.2"
+ org.eclipse.ui.ide
 Bundle-ClassPath: groove.eclipse.ui.jar

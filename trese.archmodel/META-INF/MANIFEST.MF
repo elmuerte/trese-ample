@@ -5,7 +5,7 @@ Bundle-SymbolicName: trese.archmodel;singleton:=true
 Bundle-Version: 0.5.2
 Bundle-Vendor: Software Engineering Group; University of Twente
 Require-Bundle: edu.uci.isr.xarchlibs.apigen;bundle-version="4.1.50",
- groove;bundle-version="3.2.0"
+ groove.prolog;bundle-version="3.2.2"
 Export-Package: trese.archmodel,
  trese.archmodel.groove;uses:="edu.uci.isr.xarch.types,edu.uci.isr.xarch,edu.uci.isr.xarch.instance"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

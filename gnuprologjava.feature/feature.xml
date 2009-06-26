@@ -6,7 +6,9 @@
       provider-name="Software Engineering Group; University of Twente">
 
    <description>
-      This is a fork of the original GNU Prolog for Java. Several bugs have been fixed, and it has been extended at needed for the CarmeQ project ( http://trese.ewi.utwente.nl/ ).
+      This is a fork of the original GNU Prolog for Java. Several bugs
+have been fixed, and it has been extended at needed for the TAF
+project ( http://trese.ewi.utwente.nl/ ).
    </description>
 
    <copyright url="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html">
@@ -34,6 +36,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
       <discovery label="GNU Prolog for Java" url="http://sourceforge.net/projects/gnuprologjava"/>
       <discovery label="Software Engineering Group, University of Twente" url="http://trese.ewi.utwente.nl"/>
    </url>
+
+   <requires>
+      <import plugin="org.eclipse.core.runtime" version="3.0.0" match="greaterOrEqual"/>
+   </requires>
 
    <plugin
          id="gnuprologjava"

@@ -47,7 +47,6 @@ public class SystemOutput extends JPanel
 		super();
 		setLayout(new BorderLayout());
 		Font editFont = new Font("Monospaced", Font.PLAIN, 12);
-
 		JToolBar toolbar = new JToolBar();
 		toolbar.setFloatable(false);
 

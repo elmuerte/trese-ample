@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="trese.tracing"
-      label="CarmeQ"
-      version="0.5.3"
+      id="trese.taf"
+      label="Traceabilty Analysis Framework"
+      version="0.6.0"
       provider-name="Software Engineering Group; University of Twente">
 
    <description>
       This feature includes the following features:
 - ArchModel (previously called ArchTracing)
 - FeatureModel
+- Groove+Prolog
    </description>
 
    <copyright>
@@ -31,30 +32,8 @@
          id="trese.featuremodel.feature"
          version="0.0.0"/>
 
-   <requires>
-      <import plugin="org.eclipse.core.resources" version="3.3.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.core.runtime" version="3.3.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui" version="3.3.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui.ide" version="3.3.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui.editors" version="3.3.0" match="greaterOrEqual"/>
-      <import plugin="trese.archmodel" version="0.5.2" match="greaterOrEqual"/>
-      <import plugin="trese.archmodel.ui" version="0.5.2" match="greaterOrEqual"/>
-      <import plugin="trese.featuremodel" version="0.5.2" match="greaterOrEqual"/>
-      <import plugin="groove" version="3.2.0" match="greaterOrEqual"/>
-      <import plugin="edu.uci.isr.xarchlibs.apigen" version="4.1.50" match="greaterOrEqual"/>
-   </requires>
-
-   <plugin
-         id="trese.tracing.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="trese.tracing"
-         download-size="0"
-         install-size="0"
+   <includes
+         id="groove.feature"
          version="0.0.0"/>
 
 </feature>
