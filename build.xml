@@ -1,269 +1,132 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project name="groove.prolog" default="build.jars" basedir=".">
+<?xml version="1.0"?>
+<project name="groove.prolog" default="build">
 
-	<property name="basews" value="${ws}"/>
-	<property name="baseos" value="${os}"/>
-	<property name="basearch" value="${arch}"/>
-	<property name="basenl" value="${nl}"/>
-	<property name="bundleId" value="groove.prolog"/>
-	<property name="bundleVersion" value="3.2.2"/>
+	<target name="-init-paths">
+		<property name="path.gnuprologjava" value="../gnuprologjava" />
+		<property name="path.groove" value="lib/groove" />
+	</target>
 
-	<!-- Compiler settings. -->
-	<property name="javacFailOnError" value="false"/>
-	<property name="javacDebugInfo" value="on"/>
-	<property name="javacVerbose" value="false"/>
-	<property name="logExtension" value=".log"/>
-	<property name="compilerArg" value=""/>
-	<property name="javacSource" value="1.3"/>
-	<property name="javacTarget" value="1.2"/>
-	<condition property="dir_bootclasspath" value="${java.home}/../Classes">
-		<os family="mac"/>
-	</condition>
-	<property name="dir_bootclasspath" value="${java.home}/lib"/>
-	<path id="path_bootclasspath">
-		<fileset dir="${dir_bootclasspath}">
-			<include name="*.jar"/>
+	<target name="clean" depends="-init-paths" description="Clean the project">
+		<delete dir="build" />
+		<delete dir="dist" />
+		<ant dir="${path.gnuprologjava}" target="clean" inheritall="true" />
+	</target>
+
+	<target name="-init" depends="-init-paths">
+		<property name="ant.build.javac.target" value="1.5" />
+		<property name="ant.build.javac.source" value="1.5" />
+
+		<loadproperties srcFile="META-INF/MANIFEST.MF">
+			<filterchain>
+				<linecontains>
+					<contains value="Bundle-Version:" />
+				</linecontains>
+				<prefixlines prefix="mf." />
+			</filterchain>
+		</loadproperties>
+		<property name="groove.prolog.version" value="${mf.Bundle-Version}" />
+
+		<fileset id="lib.groove" dir="${path.groove}">
+			<include name="lib/*.jar" />
+			<include name="bin/groove-*.jar" />
 		</fileset>
-	</path>
-	<property name="bootclasspath" refid="path_bootclasspath"/>
-<condition property="bundleBootClasspath" value="${J2SE-1.5}"	>
-		<isset property="J2SE-1.5"/>
-	</condition>
-<condition property="bundleJavacSource" value="1.5"	>
-		<isset property="J2SE-1.5"/>
-	</condition>
-<condition property="bundleJavacTarget" value="1.5"	>
-		<isset property="J2SE-1.5"/>
-	</condition>
-	<property name="bundleJavacSource" value="${javacSource}"/>
-	<property name="bundleJavacTarget" value="${javacTarget}"/>
-	<property name="bundleBootClasspath" value="${bootclasspath}"/>
 
-	<target name="init" depends="properties">
-<condition property="pluginTemp" value="${buildTempFolder}/plugins"		>
-			<isset property="buildTempFolder"/>
-		</condition>
-		<property name="pluginTemp" value="${basedir}"/>
-<condition property="build.result.folder" value="${pluginTemp}/groove.prolog_3.2.2"		>
-			<isset property="buildTempFolder"/>
-		</condition>
-		<property name="build.result.folder" value="${basedir}"/>
-		<property name="temp.folder" value="${basedir}/temp.folder"/>
-		<property name="plugin.destination" value="${basedir}"/>
+		<property file="${path.gnuprologjava}/src/gnu/prolog/version.properties" />
+		<property name="gnu.prolog.version" value="${gnu.prolog.version.major}.${gnu.prolog.version.minor}.${gnu.prolog.version.revision}" />
+		<property name="lib.gnuprologjava" value="${path.gnuprologjava}/build/gnuprolog-${gnu.prolog.version}.jar" />
+
+		<mkdir dir="build" />
+		<mkdir dir="dist" />
+		<mkdir dir="dist/lib" />
+		<mkdir dir="dist/bin" />
+		<mkdir dir="dist/doc" />
 	</target>
 
-	<target name="properties" if="eclipse.running">
-		<property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
-
+	<target name="buildprolog">
+		<ant dir="${path.gnuprologjava}" target="build" inheritall="true" />
 	</target>
 
-	<target name="build.update.jar" depends="init" description="Build the plug-in: groove.prolog for an update site.">
-		<delete dir="${temp.folder}"/>
-		<mkdir dir="${temp.folder}"/>
-		<antcall target="build.jars"/>
-		<antcall target="gather.bin.parts">
-			<param name="destination.temp.folder" value="${temp.folder}/"/>
-		</antcall>
-		<jar destfile="${plugin.destination}/groove.prolog_3.2.2.jar" basedir="${temp.folder}/groove.prolog_3.2.2" filesetmanifest="merge"/>
-		<delete dir="${temp.folder}"/>
-	</target>
-
-	<target name="groove.prolog.jar" depends="init" unless="groove.prolog.jar" description="Create jar: groove.prolog groove.prolog.jar.">
-		<delete dir="${temp.folder}/groove.prolog.jar.bin"/>
-		<mkdir dir="${temp.folder}/groove.prolog.jar.bin"/>
-		<path id="groove.prolog.jar.classpath">
-			<pathelement path="../gnuprologjava/build/classes"/>
-			<pathelement path="${build.result.folder}/../gnuprologjava_0.2.1/build/classes"/>
-			<pathelement path="${build.result.folder}/../gnuprologjava/gnuprolog.jar"/>
-			<pathelement path="${build.result.folder}/../gnuprologjava_0.2.1/gnuprolog.jar"/>
-			<pathelement path="../../eclipse-x/plugins/org.eclipse.core.runtime_3.4.0.v20080512.jar"/>
-			<pathelement path="../../eclipse-x/plugins/org.eclipse.osgi_3.4.3.R34x_v20081215-1030.jar"/>
-			<pathelement path="../../eclipse-x/plugins/org.eclipse.equinox.common_3.4.0.v20080421-2006.jar"/>
-			<pathelement path="../../eclipse-x/plugins/org.eclipse.core.jobs_3.4.1.R34x_v20081128.jar"/>
-			<pathelement path="../../eclipse-x/plugins/org.eclipse.core.runtime.compatibility.registry_3.2.200.v20080610/runtime_registry_compatibility.jar"/>
-			<pathelement path="../../eclipse-x/plugins/org.eclipse.core.runtime.compatibility.registry_3.2.200.v20080610"/>
-			<pathelement path="../../eclipse-x/plugins/org.eclipse.equinox.registry_3.4.0.v20080516-0950.jar"/>
-			<pathelement path="../../eclipse-x/plugins/org.eclipse.equinox.preferences_3.2.201.R34x_v20080709.jar"/>
-			<pathelement path="../../eclipse-x/plugins/org.eclipse.core.contenttype_3.3.0.v20080604-1400.jar"/>
-			<pathelement path="../../eclipse-x/plugins/org.eclipse.core.runtime.compatibility.auth_3.2.100.v20070502.jar"/>
-			<pathelement path="../../eclipse-x/plugins/org.eclipse.equinox.app_1.1.0.v20080421-2006.jar"/>
-			<pathelement path="../../eclipse-x/plugins/org.eclipse.osgi.services_3.1.200.v20071203.jar"/>
-			<pathelement path="../../eclipse-x/plugins/javax.servlet_2.4.0.v200806031604.jar"/>
-			<pathelement path="lib/groove/bin/groove-3_2_2.jar"/>
-			<pathelement path="${build.result.folder}/../groove.prolog_3.2.2/lib/groove/bin/groove-3_2_2.jar"/>
-			<pathelement path="lib/groove/lib/antlr_3.1/antlr-2.7.7.jar"/>
-			<pathelement path="${build.result.folder}/../groove.prolog_3.2.2/lib/groove/lib/antlr_3.1/antlr-2.7.7.jar"/>
-			<pathelement path="lib/groove/lib/antlr_3.1/antlr-3.1b1.jar"/>
-			<pathelement path="${build.result.folder}/../groove.prolog_3.2.2/lib/groove/lib/antlr_3.1/antlr-3.1b1.jar"/>
-			<pathelement path="lib/groove/lib/antlr_3.1/antlr-runtime-3.1b1.jar"/>
-			<pathelement path="${build.result.folder}/../groove.prolog_3.2.2/lib/groove/lib/antlr_3.1/antlr-runtime-3.1b1.jar"/>
-			<pathelement path="lib/groove/lib/antlr_3.1/stringtemplate-3.1.jar"/>
-			<pathelement path="${build.result.folder}/../groove.prolog_3.2.2/lib/groove/lib/antlr_3.1/stringtemplate-3.1.jar"/>
-			<pathelement path="lib/groove/lib/castor-0_9_5_2.jar"/>
-			<pathelement path="${build.result.folder}/../groove.prolog_3.2.2/lib/groove/lib/castor-0_9_5_2.jar"/>
-			<pathelement path="lib/groove/lib/epsgraphics-1.0.0.jar"/>
-			<pathelement path="${build.result.folder}/../groove.prolog_3.2.2/lib/groove/lib/epsgraphics-1.0.0.jar"/>
-			<pathelement path="lib/groove/lib/groove-gxl-1_0.jar"/>
-			<pathelement path="${build.result.folder}/../groove.prolog_3.2.2/lib/groove/lib/groove-gxl-1_0.jar"/>
-			<pathelement path="lib/groove/lib/jgraph-5_10_1.jar"/>
-			<pathelement path="${build.result.folder}/../groove.prolog_3.2.2/lib/groove/lib/jgraph-5_10_1.jar"/>
-			<pathelement path="lib/groove/lib/jgraphaddons-1_0_4.jar"/>
-			<pathelement path="${build.result.folder}/../groove.prolog_3.2.2/lib/groove/lib/jgraphaddons-1_0_4.jar"/>
-			<pathelement path="lib/groove/lib/layouts.jar"/>
-			<pathelement path="${build.result.folder}/../groove.prolog_3.2.2/lib/groove/lib/layouts.jar"/>
-			<pathelement path="lib/groove/lib/looks-2.1.4.jar"/>
-			<pathelement path="${build.result.folder}/../groove.prolog_3.2.2/lib/groove/lib/looks-2.1.4.jar"/>
-			<pathelement path="lib/groove/lib/ltl2ba4j.jar"/>
-			<pathelement path="${build.result.folder}/../groove.prolog_3.2.2/lib/groove/lib/ltl2ba4j.jar"/>
-			<pathelement path="lib/groove/lib/rsyntaxtextarea.jar"/>
-			<pathelement path="${build.result.folder}/../groove.prolog_3.2.2/lib/groove/lib/rsyntaxtextarea.jar"/>
-			<pathelement path="lib/groove/lib/xerces-2_6_0-xercesImpl.jar"/>
-			<pathelement path="${build.result.folder}/../groove.prolog_3.2.2/lib/groove/lib/xerces-2_6_0-xercesImpl.jar"/>
-		</path>
-		<!-- compile the source code -->
-		<javac destdir="${temp.folder}/groove.prolog.jar.bin" failonerror="${javacFailOnError}" verbose="${javacVerbose}" debug="${javacDebugInfo}" includeAntRuntime="no" bootclasspath="${bundleBootClasspath}" source="${bundleJavacSource}" target="${bundleJavacTarget}"		>
-			<compilerarg line="${compilerArg}" compiler="${build.compiler}"/>
-			<classpath refid="groove.prolog.jar.classpath" />
-			<src path="src/"			/>
-			<compilerarg value="@${basedir}/javaCompiler.groove.prolog.jar.args" compiler="org.eclipse.jdt.core.JDTCompilerAdapter"/>
-			<compilerarg line="-log '${temp.folder}/groove.prolog.jar.bin${logExtension}'" compiler="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+	<target name="build" depends="-init,buildprolog">
+		<javac srcdir="src" destdir="build">
+			<classpath path="${lib.gnuprologjava}" />
+			<classpath>
+				<fileset refid="lib.groove" />
+			</classpath>
 		</javac>
-		<!-- Copy necessary resources -->
-		<copy todir="${temp.folder}/groove.prolog.jar.bin" failonerror="true" overwrite="false">
-			<fileset dir="src/">
-				<exclude name="**/*.java"/>
-				<exclude name="**/package.htm*"/>
+		<copy todir="build">
+			<fileset dir="src">
+				<include name="**/*.pro" />
+				<include name="**/*.pl" />
+				<include name="**/*.properties" />
 			</fileset>
 		</copy>
-		<mkdir dir="${build.result.folder}"/>
-		<jar destfile="${build.result.folder}/groove.prolog.jar" basedir="${temp.folder}/groove.prolog.jar.bin"/>
-		<delete dir="${temp.folder}/groove.prolog.jar.bin"/>
+		<jar destfile="dist/lib/grooveprolog-${groove.prolog.version}.jar">
+			<fileset dir="build" />
+		</jar>
 	</target>
 
-	<target name="groove.prologsrc.zip" depends="init" unless="groove.prologsrc.zip">
-		<mkdir dir="${build.result.folder}"/>
-		<antcall target="zip.groove.prologsrc.zip"/>
-	</target>
-	<target name="zip.groove.prologsrc.zip">
-		<zip destfile="${build.result.folder}/groove.prologsrc.zip" filesonly="false" whenempty="skip" update="false">
-			<fileset dir="src/">
-				<include name="**/*.java"/>
-			</fileset>
-		</zip>
-	</target>
-	<target name="copy.groove.prologsrc.zip">
-		<copy todir="${source.destination.folder}/groove.prologsrc" failonerror="true" overwrite="true">
-			<fileset dir="src/">
-				<include name="**/*.java"/>
+	<target name="rebuild" depends="clean,build" />
+
+	<target name="dist" depends="build">
+		<!-- libs -->
+		<copy file="${lib.gnuprologjava}" todir="dist/lib" />
+		<copy todir="dist/lib">
+			<fileset dir="${path.groove}/lib">
+				<include name="**/*.jar" />
+				<include name="**/*.so" />
 			</fileset>
 		</copy>
-	</target>
-
-	<target name="build.jars" depends="init" description="Compile classes and build nested jars for the plug-in: groove.prolog.">
-		<available property="groove.prolog.jar" file="${build.result.folder}/groove.prolog.jar"/>
-		<antcall target="groove.prolog.jar"/>
-	</target>
-
-	<target name="build.sources" depends="init">
-		<available property="groove.prologsrc.zip" file="${build.result.folder}/groove.prologsrc.zip"/>
-		<antcall target="groove.prologsrc.zip"/>
-	</target>
-
-	<target name="gather.bin.parts" depends="init" if="destination.temp.folder">
-		<mkdir dir="${destination.temp.folder}/groove.prolog_3.2.2"/>
-		<copy todir="${destination.temp.folder}/groove.prolog_3.2.2" failonerror="true" overwrite="false">
-			<fileset dir="${build.result.folder}">
-				<include name="groove.prolog.jar"/>
+		<copy todir="dist/bin">
+			<fileset dir="${path.groove}/bin">
+				<include name="**/*.jar" />
 			</fileset>
 		</copy>
-		<copy todir="${destination.temp.folder}/groove.prolog_3.2.2" failonerror="true" overwrite="false">
-			<fileset dir="${basedir}">
-				<include name="META-INF/"/>
-				<include name="groove.prolog.jar"/>
-				<include name="src/"/>
-				<include name="lib/groove/lib/antlr_3.1/antlr-2.7.7.jar"/>
-				<include name="lib/groove/lib/antlr_3.1/antlr-3.1b1.jar"/>
-				<include name="lib/groove/lib/antlr_3.1/antlr-runtime-3.1b1.jar"/>
-				<include name="lib/groove/lib/antlr_3.1/stringtemplate-3.1.jar"/>
-				<include name="lib/groove/lib/castor-0_9_5_2.jar"/>
-				<include name="lib/groove/lib/epsgraphics-1.0.0.jar"/>
-				<include name="lib/groove/lib/groove-gxl-1_0.jar"/>
-				<include name="lib/groove/lib/jgraph-5_10_1.jar"/>
-				<include name="lib/groove/lib/jgraphaddons-1_0_4.jar"/>
-				<include name="lib/groove/lib/layouts.jar"/>
-				<include name="lib/groove/lib/looks-2.1.4.jar"/>
-				<include name="lib/groove/lib/ltl2ba4j.jar"/>
-				<include name="lib/groove/lib/rsyntaxtextarea.jar"/>
-				<include name="lib/groove/lib/xerces-2_6_0-xercesImpl.jar"/>
-				<include name="lib/groove/bin/groove-3_2_2.jar"/>
-				<include name="lib/groove/lib/ltl2ba/"/>
+
+		<!-- Launcher -->
+		<manifestclasspath property="launcherjar.classpath" jarfile="dist/bin/SimulatorProlog.jar">
+			<classpath>
+				<fileset dir="dist/bin">
+					<include name="groove-*.jar" />
+				</fileset>
+				<fileset dir="dist/lib">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</manifestclasspath>
+		<jar destfile="dist/bin/SimulatorProlog.jar">
+			<manifest>
+				<attribute name="Main-Class" value="groove.SimulatorEx" />
+				<attribute name="Class-Path" value="${launcherjar.classpath}" />
+			</manifest>
+		</jar>
+
+		<!-- documentation -->
+		<copy todir="dist/doc">
+			<fileset dir="src">
+				<include name="**/*.pro" />
+				<include name="**/*.pl" />
+			</fileset>
+			<mapper type="flatten" />
+		</copy>
+		<copy todir="dist/doc">
+			<fileset dir="${path.gnuprologjava}/src">
+				<include name="**/*.pro" />
+				<include name="**/*.pl" />
+			</fileset>
+			<mapper type="flatten" />
+		</copy>
+		<copy file="README.txt" todir="dist/doc" />
+
+		<!-- misc -->
+		<copy todir="dist">
+			<fileset dir="${path.groove}">
+				<include name="CHANGES" />
+				<include name="README" />
+				<include name="groove-green-g.ico" />
+				<include name="usermanual.pdf" />
 			</fileset>
 		</copy>
-	</target>
-
-	<target name="build.zips" depends="init">
-	</target>
-
-	<target name="gather.sources" depends="init" if="destination.temp.folder">
-		<mkdir dir="${destination.temp.folder}/groove.prolog_3.2.2"/>
-		<copy file="${build.result.folder}/groove.prologsrc.zip" todir="${destination.temp.folder}/groove.prolog_3.2.2" failonerror="false" overwrite="false"/>
-		<antcall target="copy.src.includes">
-			<param name="source.destination.folder" value="${destination.temp.folder}/groove.prolog_3.2.2"/>
-		</antcall>
-	</target>
-
-	<target name="gather.individual.sources" depends="init">
-		<antcall target="copy.groove.prologsrc.zip">
-			<param name="source.destination.folder" value="${destination.temp.folder}"/>
-		</antcall>
-		<antcall target="copy.src.includes">
-			<param name="source.destination.folder" value="${destination.temp.folder}"/>
-		</antcall>
-	</target>
-
-	<target name="copy.src.includes" depends="init">
-	</target>
-
-	<target name="gather.logs" depends="init" if="destination.temp.folder">
-		<mkdir dir="${destination.temp.folder}/groove.prolog_3.2.2"/>
-		<copy todir="${destination.temp.folder}/groove.prolog_3.2.2" failonerror="false" overwrite="false">
-			<fileset dir="${temp.folder}">
-				<include name="groove.prolog.jar.bin${logExtension}"/>
-			</fileset>
-		</copy>
-	</target>
-
-	<target name="clean" depends="init" description="Clean the plug-in: groove.prolog of all the zips, jars and logs created.">
-		<delete file="${build.result.folder}/groove.prolog.jar"/>
-		<delete file="${build.result.folder}/groove.prologsrc.zip"/>
-		<delete file="${plugin.destination}/groove.prolog_3.2.2.jar"/>
-		<delete file="${plugin.destination}/groove.prolog_3.2.2.zip"/>
-		<delete dir="${temp.folder}"/>
-	</target>
-
-	<target name="refresh" depends="init" if="eclipse.running" description="Refresh this folder.">
-		<eclipse.convertPath fileSystemPath="C:/local/mhendrik_ample/trese.ample/groove.prolog" property="resourcePath"/>
-		<eclipse.refreshLocal resource="${resourcePath}" depth="infinite"/>
-	</target>
-
-	<target name="zip.plugin" depends="init" description="Create a zip containing all the elements for the plug-in: groove.prolog.">
-		<delete dir="${temp.folder}"/>
-		<mkdir dir="${temp.folder}"/>
-		<antcall target="build.jars"/>
-		<antcall target="build.sources"/>
-		<antcall target="gather.bin.parts">
-			<param name="destination.temp.folder" value="${temp.folder}/"/>
-		</antcall>
-		<antcall target="gather.sources">
-			<param name="destination.temp.folder" value="${temp.folder}/"/>
-		</antcall>
-		<delete>
-			<fileset dir="${temp.folder}">
-				<include name="**/*.bin${logExtension}"/>
-			</fileset>
-		</delete>
-		<zip destfile="${plugin.destination}/groove.prolog_3.2.2.zip" basedir="${temp.folder}" filesonly="true" whenempty="skip" update="false"/>
-		<delete dir="${temp.folder}"/>
 	</target>
 
 </project>
+
