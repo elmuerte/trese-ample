@@ -11,7 +11,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.ide,
  org.eclipse.ui.forms,
  org.eclipse.ui.editors;bundle-version="3.4.0",
- org.eclipse.pde.ui;bundle-version="3.4.0"
+ org.eclipse.pde.ui;bundle-version="3.4.0",
+ edu.uci.isr.xarchlibs.apigen;bundle-version="4.1.50"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: trese.taf.jar

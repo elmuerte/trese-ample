@@ -14,7 +14,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -23,8 +22,11 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
+import org.eclipse.pde.internal.ui.PDEPlugin;
 import org.eclipse.pde.internal.ui.parts.FormEntry;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
@@ -200,10 +202,20 @@ public class TafEditor extends EditorPart
 		form.setText("Traceability Analysis Framework thingamajig"); // FIXME
 		toolkit.decorateFormHeading(form.getForm());
 
-		Action runAction = new Action("run", IAction.AS_PUSH_BUTTON) {};
+		Action runAction = new Action("run") {
+			/*
+			 * (non-Javadoc)
+			 * @see org.eclipse.jface.action.Action#run()
+			 */
+			@Override
+			public void run()
+			{
+				super.run();
+			}
+		};
 		runAction.setDescription("Execute this TAF query");
-		runAction.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.ui.ide",
-				"icons/full/dtool16/build_exec.gif"));
+		runAction.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(PDEPlugin.getPluginId(),
+				"icons/obj16/run_exc.gif"));
 		form.getToolBarManager().add(runAction);
 
 		TableWrapLayout layout = new TableWrapLayout();
@@ -220,6 +232,7 @@ public class TafEditor extends EditorPart
 		toolkit.adapt(mainComp);
 
 		final FormEntry arch = new FormEntry(mainComp, toolkit, "Architecture", "Browse...", false);
+		arch.getText().setEditable(false);
 		arch.getButton().addSelectionListener(new SelectionListener() {
 
 			public void widgetDefaultSelected(SelectionEvent e)
@@ -246,7 +259,15 @@ public class TafEditor extends EditorPart
 				}
 			}
 		});
-		new FormEntry(mainComp, toolkit, "Query", null, false);
+		final FormEntry query = new FormEntry(mainComp, toolkit, "Query", null, false);
+		query.getText().addModifyListener(new ModifyListener() {
+
+			public void modifyText(ModifyEvent e)
+			{
+				tafFile.setQuery(query.getText().getText());
+				firePropertyChange(PROP_DIRTY);
+			}
+		});
 
 		createPrologSection();
 		createGrooveSection();

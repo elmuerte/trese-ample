@@ -48,7 +48,7 @@ public class TafFile
 	/**
 	 * The prolog query
 	 */
-	protected String query;
+	protected String query = "";
 
 	public TafFile(IFile tafFile)
 	{
@@ -115,6 +115,39 @@ public class TafFile
 			xadlFile = value;
 			dirty = true;
 		}
+	}
+
+	/**
+	 * @return the xadlFile
+	 */
+	public IFile getXadlFile()
+	{
+		return xadlFile;
+	}
+
+	/**
+	 * @param newQuery
+	 *            the query to set
+	 */
+	public void setQuery(String newQuery)
+	{
+		if (newQuery == null)
+		{
+			newQuery = "";
+		}
+		if (!newQuery.equals(query))
+		{
+			query = newQuery;
+			dirty = true;
+		}
+	}
+
+	/**
+	 * @return the query
+	 */
+	public String getQuery()
+	{
+		return query;
 	}
 
 	/**

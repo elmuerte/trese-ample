@@ -1,6 +1,6 @@
 package groove.gui.eclipse.actions;
 
-import groove.Simulator;
+import groove.gui.SimulatorEx;
 import groove.util.Groove;
 
 import org.eclipse.core.resources.IFolder;
@@ -48,7 +48,7 @@ public class SimulatorAction implements IWorkbenchWindowActionDelegate
 		{
 			args = new String[0];
 		}
-		Simulator.main(args);
+		SimulatorEx.main(args);
 	}
 
 	/**
