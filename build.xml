@@ -3,7 +3,7 @@
 
 	<target name="-init-paths">
 		<property name="path.gnuprologjava" value="../gnuprologjava" />
-		<property name="path.groove" value="../groove" />
+		<property name="path.groove" value="lib/groove" />
 	</target>
 
 	<target name="clean" depends="-init-paths" description="Clean the project">

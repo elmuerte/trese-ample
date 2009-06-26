@@ -19,10 +19,13 @@
 package groove.gui;
 
 import java.awt.Component;
+import java.awt.Container;
 import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 
 /**
  * 
@@ -68,10 +71,34 @@ public class SimulatorEx extends Simulator
 		if (!exInit)
 		{
 			exInit = true;
-			getGraphViewsPanel().addTab("Prolog", getPrologEditor());
-			getGraphViewsPanel().addTab("System Output", new SystemOutput());
+			JTabbedPane pane = getGraphViewsPanel();
+			pane.addTab("Prolog", getPrologEditor());
+			pane.addTab("System Output", new SystemOutput());
 		}
 		return result;
+	}
+
+	/**
+	 * @param result
+	 * @return
+	 */
+	private JTabbedPane findGraphViewsPanel(JFrame result)
+	{
+		Container cont = result.getContentPane();
+		for (Component c1 : cont.getComponents())
+		{
+			if (c1 instanceof JSplitPane)
+			{
+				for (Component c2 : ((JSplitPane) c1).getComponents())
+				{
+					if (c2 instanceof JTabbedPane)
+					{
+						return (JTabbedPane) c2;
+					}
+				}
+			}
+		}
+		return null;
 	}
 
 	/**

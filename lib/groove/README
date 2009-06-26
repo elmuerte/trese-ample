@@ -1,0 +1,28 @@
+The GROOVE Tool Set, version 3.2.0 (http://groove.sf.net/)
+==================================================================
+
+See usermanual.pdf for detailed instructions on how to install and use the Groove Tool Set.
+
+Features
+--------
+
+Here is a brief list of the features supported by GROOVE. For details please consult the usermanual.
+
+* Visual editing and simulation of graphs and graph transformation rules
+* Global rule priorities
+* State space exploration using various exploration strategies
+* Model checking generated transition systems over CTL and LTL formulae
+* Regular expression matching and second-level negation in transformation rules
+* Primitive data types (int, string, bool and real) with corresponding operations
+* Control specification using a dedicated control language
+* Nested (i.e., quantified) rules
+
+Contact
+-------
+
+Any comments, bug reports and reactions are welcome, either through the trackers on http://sf.net/projects/groove or through an email to
+
+Arend Rensink                         http://www.cs.utwente.nl/~rensink
+Department of Computer Science             mailto:rensink@cs.utwente.nl
+University of Twente                               tel: +31 53 489 4862
+P.O. Box 217, NL-7500 AE Enschede, Netherlands     fax: +31 53 489 3247
