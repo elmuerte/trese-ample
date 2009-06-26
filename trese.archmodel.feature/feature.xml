@@ -34,19 +34,19 @@
    </requires>
 
    <plugin
-         id="groove"
+         id="trese.archmodel.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="groove.prolog"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
 
    <plugin
          id="trese.archmodel"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="trese.archmodel.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
