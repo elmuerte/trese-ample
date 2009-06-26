@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="groove.feature"
+      label="Groove+Prolog Feature"
+      version="3.2.2"
+      provider-name="University of Twente">
+
+   <description>
+      This is Groove bundled with the Groove+Prolog extensions.
+   </description>
+
+   <copyright url="http://www.apache.org/licenses/LICENSE-2.0">
+      Groove Copyright Formal Methods &amp; Tools group; University of Twente
+Distributed under the terms of the Apache Licence V2.0
+
+Groove+Prolog Copyright Software Engineering Group; University of Twente
+!! Distributed under, yet unspecified terms and conditions !!
+   </copyright>
+
+   <license>
+      The license for Groove+Prolog has not been determined yet. Do not use it if you are not part of the Software Engineering Group of the University of Twente or a member of the AMPLE project, or unless you are sure you won&apos;t object the future license.
+
+Groove is distributed under the terms of the Apache License V2.0
+   </license>
+
+   <url>
+      <update label="TRESE AMPLE Dev Update Site" url="http://eclipse.elmuerte.com/trese.ample.updatesite"/>
+      <discovery label="Groove" url="http://groove.sourceforge.net"/>
+      <discovery label="Software Engineering Group, University of Twente" url="http://trese.ewi.utwente.nl"/>
+      <discovery label="Formal Methods and Tools Group, University of Twente" url="http://fmt.ewi.utwente.nl/"/>
+   </url>
+
+   <includes
+         id="gnuprologjava"
+         version="0.0.0"/>
+
+   <requires>
+      <import plugin="groove" version="3.2.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="groove.prolog" version="3.2.2" match="greaterOrEqual"/>
+      <import plugin="groove" version="3.2.2" match="greaterOrEqual"/>
+      <import plugin="gnuprologjava" version="0.2.0" match="greaterOrEqual"/>
+   </requires>
+
+   <plugin
+         id="groove.eclipse.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="groove.prolog"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+</feature>
