@@ -39,8 +39,6 @@ Groove is distributed under the terms of the Apache License V2.0
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.ui.ide"/>
-      <import plugin="groove.prolog" version="3.2.2" match="greaterOrEqual"/>
-      <import plugin="gnuprologjava" version="0.2.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin

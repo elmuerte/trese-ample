@@ -22,15 +22,13 @@
    </url>
 
    <requires>
-      <import plugin="edu.uci.isr.xarchlibs.apigen" version="4.1.50" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui" version="3.3.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.runtime" version="3.3.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.resources" version="3.3.0" match="greaterOrEqual"/>
-      <import plugin="groove.prolog" version="3.2.1" match="greaterOrEqual"/>
-      <import plugin="gnuprologjava" version="0.2.1" match="greaterOrEqual"/>
       <import plugin="org.eclipse.jface.text"/>
       <import plugin="org.eclipse.ui.editors"/>
       <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.core.runtime" version="3.0.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
@@ -57,5 +55,11 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
+   <plugin
+         id="gnuprologjava"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
 </feature>
