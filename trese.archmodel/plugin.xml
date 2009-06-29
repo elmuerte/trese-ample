@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
+   <extension
+         point="org.eclipse.core.runtime.contentTypes">
+      <content-type
+            base-type="org.eclipse.core.runtime.xml"
+            file-extensions="xml"
+            id="edu.uci.isr.archstudio4.xadlContentBinding"
+            name="xADL"
+            priority="normal">
+         <describer
+               class="org.eclipse.core.runtime.content.XMLRootElementContentDescriber2">
+            <parameter
+                  name="element"
+                  value="xArch">
+            </parameter>
+         </describer>
+      </content-type>
+   </extension>
 
 </plugin>
