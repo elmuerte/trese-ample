@@ -2,7 +2,7 @@
 <feature
       id="trese.featuremodel.feature"
       label="TAF Feature Model (GFT)"
-      version="0.5.3"
+      version="0.5.4"
       provider-name="Software Engineering Group; University of Twente">
 
    <description>

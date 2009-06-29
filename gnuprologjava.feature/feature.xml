@@ -2,7 +2,7 @@
 <feature
       id="gnuprologjava"
       label="GNU Prolog for Java"
-      version="0.2.1"
+      version="0.2.2"
       provider-name="Software Engineering Group; University of Twente">
 
    <description>
