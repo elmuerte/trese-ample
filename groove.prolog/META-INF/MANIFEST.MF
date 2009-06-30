@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Prolog extensions for Groove
 Bundle-SymbolicName: groove.prolog;singleton:=true
-Bundle-Version: 3.2.2.200906291215
+Bundle-Version: 3.2.2.200906301500
 Export-Package: groove,
  groove.abs,
  groove.abs.lts,
