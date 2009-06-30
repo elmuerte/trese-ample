@@ -2,7 +2,7 @@
 <feature
       id="trese.taf"
       label="Traceabilty Analysis Framework"
-      version="0.6.1"
+      version="0.6.3.qualifier"
       provider-name="Software Engineering Group; University of Twente">
 
    <description>
@@ -24,16 +24,10 @@
       <update label="TRESE AMPLE Dev Update Site" url="http://eclipse.elmuerte.com/trese.ample.updatesite"/>
    </url>
 
-   <includes
-         id="trese.archmodel.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="trese.featuremodel.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="groove.feature"
-         version="0.0.0"/>
+   <requires>
+      <import feature="groove.feature" version="3.2.2" match="greaterOrEqual"/>
+      <import feature="trese.archmodel.feature" version="0.6.3" match="greaterOrEqual"/>
+      <import feature="trese.featuremodel.feature" version="0.6.3" match="greaterOrEqual"/>
+   </requires>
 
 </feature>

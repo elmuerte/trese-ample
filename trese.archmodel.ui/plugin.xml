@@ -38,7 +38,7 @@
                enablesFor="1"
                id="trese.archmodel.ui.designrationale"
                label="Design Ratonale..."
-               menubarPath="trese.archmodel.ui.archstudio/group2"
+               menubarPath="__disabled__trese.archmodel.ui.archstudio/group2"
                tooltip="Apply a design rationale on this architecture">
          </action>
          <visibility>

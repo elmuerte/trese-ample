@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Prolog extensions for Groove
 Bundle-SymbolicName: groove.prolog;singleton:=true
-Bundle-Version: 3.2.2.200906301500
+Bundle-Version: 3.2.2.qualifier
 Export-Package: groove,
  groove.abs,
  groove.abs.lts,
@@ -75,4 +75,4 @@ Bundle-ClassPath: groove.prolog.jar,
  lib/groove/lib/xerces-2_6_0-xercesImpl.jar
 Bundle-ActivationPolicy: lazy
 Eclipse-RegisterBuddy: gnuprologjava
-Require-Bundle: gnuprologjava;bundle-version="0.2.1"
+Require-Bundle: gnuprologjava;bundle-version="0.2.2"

@@ -2,7 +2,7 @@
 <feature
       id="groove.feature"
       label="Groove+Prolog Feature"
-      version="3.2.2.200906301500"
+      version="3.2.2.qualifier"
       provider-name="University of Twente">
 
    <description>
@@ -30,15 +30,12 @@ Groove is distributed under the terms of the Apache License V2.0
       <discovery label="Formal Methods and Tools Group, University of Twente" url="http://fmt.ewi.utwente.nl/"/>
    </url>
 
-   <includes
-         id="gnuprologjava"
-         version="0.0.0"/>
-
    <requires>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.ui.ide"/>
+      <import feature="gnuprologjava" version="0.2.2" match="greaterOrEqual"/>
    </requires>
 
    <plugin

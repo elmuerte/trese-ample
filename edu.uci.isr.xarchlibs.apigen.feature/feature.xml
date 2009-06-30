@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="edu.uci.isr.xarchlibs.apigen"
+      label="Xarchlibs Plug-in"
+      version="4.1.50.qualifier"
+      provider-name="Institute for Software Research, UC Irvine">
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <url>
+      <update label="ArchStudio 4 update site" url="http://www.isr.uci.edu/projects/archstudio-update/"/>
+   </url>
+
+   <plugin
+         id="edu.uci.isr.xarchlibs.apigen"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
