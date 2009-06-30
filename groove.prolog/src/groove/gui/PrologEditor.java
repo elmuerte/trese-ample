@@ -63,7 +63,9 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Map.Entry;
@@ -140,8 +142,9 @@ public class PrologEditor extends JPanel
 	protected JTree predicateTree;
 	protected DefaultMutableTreeNode predRootNode;
 
-	protected JTabbedPane proFiles;
-	protected Map<File, PrologFile> proEditors = new HashMap<File, PrologFile>();
+	protected JTabbedPane prologEditors;
+	protected Map<File, PrologFile> prologFileMap = new HashMap<File, PrologFile>();
+	protected Set<PrologFile> prologFiles = new HashSet<PrologFile>();
 
 	public PrologEditor(Simulator simulator)
 	{
@@ -258,6 +261,7 @@ public class PrologEditor extends JPanel
 		toolBar.addSeparator();
 
 		JButton newButton = new JButton(new ImageIcon(Groove.getResource("new.gif")));
+		newButton.setToolTipText("Create a new prolog file");
 		newButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e)
@@ -273,6 +277,7 @@ public class PrologEditor extends JPanel
 		toolBar.add(newButton);
 
 		JButton loadButton = new JButton(new ImageIcon(Groove.getResource("open.gif")));
+		loadButton.setToolTipText("Open a prolog file");
 		loadButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e)
@@ -294,17 +299,18 @@ public class PrologEditor extends JPanel
 		toolBar.add(loadButton);
 
 		JButton saveButton = new JButton(new ImageIcon(Groove.getResource("save.gif")));
+		saveButton.setToolTipText("Save the current prolog file");
 		saveButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e)
 			{
-				Component comp = proFiles.getSelectedComponent();
+				Component comp = prologEditors.getSelectedComponent();
 				if (comp == null)
 				{
 					return;
 				}
 				PrologFile proFile = null;
-				for (PrologFile pf : proEditors.values())
+				for (PrologFile pf : prologFiles)
 				{
 					if (pf.pane == comp)
 					{
@@ -319,19 +325,24 @@ public class PrologEditor extends JPanel
 				// select a filename
 				if (proFile.file == null)
 				{
+					JFileChooser fc = getPrologFileChooser();
+					fc.setSelectedFile(null);
 					do
 					{
-						JFileChooser fc = getPrologFileChooser();
-						fc.setSelectedFile(null);
 						int result = fc.showSaveDialog(sim.getFrame());
-						// now save, if so required
 						if (result == JFileChooser.APPROVE_OPTION)
 						{
 							File fl = getPrologFileChooser().getSelectedFile();
 							if (fl.exists())
 							{
-								int overwrite = JOptionPane.showConfirmDialog(sim.getFrame(),
-										"Overwrite existing file \"" + fl.getName() + "\"?");
+								int overwrite = JOptionPane
+										.showConfirmDialog(
+												sim.getFrame(),
+												"Overwrite existing file \""
+														+ fl.getName()
+														+ "\"?"
+														+ (prologFileMap.containsKey(fl) ? "\nThis will also discard the current editor for this file."
+																: ""));
 								if (overwrite == JOptionPane.NO_OPTION)
 								{
 									continue;
@@ -342,11 +353,15 @@ public class PrologEditor extends JPanel
 								}
 							}
 
-							if (proEditors.containsKey(fl))
+							if (prologFileMap.containsKey(fl))
 							{
-								// TODO close the other file
+								PrologFile other = prologFileMap.get(fl);
+								prologEditors.remove(other.pane);
+								prologFileMap.remove(fl);
+								prologFiles.remove(other);
 							}
 							proFile.file = fl;
+							prologFileMap.put(fl, proFile);
 							break;
 						}
 					} while (true);
@@ -356,10 +371,10 @@ public class PrologEditor extends JPanel
 				{
 					proFile.editor.write(new FileWriter(proFile.file));
 					proFile.dirty = false;
-					int index = proFiles.indexOfComponent(proFile.pane);
+					int index = prologEditors.indexOfComponent(proFile.pane);
 					if (index > -1)
 					{
-						proFiles.setTitleAt(index, proFile.file.getName());
+						prologEditors.setTitleAt(index, proFile.file.getName());
 					}
 				}
 				catch (IOException eex)
@@ -369,6 +384,50 @@ public class PrologEditor extends JPanel
 		});
 		toolBar.add(saveButton);
 
+		JButton closeButton = new JButton(new ImageIcon(Groove.getResource("delete.gif")));
+		closeButton.setToolTipText("Close the current prolog file");
+		closeButton.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e)
+			{
+				Component comp = prologEditors.getSelectedComponent();
+				if (comp == null)
+				{
+					return;
+				}
+				PrologFile proFile = null;
+				for (PrologFile pf : prologFiles)
+				{
+					if (pf.pane == comp)
+					{
+						proFile = pf;
+					}
+				}
+				if (proFile == null)
+				{
+					return;
+				}
+				if (proFile.dirty)
+				{
+					int overwrite = JOptionPane
+							.showConfirmDialog(
+									sim.getFrame(),
+									"You have got unsaved changes. Are you sure you want to close this file and discard the changes?",
+									"Discard changes?", JOptionPane.YES_NO_OPTION);
+					if (overwrite == JOptionPane.NO_OPTION)
+					{
+						return;
+					}
+				}
+
+				prologEditors.remove(proFile.pane);
+				prologFileMap.remove(proFile.file);
+				prologFiles.remove(proFile);
+				consultUserCode();
+			}
+		});
+		toolBar.add(closeButton);
+
 		toolBar.addSeparator();
 
 		consultBtn = new JButton("Consult");
@@ -377,7 +436,7 @@ public class PrologEditor extends JPanel
 			public void actionPerformed(ActionEvent arg0)
 			{
 				boolean dirty = false;
-				for (PrologFile pf : proEditors.values())
+				for (PrologFile pf : prologFiles)
 				{
 					if (pf.dirty)
 					{
@@ -405,11 +464,11 @@ public class PrologEditor extends JPanel
 		toolBar.addSeparator();
 		toolBar.add(userCodeConsulted);
 
-		proFiles = new JTabbedPane(SwingConstants.BOTTOM, JTabbedPane.SCROLL_TAB_LAYOUT);
+		prologEditors = new JTabbedPane(SwingConstants.BOTTOM, JTabbedPane.SCROLL_TAB_LAYOUT);
 
 		JPanel editorPane = new JPanel(new BorderLayout());
 		editorPane.add(toolBar, BorderLayout.NORTH);
-		editorPane.add(proFiles, BorderLayout.CENTER);
+		editorPane.add(prologEditors, BorderLayout.CENTER);
 
 		results = new JTextArea();
 		results.setFont(editFont);
@@ -525,40 +584,40 @@ public class PrologEditor extends JPanel
 
 	protected void createEditor(File file)
 	{
-		if (file != null && proEditors.containsKey(file))
+		if (file != null && prologFileMap.containsKey(file))
 		{
-			// TODO activate tab
-			PrologFile pfile = proEditors.get(file);
-			proFiles.setSelectedComponent(pfile.pane);
+			PrologFile proFile = prologFileMap.get(file);
+			prologEditors.setSelectedComponent(proFile.pane);
 			return;
 		}
 
-		final PrologFile pfile = new PrologFile();
-		pfile.file = file;
-		pfile.dirty = file == null;
-		pfile.editor = new RSyntaxTextArea();
+		final PrologFile proFile = new PrologFile();
+		proFile.file = file;
+		proFile.dirty = file == null;
+		proFile.editor = new RSyntaxTextArea();
 		Font editFont = new Font("Monospaced", Font.PLAIN, 12);
-		pfile.editor.setFont(editFont);
-		pfile.editor.setText("");
-		pfile.editor.setEditable(true);
-		pfile.editor.setEnabled(true);
-		pfile.editor.setTabSize(4);
-		proEditors.put(file, pfile);
+		proFile.editor.setFont(editFont);
+		proFile.editor.setText("");
+		proFile.editor.setEditable(true);
+		proFile.editor.setEnabled(true);
+		proFile.editor.setTabSize(4);
 		String title = "* untitled.pro";
 		if (file != null)
 		{
 			title = file.getName();
+			prologFileMap.put(file, proFile);
 		}
-		pfile.pane = new RTextScrollPane(300, 300, pfile.editor, true);
-		proFiles.addTab(title, pfile.pane);
-		proFiles.setSelectedComponent(pfile.pane);
+		proFile.pane = new RTextScrollPane(300, 300, proFile.editor, true);
+		prologFiles.add(proFile);
+		prologEditors.addTab(title, proFile.pane);
+		prologEditors.setSelectedComponent(proFile.pane);
 
 		if (file != null)
 		{
 			try
 			{
 				FileReader fis = new FileReader(file);
-				pfile.editor.read(fis, null);
+				proFile.editor.read(fis, null);
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run()
 					{
@@ -570,22 +629,22 @@ public class PrologEditor extends JPanel
 			{}
 		}
 
-		pfile.editor.getDocument().addDocumentListener(new DocumentListener() {
+		proFile.editor.getDocument().addDocumentListener(new DocumentListener() {
 
 			protected void updateTab()
 			{
-				if (pfile.dirty)
+				if (proFile.dirty)
 				{
 					return;
 				}
-				pfile.dirty = true;
+				proFile.dirty = true;
 				String title = "untitled.pro";
-				if (pfile.file != null)
+				if (proFile.file != null)
 				{
-					title = pfile.file.getName();
+					title = proFile.file.getName();
 				}
-				int index = proFiles.indexOfComponent(pfile.pane);
-				proFiles.setTitleAt(index, "* " + title);
+				int index = prologEditors.indexOfComponent(proFile.pane);
+				prologEditors.setTitleAt(index, "* " + title);
 			}
 
 			public void changedUpdate(DocumentEvent arg0)
@@ -759,7 +818,7 @@ public class PrologEditor extends JPanel
 				try
 				{
 					Environment env = prolog.getEnvironment();
-					for (PrologFile pf : proEditors.values())
+					for (PrologFile pf : prologFiles)
 					{
 						if (pf.file == null)
 						{
@@ -768,6 +827,10 @@ public class PrologEditor extends JPanel
 						CompoundTerm term = new CompoundTerm(AtomTerm.get("file"), new Term[] { AtomTerm.get(pf.file
 								.getAbsolutePath()) });
 						env.ensureLoaded(term);
+						if (!env.getLoadingErrors().isEmpty())
+						{
+							throw new GroovePrologLoadingException(env.getLoadingErrors());
+						}
 					}
 				}
 				catch (GroovePrologLoadingException e)
@@ -786,6 +849,7 @@ public class PrologEditor extends JPanel
 			try
 			{
 				updatePredicateTree(prolog.getEnvironment().getModule());
+				prolog.init();
 			}
 			catch (GroovePrologLoadingException e)
 			{
@@ -794,40 +858,6 @@ public class PrologEditor extends JPanel
 				prolog = null;
 				return false;
 			}
-
-			// if (doConsultUserCode)
-			// {
-			// String userCode = editor.getText();
-			// if (userCode != null && userCode.length() > 0)
-			// {
-			// try
-			// {
-			// prolog.init(new StringReader(userCode), "user_input");
-			// userCodeConsulted.setText("User code consulted");
-			// statusBar.setText("User code accepted");
-			// }
-			// catch (GroovePrologLoadingException e)
-			// {
-			// userCodeConsulted.setText("Error");
-			// results.append("\nError loading the prolog engine:\n");
-			// results.append(e.getMessage());
-			// prolog = null;
-			// doConsultUserCode = false;
-			// return false;
-			// }
-			// }
-			// }
-			// try
-			// {
-			// updatePredicateTree(prolog.getEnvironment().getModule());
-			// }
-			// catch (GroovePrologLoadingException e)
-			// {
-			// results.append("\nError loading the prolog engine:\n");
-			// results.append(e.getMessage());
-			// prolog = null;
-			// return false;
-			// }
 		}
 		return true;
 	}
