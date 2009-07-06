@@ -96,6 +96,11 @@ public class GrooveState
 		return gts;
 	}
 
+	/**
+	 * Rule events, used by the RuleEvent filtering exploration system
+	 * 
+	 * @return
+	 */
 	public Set<RuleEvent> getRuleEvents()
 	{
 		if (ruleEvents == null)

@@ -29,7 +29,9 @@ import java.io.OutputStream;
 import java.io.Reader;
 
 /**
- * 
+ * Subclass of the normal GNU Prolog Environment, contains a reference to a
+ * {@link GrooveState} instance which contains the reference to various Groove
+ * structures.
  * 
  * @author Michiel Hendriks
  */
@@ -47,6 +49,9 @@ public class GrooveEnvironment extends Environment
 				PrologException.errorAtom), null);
 	}
 
+	/**
+	 * The current groove state
+	 */
 	protected GrooveState grooveState;
 
 	public GrooveEnvironment()
