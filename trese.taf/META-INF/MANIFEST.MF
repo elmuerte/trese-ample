@@ -2,17 +2,18 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Traceability Analysis Framework
 Bundle-SymbolicName: trese.taf;singleton:=true
-Bundle-Version: 0.1.0
+Bundle-Version: 0.6.3.qualifier
 Bundle-Activator: trese.taf.Activator
 Bundle-Vendor: Software Engineering Group; University of Twente
-Require-Bundle: org.eclipse.ui,
+Require-Bundle: groove.prolog;bundle-version="3.2.2",
+ edu.uci.isr.xarchlibs.apigen;bundle-version="4.1.50",
+ org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
  org.eclipse.ui.ide,
  org.eclipse.ui.forms,
  org.eclipse.ui.editors;bundle-version="3.4.0",
- org.eclipse.pde.ui;bundle-version="3.4.0",
- edu.uci.isr.xarchlibs.apigen;bundle-version="4.1.50"
+ org.eclipse.pde.ui;bundle-version="3.4.0"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: trese.taf.jar
