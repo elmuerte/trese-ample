@@ -69,6 +69,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Map.Entry;
+import java.util.prefs.Preferences;
 
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
@@ -109,6 +110,9 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 public class PrologEditor extends JPanel
 {
 	private static final long serialVersionUID = 1728208313657610091L;
+	private static final int MAX_HISTORY = 50;
+
+	static final Preferences PREFS = Preferences.userNodeForPackage(PrologEditor.class);
 
 	public enum QueryMode
 	{
@@ -225,7 +229,7 @@ public class PrologEditor extends JPanel
 		toolBar.addSeparator();
 		toolBar.add(exploreBtn);
 
-		query = new JComboBox();
+		query = new JComboBox(PREFS.get("queryHistory", "").split("\\n"));
 		query.setFont(editFont);
 		query.setEditable(true);
 		query.setEnabled(true);
@@ -282,15 +286,20 @@ public class PrologEditor extends JPanel
 
 			public void actionPerformed(ActionEvent e)
 			{
+				getPrologFileChooser().setMultiSelectionEnabled(true);
 				int result = getPrologFileChooser().showOpenDialog(sim.getFrame());
 				// now load, if so required
 				if (result == JFileChooser.APPROVE_OPTION)
 				{
-					final File fl = getPrologFileChooser().getSelectedFile();
+					final File[] files = getPrologFileChooser().getSelectedFiles();
 					SwingUtilities.invokeLater(new Runnable() {
 						public void run()
 						{
-							createEditor(fl);
+							for (File fl : files)
+							{
+								createEditor(fl, true);
+							}
+							consultUserCode();
 						}
 					});
 				}
@@ -435,24 +444,9 @@ public class PrologEditor extends JPanel
 		consultBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0)
 			{
-				boolean dirty = false;
-				for (PrologFile pf : prologFiles)
+				if (!confirmDirty())
 				{
-					if (pf.dirty)
-					{
-						dirty = true;
-						break;
-					}
-				}
-				if (dirty)
-				{
-					int overwrite = JOptionPane.showConfirmDialog(sim.getFrame(),
-							"You have got unsaved changes. Are you sure you want to consult the files on disk?",
-							"Ignore changes?", JOptionPane.YES_NO_OPTION);
-					if (overwrite == JOptionPane.NO_OPTION)
-					{
-						return;
-					}
+					return;
 				}
 				consultUserCode();
 			}
@@ -584,6 +578,11 @@ public class PrologEditor extends JPanel
 
 	protected void createEditor(File file)
 	{
+		createEditor(file, false);
+	}
+
+	protected void createEditor(File file, boolean delayLoading)
+	{
 		if (file != null && prologFileMap.containsKey(file))
 		{
 			PrologFile proFile = prologFileMap.get(file);
@@ -618,12 +617,15 @@ public class PrologEditor extends JPanel
 			{
 				FileReader fis = new FileReader(file);
 				proFile.editor.read(fis, null);
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run()
-					{
-						consultUserCode();
-					}
-				});
+				if (delayLoading)
+				{
+					SwingUtilities.invokeLater(new Runnable() {
+						public void run()
+						{
+							consultUserCode();
+						}
+					});
+				}
 			}
 			catch (IOException eex)
 			{}
@@ -709,6 +711,10 @@ public class PrologEditor extends JPanel
 
 			public void actionPerformed(ActionEvent e)
 			{
+				if (!confirmDirty())
+				{
+					return;
+				}
 				if (queryEdit.getText().length() == 0)
 				{
 					return;
@@ -718,11 +724,32 @@ public class PrologEditor extends JPanel
 					return;
 				}
 				results.setText("");
-				strat.setPrologQuery(null, queryEdit.getText(), ""); // TODO
+				strat.setPrologQuery(null, queryEdit.getText(), getUserPrologCode());
+				addQueryHistory(queryEdit.getText());
 				innerAct.actionPerformed(e);
 			}
 		};
 		return act;
+	}
+
+	/**
+	 * Produces prolog code to load the currently open files
+	 * 
+	 * @return prolog code
+	 */
+	private String getUserPrologCode()
+	{
+		StringBuilder sb = new StringBuilder();
+		for (PrologFile pfile : prologFiles)
+		{
+			if (pfile.file != null)
+			{
+				sb.append(":-ensure_loaded(file('");
+				sb.append(pfile.file.toString().replaceAll("\\\\", "\\\\\\\\"));
+				sb.append("')).\n");
+			}
+		}
+		return sb.toString();
 	}
 
 	/**
@@ -769,6 +796,10 @@ public class PrologEditor extends JPanel
 
 			public void actionPerformed(ActionEvent e)
 			{
+				if (!confirmDirty())
+				{
+					return;
+				}
 				if (queryEdit.getText().length() == 0)
 				{
 					return;
@@ -779,7 +810,8 @@ public class PrologEditor extends JPanel
 				}
 				results.setText("");
 				prologCondition.setCondition(queryEdit.getText());
-				prologCondition.setUsercode(""); // TODO
+				prologCondition.setUsercode(getUserPrologCode());
+				addQueryHistory(queryEdit.getText());
 				innerAct.actionPerformed(e);
 			}
 		};
@@ -921,17 +953,9 @@ public class PrologEditor extends JPanel
 		{
 			queryString = queryString.substring(0, queryString.length() - 1);
 		}
-		// if (query.getSelectedIndex() == -1)
-		// {
-		// query.insertItemAt(queryString, 0);
-		// }
-		query.removeItem(queryString);
-		query.insertItemAt(queryString, 0);
-		query.setSelectedIndex(0);
-		results.setText("?- " + queryString + "\n");
 
-		// System.setOut(new PrintStream(userOutput));
-		// System.setErr(new PrintStream(userOutput));
+		addQueryHistory(queryString);
+		results.setText("?- " + queryString + "\n");
 
 		if (!ensureProlog())
 		{
@@ -969,6 +993,34 @@ public class PrologEditor extends JPanel
 		{
 			handelPrologException(e);
 		}
+	}
+
+	/**
+	 * Add the query to the history
+	 * 
+	 * @param queryString
+	 */
+	protected void addQueryHistory(String queryString)
+	{
+		query.removeItem(queryString);
+		query.insertItemAt(queryString, 0);
+		query.setSelectedIndex(0);
+		while (query.getItemCount() > MAX_HISTORY)
+		{
+			query.removeItemAt(MAX_HISTORY);
+		}
+
+		// store the history
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < query.getItemCount(); i++)
+		{
+			if (i > 0)
+			{
+				sb.append("\n");
+			}
+			sb.append(query.getItemAt(i));
+		}
+		PREFS.put("queryHistory", sb.toString());
 	}
 
 	protected void handelPrologException(Throwable e)
@@ -1079,6 +1131,33 @@ public class PrologEditor extends JPanel
 		nextResultBtn.setVisible(false);
 		results.setText("");
 		ensureProlog();
+	}
+
+	/**
+	 * 
+	 */
+	protected boolean confirmDirty()
+	{
+		boolean dirty = false;
+		for (PrologFile pf : prologFiles)
+		{
+			if (pf.dirty)
+			{
+				dirty = true;
+				break;
+			}
+		}
+		if (dirty)
+		{
+			int overwrite = JOptionPane.showConfirmDialog(sim.getFrame(),
+					"You have got unsaved changes. Are you sure you want to consult the files on disk?",
+					"Ignore changes?", JOptionPane.YES_NO_OPTION);
+			if (overwrite == JOptionPane.NO_OPTION)
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 
 	static class JTextAreaOutputStream extends OutputStream
