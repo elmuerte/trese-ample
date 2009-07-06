@@ -16,12 +16,18 @@
 		<property name="ant.build.javac.target" value="1.5" />
 		<property name="ant.build.javac.source" value="1.5" />
 
+		<tstamp>
+			<format property="version.qualifier" pattern="yyyyMMddHHmm" />
+		</tstamp>
 		<loadproperties srcFile="META-INF/MANIFEST.MF">
 			<filterchain>
 				<linecontains>
 					<contains value="Bundle-Version:" />
 				</linecontains>
 				<prefixlines prefix="mf." />
+				<tokenfilter>
+					<replacestring from=".qualifier" to=".${version.qualifier}" />
+				</tokenfilter>
 			</filterchain>
 		</loadproperties>
 		<property name="groove.prolog.version" value="${mf.Bundle-Version}" />
@@ -60,7 +66,7 @@
 				<include name="**/*.properties" />
 			</fileset>
 		</copy>
-		<jar destfile="dist/lib/grooveprolog-${groove.prolog.version}.jar">
+		<jar destfile="dist/lib/groove.prolog-${groove.prolog.version}.jar">
 			<fileset dir="build" />
 		</jar>
 	</target>
