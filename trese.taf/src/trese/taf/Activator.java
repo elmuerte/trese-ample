@@ -13,14 +13,18 @@ import org.osgi.framework.BundleContext;
  */
 public class Activator extends AbstractUIPlugin
 {
-
-	// The plug-in ID
 	public static final String PLUGIN_ID = "trese.taf";
+
+	public static final String NATURE_ID = "trese.taf.project";
+
+	public static final String TAF_FILE_ID = "trese.taf.file";
+
+	public static final String PROLOG_FILE_ID = "gnuprologjava.file.prolog";
+
+	public static final String XADL_FILE_ID = "edu.uci.isr.archstudio4.xadlContentBinding";
 
 	// The shared instance
 	private static Activator plugin;
-
-	public static final String NATURE_ID = "trese.taf.project";
 
 	/**
 	 * The constructor

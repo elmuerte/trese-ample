@@ -47,6 +47,7 @@ import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
+import trese.taf.Activator;
 import trese.taf.TafFile;
 import trese.taf.ui.dialog.WorkbenchFileSelectionDialog;
 
@@ -241,7 +242,7 @@ public class TafEditor extends EditorPart
 			public void widgetSelected(SelectionEvent e)
 			{
 				WorkbenchFileSelectionDialog dlg = new WorkbenchFileSelectionDialog(getSite().getShell(), Collections
-						.singleton("edu.uci.isr.archstudio4.xadlContentBinding"));
+						.singleton(Activator.XADL_FILE_ID));
 				dlg.setTitle("Architecture Selection");
 				dlg.setMessage("Select an architecture from the current project.");
 				dlg.setInput(project);
@@ -312,7 +313,7 @@ public class TafEditor extends EditorPart
 			public void widgetSelected(SelectionEvent e)
 			{
 				WorkbenchFileSelectionDialog dlg = new WorkbenchFileSelectionDialog(getSite().getShell(), Collections
-						.singleton("gnuprologjava.file.prolog"));
+						.singleton(Activator.PROLOG_FILE_ID));
 				dlg.setTitle("Prolog Selection");
 				dlg.setMessage("Select one or more prolog files from the current project to add.");
 				dlg.setInput(project);
