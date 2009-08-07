@@ -7,6 +7,7 @@ package trese.featuremodel;
 
 import groove.graph.DefaultGraph;
 import groove.graph.DefaultLabel;
+import groove.graph.GraphInfo;
 import groove.graph.Label;
 import groove.graph.Node;
 import groove.view.aspect.AspectGraph;
@@ -80,6 +81,7 @@ public final class FeatureGraphCreator
 	{
 		DefaultGraph graph = new DefaultGraph();
 		createGraph(fromResult, graph);
+		graph.setInfo(new GraphInfo());
 		return AspectGraph.getFactory().fromPlainGraph(graph);
 	}
 
