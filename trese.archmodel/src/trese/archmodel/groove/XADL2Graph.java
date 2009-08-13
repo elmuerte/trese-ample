@@ -37,6 +37,7 @@ import edu.uci.isr.xarch.variants.IVariantConnectorType;
 import groove.graph.DefaultGraph;
 import groove.graph.DefaultLabel;
 import groove.graph.Graph;
+import groove.graph.GraphInfo;
 import groove.graph.Label;
 import groove.graph.Node;
 import groove.view.AspectualGraphView;
@@ -193,6 +194,10 @@ public class XADL2Graph
 	protected Graph internalConvert() throws ConversionException
 	{
 		internalConvert(new DefaultGraph());
+		if (graph.getInfo() == null)
+		{
+			graph.setInfo(new GraphInfo());
+		}
 		AspectualGraphView view = new AspectualGraphView(AspectGraph.getFactory().fromPlainGraph(graph), null);
 		try
 		{
