@@ -59,7 +59,7 @@
             visible="true">
          <menu
                id="grooveMenu"
-               label="&amp;Groove">
+               label="&amp;TAF">
             <separator
                   name="grooveGroup">
             </separator>
