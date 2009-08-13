@@ -94,13 +94,6 @@
    <extension
          point="net.ample.tracing.core.traceExtractor">
       <extractor
-            class="trese.taf.TraceExtractor1"
-            id="trese.taf.extractor1">
-      </extractor>
-   </extension>
-   <extension
-         point="net.ample.tracing.core.traceExtractor">
-      <extractor
             class="trese.taf.atf.TraceExtractor"
             id="trese.taf.atf.extractor">
       </extractor>
