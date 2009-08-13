@@ -1,32 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
-   <extension
-         point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            id="trese.archmodel.ui.xadl2gst"
-            objectClass="org.eclipse.core.resources.IFile">
-         <action
-               class="trese.archmodel.ui.popup.actions.DRWizard"
-               enablesFor="1"
-               id="trese.archmodel.ui.designrationale"
-               label="Design Ratonale..."
-               menubarPath="__disabled__trese.archmodel.ui.archstudio/group2"
-               tooltip="Apply a design rationale on this architecture">
-         </action>
-      </objectContribution>
-   </extension>
-   <extension
-         point="org.eclipse.ui.editors">
-      <editor
-            class="trese.archmodel.dr.ui.DREditor"
-            default="false"
-            id="trese.archmodel.dr.ui.editor"
-            name="Design Rationale">
-         <contentTypeBinding
-               contentTypeId="edu.uci.isr.archstudio4.xadlContentBinding">
-         </contentTypeBinding>
-      </editor>
-   </extension>
 
 </plugin>
