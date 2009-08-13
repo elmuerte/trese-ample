@@ -1,13 +1,17 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: CarmeQ ArchModel
+Bundle-Name: TAF ArchModel
 Bundle-SymbolicName: trese.archmodel;singleton:=true
-Bundle-Version: 0.6.3.qualifier
+Bundle-Version: 0.6.4.qualifier
 Bundle-Vendor: Software Engineering Group; University of Twente
 Require-Bundle: edu.uci.isr.xarchlibs.apigen;bundle-version="4.1.50",
  groove.prolog;bundle-version="3.2.2",
- org.eclipse.core.runtime;bundle-version="3.4.0"
+ org.eclipse.core.runtime;bundle-version="3.4.0",
+ org.eclipse.core.resources;bundle-version="3.4.0",
+ org.eclipse.ui;bundle-version="3.4.0"
 Export-Package: trese.archmodel,
- trese.archmodel.groove;uses:="edu.uci.isr.xarch.types,edu.uci.isr.xarch,edu.uci.isr.xarch.instance"
+ trese.archmodel.groove;uses:="edu.uci.isr.xarch.types,edu.uci.isr.xarch,edu.uci.isr.xarch.instance",
+ trese.archmodel.ui.dialogs,
+ trese.archmodel.ui.popup.actions
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ClassPath: trese.archmodel.jar

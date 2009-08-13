@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2008 University of Twente
  */
-package trese.archmodel.ui.popup.actions;
+package trese.archmodel.dr.ui;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
@@ -13,7 +13,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.IWorkbenchWindow;
 
-import trese.archmodel.dr.ui.DesignRationaleWizard;
 
 /**
  * @author Michiel Hendriks

@@ -80,5 +80,30 @@
          </describer>
       </content-type>
    </extension>
+   <extension
+         point="net.ample.tracing.frontend.core.traceRegister">
+      <register
+            class="trese.taf.atf.TafTraceRegister"
+            id="trese.taf.atf.register"
+            name="TAF Trace Register">
+         <description>
+            Import traces from the Trace Analysis Framework
+         </description>
+      </register>
+   </extension>
+   <extension
+         point="net.ample.tracing.core.traceExtractor">
+      <extractor
+            class="trese.taf.TraceExtractor1"
+            id="trese.taf.extractor1">
+      </extractor>
+   </extension>
+   <extension
+         point="net.ample.tracing.core.traceExtractor">
+      <extractor
+            class="trese.taf.atf.TraceExtractor"
+            id="trese.taf.atf.extractor">
+      </extractor>
+   </extension>
 
 </plugin>

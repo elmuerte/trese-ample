@@ -13,7 +13,9 @@ Require-Bundle: groove.prolog;bundle-version="3.2.2",
  org.eclipse.ui.ide,
  org.eclipse.ui.forms,
  org.eclipse.ui.editors;bundle-version="3.4.0",
- org.eclipse.pde.ui;bundle-version="3.4.0"
+ org.eclipse.pde.ui;bundle-version="3.4.0",
+ net.ample.tracing.core;bundle-version="0.2.1",
+ net.ample.tracing.frontend.core;bundle-version="0.1.5"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: trese.taf.jar
