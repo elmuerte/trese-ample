@@ -34,5 +34,34 @@
          </action>
       </objectContribution>
    </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="trese.taf"
+            name="TAF">
+      </category>
+      <view
+            allowMultiple="false"
+            category="trese.taf"
+            class="trese.taf.atf.AtfImportExportView"
+            icon="icons/views/atf-ie-view.gif"
+            id="trese.taf.atf.AtfImportExportView"
+            name="TAF:ATF Import/Export">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="net.ample.tracing.ui.perspectives.TracingPerspective">
+         <view
+               id="trese.taf.atf.AtfImportExportView"
+               relationship="stack"
+               relative="org.eclipse.ui.views.PropertySheet">
+         </view>
+         <viewShortcut
+               id="trese.taf.atf.AtfImportExportView">
+         </viewShortcut>
+      </perspectiveExtension>
+   </extension>
 
 </plugin>
