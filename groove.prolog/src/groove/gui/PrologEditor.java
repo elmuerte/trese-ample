@@ -969,19 +969,25 @@ public class PrologEditor extends JPanel
 				GraphState gs = sim.getCurrentState();
 				if (gs == null)
 				{
-					results.append("Error: no graph");
-					return;
+					results.append("% Warning: no graph\n");
+					prolog.setGrooveState(null);
 				}
-				prolog.setGrooveState(new GrooveState(gs));
+				else
+				{
+					prolog.setGrooveState(new GrooveState(gs));
+				}
 				break;
 			case LTS:
 				GTS gts = sim.getCurrentGTS();
 				if (gts == null)
 				{
-					results.append("Error: no LTS");
-					return;
+					results.append("% Warning: no LTS\n");
+					prolog.setGrooveState(null);
 				}
-				prolog.setGrooveState(new GrooveState(gts, sim.getCurrentState()));
+				else
+				{
+					prolog.setGrooveState(new GrooveState(gts, sim.getCurrentState()));
+				}
 				break;
 		}
 

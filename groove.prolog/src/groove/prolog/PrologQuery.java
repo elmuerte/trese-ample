@@ -180,7 +180,7 @@ public class PrologQuery
 		}
 		if (env.getGrooveState() == null)
 		{
-			throw new GroovePrologException("No Groove state");
+			// throw new GroovePrologException("No Groove state");
 		}
 		if (currentResult != null)
 		{
