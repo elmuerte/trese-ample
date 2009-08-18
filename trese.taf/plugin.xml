@@ -2,68 +2,6 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         id="trese.taf.project"
-         name="TAF Project"
-         point="org.eclipse.core.resources.natures">
-      <runtime>
-         <run
-               class="trese.taf.TafProject">
-         </run>
-      </runtime>
-   </extension>
-   <extension
-         point="org.eclipse.ui.ide.projectNatureImages">
-      <image
-            icon="icons/taf_obj.gif"
-            id="trese.taf.project.icon"
-            natureId="trese.taf.project">
-      </image>
-   </extension>
-   <extension
-         point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            adaptable="true"
-            id="trese.taf.projectContrib"
-            objectClass="org.eclipse.core.resources.IProject">
-         <menu
-               id="trese.taf.projectMenu"
-               label="TAF"
-               path="additions">
-            <separator
-                  name="main">
-            </separator>
-         </menu>
-         <action
-               class="trese.taf.ToggleTafNature"
-               id="trese.taf.toggleNature"
-               label="Add/Remove TAF Nature"
-               menubarPath="trese.taf.projectMenu/main">
-         </action>
-      </objectContribution>
-   </extension>
-   <extension
-         point="org.eclipse.core.runtime.contentTypes">
-      <content-type
-            file-extensions="taf"
-            id="trese.taf.file"
-            name="TAF Query "
-            priority="normal">
-      </content-type>
-   </extension>
-   <extension
-         point="org.eclipse.ui.editors">
-      <editor
-            class="trese.taf.editor.TafEditor"
-            default="true"
-            icon="icons/taf_file_obj.gif"
-            id="trese.taf.file.editor"
-            name="TAF Editor">
-         <contentTypeBinding
-               contentTypeId="trese.taf.file">
-         </contentTypeBinding>
-      </editor>
-   </extension>
-   <extension
          point="org.eclipse.core.runtime.contentTypes">
       <content-type
             base-type="org.eclipse.core.runtime.xml"
@@ -79,24 +17,6 @@
             </parameter>
          </describer>
       </content-type>
-   </extension>
-   <extension
-         point="net.ample.tracing.frontend.core.traceRegister">
-      <register
-            class="trese.taf.atf.TafTraceRegister"
-            id="trese.taf.atf.register"
-            name="TAF Trace Register">
-         <description>
-            Import traces from the Trace Analysis Framework
-         </description>
-      </register>
-   </extension>
-   <extension
-         point="net.ample.tracing.core.traceExtractor">
-      <extractor
-            class="trese.taf.atf.TraceExtractor"
-            id="trese.taf.atf.extractor">
-      </extractor>
    </extension>
 
 </plugin>
