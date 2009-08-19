@@ -1,181 +1,206 @@
+/*
+ * !! LICENSE PENDING !! 
+ *
+ * Copyright (C) 2009 University of Twente.
+ */
 package trese.taf.atf;
 
+import net.ample.tracing.core.RepositoryManager;
+import net.ample.tracing.core.TraceNotification;
+import net.ample.tracing.ui.models.ArtefactTypeContainerViewModel;
+import net.ample.tracing.ui.models.LinkTypeContainerViewModel;
+import net.ample.tracing.ui.models.RepositoryViewModel;
+import net.ample.tracing.ui.models.ViewModel;
+import net.ample.tracing.ui.views.RepositoryBrowser;
+import net.ample.tracing.ui.views.RepositoryContentProvider;
+import net.ample.tracing.ui.views.RepositoryLabelProvider;
 
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.part.*;
-import org.eclipse.jface.viewers.*;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.jface.action.*;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.ui.*;
-import org.eclipse.swt.widgets.Menu;
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
-
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.part.ViewPart;
 
 /**
- * This sample class demonstrates how to plug-in a new
- * workbench view. The view shows data obtained from the
- * model. The sample creates a dummy model on the fly,
- * but a real implementation would connect to the model
- * available either in this or another plug-in (e.g. the workspace).
- * The view is connected to the model using a content provider.
- * <p>
- * The view uses a label provider to define how model
- * objects should be presented in the view. Each
- * view can present the same model objects using
- * different labels and icons, if needed. Alternatively,
- * a single label provider can be shared between views
- * in order to ensure that objects of the same type are
- * presented in the same way everywhere.
- * <p>
+ * 
+ * 
+ * @author Michiel Hendriks
  */
+public class AtfImportExportView extends ViewPart implements Adapter, ISelectionListener
+{
+	protected TreeViewer viewer;
+	protected Notifier target;
 
-public class AtfImportExportView extends ViewPart {
-	private TableViewer viewer;
-	private Action action1;
-	private Action action2;
-	private Action doubleClickAction;
+	public static class RepositoryManagerContentProvider extends RepositoryContentProvider
+	{
+		public static final Object[] EMPTY_ARRAY = new Object[0];
+		protected RepositoryViewModel model;
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * net.ample.tracing.ui.views.RepositoryContentProvider#getElements(
+		 * java.lang.Object)
+		 */
+		@Override
+		public Object[] getElements(Object inputElement)
+		{
+			if (model == null)
+			{
+				return EMPTY_ARRAY;
+			}
+			return new Object[] { new ArtefactTypeContainerViewModel(model, model.getElement()),
+					new LinkTypeContainerViewModel(model, model.getElement()) };
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * net.ample.tracing.ui.views.RepositoryContentProvider#inputChanged
+		 * (org.eclipse.jface.viewers.Viewer, java.lang.Object,
+		 * java.lang.Object)
+		 */
+		@Override
+		public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
+		{
+			if (newInput != null && newInput instanceof RepositoryViewModel)
+			{
+				model = (RepositoryViewModel) newInput;
+			}
+			else
+			{
+				model = null;
+			}
+		}
+	}
+
+	public AtfImportExportView()
+	{}
 
 	/*
-	 * The content provider class is responsible for
-	 * providing objects to the view. It can wrap
-	 * existing objects in adapters or simply return
-	 * objects as-is. These objects may be sensitive
-	 * to the current input of the view, or ignore
-	 * it and always show the same content 
-	 * (like Task List, for example).
+	 * (non-Javadoc)
+	 * @see
+	 * org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets
+	 * .Composite)
 	 */
-	 
-	class ViewContentProvider implements IStructuredContentProvider {
-		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
-		}
-		public void dispose() {
-		}
-		public Object[] getElements(Object parent) {
-			return new String[] { "One", "Two", "Three" };
-		}
-	}
-	class ViewLabelProvider extends LabelProvider implements ITableLabelProvider {
-		public String getColumnText(Object obj, int index) {
-			return getText(obj);
-		}
-		public Image getColumnImage(Object obj, int index) {
-			return getImage(obj);
-		}
-		public Image getImage(Object obj) {
-			return PlatformUI.getWorkbench().
-					getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT);
-		}
-	}
-	class NameSorter extends ViewerSorter {
+	@Override
+	public void createPartControl(Composite parent)
+	{
+		viewer = new TreeViewer(parent, SWT.CHECK | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
+		viewer.setLabelProvider(new RepositoryLabelProvider());
+		viewer.setContentProvider(new RepositoryManagerContentProvider());
+		getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(RepositoryBrowser.ID, this);
 	}
 
-	/**
-	 * The constructor.
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
 	 */
-	public AtfImportExportView() {
-	}
-
-	/**
-	 * This is a callback that will allow us
-	 * to create the viewer and initialize it.
-	 */
-	public void createPartControl(Composite parent) {
-		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
-		viewer.setContentProvider(new ViewContentProvider());
-		viewer.setLabelProvider(new ViewLabelProvider());
-		viewer.setSorter(new NameSorter());
-		viewer.setInput(getViewSite());
-		makeActions();
-		hookContextMenu();
-		hookDoubleClickAction();
-		contributeToActionBars();
-	}
-
-	private void hookContextMenu() {
-		MenuManager menuMgr = new MenuManager("#PopupMenu");
-		menuMgr.setRemoveAllWhenShown(true);
-		menuMgr.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager) {
-				AtfImportExportView.this.fillContextMenu(manager);
-			}
-		});
-		Menu menu = menuMgr.createContextMenu(viewer.getControl());
-		viewer.getControl().setMenu(menu);
-		getSite().registerContextMenu(menuMgr, viewer);
-	}
-
-	private void contributeToActionBars() {
-		IActionBars bars = getViewSite().getActionBars();
-		fillLocalPullDown(bars.getMenuManager());
-		fillLocalToolBar(bars.getToolBarManager());
-	}
-
-	private void fillLocalPullDown(IMenuManager manager) {
-		manager.add(action1);
-		manager.add(new Separator());
-		manager.add(action2);
-	}
-
-	private void fillContextMenu(IMenuManager manager) {
-		manager.add(action1);
-		manager.add(action2);
-		// Other plug-ins can contribute there actions here
-		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-	}
-	
-	private void fillLocalToolBar(IToolBarManager manager) {
-		manager.add(action1);
-		manager.add(action2);
-	}
-
-	private void makeActions() {
-		action1 = new Action() {
-			public void run() {
-				showMessage("Action 1 executed");
-			}
-		};
-		action1.setText("Action 1");
-		action1.setToolTipText("Action 1 tooltip");
-		action1.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
-			getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
-		
-		action2 = new Action() {
-			public void run() {
-				showMessage("Action 2 executed");
-			}
-		};
-		action2.setText("Action 2");
-		action2.setToolTipText("Action 2 tooltip");
-		action2.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
-				getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
-		doubleClickAction = new Action() {
-			public void run() {
-				ISelection selection = viewer.getSelection();
-				Object obj = ((IStructuredSelection)selection).getFirstElement();
-				showMessage("Double-click detected on "+obj.toString());
-			}
-		};
-	}
-
-	private void hookDoubleClickAction() {
-		viewer.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
-				doubleClickAction.run();
-			}
-		});
-	}
-	private void showMessage(String message) {
-		MessageDialog.openInformation(
-			viewer.getControl().getShell(),
-			"ATF Import/Export",
-			message);
-	}
-
-	/**
-	 * Passing the focus request to the viewer's control.
-	 */
-	public void setFocus() {
+	@Override
+	public void setFocus()
+	{
 		viewer.getControl().setFocus();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.emf.common.notify.Adapter#getTarget()
+	 */
+	public Notifier getTarget()
+	{
+		return target;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * org.eclipse.emf.common.notify.Adapter#isAdapterForType(java.lang.Object)
+	 */
+	public boolean isAdapterForType(Object type)
+	{
+		return !(type instanceof RepositoryManager);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * org.eclipse.emf.common.notify.Adapter#notifyChanged(org.eclipse.emf.common
+	 * .notify.Notification)
+	 */
+	public void notifyChanged(Notification notification)
+	{
+		if (!viewer.getControl().isDisposed())
+		{
+			switch (notification.getEventType())
+			{
+				case TraceNotification.CONNECTION_ESTABLISHED:
+				case TraceNotification.CONNECTION_CLOSED:
+				case TraceNotification.REPOSITORY_INITIALIZED:
+					viewer.refresh();
+					break;
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * org.eclipse.emf.common.notify.Adapter#setTarget(org.eclipse.emf.common
+	 * .notify.Notifier)
+	 */
+	public void setTarget(Notifier newTarget)
+	{
+		target = newTarget;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @seeorg.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.
+	 * IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
+	 */
+	public void selectionChanged(IWorkbenchPart part, ISelection selection)
+	{
+		Object sel = null;
+		if (selection instanceof IStructuredSelection)
+		{
+			sel = ((IStructuredSelection) selection).getFirstElement();
+		}
+		if (sel != null)
+		{
+			System.out.println(String.format("%s [%s]", sel, sel.getClass().getName()));
+		}
+		RepositoryViewModel repModel = null;
+		while (sel != null && sel instanceof ViewModel<?>)
+		{
+			if (sel instanceof RepositoryViewModel)
+			{
+				repModel = (RepositoryViewModel) sel;
+				break;
+			}
+			sel = ((ViewModel<?>) sel).getParent();
+		}
+		if (sel == null)
+		{
+			return;
+		}
+
+		Object oldInput = viewer.getInput();
+		if (oldInput == repModel)
+		{
+			return;
+		}
+		if (oldInput instanceof RepositoryViewModel)
+		{
+			// TODO: remove listener
+		}
+		viewer.setInput(repModel);
+		// TODO: add listener
 	}
 }
