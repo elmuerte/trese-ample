@@ -2,7 +2,7 @@
 <feature
       id="trese.taf"
       label="Traceabilty Analysis Framework"
-      version="0.6.3.qualifier"
+      version="0.6.4.qualifier"
       provider-name="Software Engineering Group; University of Twente">
 
    <description>
@@ -29,5 +29,11 @@
       <import feature="trese.archmodel.feature" version="0.6.3" match="greaterOrEqual"/>
       <import feature="trese.featuremodel.feature" version="0.6.3" match="greaterOrEqual"/>
    </requires>
+
+   <plugin
+         id="trese.taf"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
 </feature>
