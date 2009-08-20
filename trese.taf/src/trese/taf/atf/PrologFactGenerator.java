@@ -27,7 +27,7 @@ import net.ample.tracing.core.query.Query;
  * 
  * <pre>
  * traceable_artefact_type(UUID, Name).
- * traceable_artefact(UUID, Name, TypeUUID, ResourceUI).
+ * traceable_artefact(UUID, Name, TypeUUID, ResourceURI).
  * trace_link_type(UUID, Name).
  * trace_link(UUID, Name, TypeUUID, [SourceUUIDs], [TargetUUIDs]).
  * </pre>
@@ -154,7 +154,7 @@ public class PrologFactGenerator
 	{
 		output.write("% Data format: \n");
 		output.write("% traceable_artefact_type(UUID, Name).\n");
-		output.write("% traceable_artefact(UUID, Name, TypeUUID, ResourceUI).\n");
+		output.write("% traceable_artefact(UUID, Name, TypeUUID, ResourceURI).\n");
 		output.write("% trace_link_type(UUID, Name).\n");
 		output.write("% trace_link(UUID, Name, TypeUUID, [SourceUUIDs], [TargetUUIDs]).\n");
 		output.write("\n");
