@@ -25,6 +25,7 @@ import org.eclipse.ui.IWorkbenchPart;
  * 
  * @author Michiel Hendriks
  */
+@Deprecated
 public class PrologExportAction implements IObjectActionDelegate
 {
 	protected RepositoryManager repository;

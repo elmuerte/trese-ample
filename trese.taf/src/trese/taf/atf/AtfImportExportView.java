@@ -55,7 +55,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.ISelectionListener;
@@ -73,6 +75,8 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 	protected Notifier target;
 	protected RepositoryViewModel currentModel;
 	protected Button exportBtn;
+	protected Label message;
+	protected Composite mainPanel;
 
 	public static class RepositoryManagerContentProvider extends RepositoryContentProvider
 	{
@@ -174,11 +178,18 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 	@Override
 	public void createPartControl(Composite parent)
 	{
-		final Composite panel = new Composite(parent, SWT.NONE);
+		mainPanel = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout(2, false);
-		panel.setLayout(layout);
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
+		mainPanel.setLayout(layout);
 
-		viewer = new CheckboxTreeViewer(panel, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
+		message = new Label(mainPanel, SWT.NONE | SWT.WRAP | SWT.SHADOW_OUT);
+		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		layoutData.horizontalSpan = 2;
+		message.setLayoutData(layoutData);
+
+		viewer = new CheckboxTreeViewer(mainPanel, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
 		viewer.setContentProvider(new RepositoryManagerContentProvider());
 		viewer.getTree().setHeaderVisible(true);
 
@@ -191,15 +202,14 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 		col2.getColumn().setText("Count");
 		col2.getColumn().setWidth(50);
 
-		GridData layoutData = new GridData(GridData.FILL_BOTH);
+		layoutData = new GridData(GridData.FILL_BOTH);
 		layoutData.grabExcessHorizontalSpace = true;
 		layoutData.grabExcessVerticalSpace = true;
 		viewer.getControl().setLayoutData(layoutData);
 		hookViewerContextMenu();
 
-		exportBtn = new Button(panel, SWT.PUSH);
+		exportBtn = new Button(mainPanel, SWT.PUSH);
 		exportBtn.setText("Export Prolog Facts");
-		exportBtn.setEnabled(false);
 		exportBtn.addSelectionListener(new SelectionAdapter() {
 			/*
 			 * (non-Javadoc)
@@ -213,8 +223,33 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 				exportPrologFacts();
 			}
 		});
+		layoutData = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
+		exportBtn.setLayoutData(layoutData);
 
+		updateMessage();
 		getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(RepositoryBrowser.ID, this);
+	}
+
+	protected void setMessage(String msg)
+	{
+		if (msg != null && msg.length() == 0)
+		{
+			msg = null;
+		}
+		if (msg != null)
+		{
+			if (currentModel != null)
+			{
+				msg = String.format("[%s] %s", currentModel.getElement().getProject().getName(), msg);
+			}
+			message.setText(msg);
+		}
+		else
+		{
+			message.setText("");
+		}
+		message.setVisible(msg != null);
+		mainPanel.layout(new Control[] { message });
 	}
 
 	/**
@@ -269,6 +304,7 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 				gen.generate();
 				out.flush();
 				out.close();
+				setMessage(String.format("Prolog facts generated in %s", result));
 			}
 			catch (IOException e)
 			{
@@ -410,7 +446,7 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 				case TraceNotification.CONNECTION_CLOSED:
 				case TraceNotification.REPOSITORY_INITIALIZED:
 					viewer.refresh();
-					exportBtn.setEnabled(currentModel != null && currentModel.getElement().isConnectedToRepository());
+					updateMessage();
 					break;
 			}
 		}
@@ -438,10 +474,6 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 		if (selection instanceof IStructuredSelection)
 		{
 			sel = ((IStructuredSelection) selection).getFirstElement();
-		}
-		if (sel != null)
-		{
-			System.out.println(String.format("%s [%s]", sel, sel.getClass().getName()));
 		}
 		currentModel = null;
 		while (sel != null && sel instanceof ViewModel<?>)
@@ -473,5 +505,28 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 			currentModel.getElement().eAdapters().add(this);
 		}
 		exportBtn.setEnabled(currentModel != null && currentModel.getElement().isConnectedToRepository());
+		updateMessage();
+	}
+
+	/**
+	 * 
+	 */
+	protected void updateMessage()
+	{
+		if (currentModel == null)
+		{
+			exportBtn.setEnabled(false);
+			setMessage("Select a repository.");
+		}
+		else if (!currentModel.getElement().isConnectedToRepository())
+		{
+			exportBtn.setEnabled(false);
+			setMessage("No connection has been established to the repository.");
+		}
+		else
+		{
+			exportBtn.setEnabled(true);
+			setMessage("Check items to filter on types.");
+		}
 	}
 }

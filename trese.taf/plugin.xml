@@ -50,7 +50,7 @@
             allowMultiple="false"
             category="trese.taf"
             class="trese.taf.atf.AtfImportExportView"
-            icon="icons/views/atf-ie-view.gif"
+            icon="icons/view/atf-ie-view.png"
             id="trese.taf.atf.importexport.view"
             name="TAF:ATF Import/Export">
       </view>
