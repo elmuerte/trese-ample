@@ -72,6 +72,7 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 	protected CheckboxTreeViewer viewer;
 	protected Notifier target;
 	protected RepositoryViewModel currentModel;
+	protected Button exportBtn;
 
 	public static class RepositoryManagerContentProvider extends RepositoryContentProvider
 	{
@@ -196,8 +197,9 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 		viewer.getControl().setLayoutData(layoutData);
 		hookViewerContextMenu();
 
-		final Button exportBtn = new Button(panel, SWT.PUSH);
+		exportBtn = new Button(panel, SWT.PUSH);
 		exportBtn.setText("Export Prolog Facts");
+		exportBtn.setEnabled(false);
 		exportBtn.addSelectionListener(new SelectionAdapter() {
 			/*
 			 * (non-Javadoc)
@@ -408,6 +410,7 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 				case TraceNotification.CONNECTION_CLOSED:
 				case TraceNotification.REPOSITORY_INITIALIZED:
 					viewer.refresh();
+					exportBtn.setEnabled(currentModel != null && currentModel.getElement().isConnectedToRepository());
 					break;
 			}
 		}
@@ -469,5 +472,6 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 		{
 			currentModel.getElement().eAdapters().add(this);
 		}
+		exportBtn.setEnabled(currentModel != null && currentModel.getElement().isConnectedToRepository());
 	}
 }
