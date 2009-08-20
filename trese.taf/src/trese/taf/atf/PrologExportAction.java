@@ -53,7 +53,9 @@ public class PrologExportAction implements IObjectActionDelegate
 		if (repository != null)
 		{
 			FileDialog fd = new FileDialog(shell, SWT.SAVE);
-			fd.setFilterExtensions(new String[] { "*.pro" });
+			fd.setFilterExtensions(new String[] { "*.pro;*.pl", "*.*" });
+			fd.setFilterNames(new String[] { "Prolog Files", "All Files" });
+			fd.setOverwrite(true);
 			String result = fd.open();
 			if (result != null)
 			{

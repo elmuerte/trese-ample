@@ -32,6 +32,12 @@
                menubarPath="contextAdditions"
                style="push">
          </action>
+         <visibility>
+            <objectState
+                  name="false"
+                  value="false">
+            </objectState>
+         </visibility>
       </objectContribution>
    </extension>
    <extension
@@ -45,7 +51,7 @@
             category="trese.taf"
             class="trese.taf.atf.AtfImportExportView"
             icon="icons/views/atf-ie-view.gif"
-            id="trese.taf.atf.AtfImportExportView"
+            id="trese.taf.atf.importexport.view"
             name="TAF:ATF Import/Export">
       </view>
    </extension>
@@ -54,12 +60,12 @@
       <perspectiveExtension
             targetID="net.ample.tracing.ui.perspectives.TracingPerspective">
          <view
-               id="trese.taf.atf.AtfImportExportView"
+               id="trese.taf.atf.importexport.view"
                relationship="stack"
                relative="org.eclipse.ui.views.PropertySheet">
          </view>
          <viewShortcut
-               id="trese.taf.atf.AtfImportExportView">
+               id="trese.taf.atf.importexport.view">
          </viewShortcut>
       </perspectiveExtension>
    </extension>
