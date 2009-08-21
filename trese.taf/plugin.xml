@@ -54,6 +54,14 @@
             id="trese.taf.atf.importexport.view"
             name="TAF:ATF Import/Export">
       </view>
+      <view
+            allowMultiple="false"
+            category="net.ample.tracing.ui.views"
+            class="trese.taf.atf.AtfRepositoryEntitiesView"
+            icon="icons/view/atf-repo-ent.png"
+            id="trese.taf.atf.repositoryentities"
+            name="Repository Entities">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.perspectiveExtensions">
@@ -66,6 +74,9 @@
          </view>
          <viewShortcut
                id="trese.taf.atf.importexport.view">
+         </viewShortcut>
+         <viewShortcut
+               id="trese.taf.atf.repositoryentities">
          </viewShortcut>
       </perspectiveExtension>
    </extension>

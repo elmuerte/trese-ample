@@ -20,14 +20,11 @@ import net.ample.tracing.core.TraceableArtefact;
 import net.ample.tracing.core.query.Constraint;
 import net.ample.tracing.core.query.Constraints;
 import net.ample.tracing.core.query.Query;
-import net.ample.tracing.ui.models.ArtefactTypeContainerViewModel;
 import net.ample.tracing.ui.models.ArtefactTypeViewModel;
-import net.ample.tracing.ui.models.LinkTypeContainerViewModel;
 import net.ample.tracing.ui.models.LinkTypeViewModel;
 import net.ample.tracing.ui.models.RepositoryViewModel;
 import net.ample.tracing.ui.models.ViewModel;
 import net.ample.tracing.ui.views.RepositoryBrowser;
-import net.ample.tracing.ui.views.RepositoryContentProvider;
 import net.ample.tracing.ui.views.RepositoryLabelProvider;
 
 import org.eclipse.emf.common.notify.Adapter;
@@ -46,7 +43,6 @@ import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.viewers.TreeColumnViewerLabelProvider;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewerColumn;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -78,56 +74,7 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 	protected Label message;
 	protected Composite mainPanel;
 
-	public static class RepositoryManagerContentProvider extends RepositoryContentProvider
-	{
-		public static final Object[] EMPTY_ARRAY = new Object[0];
-		protected RepositoryViewModel model;
-
-		/*
-		 * (non-Javadoc)
-		 * @see
-		 * net.ample.tracing.ui.views.RepositoryContentProvider#getElements(
-		 * java.lang.Object)
-		 */
-		@Override
-		public Object[] getElements(Object inputElement)
-		{
-			if (model == null)
-			{
-				return EMPTY_ARRAY;
-			}
-			if (model.getElement() == null || !model.getElement().isConnectedToRepository())
-			{
-				return EMPTY_ARRAY;
-			}
-			return new Object[] { new ArtefactTypeContainerViewModel(model, model.getElement()),
-					new LinkTypeContainerViewModel(model, model.getElement()) };
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see
-		 * net.ample.tracing.ui.views.RepositoryContentProvider#inputChanged
-		 * (org.eclipse.jface.viewers.Viewer, java.lang.Object,
-		 * java.lang.Object)
-		 */
-		@Override
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
-		{
-			if (newInput != null && newInput instanceof RepositoryViewModel)
-			{
-				model = (RepositoryViewModel) newInput;
-			}
-			else
-			{
-				model = null;
-			}
-		}
-	}
-
 	/**
-	 * 
-	 * 
 	 * @author Michiel Hendriks
 	 */
 	public class RepositoryItemCounterLabelProvider extends CellLabelProvider

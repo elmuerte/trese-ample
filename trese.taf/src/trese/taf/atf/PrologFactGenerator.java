@@ -7,8 +7,10 @@ package trese.taf.atf;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -152,6 +154,8 @@ public class PrologFactGenerator
 	 */
 	protected void writeHeader() throws IOException
 	{
+		SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
+		output.write(String.format("%% %s \n", sdf.format(new Date())));
 		output.write("% Data format: \n");
 		output.write("% traceable_artefact_type(UUID, Name).\n");
 		output.write("% traceable_artefact(UUID, Name, TypeUUID, ResourceURI).\n");
