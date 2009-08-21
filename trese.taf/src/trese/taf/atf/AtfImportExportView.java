@@ -44,6 +44,7 @@ import org.eclipse.jface.viewers.TreeColumnViewerLabelProvider;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -138,12 +139,14 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 
 		viewer = new CheckboxTreeViewer(mainPanel, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
 		viewer.setContentProvider(new RepositoryManagerContentProvider());
+		viewer.setLabelProvider(new RepositoryLabelProvider());
+		viewer.setComparator(new ViewerSorter());
 		viewer.getTree().setHeaderVisible(true);
 
 		TreeViewerColumn col1 = new TreeViewerColumn(viewer, SWT.LEFT);
 		col1.getColumn().setText("Type");
 		col1.getColumn().setWidth(300);
-		col1.setLabelProvider(new TreeColumnViewerLabelProvider(new RepositoryLabelProvider()));
+		col1.setLabelProvider(new TreeColumnViewerLabelProvider(viewer.getLabelProvider()));
 		TreeViewerColumn col2 = new TreeViewerColumn(viewer, SWT.RIGHT);
 		col2.setLabelProvider(new RepositoryItemCounterLabelProvider());
 		col2.getColumn().setText("Count");

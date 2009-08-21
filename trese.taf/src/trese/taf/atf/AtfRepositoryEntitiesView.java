@@ -20,6 +20,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
@@ -55,6 +56,7 @@ public class AtfRepositoryEntitiesView extends ViewPart implements Adapter, ISel
 		items = new TreeViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL);
 		items.setLabelProvider(new RepositoryLabelProviderEx());
 		items.setContentProvider(new RepositoryItemsProvider());
+		items.setComparator(new ViewerSorter());
 		getSite().setSelectionProvider(items);
 
 		properties = new PropertySheetPage();
