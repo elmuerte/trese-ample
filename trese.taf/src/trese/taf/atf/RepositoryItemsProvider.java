@@ -11,7 +11,6 @@ import java.util.List;
 import net.ample.tracing.core.RepositoryManager;
 import net.ample.tracing.core.TraceLink;
 import net.ample.tracing.core.TraceableArtefact;
-import net.ample.tracing.core.query.Constraint;
 import net.ample.tracing.core.query.Constraints;
 import net.ample.tracing.core.query.Query;
 import net.ample.tracing.ui.models.ArtefactContainerViewModel;
@@ -24,27 +23,25 @@ import net.ample.tracing.ui.models.RepositoryViewModel;
 import net.ample.tracing.ui.models.ViewModel;
 
 import org.eclipse.jface.viewers.IContentProvider;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+
+import trese.taf.atf.viewmodel.ArtefactDetailViewModel;
+import trese.taf.atf.viewmodel.LinkDetailViewModel;
+import trese.taf.atf.viewmodel.ArtefactDetailViewModel.ArtefactDetail;
+import trese.taf.atf.viewmodel.LinkDetailViewModel.LinkDetail;
 
 /**
  * 
  * 
  * @author Michiel Hendriks
  */
-public class RepositoryItemsProvider implements IContentProvider, IStructuredContentProvider
+public class RepositoryItemsProvider implements IContentProvider, ITreeContentProvider
 {
 	public static final Object[] EMPTY_ARRAY = new Object[0];
 
-	enum ViewMode
-	{
-		VM_Artefacts, VM_TraceLinks,
-	}
-
 	protected RepositoryManager manager;
 	protected RepositoryViewModel managerVm;
-	protected Constraint constraint;
-	protected ViewMode mode;
 
 	/*
 	 * (non-Javadoc)
@@ -54,7 +51,6 @@ public class RepositoryItemsProvider implements IContentProvider, IStructuredCon
 	{
 		managerVm = null;
 		manager = null;
-		constraint = null;
 	}
 
 	/*
@@ -66,6 +62,7 @@ public class RepositoryItemsProvider implements IContentProvider, IStructuredCon
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
 	{
 		manager = null;
+		managerVm = null;
 		if (newInput instanceof ViewModel<?>)
 		{
 			ViewModel<?> itm = (ViewModel<?>) newInput;
@@ -80,16 +77,6 @@ public class RepositoryItemsProvider implements IContentProvider, IStructuredCon
 				itm = itm.getParent();
 			}
 		}
-		if (newInput instanceof ArtefactTypeViewModel)
-		{
-			constraint = Constraints.isOfType(((ArtefactTypeViewModel) newInput).getElement());
-			mode = ViewMode.VM_Artefacts;
-		}
-		else if (newInput instanceof LinkTypeViewModel)
-		{
-			constraint = Constraints.isOfType(((LinkTypeViewModel) newInput).getElement());
-			mode = ViewMode.VM_TraceLinks;
-		}
 	}
 
 	/*
@@ -98,44 +85,190 @@ public class RepositoryItemsProvider implements IContentProvider, IStructuredCon
 	 * org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java
 	 * .lang.Object)
 	 */
-	public Object[] getElements(Object inputElement)
+	public Object[] getElements(Object obj)
 	{
-		if (manager == null || constraint == null)
+		if (manager == null || !manager.isConnectedToRepository())
 		{
 			return EMPTY_ARRAY;
 		}
-		if (!manager.isConnectedToRepository())
-		{
-			return EMPTY_ARRAY;
-		}
+
 		List<Object> result = new ArrayList<Object>();
-		switch (mode)
+		if (obj instanceof ArtefactTypeViewModel)
 		{
-			case VM_Artefacts:
+			ArtefactContainerViewModel container = new ArtefactContainerViewModel(managerVm, manager);
+			Query<TraceableArtefact> query = manager.getQueryManager().queryOnArtefacts();
+			query.add(Constraints.isOfType(((ArtefactTypeViewModel) obj).getElement()));
+			for (TraceableArtefact artefact : query.execute())
 			{
-				ArtefactContainerViewModel container = new ArtefactContainerViewModel(managerVm, manager);
-				Query<TraceableArtefact> query = manager.getQueryManager().queryOnArtefacts();
-				query.add(constraint);
-				for (TraceableArtefact artefact : query.execute())
-				{
-					result.add(new ArtefactViewModel(container, artefact));
-				}
-				break;
+				result.add(new ArtefactViewModel(container, artefact));
 			}
-			case VM_TraceLinks:
+		}
+		else if (obj instanceof LinkTypeViewModel)
+		{
+			LinkContainerViewModel container = new LinkContainerViewModel(managerVm, manager);
+			Query<TraceLink> query = manager.getQueryManager().queryOnLinks();
+			query.add(Constraints.isOfType(((LinkTypeViewModel) obj).getElement()));
+			for (TraceLink link : query.execute())
 			{
-				LinkContainerViewModel container = new LinkContainerViewModel(managerVm, manager);
-				Query<TraceLink> query = manager.getQueryManager().queryOnLinks();
-				query.add(constraint);
-				for (TraceLink artefact : query.execute())
-				{
-					result.add(new LinkViewModel(container, artefact));
-				}
-				break;
+				result.add(new LinkViewModel(container, link));
 			}
-			default:
-				return EMPTY_ARRAY;
+		}
+		else if (obj instanceof ArtefactViewModel)
+		{
+			ArtefactViewModel view = (ArtefactViewModel) obj;
+			TraceableArtefact artefact = view.getElement();
+			if (!artefact.getIncomingLinks().isEmpty())
+			{
+				result.add(new ArtefactDetailViewModel(view, artefact, ArtefactDetail.INCOMING_LINKS));
+			}
+			if (!artefact.getOutgoingLinks().isEmpty())
+			{
+				result.add(new ArtefactDetailViewModel(view, artefact, ArtefactDetail.OUTGOING_LINKS));
+			}
+			if (!artefact.getAncestors().isEmpty())
+			{
+				result.add(new ArtefactDetailViewModel(view, artefact, ArtefactDetail.ANCESTORS));
+			}
+			if (!artefact.getDescendants().isEmpty())
+			{
+				result.add(new ArtefactDetailViewModel(view, artefact, ArtefactDetail.DESCENDANTS));
+			}
+		}
+		else if (obj instanceof LinkViewModel)
+		{
+			LinkViewModel view = (LinkViewModel) obj;
+			TraceLink link = view.getElement();
+			if (!link.getSources().isEmpty())
+			{
+				result.add(new LinkDetailViewModel(view, link, LinkDetail.SOURCES));
+			}
+			if (!link.getTargets().isEmpty())
+			{
+				result.add(new LinkDetailViewModel(view, link, LinkDetail.TARGETS));
+			}
+		}
+		else if (obj instanceof ArtefactDetailViewModel)
+		{
+			ArtefactDetailViewModel detailView = (ArtefactDetailViewModel) obj;
+			TraceableArtefact artefact = detailView.getElement();
+			switch (detailView.getDetail())
+			{
+				case INCOMING_LINKS:
+				{
+					LinkContainerViewModel container = new LinkContainerViewModel(managerVm, manager);
+					for (TraceLink link : artefact.getIncomingLinks())
+					{
+						result.add(new LinkViewModel(container, link));
+					}
+					break;
+				}
+				case OUTGOING_LINKS:
+				{
+					LinkContainerViewModel container = new LinkContainerViewModel(managerVm, manager);
+					for (TraceLink link : artefact.getOutgoingLinks())
+					{
+						result.add(new LinkViewModel(container, link));
+					}
+					break;
+				}
+				case ANCESTORS:
+				{
+					ArtefactContainerViewModel container = new ArtefactContainerViewModel(managerVm, manager);
+					for (TraceableArtefact subart : artefact.getAncestors())
+					{
+						result.add(new ArtefactViewModel(container, subart));
+					}
+					break;
+				}
+				case DESCENDANTS:
+				{
+					ArtefactContainerViewModel container = new ArtefactContainerViewModel(managerVm, manager);
+					for (TraceableArtefact subart : artefact.getDescendants())
+					{
+						result.add(new ArtefactViewModel(container, subart));
+					}
+					break;
+				}
+			}
+		}
+		else if (obj instanceof LinkDetailViewModel)
+		{
+			LinkDetailViewModel detailView = (LinkDetailViewModel) obj;
+			TraceLink link = detailView.getElement();
+			switch (detailView.getDetail())
+			{
+				case SOURCES:
+				{
+					ArtefactContainerViewModel container = new ArtefactContainerViewModel(managerVm, manager);
+					for (TraceableArtefact source : link.getSources())
+					{
+						result.add(new ArtefactViewModel(container, source));
+					}
+					break;
+				}
+				case TARGETS:
+				{
+					ArtefactContainerViewModel container = new ArtefactContainerViewModel(managerVm, manager);
+					for (TraceableArtefact target : link.getTargets())
+					{
+						result.add(new ArtefactViewModel(container, target));
+					}
+					break;
+				}
+			}
 		}
 		return result.toArray();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.
+	 * Object)
+	 */
+	public Object[] getChildren(Object parentElement)
+	{
+		return getElements(parentElement);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object
+	 * )
+	 */
+	public Object getParent(Object element)
+	{
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.
+	 * Object)
+	 */
+	public boolean hasChildren(Object element)
+	{
+		if (element instanceof LinkViewModel)
+		{
+			TraceLink link = ((LinkViewModel) element).getElement();
+			return !link.getSources().isEmpty() || !link.getTargets().isEmpty();
+		}
+		else if (element instanceof ArtefactViewModel)
+		{
+			TraceableArtefact artefact = ((ArtefactViewModel) element).getElement();
+			return !artefact.getIncomingLinks().isEmpty() || !artefact.getOutgoingLinks().isEmpty()
+					|| !artefact.getAncestors().isEmpty() || !artefact.getDescendants().isEmpty();
+		}
+		else if (element instanceof ArtefactDetailViewModel)
+		{
+			return true;
+		}
+		else if (element instanceof LinkDetailViewModel)
+		{
+			return true;
+		}
+		return false;
 	}
 }

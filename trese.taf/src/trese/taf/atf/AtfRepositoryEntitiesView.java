@@ -9,7 +9,6 @@ import net.ample.tracing.core.RepositoryManager;
 import net.ample.tracing.core.TraceNotification;
 import net.ample.tracing.ui.properties.RepositoryPropertySourceProvider;
 import net.ample.tracing.ui.views.RepositoryBrowser;
-import net.ample.tracing.ui.views.RepositoryLabelProvider;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
@@ -20,7 +19,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
@@ -37,7 +36,7 @@ import org.eclipse.ui.views.properties.PropertySheetPage;
  */
 public class AtfRepositoryEntitiesView extends ViewPart implements Adapter, ISelectionListener
 {
-	protected TableViewer items;
+	protected TreeViewer items;
 	protected PropertySheetPage properties;
 	protected Notifier target;
 
@@ -53,8 +52,8 @@ public class AtfRepositoryEntitiesView extends ViewPart implements Adapter, ISel
 	@Override
 	public void createPartControl(Composite parent)
 	{
-		items = new TableViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL);
-		items.setLabelProvider(new RepositoryLabelProvider());
+		items = new TreeViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL);
+		items.setLabelProvider(new RepositoryLabelProviderEx());
 		items.setContentProvider(new RepositoryItemsProvider());
 		getSite().setSelectionProvider(items);
 
@@ -179,6 +178,10 @@ public class AtfRepositoryEntitiesView extends ViewPart implements Adapter, ISel
 		if (items.getInput() == sel)
 		{
 			return;
+		}
+		if (sel == null)
+		{
+			items.setSelection(null);
 		}
 		items.setInput(sel);
 	}
