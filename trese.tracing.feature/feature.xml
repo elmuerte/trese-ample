@@ -2,7 +2,7 @@
 <feature
       id="trese.taf"
       label="Traceabilty Analysis Framework"
-      version="0.6.4.qualifier"
+      version="0.6.5.qualifier"
       provider-name="Software Engineering Group; University of Twente">
 
    <description>
