@@ -151,6 +151,7 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 		col2.setLabelProvider(new RepositoryItemCounterLabelProvider());
 		col2.getColumn().setText("Count");
 		col2.getColumn().setWidth(50);
+		col2.getColumn().setToolTipText("Number of elements in the repository with this type.");
 
 		layoutData = new GridData(GridData.FILL_BOTH);
 		layoutData.grabExcessHorizontalSpace = true;
@@ -268,7 +269,7 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 	 */
 	protected void hookViewerContextMenu()
 	{
-		MenuManager menuMgr = new MenuManager("trese.taf.atf.importexport.view.repositorybrowser");
+		MenuManager menuMgr = new MenuManager("#PopupMenu");
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager)
@@ -454,7 +455,6 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 		{
 			currentModel.getElement().eAdapters().add(this);
 		}
-		exportBtn.setEnabled(currentModel != null && currentModel.getElement().isConnectedToRepository());
 		updateMessage();
 	}
 

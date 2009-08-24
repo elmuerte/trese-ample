@@ -33,7 +33,6 @@ import trese.taf.atf.viewmodel.LinkDetailViewModel.LinkDetail;
 
 /**
  * 
- * 
  * @author Michiel Hendriks
  */
 public class RepositoryItemsProvider implements IContentProvider, ITreeContentProvider
@@ -239,6 +238,10 @@ public class RepositoryItemsProvider implements IContentProvider, ITreeContentPr
 	 */
 	public Object getParent(Object element)
 	{
+		if (element instanceof ViewModel<?>)
+		{
+			return ((ViewModel<?>) element).getParent();
+		}
 		return null;
 	}
 

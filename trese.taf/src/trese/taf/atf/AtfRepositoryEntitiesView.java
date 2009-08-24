@@ -13,6 +13,7 @@ import net.ample.tracing.ui.views.RepositoryBrowser;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -31,7 +32,8 @@ import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 
 /**
- * 
+ * This view shows artfecats, links and their references elements based on the
+ * selected element from the "repository browser" view.
  * 
  * @author Michiel Hendriks
  */
@@ -71,7 +73,7 @@ public class AtfRepositoryEntitiesView extends ViewPart implements Adapter, ISel
 	 */
 	protected void hookViewerContextMenu()
 	{
-		MenuManager menuMgr = new MenuManager("trese.taf.atf.repositoryentities.menu");
+		MenuManager menuMgr = new MenuManager("#PopupMenu");
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager)
@@ -86,6 +88,17 @@ public class AtfRepositoryEntitiesView extends ViewPart implements Adapter, ISel
 
 	protected void fillViewerContextMenu(IMenuManager manager)
 	{
+		manager.add(new Action("Refresh") {
+			/*
+			 * (non-Javadoc)
+			 * @see org.eclipse.jface.action.Action #run()
+			 */
+			@Override
+			public void run()
+			{
+				items.refresh();
+			}
+		});
 		manager.add(new Separator());
 		manager.add(new Separator("additions"));
 	}
