@@ -75,6 +75,11 @@
          <viewShortcut
                id="trese.taf.atf.importexport.view">
          </viewShortcut>
+         <view
+               id="trese.taf.atf.repositoryentities"
+               relationship="bottom"
+               relative="net.ample.tracing.ui.views.RepositoryBrowser">
+         </view>
          <viewShortcut
                id="trese.taf.atf.repositoryentities">
          </viewShortcut>

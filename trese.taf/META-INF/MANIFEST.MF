@@ -17,3 +17,6 @@ Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: trese.taf.jar
 Eclipse-RegisterBuddy: gnuprologjava
 Bundle-Activator: trese.taf.Activator
+Export-Package: trese.taf,
+ trese.taf.atf,
+ trese.taf.atf.viewmodel
