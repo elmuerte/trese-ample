@@ -5,14 +5,9 @@
  */
 package trese.taf.atf;
 
-import net.ample.tracing.core.RepositoryManager;
-import net.ample.tracing.core.TraceNotification;
 import net.ample.tracing.ui.properties.RepositoryPropertySourceProvider;
 import net.ample.tracing.ui.views.RepositoryBrowser;
 
-import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -37,11 +32,10 @@ import org.eclipse.ui.views.properties.PropertySheetPage;
  * 
  * @author Michiel Hendriks
  */
-public class AtfRepositoryEntitiesView extends ViewPart implements Adapter, ISelectionListener
+public class AtfRepositoryEntitiesView extends ViewPart implements ISelectionListener
 {
 	protected TreeViewer items;
 	protected PropertySheetPage properties;
-	protected Notifier target;
 
 	public AtfRepositoryEntitiesView()
 	{}
@@ -66,6 +60,17 @@ public class AtfRepositoryEntitiesView extends ViewPart implements Adapter, ISel
 
 		hookViewerContextMenu();
 		getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(RepositoryBrowser.ID, this);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.ui.part.WorkbenchPart#dispose()
+	 */
+	@Override
+	public void dispose()
+	{
+		getSite().getWorkbenchWindow().getSelectionService().removeSelectionListener(RepositoryBrowser.ID, this);
+		super.dispose();
 	}
 
 	/**
@@ -115,25 +120,6 @@ public class AtfRepositoryEntitiesView extends ViewPart implements Adapter, ISel
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.emf.common.notify.Adapter#getTarget()
-	 */
-	public Notifier getTarget()
-	{
-		return target;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * org.eclipse.emf.common.notify.Adapter#isAdapterForType(java.lang.Object)
-	 */
-	public boolean isAdapterForType(Object type)
-	{
-		return !(type instanceof RepositoryManager);
-	}
-
-	/*
-	 * (non-Javadoc)
 	 * @see org.eclipse.ui.part.WorkbenchPart#getAdapter(java.lang.Class)
 	 */
 	@Override
@@ -144,38 +130,6 @@ public class AtfRepositoryEntitiesView extends ViewPart implements Adapter, ISel
 			return properties;
 		}
 		return super.getAdapter(adapter);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * org.eclipse.emf.common.notify.Adapter#notifyChanged(org.eclipse.emf.common
-	 * .notify.Notification)
-	 */
-	public void notifyChanged(Notification notification)
-	{
-		if (!items.getControl().isDisposed())
-		{
-			switch (notification.getEventType())
-			{
-				case TraceNotification.CONNECTION_ESTABLISHED:
-				case TraceNotification.CONNECTION_CLOSED:
-				case TraceNotification.REPOSITORY_INITIALIZED:
-					items.refresh();
-					break;
-			}
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * org.eclipse.emf.common.notify.Adapter#setTarget(org.eclipse.emf.common
-	 * .notify.Notifier)
-	 */
-	public void setTarget(Notifier newTarget)
-	{
-		target = newTarget;
 	}
 
 	/*

@@ -181,6 +181,21 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 		getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(RepositoryBrowser.ID, this);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.ui.part.WorkbenchPart#dispose()
+	 */
+	@Override
+	public void dispose()
+	{
+		if (currentModel != null)
+		{
+			currentModel.getElement().eAdapters().remove(this);
+		}
+		getSite().getWorkbenchWindow().getSelectionService().removeSelectionListener(RepositoryBrowser.ID, this);
+		super.dispose();
+	}
+
 	protected void setMessage(String msg)
 	{
 		if (msg != null && msg.length() == 0)
