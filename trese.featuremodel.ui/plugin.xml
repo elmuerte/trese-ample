@@ -32,7 +32,7 @@
       <objectContribution
             adaptable="false"
             id="trese.featuremodel.ui.DUMMY"
-            objectClass="trese.featuremodel.ui.object1">
+            objectClass="org.eclipse.core.resources.IFile">
          <action
                class="trese.featuremodel.ui.popup.actions.HasProduct"
                enablesFor="1"
@@ -49,6 +49,12 @@
                menubarPath="trese.featuremodel.ui.gft/group1"
                tooltip="Find all valid product configurations">
          </action>
+         <visibility>
+            <objectState
+                  name="false"
+                  value="false">
+            </objectState>
+         </visibility>
       </objectContribution>
    </extension>
 

@@ -123,7 +123,7 @@ public class AtfRepositoryEntitiesView extends ViewPart implements ISelectionLis
 	 * @see org.eclipse.ui.part.WorkbenchPart#getAdapter(java.lang.Class)
 	 */
 	@Override
-	public Object getAdapter(Class adapter)
+	public Object getAdapter(@SuppressWarnings("unchecked") Class adapter)
 	{
 		if (adapter.equals(IPropertySheetPage.class))
 		{
