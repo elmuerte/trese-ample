@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="net.ample.tracing.core.traceExtractor">
+      <extractor
+            class="trese.taf.dev.gen.Artefacts"
+            description="Random Artefact Generator"
+            id="trese.taf.dev.gen.artefacts">
+      </extractor>
+   </extension>
+
+</plugin>
