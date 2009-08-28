@@ -81,7 +81,7 @@ public class SystemOutput extends JPanel
 		System.setErr(new PrintStream(new UIOutputStream(output), true));
 
 		splitPane.setBottomComponent(new JScrollPane(output));
-		splitPane.setDividerLocation(0.5);
+		splitPane.setDividerLocation(100);
 
 		final JTextArea stderr = output;
 		toolbar.add(new AbstractAction("Clear stderr") {
