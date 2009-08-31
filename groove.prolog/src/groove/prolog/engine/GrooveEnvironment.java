@@ -18,6 +18,7 @@
  */
 package groove.prolog.engine;
 
+import gnu.prolog.database.PrologTextLoader;
 import gnu.prolog.term.AtomTerm;
 import gnu.prolog.term.CompoundTerm;
 import gnu.prolog.term.CompoundTermTag;
@@ -88,6 +89,6 @@ public class GrooveEnvironment extends Environment
 		{
 			throw new IllegalStateException("no files can be loaded after inializtion was run");
 		}
-		new PrologStreamLoader(getPrologTextLoaderState(), stream, streamName);
+		new PrologTextLoader(getPrologTextLoaderState(), stream, streamName);
 	}
 }
