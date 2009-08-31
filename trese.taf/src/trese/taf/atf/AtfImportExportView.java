@@ -5,6 +5,7 @@
  */
 package trese.taf.atf;
 
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -71,7 +72,7 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 	protected CheckboxTreeViewer viewer;
 	protected Notifier target;
 	protected RepositoryViewModel currentModel;
-	protected Button exportBtn;
+	protected Button exportBtn, importBtn;
 	protected Label message;
 	protected Composite mainPanel;
 
@@ -156,6 +157,7 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 		layoutData = new GridData(GridData.FILL_BOTH);
 		layoutData.grabExcessHorizontalSpace = true;
 		layoutData.grabExcessVerticalSpace = true;
+		layoutData.verticalSpan = 2;
 		viewer.getControl().setLayoutData(layoutData);
 		hookViewerContextMenu();
 
@@ -176,6 +178,24 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 		});
 		layoutData = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
 		exportBtn.setLayoutData(layoutData);
+
+		importBtn = new Button(mainPanel, SWT.PUSH);
+		importBtn.setText("Import Prolog Facts");
+		importBtn.addSelectionListener(new SelectionAdapter() {
+			/*
+			 * (non-Javadoc)
+			 * @see
+			 * org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse
+			 * .swt.events.SelectionEvent)
+			 */
+			@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+				importPrologFacts();
+			}
+		});
+		layoutData = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
+		importBtn.setLayoutData(layoutData);
 
 		updateMessage();
 		getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(RepositoryBrowser.ID, this);
@@ -271,6 +291,30 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 				out.flush();
 				out.close();
 				setMessage(String.format("Prolog facts generated in %s", result));
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+
+	protected void importPrologFacts()
+	{
+		FileDialog fd = new FileDialog(getSite().getShell(), SWT.OPEN);
+		fd.setFilterExtensions(new String[] { "*.pro;*.pl", "*.*" });
+		fd.setFilterNames(new String[] { "Prolog Files", "All Files" });
+		String result = fd.open();
+		if (result != null)
+		{
+			FileReader inp = null;
+			try
+			{
+				PrologFactImporter imp = new PrologFactImporter(currentModel.getElement(), null);
+				inp = new FileReader(result);
+				imp.importFacts(inp);
+				inp.close();
+				setMessage(String.format("Prolog facts imported from %s", result));
 			}
 			catch (IOException e)
 			{
@@ -478,20 +522,21 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 	 */
 	protected void updateMessage()
 	{
+		boolean enabled = false;
 		if (currentModel == null)
 		{
-			exportBtn.setEnabled(false);
 			setMessage("Select a repository.");
 		}
 		else if (!currentModel.getElement().isConnectedToRepository())
 		{
-			exportBtn.setEnabled(false);
 			setMessage("No connection has been established to the repository.");
 		}
 		else
 		{
-			exportBtn.setEnabled(true);
+			enabled = true;
 			setMessage("Check items to filter on types.");
 		}
+		importBtn.setEnabled(enabled);
+		exportBtn.setEnabled(enabled);
 	}
 }

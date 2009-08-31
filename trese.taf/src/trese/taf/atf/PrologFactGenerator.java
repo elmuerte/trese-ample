@@ -36,6 +36,7 @@ import net.ample.tracing.core.query.Query;
  * 
  * @author Michiel Hendriks
  */
+// TODO export attribute map?
 public class PrologFactGenerator
 {
 	/**
@@ -132,16 +133,12 @@ public class PrologFactGenerator
 	{
 		writeHeader();
 		Collection<TraceableArtefact> artefacts;
-		if (artefactConstraint == null)
+		Query<TraceableArtefact> query = repository.getQueryManager().queryOnArtefacts();
+		if (artefactConstraint != null)
 		{
-			artefacts = repository.getRepository().getArtefacts();
-		}
-		else
-		{
-			Query<TraceableArtefact> query = repository.getQueryManager().queryOnArtefacts();
 			query.add(artefactConstraint);
-			artefacts = query.execute();
 		}
+		artefacts = query.execute();
 		for (TraceableArtefact artefact : artefacts)
 		{
 			generateArtefact(artefact);

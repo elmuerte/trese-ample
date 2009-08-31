@@ -7,6 +7,7 @@ package trese.taf.dev.gen;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.UUID;
 
 import net.ample.tracing.core.AbstractTraceExtractor;
 import net.ample.tracing.core.RepositoryManager;
@@ -77,6 +78,11 @@ public class Artefacts extends AbstractTraceExtractor
 			TraceableArtefactType type = types.next();
 			TraceableArtefact artefact = repository.getItemManager().createTraceableArtefact(type,
 					String.format("%s %d [%8h]", type.getName(), i, System.nanoTime()));
+			UUID uuid = UUID.randomUUID();
+			// Test to see if we can update the UUID
+			System.out.println(String.format("UUID update %s: %s -> %s", artefact.getName(), artefact.getUuid(), uuid
+					.toString()));
+			artefact.setUuid(uuid.toString());
 			repository.getPersistenceManager().add(artefact);
 			monitor.worked(1);
 		}
