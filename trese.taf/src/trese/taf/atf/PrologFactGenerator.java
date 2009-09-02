@@ -14,7 +14,9 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Map.Entry;
 
+import net.ample.tracing.core.Augmentable;
 import net.ample.tracing.core.RepositoryManager;
 import net.ample.tracing.core.TraceLink;
 import net.ample.tracing.core.TraceLinkType;
@@ -32,6 +34,7 @@ import net.ample.tracing.core.query.Query;
  * traceable_artefact(UUID, Name, TypeUUID, ResourceURI).
  * trace_link_type(UUID, Name).
  * trace_link(UUID, Name, TypeUUID, [SourceUUIDs], [TargetUUIDs]).
+ * atf_element_property(UUID, property, value).
  * </pre>
  * 
  * @author Michiel Hendriks
@@ -48,6 +51,8 @@ public class PrologFactGenerator
 	 * Where to write the prolog facts to
 	 */
 	protected Writer output;
+
+	protected boolean exportProperties = true;
 
 	/**
 	 * The constraint to satisfy for artefacts. When null all artefacts are
@@ -132,14 +137,17 @@ public class PrologFactGenerator
 	public void generate() throws IOException
 	{
 		writeHeader();
-		Collection<TraceableArtefact> artefacts;
+		if (true)
+		{
+			// TODO: make configurable
+			writeTypes();
+		}
 		Query<TraceableArtefact> query = repository.getQueryManager().queryOnArtefacts();
 		if (artefactConstraint != null)
 		{
 			query.add(artefactConstraint);
 		}
-		artefacts = query.execute();
-		for (TraceableArtefact artefact : artefacts)
+		for (TraceableArtefact artefact : query.execute())
 		{
 			generateArtefact(artefact);
 		}
@@ -158,6 +166,10 @@ public class PrologFactGenerator
 		output.write("% traceable_artefact(UUID, Name, TypeUUID, ResourceURI).\n");
 		output.write("% trace_link_type(UUID, Name).\n");
 		output.write("% trace_link(UUID, Name, TypeUUID, [SourceUUIDs], [TargetUUIDs]).\n");
+		if (exportProperties)
+		{
+			output.write("% atf_element_property(UUID, property, value).\n");
+		}
 		output.write("\n");
 		output.write(":-discontiguous(traceable_artefact_type/2).\n");
 		output.write(":-discontiguous(traceable_artefact/4).\n");
@@ -165,6 +177,33 @@ public class PrologFactGenerator
 		output.write(":-discontiguous(trace_link_type/2).\n");
 		output.write(":-discontiguous(trace_link/5).\n");
 		output.write(":-dynamic(trace_link/5).\n");
+		if (exportProperties)
+		{
+			output.write(":-discontiguous(atf_element_property/3).\n");
+			output.write(":-dynamic(atf_element_property/3).\n");
+		}
+		output.write("\n");
+	}
+
+	/**
+	 * Write the types to the output
+	 * 
+	 * @throws IOException
+	 */
+	protected void writeTypes() throws IOException
+	{
+		Query<TraceableArtefactType> query = repository.getQueryManager().queryOnArtefactTypes();
+		for (TraceableArtefactType type : query.execute())
+		{
+			generateArtefactType(type);
+		}
+		output.write("\n");
+
+		Query<TraceLinkType> query2 = repository.getQueryManager().queryOnLinkTypes();
+		for (TraceLinkType type : query2.execute())
+		{
+			generateLinkType(type);
+		}
 		output.write("\n");
 	}
 
@@ -184,7 +223,7 @@ public class PrologFactGenerator
 
 		generateArtefactType(artefact.getType());
 
-		output.write("traceable_artefact( '");
+		output.write("traceable_artefact('");
 		output.write(artefact.getUuid());
 		output.write("', '");
 		output.write(artefact.getName());
@@ -196,6 +235,8 @@ public class PrologFactGenerator
 			output.write(artefact.getResourceURI().toString());
 		}
 		output.write("').\n");
+
+		generateProperties(artefact);
 
 		Collection<TraceLink> links = artefact.getOutgoingLinks();
 		for (TraceLink link : links)
@@ -216,11 +257,13 @@ public class PrologFactGenerator
 		}
 		visitedArtefactTypes.add(type);
 
-		output.write("traceable_artefact_type( '");
+		output.write("traceable_artefact_type('");
 		output.write(type.getUuid());
 		output.write("', '");
 		output.write(type.getName());
 		output.write("').\n");
+
+		generateProperties(type);
 	}
 
 	/**
@@ -252,7 +295,7 @@ public class PrologFactGenerator
 
 		generateLinkType(link.getType());
 
-		output.write("trace_link( '");
+		output.write("trace_link('");
 		output.write(link.getUuid());
 		output.write("', '");
 		output.write(String.format("%s", link.getName()));
@@ -285,6 +328,8 @@ public class PrologFactGenerator
 			output.write('\'');
 		}
 		output.write("]).\n");
+
+		generateProperties(link);
 	}
 
 	/**
@@ -325,10 +370,46 @@ public class PrologFactGenerator
 		}
 		visitedLinkTypes.add(type);
 
-		output.write("trace_link_type( '");
+		output.write("trace_link_type('");
 		output.write(type.getUuid());
 		output.write("', '");
 		output.write(type.getName());
 		output.write("').\n");
+
+		generateProperties(type);
+	}
+
+	protected void generateProperties(Augmentable aug) throws IOException
+	{
+		if (!exportProperties)
+		{
+			return;
+		}
+
+		for (Entry<String, String> entry : aug.getProperties().entrySet())
+		{
+			if ("URI".equals(entry.getKey()))
+			{
+				// this is already included
+				continue;
+			}
+			output.write("atf_element_property('");
+			output.write(aug.getUuid());
+			output.write("', '");
+			output.write(atomEscape(entry.getKey()));
+			output.write("', '");
+			output.write(atomEscape(entry.getValue()));
+			output.write("').\n");
+		}
+		output.write("\n");
+	}
+
+	/**
+	 * @param key
+	 * @return
+	 */
+	protected String atomEscape(String value)
+	{
+		return value.replace("'", "\\'");
 	}
 }

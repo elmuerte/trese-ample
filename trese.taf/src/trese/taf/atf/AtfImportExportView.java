@@ -8,6 +8,7 @@ package trese.taf.atf;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -28,6 +29,8 @@ import net.ample.tracing.ui.models.ViewModel;
 import net.ample.tracing.ui.views.RepositoryBrowser;
 import net.ample.tracing.ui.views.RepositoryLabelProvider;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
@@ -36,6 +39,8 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ISelection;
@@ -61,6 +66,8 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
+
+import trese.taf.Activator;
 
 /**
  * 
@@ -194,7 +201,7 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 				importPrologFacts();
 			}
 		});
-		layoutData = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
+		layoutData = new GridData(GridData.VERTICAL_ALIGN_END);
 		importBtn.setLayoutData(layoutData);
 
 		updateMessage();
@@ -247,52 +254,73 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 		fd.setFilterExtensions(new String[] { "*.pro;*.pl", "*.*" });
 		fd.setFilterNames(new String[] { "Prolog Files", "All Files" });
 		fd.setOverwrite(true);
-		String result = fd.open();
+		final String result = fd.open();
 		if (result != null)
 		{
-			try
+			final List<Constraint> filterTypes = new ArrayList<Constraint>();
+			final List<Constraint> filterLinks = new ArrayList<Constraint>();
+			final RepositoryManager repoMan = currentModel.getElement();
+
+			Queue<TreeItem> items = new LinkedList<TreeItem>();
+			items.addAll(Arrays.asList(viewer.getTree().getItems()));
+			while (!items.isEmpty())
 			{
-				FileWriter out = new FileWriter(result);
-				PrologFactGenerator gen = new PrologFactGenerator(currentModel.getElement(), out);
-
-				List<Constraint> filterTypes = new ArrayList<Constraint>();
-				List<Constraint> filterLinks = new ArrayList<Constraint>();
-
-				Queue<TreeItem> items = new LinkedList<TreeItem>();
-				items.addAll(Arrays.asList(viewer.getTree().getItems()));
-				while (!items.isEmpty())
+				TreeItem item = items.poll();
+				items.addAll(Arrays.asList(item.getItems()));
+				if (item.getChecked())
 				{
-					TreeItem item = items.poll();
-					items.addAll(Arrays.asList(item.getItems()));
-					if (item.getChecked())
+					Object data = item.getData();
+					if (data instanceof ArtefactTypeViewModel)
 					{
-						Object data = item.getData();
-						if (data instanceof ArtefactTypeViewModel)
-						{
-							filterTypes.add(Constraints.isOfType(((ArtefactTypeViewModel) data).getElement()));
-						}
-						else if (data instanceof LinkTypeViewModel)
-						{
-							filterLinks.add(Constraints.isOfType(((LinkTypeViewModel) data).getElement()));
-						}
+						filterTypes.add(Constraints.isOfType(((ArtefactTypeViewModel) data).getElement()));
+					}
+					else if (data instanceof LinkTypeViewModel)
+					{
+						filterLinks.add(Constraints.isOfType(((LinkTypeViewModel) data).getElement()));
 					}
 				}
+			}
 
-				if (!filterTypes.isEmpty())
-				{
-					gen.setArtefactConstraint(Constraints.or(filterTypes.toArray(new Constraint[filterTypes.size()])));
-				}
-				if (!filterLinks.isEmpty())
-				{
-					gen.setLinkConstraint(Constraints.or(filterLinks.toArray(new Constraint[filterLinks.size()])));
-				}
+			try
+			{
+				new ProgressMonitorDialog(getSite().getShell()).run(true, false, new IRunnableWithProgress() {
+					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException
+					{
+						monitor.beginTask(String.format("Exporting prolog facts to %s", result), 1);
+						try
+						{
+							FileWriter out = new FileWriter(result);
+							PrologFactGenerator gen = new PrologFactGenerator(repoMan, out);
 
-				gen.generate();
-				out.flush();
-				out.close();
+							if (!filterTypes.isEmpty())
+							{
+								gen.setArtefactConstraint(Constraints.or(filterTypes.toArray(new Constraint[filterTypes
+										.size()])));
+							}
+							if (!filterLinks.isEmpty())
+							{
+								gen.setLinkConstraint(Constraints.or(filterLinks.toArray(new Constraint[filterLinks
+										.size()])));
+							}
+
+							gen.generate();
+							out.flush();
+							out.close();
+						}
+						catch (IOException e)
+						{
+							e.printStackTrace();
+						}
+						monitor.done();
+					}
+				});
 				setMessage(String.format("Prolog facts generated in %s", result));
 			}
-			catch (IOException e)
+			catch (InvocationTargetException e)
+			{
+				e.printStackTrace();
+			}
+			catch (InterruptedException e)
 			{
 				e.printStackTrace();
 			}
@@ -304,19 +332,37 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 		FileDialog fd = new FileDialog(getSite().getShell(), SWT.OPEN);
 		fd.setFilterExtensions(new String[] { "*.pro;*.pl", "*.*" });
 		fd.setFilterNames(new String[] { "Prolog Files", "All Files" });
-		String result = fd.open();
+		final String result = fd.open();
 		if (result != null)
 		{
-			FileReader inp = null;
 			try
 			{
-				PrologFactImporter imp = new PrologFactImporter(currentModel.getElement(), null);
-				inp = new FileReader(result);
-				imp.importFacts(inp);
-				inp.close();
-				setMessage(String.format("Prolog facts imported from %s", result));
+				new ProgressMonitorDialog(getSite().getShell()).run(true, false, new IRunnableWithProgress() {
+					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException
+					{
+						monitor.beginTask(String.format("Importing prolog facts from %s", result), 1);
+						FileReader inp = null;
+						try
+						{
+							PrologFactImporter imp = new PrologFactImporter(currentModel.getElement(), Activator
+									.getDefault().getLog());
+							inp = new FileReader(result);
+							imp.importFacts(inp, new SubProgressMonitor(monitor, 1));
+							inp.close();
+						}
+						catch (IOException e)
+						{
+							e.printStackTrace();
+						}
+						monitor.done();
+					}
+				});
 			}
-			catch (IOException e)
+			catch (InvocationTargetException e)
+			{
+				e.printStackTrace();
+			}
+			catch (InterruptedException e)
 			{
 				e.printStackTrace();
 			}
