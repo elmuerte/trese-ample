@@ -765,6 +765,7 @@ public class PrologFactImporter implements ILogListener
 					"ATF element with uuid %s has been removed", uuid)));
 			return;
 		}
+		// TODO: optimize this
 		Augmentable aug = getTraceableArtefactType(uuid);
 		if (aug == null)
 		{
