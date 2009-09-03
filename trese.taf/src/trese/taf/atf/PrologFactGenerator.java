@@ -39,7 +39,6 @@ import net.ample.tracing.core.query.Query;
  * 
  * @author Michiel Hendriks
  */
-// TODO export attribute map?
 public class PrologFactGenerator
 {
 	/**
@@ -52,7 +51,7 @@ public class PrologFactGenerator
 	 */
 	protected Writer output;
 
-	protected boolean exportProperties = true;
+	protected boolean exportProperties;
 
 	/**
 	 * The constraint to satisfy for artefacts. When null all artefacts are
@@ -127,6 +126,23 @@ public class PrologFactGenerator
 	public void setLinkConstraint(Constraint value)
 	{
 		linkConstraint = value;
+	}
+
+	/**
+	 * @param value
+	 *            the exportProperties to set
+	 */
+	public void setExportProperties(boolean value)
+	{
+		exportProperties = value;
+	}
+
+	/**
+	 * @return
+	 */
+	public boolean getExportProperties()
+	{
+		return exportProperties;
 	}
 
 	/**

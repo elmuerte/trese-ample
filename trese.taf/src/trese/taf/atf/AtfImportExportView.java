@@ -79,7 +79,7 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 	protected CheckboxTreeViewer viewer;
 	protected Notifier target;
 	protected RepositoryViewModel currentModel;
-	protected Button exportBtn, importBtn;
+	protected Button exportBtn, importBtn, exportProps;
 	protected Label message;
 	protected Composite mainPanel;
 
@@ -164,7 +164,7 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 		layoutData = new GridData(GridData.FILL_BOTH);
 		layoutData.grabExcessHorizontalSpace = true;
 		layoutData.grabExcessVerticalSpace = true;
-		layoutData.verticalSpan = 2;
+		layoutData.verticalSpan = 3;
 		viewer.getControl().setLayoutData(layoutData);
 		hookViewerContextMenu();
 
@@ -185,6 +185,13 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 		});
 		layoutData = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
 		exportBtn.setLayoutData(layoutData);
+
+		exportProps = new Button(mainPanel, SWT.CHECK);
+		exportProps.setText("Export Properties");
+		exportProps.setSelection(true);
+		exportProps.setToolTipText("Also export all properties associated with each element.");
+		layoutData = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
+		exportProps.setLayoutData(layoutData);
 
 		importBtn = new Button(mainPanel, SWT.PUSH);
 		importBtn.setText("Import Prolog Facts");
@@ -260,6 +267,7 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 			final List<Constraint> filterTypes = new ArrayList<Constraint>();
 			final List<Constraint> filterLinks = new ArrayList<Constraint>();
 			final RepositoryManager repoMan = currentModel.getElement();
+			final boolean propsExport = exportProps.getSelection();
 
 			Queue<TreeItem> items = new LinkedList<TreeItem>();
 			items.addAll(Arrays.asList(viewer.getTree().getItems()));
@@ -291,6 +299,7 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 						{
 							FileWriter out = new FileWriter(result);
 							PrologFactGenerator gen = new PrologFactGenerator(repoMan, out);
+							gen.setExportProperties(propsExport);
 
 							if (!filterTypes.isEmpty())
 							{

@@ -21,26 +21,17 @@ import java.io.Reader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
 import net.ample.tracing.core.Augmentable;
-import net.ample.tracing.core.Persistable;
 import net.ample.tracing.core.PersistenceManager;
 import net.ample.tracing.core.RepositoryManager;
 import net.ample.tracing.core.TraceLink;
 import net.ample.tracing.core.TraceLinkType;
 import net.ample.tracing.core.TraceableArtefact;
 import net.ample.tracing.core.TraceableArtefactType;
-import net.ample.tracing.core.query.Constraints;
-import net.ample.tracing.core.query.Query;
 
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.ILogListener;
@@ -49,6 +40,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
 import trese.taf.Activator;
+import trese.taf.atf.util.AtfQueue;
+import trese.taf.atf.util.AtfQueueEntry;
+import trese.taf.atf.util.AtfRepoCache;
 
 /**
  * Import artefacts/links/types from a prolog fact database.
@@ -78,34 +72,6 @@ public class PrologFactImporter implements ILogListener
 	// and transaction handling.
 
 	/**
-	 * Used to workaround the useless ATF persistence manager
-	 * 
-	 * @author Michiel Hendriks
-	 */
-	public enum RepoActionType
-	{
-		ADD, UPDATE, REMOVE
-	}
-
-	/**
-	 * Used to workaround the useless ATF persistence manager
-	 * 
-	 * @author Michiel Hendriks
-	 */
-	public class RepositoryAction
-	{
-		public RepoActionType action;
-		public Persistable obj;
-
-		public RepositoryAction(RepoActionType action, Persistable obj)
-		{
-			super();
-			this.action = action;
-			this.obj = obj;
-		}
-	}
-
-	/**
 	 * Helper interface for method delegates
 	 * 
 	 * @author Michiel Hendriks
@@ -123,16 +89,12 @@ public class PrologFactImporter implements ILogListener
 
 	// Caches because the ATF doesn't know about new/removed elements until the
 	// commit is performed
-	protected Map<String, TraceableArtefactType> artTypes;
-	protected Map<String, TraceLinkType> linkTypes;
-	protected Map<String, TraceableArtefact> arts;
-	protected Map<String, TraceLink> links;
-	protected Set<String> removed;
+	protected AtfRepoCache cache;
 
 	// Queue because ATF does not handle query() during write operations on the
 	// repository (which actually makes the whole transaction system completely
 	// useless).
-	protected Queue<RepositoryAction> actionQueue;
+	protected AtfQueue queue;
 
 	public PrologFactImporter(RepositoryManager repo, ILog log)
 	{
@@ -171,12 +133,8 @@ public class PrologFactImporter implements ILogListener
 			return false;
 		}
 
-		artTypes = new HashMap<String, TraceableArtefactType>();
-		linkTypes = new HashMap<String, TraceLinkType>();
-		arts = new HashMap<String, TraceableArtefact>();
-		links = new HashMap<String, TraceLink>();
-		removed = new HashSet<String>();
-		actionQueue = new LinkedList<RepositoryAction>();
+		queue = new AtfQueue();
+		cache = new AtfRepoCache(repository, queue);
 
 		try
 		{
@@ -256,18 +214,18 @@ public class PrologFactImporter implements ILogListener
 			{
 				PersistenceManager perman = repository.getPersistenceManager();
 				perman.begin();
-				for (RepositoryAction act : actionQueue)
+				for (AtfQueueEntry entry : queue)
 				{
-					switch (act.action)
+					switch (entry.getAction())
 					{
 						case ADD:
-							perman.add(act.obj);
+							perman.add(entry.getObj());
 							break;
 						case REMOVE:
-							perman.remove(act.obj);
+							perman.remove(entry.getObj());
 							break;
 						case UPDATE:
-							perman.update(act.obj);
+							perman.update(entry.getObj());
 							break;
 					}
 				}
@@ -287,12 +245,8 @@ public class PrologFactImporter implements ILogListener
 		finally
 		{
 			logger.removeLogListener(this);
-			artTypes = null;
-			linkTypes = null;
-			actionQueue = null;
-			arts = null;
-			links = null;
-			removed = null;
+			cache = null;
+			queue = null;
 			monitor.done();
 		}
 		return !hasErrors;
@@ -408,7 +362,7 @@ public class PrologFactImporter implements ILogListener
 		TraceableArtefactType type = null;
 		if (uuid != null)
 		{
-			type = getTraceableArtefactType(uuid);
+			type = cache.getTraceableArtefactType(uuid);
 		}
 		if (type == null)
 		{
@@ -418,32 +372,11 @@ public class PrologFactImporter implements ILogListener
 			{
 				type.setUuid(uuid);
 			}
-			actionQueue.add(new RepositoryAction(RepoActionType.ADD, type));
-			artTypes.put(uuid, type);
+			queue.add(type);
+			cache.register(type);
 			logger.log(new Status(IStatus.INFO, Activator.PLUGIN_ID, String.format(
 					"Created traceable artefact type '%s' with UUID %s", type.getName(), type.getUuid())));
 		}
-	}
-
-	/**
-	 * @param uuid
-	 * @return
-	 */
-	protected TraceableArtefactType getTraceableArtefactType(String uuid)
-	{
-		if (artTypes.containsKey(uuid))
-		{
-			return artTypes.get(uuid);
-		}
-		if (uuid == null)
-		{
-			return null;
-		}
-		Query<TraceableArtefactType> q = repository.getQueryManager().queryOnArtefactTypes();
-		q.add(Constraints.hasUuid(uuid));
-		TraceableArtefactType res = q.executeUnique();
-		artTypes.put(uuid, res);
-		return res;
 	}
 
 	/**
@@ -466,7 +399,7 @@ public class PrologFactImporter implements ILogListener
 		}
 		if (uuid != null)
 		{
-			type = getTraceLinkType(uuid);
+			type = cache.getTraceLinkType(uuid);
 		}
 		if (type == null)
 		{
@@ -476,32 +409,11 @@ public class PrologFactImporter implements ILogListener
 			{
 				type.setUuid(uuid);
 			}
-			actionQueue.add(new RepositoryAction(RepoActionType.ADD, type));
-			linkTypes.put(uuid, type);
+			queue.add(type);
+			cache.register(type);
 			logger.log(new Status(IStatus.INFO, Activator.PLUGIN_ID, String.format(
 					"Created trace link type '%s' with UUID %s", type.getName(), type.getUuid())));
 		}
-	}
-
-	/**
-	 * @param uuid
-	 * @return
-	 */
-	protected TraceLinkType getTraceLinkType(String uuid)
-	{
-		if (linkTypes.containsKey(uuid))
-		{
-			return linkTypes.get(uuid);
-		}
-		if (uuid == null)
-		{
-			return null;
-		}
-		Query<TraceLinkType> q = repository.getQueryManager().queryOnLinkTypes();
-		q.add(Constraints.hasUuid(uuid));
-		TraceLinkType res = q.executeUnique();
-		linkTypes.put(uuid, res);
-		return res;
 	}
 
 	/**
@@ -511,42 +423,16 @@ public class PrologFactImporter implements ILogListener
 	protected void processRemoveArtefact(Term uuidTerm) throws PrologException
 	{
 		String uuid = getUUID(uuidTerm);
-		TraceableArtefact artefact = getArtefact(uuid);
+		TraceableArtefact artefact = cache.getArtefact(uuid);
 		if (artefact == null)
 		{
 			logger.log(new Status(IStatus.WARNING, Activator.PLUGIN_ID, String.format(
 					"Unable to find traceable artefact with UUID %s", uuid)));
 			return;
 		}
-		actionQueue.add(new RepositoryAction(RepoActionType.REMOVE, artefact));
-		removed.add(uuid);
+		queue.remove(artefact);
 		logger.log(new Status(IStatus.INFO, Activator.PLUGIN_ID, String.format(
 				"Removed traceable artefact '%s' with UUID %s", artefact.getName(), artefact.getUuid())));
-	}
-
-	/**
-	 * @param uuid
-	 * @return
-	 */
-	protected TraceableArtefact getArtefact(String uuid)
-	{
-		if (removed.contains(uuid))
-		{
-			return null;
-		}
-		if (arts.containsKey(uuid))
-		{
-			return arts.get(uuid);
-		}
-		if (uuid == null)
-		{
-			return null;
-		}
-		Query<TraceableArtefact> q = repository.getQueryManager().queryOnArtefacts();
-		q.add(Constraints.hasUuid(uuid));
-		TraceableArtefact res = q.executeUnique();
-		arts.put(uuid, res);
-		return res;
 	}
 
 	/**
@@ -556,42 +442,16 @@ public class PrologFactImporter implements ILogListener
 	protected void processRemoveLink(Term uuidTerm) throws PrologException
 	{
 		String uuid = getUUID(uuidTerm);
-		TraceLink link = getLink(uuid);
+		TraceLink link = cache.getLink(uuid);
 		if (link == null)
 		{
 			logger.log(new Status(IStatus.WARNING, Activator.PLUGIN_ID, String.format(
 					"Unable to find trace link with UUID %s", uuid)));
 			return;
 		}
-		actionQueue.add(new RepositoryAction(RepoActionType.REMOVE, link));
-		removed.add(uuid);
+		queue.remove(link);
 		logger.log(new Status(IStatus.INFO, Activator.PLUGIN_ID, String.format("Removed trace link '%s' with UUID %s",
 				link.getName(), link.getUuid())));
-	}
-
-	/**
-	 * @param uuid
-	 * @return
-	 */
-	protected TraceLink getLink(String uuid)
-	{
-		if (removed.contains(uuid))
-		{
-			return null;
-		}
-		if (links.containsKey(uuid))
-		{
-			return links.get(uuid);
-		}
-		if (uuid == null)
-		{
-			return null;
-		}
-		Query<TraceLink> q = repository.getQueryManager().queryOnLinks();
-		q.add(Constraints.hasUuid(uuid));
-		TraceLink res = q.executeUnique();
-		links.put(uuid, res);
-		return res;
 	}
 
 	/**
@@ -607,7 +467,7 @@ public class PrologFactImporter implements ILogListener
 		String uuid = getUUID(uuidTerm);
 		String typeUuid = getUUID(typeTerm);
 
-		TraceableArtefactType type = getTraceableArtefactType(typeUuid);
+		TraceableArtefactType type = cache.getTraceableArtefactType(typeUuid);
 		if (type == null)
 		{
 			logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, String.format(
@@ -643,7 +503,7 @@ public class PrologFactImporter implements ILogListener
 			PrologException.typeError(TermConstants.atomAtom, uriTerm);
 		}
 
-		TraceableArtefact artefact = getArtefact(uuid);
+		TraceableArtefact artefact = cache.getArtefact(uuid);
 		if (artefact == null)
 		{
 			artefact = repository.getItemManager().createTraceableArtefact(type, name);
@@ -651,9 +511,8 @@ public class PrologFactImporter implements ILogListener
 			{
 				artefact.setUuid(uuid);
 			}
-			actionQueue.add(new RepositoryAction(RepoActionType.ADD, artefact));
-			arts.put(uuid, artefact);
-			removed.remove(uuid);
+			queue.add(artefact);
+			cache.register(artefact);
 			logger.log(new Status(IStatus.INFO, Activator.PLUGIN_ID, String.format("Created new artefact %s (%s)",
 					artefact.getName(), artefact.getUuid())));
 		}
@@ -661,7 +520,7 @@ public class PrologFactImporter implements ILogListener
 		{
 			artefact.setName(name);
 			artefact.setType(type);
-			actionQueue.add(new RepositoryAction(RepoActionType.UPDATE, artefact));
+			queue.update(artefact);
 			logger.log(new Status(IStatus.INFO, Activator.PLUGIN_ID, String.format("Updated artefact %s (%s)", artefact
 					.getName(), artefact.getUuid())));
 		}
@@ -681,7 +540,7 @@ public class PrologFactImporter implements ILogListener
 	{
 		String uuid = getUUID(uuidTerm);
 		String typeUuid = getUUID(typeTerm);
-		TraceLinkType type = getTraceLinkType(typeUuid);
+		TraceLinkType type = cache.getTraceLinkType(typeUuid);
 		if (type == null)
 		{
 			logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, String.format(
@@ -699,7 +558,7 @@ public class PrologFactImporter implements ILogListener
 			PrologException.typeError(TermConstants.atomAtom, nameTerm);
 		}
 
-		TraceLink link = getLink(uuid);
+		TraceLink link = cache.getLink(uuid);
 		if (link == null)
 		{
 			TraceableArtefact[] sources = getTraceableArtefact(sourcesTerm);
@@ -713,8 +572,7 @@ public class PrologFactImporter implements ILogListener
 			{
 				link.setName(name);
 			}
-			actionQueue.add(new RepositoryAction(RepoActionType.ADD, link));
-			removed.remove(uuid);
+			queue.add(link);
 			logger.log(new Status(IStatus.INFO, Activator.PLUGIN_ID, String.format("Created new trace link %s", link
 					.getUuid())));
 		}
@@ -742,7 +600,7 @@ public class PrologFactImporter implements ILogListener
 		for (Term item : termCollection)
 		{
 			String uuid = getUUID(item);
-			TraceableArtefact artefact = getArtefact(uuid);
+			TraceableArtefact artefact = cache.getArtefact(uuid);
 			if (artefact != null)
 			{
 				result.add(artefact);
@@ -759,26 +617,13 @@ public class PrologFactImporter implements ILogListener
 	protected void processProperties(Term uuidTerm, Term keyTerm, Term valueTerm) throws PrologException
 	{
 		String uuid = getUUID(uuidTerm);
-		if (removed.contains(uuid))
+		if (queue.isRemoved(uuid))
 		{
 			logger.log(new Status(IStatus.WARNING, Activator.PLUGIN_ID, String.format(
 					"ATF element with uuid %s has been removed", uuid)));
 			return;
 		}
-		// TODO: optimize this
-		Augmentable aug = getTraceableArtefactType(uuid);
-		if (aug == null)
-		{
-			aug = getTraceLinkType(uuid);
-		}
-		if (aug == null)
-		{
-			aug = getArtefact(uuid);
-		}
-		if (aug == null)
-		{
-			aug = getLink(uuid);
-		}
+		Augmentable aug = cache.get(uuid);
 		if (aug == null)
 		{
 			logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, String.format(
@@ -805,6 +650,7 @@ public class PrologFactImporter implements ILogListener
 			PrologException.typeError(TermConstants.atomAtom, valueTerm);
 		}
 		aug.getProperties().put(key, value);
+		queue.update(aug);
 	}
 
 	/*
