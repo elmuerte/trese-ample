@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Traceability Analysis Framework
 Bundle-SymbolicName: trese.taf;singleton:=true
-Bundle-Version: 0.6.5.qualifier
+Bundle-Version: 0.6.6.qualifier
 Bundle-Vendor: Software Engineering Group; University of Twente
 Require-Bundle: groove.prolog;bundle-version="3.2.2",
  edu.uci.isr.xarchlibs.apigen;bundle-version="4.1.50",
