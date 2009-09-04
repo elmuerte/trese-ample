@@ -18,6 +18,7 @@ import gnu.prolog.vm.PrologException;
 import gnu.prolog.vm.TermConstants;
 
 import java.io.Reader;
+import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -43,12 +44,13 @@ import trese.taf.Activator;
 import trese.taf.atf.util.AtfQueue;
 import trese.taf.atf.util.AtfQueueEntry;
 import trese.taf.atf.util.AtfRepoCache;
+import trese.taf.atf.util.CompositeReader;
 
 /**
  * Import artefacts/links/types from a prolog fact database.
  * 
- * To delete artefacts use the predicate delete_traceable_artefact(UUID), to
- * delete links use the predicate delete_trace_link(UUID). When an artefact/link
+ * To delete artefacts use the predicate remove_traceable_artefact(UUID), to
+ * delete links use the predicate remove_trace_link(UUID). When an artefact/link
  * does not exist it will result in an warning.
  * 
  * To add new or update new artefacts use the standard traceable_artefact/4
@@ -60,8 +62,7 @@ import trese.taf.atf.util.AtfRepoCache;
  * rules as for the artefacts. Tracelinks cannot be updated.
  * 
  * Creation of new types can be done using the traceable_artefact_type/2 and
- * trace_link_type/2 predicates. Removing or updating of artefacts is not
- * possible.
+ * trace_link_type/2 predicates. Removing or updating of types is not possible.
  * 
  * @author Michiel Hendriks
  */
@@ -70,6 +71,19 @@ public class PrologFactImporter implements ILogListener
 	// Note: this importer contains a lot of hacks to work around the terrible
 	// implementation of the repository. This importer performs it's own caching
 	// and transaction handling.
+
+	public static final CompoundTermTag ATF_ELEMENT_PROPERTY_TAG = CompoundTermTag.get("atf_element_property", 3);
+	public static final CompoundTermTag TRACE_LINK_TAG = CompoundTermTag.get("trace_link", 5);
+	public static final CompoundTermTag TRACEABLE_ARTEFACT_TAG = CompoundTermTag.get("traceable_artefact", 4);
+	public static final CompoundTermTag REMOVE_TRACE_LINK_TAG = CompoundTermTag.get("remove_trace_link", 1);
+	public static final CompoundTermTag REMOVE_TRACEABLE_ARTEFACT_TAG = CompoundTermTag.get(
+			"remove_traceable_artefact", 1);
+	public static final CompoundTermTag TRACE_LINK_TYPE_TAG = CompoundTermTag.get("trace_link_type", 2);
+	public static final CompoundTermTag TRACEABLE_ARTEFACT_TYPE_TAG = CompoundTermTag.get("traceable_artefact_type", 2);
+
+	public static final CompoundTermTag[] TAGS = new CompoundTermTag[] { TRACEABLE_ARTEFACT_TYPE_TAG,
+			TRACE_LINK_TYPE_TAG, REMOVE_TRACEABLE_ARTEFACT_TAG, REMOVE_TRACE_LINK_TAG, TRACEABLE_ARTEFACT_TAG,
+			TRACE_LINK_TAG, ATF_ELEMENT_PROPERTY_TAG };
 
 	/**
 	 * Helper interface for method delegates
@@ -120,7 +134,7 @@ public class PrologFactImporter implements ILogListener
 		hasErrors = false;
 		monitor.subTask("Parsing");
 		PrologTextLoaderState state = new PrologTextLoaderState();
-		new PrologTextLoader(state, data);
+		new PrologTextLoader(state, new CompositeReader(predicateInit(), data));
 		monitor.worked(1);
 		List<PrologTextLoaderError> errors = state.getErrors();
 		if (!errors.isEmpty())
@@ -142,72 +156,99 @@ public class PrologFactImporter implements ILogListener
 
 			// First process types
 			monitor.subTask("Processing artefact types");
-			processPredicates(state.getModule(), CompoundTermTag.get("traceable_artefact_type", 2), new FactImporter() {
+			processPredicates(state.getModule(), TRACEABLE_ARTEFACT_TYPE_TAG, new FactImporter() {
 				public void processFact(Term[] args) throws PrologException
 				{
 					processArtefactType(args[0], args[1]);
 				}
 			});
 			monitor.worked(1);
+			if (monitor.isCanceled())
+			{
+				return false;
+			}
 
 			monitor.subTask("Processing link types");
-			processPredicates(state.getModule(), CompoundTermTag.get("trace_link_type", 2), new FactImporter() {
+			processPredicates(state.getModule(), TRACE_LINK_TYPE_TAG, new FactImporter() {
 				public void processFact(Term[] args) throws PrologException
 				{
 					processLinkType(args[0], args[1]);
 				}
 			});
 			monitor.worked(1);
+			if (monitor.isCanceled())
+			{
+				return false;
+			}
 
 			// Process removals
 
 			monitor.subTask("Processing artefact removals");
-			processPredicates(state.getModule(), CompoundTermTag.get("remove_traceable_artefact_type", 1),
-					new FactImporter() {
-						public void processFact(Term[] args) throws PrologException
-						{
-							processRemoveArtefact(args[0]);
-						}
-					});
+			processPredicates(state.getModule(), REMOVE_TRACEABLE_ARTEFACT_TAG, new FactImporter() {
+				public void processFact(Term[] args) throws PrologException
+				{
+					processRemoveArtefact(args[0]);
+				}
+			});
 			monitor.worked(1);
+			if (monitor.isCanceled())
+			{
+				return false;
+			}
 
 			monitor.subTask("Processing link removals");
-			processPredicates(state.getModule(), CompoundTermTag.get("remove_trace_link_type", 1), new FactImporter() {
+			processPredicates(state.getModule(), REMOVE_TRACE_LINK_TAG, new FactImporter() {
 				public void processFact(Term[] args) throws PrologException
 				{
 					processRemoveLink(args[0]);
 				}
 			});
 			monitor.worked(1);
+			if (monitor.isCanceled())
+			{
+				return false;
+			}
 
 			// Process updates/additions
 
 			monitor.subTask("Processing artefact additions/updates");
-			processPredicates(state.getModule(), CompoundTermTag.get("traceable_artefact", 4), new FactImporter() {
+			processPredicates(state.getModule(), TRACEABLE_ARTEFACT_TAG, new FactImporter() {
 				public void processFact(Term[] args) throws PrologException
 				{
 					processUpdateArtefact(args[0], args[1], args[2], args[3]);
 				}
 			});
 			monitor.worked(1);
+			if (monitor.isCanceled())
+			{
+				return false;
+			}
 
 			monitor.subTask("Processing link additions");
-			processPredicates(state.getModule(), CompoundTermTag.get("trace_link", 5), new FactImporter() {
+			processPredicates(state.getModule(), TRACE_LINK_TAG, new FactImporter() {
 				public void processFact(Term[] args) throws PrologException
 				{
 					processCreateLink(args[0], args[1], args[2], args[3], args[4]);
 				}
 			});
 			monitor.worked(1);
+			if (monitor.isCanceled())
+			{
+				return false;
+			}
 
 			monitor.subTask("Processing properties");
-			processPredicates(state.getModule(), CompoundTermTag.get("atf_element_property", 3), new FactImporter() {
+			processPredicates(state.getModule(), ATF_ELEMENT_PROPERTY_TAG, new FactImporter() {
 				public void processFact(Term[] args) throws PrologException
 				{
 					processProperties(args[0], args[1], args[2]);
 				}
 			});
 			monitor.worked(1);
+			if (monitor.isCanceled())
+			{
+				return false;
+			}
 
 			monitor.subTask("Commiting changes");
 			if (!hasErrors)
@@ -216,6 +257,10 @@ public class PrologFactImporter implements ILogListener
 				perman.begin();
 				for (AtfQueueEntry entry : queue)
 				{
+					if (monitor.isCanceled())
+					{
+						return false;
+					}
 					switch (entry.getAction())
 					{
 						case ADD:
@@ -250,6 +295,25 @@ public class PrologFactImporter implements ILogListener
 			monitor.done();
 		}
 		return !hasErrors;
+	}
+
+	/**
+	 * Produces predicate initializer header
+	 * 
+	 * @param state
+	 */
+	protected Reader predicateInit()
+	{
+		StringBuilder sb = new StringBuilder();
+		for (CompoundTermTag tag : TAGS)
+		{
+			sb.append(":-discontiguous(");
+			sb.append(tag.toString());
+			sb.append(").\n:-dynamic(");
+			sb.append(tag.toString());
+			sb.append(").\n");
+		}
+		return new StringReader(sb.toString());
 	}
 
 	/**

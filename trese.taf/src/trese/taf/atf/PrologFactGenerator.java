@@ -187,14 +187,19 @@ public class PrologFactGenerator
 			output.write("% atf_element_property(UUID, property, value).\n");
 		}
 		output.write("\n");
+		output.write(":-multifile(traceable_artefact_type/2).\n");
 		output.write(":-discontiguous(traceable_artefact_type/2).\n");
+		output.write(":-multifile(traceable_artefact/4).\n");
 		output.write(":-discontiguous(traceable_artefact/4).\n");
 		output.write(":-dynamic(traceable_artefact/4).\n");
+		output.write(":-multifile(trace_link_type/2).\n");
 		output.write(":-discontiguous(trace_link_type/2).\n");
+		output.write(":-multifile(trace_link/5).\n");
 		output.write(":-discontiguous(trace_link/5).\n");
 		output.write(":-dynamic(trace_link/5).\n");
 		if (exportProperties)
 		{
+			output.write(":-multifile(atf_element_property/3).\n");
 			output.write(":-discontiguous(atf_element_property/3).\n");
 			output.write(":-dynamic(atf_element_property/3).\n");
 		}

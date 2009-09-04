@@ -346,7 +346,7 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 		{
 			try
 			{
-				new ProgressMonitorDialog(getSite().getShell()).run(true, false, new IRunnableWithProgress() {
+				new ProgressMonitorDialog(getSite().getShell()).run(true, true, new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException
 					{
 						monitor.beginTask(String.format("Importing prolog facts from %s", result), 1);
