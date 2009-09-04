@@ -25,14 +25,18 @@
    </url>
 
    <requires>
-      <import feature="groove.feature" version="3.2.2" match="greaterOrEqual"/>
-      <import feature="trese.archmodel.feature" version="0.6.3" match="greaterOrEqual"/>
-      <import feature="trese.featuremodel.feature" version="0.6.3" match="greaterOrEqual"/>
+      <import plugin="groove.prolog" version="3.2.2" match="greaterOrEqual"/>
+      <import plugin="edu.uci.isr.xarchlibs.apigen" version="4.1.50" match="greaterOrEqual"/>
       <import plugin="net.ample.tracing.core" version="0.2.1" match="greaterOrEqual"/>
       <import plugin="net.ample.tracing.ui" version="0.2.1" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui" version="3.4.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.runtime" version="3.4.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.resources" version="3.4.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui.views" version="3.3.1" match="greaterOrEqual"/>
+      <import plugin="gnuprologjava" version="0.2.3" match="greaterOrEqual"/>
+      <import feature="trese.archmodel.feature" version="0.6.4" match="greaterOrEqual"/>
+      <import feature="trese.featuremodel.feature" version="0.6.3" match="greaterOrEqual"/>
+      <import feature="groove.feature" version="3.2.2" match="greaterOrEqual"/>
    </requires>
 
    <plugin

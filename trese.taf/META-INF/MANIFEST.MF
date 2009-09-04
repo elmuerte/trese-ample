@@ -5,15 +5,13 @@ Bundle-SymbolicName: trese.taf;singleton:=true
 Bundle-Version: 0.6.6.qualifier
 Bundle-Vendor: Software Engineering Group; University of Twente
 Require-Bundle: groove.prolog;bundle-version="3.2.2",
- edu.uci.isr.xarchlibs.apigen;bundle-version="4.1.50",
  net.ample.tracing.core;bundle-version="0.2.1",
  net.ample.tracing.ui;bundle-version="0.2.1",
  org.eclipse.ui;bundle-version="3.4.0",
  org.eclipse.core.runtime;bundle-version="3.4.0",
  org.eclipse.core.resources;bundle-version="3.4.0",
  org.eclipse.ui.views;bundle-version="3.3.1",
- gnuprologjava;bundle-version="0.2.3",
- net.ample.tracing.h2;bundle-version="0.2.1"
+ gnuprologjava;bundle-version="0.2.3"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: trese.taf.jar
