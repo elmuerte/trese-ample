@@ -234,6 +234,7 @@ public class PrologEditor extends JPanel
 		query.setFont(editFont);
 		query.setEditable(true);
 		query.setEnabled(true);
+		query.setPrototypeDisplayValue("groove+prolog");
 		queryEdit = (JTextComponent) query.getEditor().getEditorComponent();
 		queryEdit.addKeyListener(new KeyAdapter() {
 			@Override
