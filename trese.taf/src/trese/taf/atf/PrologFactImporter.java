@@ -22,6 +22,7 @@ import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -431,7 +432,15 @@ public class PrologFactImporter implements ILogListener
 		if (type == null)
 		{
 			// type doesn't exist -> create it
-			type = repository.getTypeManager().createArtefactType(typeName);
+			try
+			{
+				type = repository.getTypeManager().createArtefactType(typeName);
+			}
+			catch (IllegalArgumentException e)
+			{
+				logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e));
+				return;
+			}
 			if (uuid != null)
 			{
 				type.setUuid(uuid);
@@ -468,7 +477,15 @@ public class PrologFactImporter implements ILogListener
 		if (type == null)
 		{
 			// type doesn't exist -> create it
-			type = repository.getTypeManager().createLinkType(typeName);
+			try
+			{
+				type = repository.getTypeManager().createLinkType(typeName);
+			}
+			catch (IllegalArgumentException e)
+			{
+				logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e));
+				return;
+			}
 			if (uuid != null)
 			{
 				type.setUuid(uuid);
@@ -622,11 +639,12 @@ public class PrologFactImporter implements ILogListener
 			PrologException.typeError(TermConstants.atomAtom, nameTerm);
 		}
 
+		TraceableArtefact[] sources = getTraceableArtefact(sourcesTerm);
+		TraceableArtefact[] targets = getTraceableArtefact(targetsTerm);
+
 		TraceLink link = cache.getLink(uuid);
 		if (link == null)
 		{
-			TraceableArtefact[] sources = getTraceableArtefact(sourcesTerm);
-			TraceableArtefact[] targets = getTraceableArtefact(targetsTerm);
 			link = repository.getItemManager().createTraceLink(sources, targets, type);
 			if (uuid != null)
 			{
@@ -637,13 +655,40 @@ public class PrologFactImporter implements ILogListener
 				link.setName(name);
 			}
 			queue.add(link);
-			logger.log(new Status(IStatus.INFO, Activator.PLUGIN_ID, String.format("Created new trace link %s", link
-					.getUuid())));
+			logger.log(new Status(IStatus.INFO, Activator.PLUGIN_ID, String.format("Created new trace link %s (%s)",
+					link.getUuid(), link.getName())));
 		}
 		else
 		{
-			logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, String.format(
-					"Cannot update existing trace link %s", link.getUuid())));
+			// check if identical
+			boolean identical = true;
+			if (!link.getName().equals(name))
+			{
+				identical = false;
+			}
+			else if (link.getType() != type)
+			{
+				identical = false;
+			}
+			else if (!link.getSources().containsAll(Arrays.asList(sources)))
+			{
+				identical = false;
+			}
+			else if (!link.getTargets().containsAll(Arrays.asList(targets)))
+			{
+				identical = false;
+			}
+
+			if (!identical)
+			{
+				logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, String.format(
+						"Cannot update existing trace link %s (%s)", link.getUuid(), link.getName())));
+			}
+			else
+			{
+				logger.log(new Status(IStatus.INFO, Activator.PLUGIN_ID, String.format(
+						"Ignoring existing trace link %s (%s)", link.getUuid(), link.getName())));
+			}
 		}
 	}
 
