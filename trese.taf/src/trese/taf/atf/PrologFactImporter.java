@@ -40,6 +40,7 @@ import org.eclipse.core.runtime.ILogListener;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 
 import trese.taf.Activator;
 import trese.taf.atf.util.AtfQueue;
@@ -85,6 +86,14 @@ public class PrologFactImporter implements ILogListener
 	public static final CompoundTermTag[] TAGS = new CompoundTermTag[] { TRACEABLE_ARTEFACT_TYPE_TAG,
 			TRACE_LINK_TYPE_TAG, REMOVE_TRACEABLE_ARTEFACT_TAG, REMOVE_TRACE_LINK_TAG, TRACEABLE_ARTEFACT_TAG,
 			TRACE_LINK_TAG, ATF_ELEMENT_PROPERTY_TAG };
+
+	/**
+	 * The maximum size of a string which the ATF (persistent manager)
+	 * repository supports. When an import string is larger than this it will
+	 * truncate the string (and produce a warning) by removing leading
+	 * characters.
+	 */
+	public static final int MAX_STRING_SIZE = 255;
 
 	/**
 	 * Helper interface for method delegates
@@ -156,55 +165,62 @@ public class PrologFactImporter implements ILogListener
 			logger.addLogListener(this);
 
 			// First process types
-			monitor.subTask("Processing artefact types");
-			processPredicates(state.getModule(), TRACEABLE_ARTEFACT_TYPE_TAG, new FactImporter() {
-				public void processFact(Term[] args) throws PrologException
-				{
-					processArtefactType(args[0], args[1]);
-				}
-			});
-			monitor.worked(1);
+			monitor.subTask("Processing artefact removals");
+			processPredicates(new SubProgressMonitor(monitor, 1), state.getModule(), TRACEABLE_ARTEFACT_TYPE_TAG,
+					new FactImporter() {
+						public void processFact(Term[] args) throws PrologException
+						{
+							processArtefactType(args[0], args[1]);
+						}
+					});
 			if (monitor.isCanceled())
 			{
 				return false;
 			}
 
 			monitor.subTask("Processing link types");
-			processPredicates(state.getModule(), TRACE_LINK_TYPE_TAG, new FactImporter() {
-				public void processFact(Term[] args) throws PrologException
-				{
-					processLinkType(args[0], args[1]);
-				}
-			});
-			monitor.worked(1);
+			processPredicates(new SubProgressMonitor(monitor, 1), state.getModule(), TRACE_LINK_TYPE_TAG,
+					new FactImporter() {
+						public void processFact(Term[] args) throws PrologException
+						{
+							processLinkType(args[0], args[1]);
+						}
+					});
 			if (monitor.isCanceled())
 			{
+				return false;
+			}
+
+			if (hasErrors)
+			{
+				logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+						"Aborted import due to errors creating artefact and/or trace link types."));
 				return false;
 			}
 
 			// Process removals
 
 			monitor.subTask("Processing artefact removals");
-			processPredicates(state.getModule(), REMOVE_TRACEABLE_ARTEFACT_TAG, new FactImporter() {
-				public void processFact(Term[] args) throws PrologException
-				{
-					processRemoveArtefact(args[0]);
-				}
-			});
-			monitor.worked(1);
+			processPredicates(new SubProgressMonitor(monitor, 1), state.getModule(), REMOVE_TRACEABLE_ARTEFACT_TAG,
+					new FactImporter() {
+						public void processFact(Term[] args) throws PrologException
+						{
+							processRemoveArtefact(args[0]);
+						}
+					});
 			if (monitor.isCanceled())
 			{
 				return false;
 			}
 
 			monitor.subTask("Processing link removals");
-			processPredicates(state.getModule(), REMOVE_TRACE_LINK_TAG, new FactImporter() {
-				public void processFact(Term[] args) throws PrologException
-				{
-					processRemoveLink(args[0]);
-				}
-			});
-			monitor.worked(1);
+			processPredicates(new SubProgressMonitor(monitor, 1), state.getModule(), REMOVE_TRACE_LINK_TAG,
+					new FactImporter() {
+						public void processFact(Term[] args) throws PrologException
+						{
+							processRemoveLink(args[0]);
+						}
+					});
 			if (monitor.isCanceled())
 			{
 				return false;
@@ -213,45 +229,47 @@ public class PrologFactImporter implements ILogListener
 			// Process updates/additions
 
 			monitor.subTask("Processing artefact additions/updates");
-			processPredicates(state.getModule(), TRACEABLE_ARTEFACT_TAG, new FactImporter() {
-				public void processFact(Term[] args) throws PrologException
-				{
-					processUpdateArtefact(args[0], args[1], args[2], args[3]);
-				}
-			});
-			monitor.worked(1);
+			processPredicates(new SubProgressMonitor(monitor, 1), state.getModule(), TRACEABLE_ARTEFACT_TAG,
+					new FactImporter() {
+						public void processFact(Term[] args) throws PrologException
+						{
+							processUpdateArtefact(args[0], args[1], args[2], args[3]);
+						}
+					});
 			if (monitor.isCanceled())
 			{
 				return false;
 			}
 
 			monitor.subTask("Processing link additions");
-			processPredicates(state.getModule(), TRACE_LINK_TAG, new FactImporter() {
-				public void processFact(Term[] args) throws PrologException
-				{
-					processCreateLink(args[0], args[1], args[2], args[3], args[4]);
-				}
-			});
-			monitor.worked(1);
+			processPredicates(new SubProgressMonitor(monitor, 1), state.getModule(), TRACE_LINK_TAG,
+					new FactImporter() {
+						public void processFact(Term[] args) throws PrologException
+						{
+							processCreateLink(args[0], args[1], args[2], args[3], args[4]);
+						}
+					});
 			if (monitor.isCanceled())
 			{
 				return false;
 			}
 
 			monitor.subTask("Processing properties");
-			processPredicates(state.getModule(), ATF_ELEMENT_PROPERTY_TAG, new FactImporter() {
-				public void processFact(Term[] args) throws PrologException
-				{
-					processProperties(args[0], args[1], args[2]);
-				}
-			});
-			monitor.worked(1);
+			processPredicates(new SubProgressMonitor(monitor, 1), state.getModule(), ATF_ELEMENT_PROPERTY_TAG,
+					new FactImporter() {
+						public void processFact(Term[] args) throws PrologException
+						{
+							processProperties(args[0], args[1], args[2]);
+						}
+					});
 			if (monitor.isCanceled())
 			{
 				return false;
 			}
 
-			monitor.subTask("Commiting changes");
+			IProgressMonitor submon = new SubProgressMonitor(monitor, 2);
+			monitor.subTask(String.format("Commiting %d changes", queue.size()));
+			submon.beginTask("", queue.size() + 1);
 			if (!hasErrors)
 			{
 				PersistenceManager perman = repository.getPersistenceManager();
@@ -274,10 +292,12 @@ public class PrologFactImporter implements ILogListener
 							perman.update(entry.getObj());
 							break;
 					}
+					submon.worked(1);
 				}
 				perman.commit();
+				submon.worked(1);
 			}
-			monitor.worked(2);
+			submon.done();
 		}
 		catch (Exception e)
 		{
@@ -321,14 +341,19 @@ public class PrologFactImporter implements ILogListener
 	 * @param tag
 	 * @param importer
 	 */
-	protected void processPredicates(Module module, CompoundTermTag tag, FactImporter importer)
+	protected void processPredicates(IProgressMonitor monitor, Module module, CompoundTermTag tag, FactImporter importer)
 	{
 		Predicate pred = module.getDefinedPredicate(tag);
 		if (pred != null)
 		{
+			monitor.beginTask("", pred.getClauses().size());
 			// Clause = CompoundTerm -> args[0] = CompoundTerm -> args = data
 			for (Term term : pred.getClauses())
 			{
+				if (monitor.isCanceled())
+				{
+					break;
+				}
 				if (!(term instanceof CompoundTerm))
 				{
 					continue;
@@ -337,33 +362,40 @@ public class PrologFactImporter implements ILogListener
 				if (!TermConstants.clauseTag.equals(ct.tag))
 				{
 					// TODO: not a clause!?
+					monitor.worked(1);
 					continue;
 				}
 				if (!TermConstants.trueAtom.equals(ct.args[1]))
 				{
 					// TODO: not a fact
+					monitor.worked(1);
 					continue;
 				}
 				if (!(ct.args[0] instanceof CompoundTerm))
 				{
+					monitor.worked(1);
 					continue;
 				}
 				ct = (CompoundTerm) ct.args[0];
 				if (!tag.equals(ct.tag))
 				{
 					// TODO: not the correct tag;
+					monitor.worked(1);
 					continue;
 				}
 				try
 				{
 					importer.processFact(ct.args);
+					monitor.worked(1);
 				}
 				catch (PrologException e)
 				{
+					monitor.worked(1);
 					logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e));
 				}
 			}
 		}
+		monitor.done();
 	}
 
 	/**
@@ -408,6 +440,39 @@ public class PrologFactImporter implements ILogListener
 	}
 
 	/**
+	 * Get a string from a term which is "safe" for the ATF. This will trucate
+	 * the string according to {@link #MAX_STRING_SIZE}
+	 * 
+	 * @param term
+	 * @return
+	 * @throws PrologException
+	 */
+	protected String getSafeString(Term term, String termName) throws PrologException
+	{
+		String value = null;
+		if (term instanceof AtomTerm)
+		{
+			value = ((AtomTerm) term).value;
+		}
+		else
+		{
+			PrologException.typeError(TermConstants.atomAtom, term);
+		}
+		if (value == null)
+		{
+			return "";
+		}
+		if (value.length() > MAX_STRING_SIZE)
+		{
+			value = value.substring(value.length() - MAX_STRING_SIZE);
+			logger.log(new Status(IStatus.WARNING, Activator.PLUGIN_ID, String.format(
+					"%s exceeded %d characters, truncated to: %s", (termName == null ? "String" : termName),
+					MAX_STRING_SIZE, value)));
+		}
+		return value;
+	}
+
+	/**
 	 * @param uuidTerm
 	 * @param nameTerm
 	 * @throws PrologException
@@ -415,15 +480,7 @@ public class PrologFactImporter implements ILogListener
 	protected void processArtefactType(Term uuidTerm, Term nameTerm) throws PrologException
 	{
 		String uuid = getUUID(uuidTerm);
-		String typeName = null;
-		if (nameTerm instanceof AtomTerm)
-		{
-			typeName = ((AtomTerm) nameTerm).value;
-		}
-		else
-		{
-			PrologException.typeError(TermConstants.atomAtom, nameTerm);
-		}
+		String typeName = getSafeString(nameTerm, "Type name");
 		TraceableArtefactType type = null;
 		if (uuid != null)
 		{
@@ -460,16 +517,8 @@ public class PrologFactImporter implements ILogListener
 	protected void processLinkType(Term uuidTerm, Term nameTerm) throws PrologException
 	{
 		String uuid = getUUID(uuidTerm);
-		String typeName = null;
+		String typeName = getSafeString(nameTerm, "Type name");
 		TraceLinkType type = null;
-		if (nameTerm instanceof AtomTerm)
-		{
-			typeName = ((AtomTerm) nameTerm).value;
-		}
-		else
-		{
-			PrologException.typeError(TermConstants.atomAtom, nameTerm);
-		}
 		if (uuid != null)
 		{
 			type = cache.getTraceLinkType(uuid);
@@ -556,16 +605,7 @@ public class PrologFactImporter implements ILogListener
 			return;
 		}
 
-		String name = null;
-		if (nameTerm instanceof AtomTerm)
-		{
-			name = ((AtomTerm) nameTerm).value;
-		}
-		else
-		{
-			PrologException.typeError(TermConstants.atomAtom, nameTerm);
-		}
-
+		String name = getSafeString(nameTerm, "Artefact name");
 		URI uri = null;
 		if (uriTerm instanceof AtomTerm)
 		{
@@ -629,15 +669,7 @@ public class PrologFactImporter implements ILogListener
 			return;
 		}
 
-		String name = null;
-		if (nameTerm instanceof AtomTerm)
-		{
-			name = ((AtomTerm) nameTerm).value;
-		}
-		else
-		{
-			PrologException.typeError(TermConstants.atomAtom, nameTerm);
-		}
+		String name = getSafeString(nameTerm, "Link name");
 
 		TraceableArtefact[] sources = getTraceableArtefact(sourcesTerm);
 		TraceableArtefact[] targets = getTraceableArtefact(targetsTerm);
@@ -740,24 +772,8 @@ public class PrologFactImporter implements ILogListener
 			return;
 		}
 
-		String key = null;
-		if (keyTerm instanceof AtomTerm)
-		{
-			key = ((AtomTerm) keyTerm).value;
-		}
-		else
-		{
-			PrologException.typeError(TermConstants.atomAtom, keyTerm);
-		}
-		String value = null;
-		if (valueTerm instanceof AtomTerm)
-		{
-			value = ((AtomTerm) valueTerm).value;
-		}
-		else
-		{
-			PrologException.typeError(TermConstants.atomAtom, valueTerm);
-		}
+		String key = getSafeString(keyTerm, "Property key");
+		String value = getSafeString(valueTerm, "Property value");
 		aug.getProperties().put(key, value);
 		queue.update(aug);
 	}

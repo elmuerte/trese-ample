@@ -11,6 +11,7 @@ import java.io.IOException;
 import net.ample.tracing.core.RepositoryManager;
 import net.ample.tracing.ui.models.RepositoryViewModel;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -64,7 +65,7 @@ public class PrologExportAction implements IObjectActionDelegate
 				{
 					FileWriter out = new FileWriter(result);
 					PrologFactGenerator gen = new PrologFactGenerator(repository, out);
-					gen.generate();
+					gen.generate(new NullProgressMonitor());
 					out.flush();
 					out.close();
 				}

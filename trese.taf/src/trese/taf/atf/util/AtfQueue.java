@@ -138,4 +138,12 @@ public class AtfQueue implements Iterable<AtfQueueEntry>
 	{
 		return queue.iterator();
 	}
+
+	/**
+	 * @return
+	 */
+	public int size()
+	{
+		return queue.size();
+	}
 }

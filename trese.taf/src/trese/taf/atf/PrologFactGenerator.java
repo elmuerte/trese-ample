@@ -25,6 +25,9 @@ import net.ample.tracing.core.TraceableArtefactType;
 import net.ample.tracing.core.query.Constraint;
 import net.ample.tracing.core.query.Query;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
+
 /**
  * Convert traceable artifacts and links to prolog facts. Generated prolog
  * facts:
@@ -150,23 +153,48 @@ public class PrologFactGenerator
 	 * 
 	 * @throws IOException
 	 */
-	public void generate() throws IOException
+	public void generate(IProgressMonitor monitor) throws IOException
 	{
+		monitor.beginTask("Exporting artefacts", 10);
+		monitor.subTask("Generating header");
 		writeHeader();
+		monitor.worked(1);
+
+		monitor.subTask("Writing type declarations");
 		if (true)
 		{
 			// TODO: make configurable
 			writeTypes();
 		}
+		monitor.worked(1);
+		if (monitor.isCanceled())
+		{
+			return;
+		}
+
+		monitor.subTask("Querying artefacts");
 		Query<TraceableArtefact> query = repository.getQueryManager().queryOnArtefacts();
 		if (artefactConstraint != null)
 		{
 			query.add(artefactConstraint);
 		}
-		for (TraceableArtefact artefact : query.execute())
+		Collection<TraceableArtefact> lst = query.execute();
+		monitor.worked(1);
+
+		monitor.subTask("Exporting artefacts");
+		IProgressMonitor submon = new SubProgressMonitor(monitor, 7);
+		submon.beginTask("Exporting artefacts", lst.size());
+		for (TraceableArtefact artefact : lst)
 		{
+			if (monitor.isCanceled())
+			{
+				return;
+			}
 			generateArtefact(artefact);
+			submon.worked(1);
 		}
+		submon.done();
+		monitor.done();
 	}
 
 	/**
@@ -245,15 +273,15 @@ public class PrologFactGenerator
 		generateArtefactType(artefact.getType());
 
 		output.write("traceable_artefact('");
-		output.write(artefact.getUuid());
+		output.write(atomEscape(artefact.getUuid()));
 		output.write("', '");
-		output.write(artefact.getName());
+		output.write(atomEscape(artefact.getName()));
 		output.write("', '");
 		output.write(artefact.getType().getUuid());
 		output.write("', '");
 		if (artefact.getResourceURI() != null)
 		{
-			output.write(artefact.getResourceURI().toString());
+			output.write(atomEscape(artefact.getResourceURI().toString()));
 		}
 		output.write("').\n");
 
@@ -279,9 +307,9 @@ public class PrologFactGenerator
 		visitedArtefactTypes.add(type);
 
 		output.write("traceable_artefact_type('");
-		output.write(type.getUuid());
+		output.write(atomEscape(type.getUuid()));
 		output.write("', '");
-		output.write(type.getName());
+		output.write(atomEscape(type.getName()));
 		output.write("').\n");
 
 		generateProperties(type);
@@ -317,11 +345,11 @@ public class PrologFactGenerator
 		generateLinkType(link.getType());
 
 		output.write("trace_link('");
-		output.write(link.getUuid());
+		output.write(atomEscape(link.getUuid()));
 		output.write("', '");
-		output.write(String.format("%s", link.getName()));
+		output.write(atomEscape(link.getName()));
 		output.write("', '");
-		output.write(link.getType().getUuid());
+		output.write(atomEscape(link.getType().getUuid()));
 		output.write("', [");
 		boolean first = true;
 		for (TraceableArtefact artefact : sources)
@@ -332,7 +360,7 @@ public class PrologFactGenerator
 			}
 			first = false;
 			output.write('\'');
-			output.write(artefact.getUuid());
+			output.write(atomEscape(artefact.getUuid()));
 			output.write('\'');
 		}
 		output.write("], [");
@@ -345,7 +373,7 @@ public class PrologFactGenerator
 			}
 			first = false;
 			output.write('\'');
-			output.write(artefact.getUuid());
+			output.write(atomEscape(artefact.getUuid()));
 			output.write('\'');
 		}
 		output.write("]).\n");
@@ -392,9 +420,9 @@ public class PrologFactGenerator
 		visitedLinkTypes.add(type);
 
 		output.write("trace_link_type('");
-		output.write(type.getUuid());
+		output.write(atomEscape(type.getUuid()));
 		output.write("', '");
-		output.write(type.getName());
+		output.write(atomEscape(type.getName()));
 		output.write("').\n");
 
 		generateProperties(type);
@@ -415,7 +443,7 @@ public class PrologFactGenerator
 				continue;
 			}
 			output.write("atf_element_property('");
-			output.write(aug.getUuid());
+			output.write(atomEscape(aug.getUuid()));
 			output.write("', '");
 			output.write(atomEscape(entry.getKey()));
 			output.write("', '");
@@ -431,6 +459,10 @@ public class PrologFactGenerator
 	 */
 	protected String atomEscape(String value)
 	{
-		return value.replace("'", "\\'");
+		if (value == null)
+		{
+			return "";
+		}
+		return value.replace("\\", "\\\\").replace("'", "\\'");
 	}
 }

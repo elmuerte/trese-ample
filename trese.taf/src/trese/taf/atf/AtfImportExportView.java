@@ -30,6 +30,8 @@ import net.ample.tracing.ui.views.RepositoryBrowser;
 import net.ample.tracing.ui.views.RepositoryLabelProvider;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
@@ -39,6 +41,7 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.CellLabelProvider;
@@ -291,7 +294,7 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 
 			try
 			{
-				new ProgressMonitorDialog(getSite().getShell()).run(true, false, new IRunnableWithProgress() {
+				new ProgressMonitorDialog(getSite().getShell()).run(true, true, new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException
 					{
 						monitor.beginTask(String.format("Exporting prolog facts to %s", result), 1);
@@ -312,7 +315,7 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 										.size()])));
 							}
 
-							gen.generate();
+							gen.generate(new SubProgressMonitor(monitor, 1));
 							out.flush();
 							out.close();
 						}
@@ -327,11 +330,17 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 			}
 			catch (InvocationTargetException e)
 			{
-				e.printStackTrace();
+				Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getCause().getMessage(), e.getCause());
+				Activator.getDefault().getLog().log(status);
+				ErrorDialog diag = new ErrorDialog(getSite().getShell(), null, null, status, IStatus.ERROR);
+				diag.open();
 			}
 			catch (InterruptedException e)
 			{
-				e.printStackTrace();
+				Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getCause().getMessage(), e.getCause());
+				Activator.getDefault().getLog().log(status);
+				ErrorDialog diag = new ErrorDialog(getSite().getShell(), null, null, status, IStatus.ERROR);
+				diag.open();
 			}
 		}
 	}
@@ -346,6 +355,7 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 		{
 			try
 			{
+				final Boolean[] success = new Boolean[] { true };
 				new ProgressMonitorDialog(getSite().getShell()).run(true, true, new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException
 					{
@@ -356,7 +366,7 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 							PrologFactImporter imp = new PrologFactImporter(currentModel.getElement(), Activator
 									.getDefault().getLog());
 							inp = new FileReader(result);
-							imp.importFacts(inp, new SubProgressMonitor(monitor, 1));
+							success[0] = imp.importFacts(inp, new SubProgressMonitor(monitor, 1));
 							inp.close();
 						}
 						catch (IOException e)
@@ -366,14 +376,27 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 						monitor.done();
 					}
 				});
+				if (!success[0])
+				{
+					ErrorDialog diag = new ErrorDialog(getSite().getShell(), null, null, new Status(IStatus.ERROR,
+							Activator.PLUGIN_ID, "Import of prolog facts failed. See the error log for details."),
+							IStatus.ERROR);
+					diag.open();
+				}
 			}
 			catch (InvocationTargetException e)
 			{
-				e.printStackTrace();
+				Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getCause().getMessage(), e.getCause());
+				Activator.getDefault().getLog().log(status);
+				ErrorDialog diag = new ErrorDialog(getSite().getShell(), null, null, status, IStatus.ERROR);
+				diag.open();
 			}
 			catch (InterruptedException e)
 			{
-				e.printStackTrace();
+				Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getCause().getMessage(), e.getCause());
+				Activator.getDefault().getLog().log(status);
+				ErrorDialog diag = new ErrorDialog(getSite().getShell(), null, null, status, IStatus.ERROR);
+				diag.open();
 			}
 		}
 	}
