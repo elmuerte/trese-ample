@@ -37,6 +37,7 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -85,6 +86,7 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 	protected Button exportBtn, importBtn, exportProps;
 	protected Label message;
 	protected Composite mainPanel;
+	protected boolean showCount = true;
 
 	/**
 	 * @author Michiel Hendriks
@@ -100,7 +102,7 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 		@Override
 		public void update(ViewerCell cell)
 		{
-			if (currentModel == null)
+			if (currentModel == null || !showCount)
 			{
 				cell.setText("");
 				return;
@@ -483,6 +485,36 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 						viewer.setSubtreeChecked(path, false);
 					}
 				}
+			}
+		});
+		manager.add(new Separator());
+		final Action showCountAct = new Action("Show element count", IAction.AS_CHECK_BOX) {
+			/*
+			 * (non-Javadoc)
+			 * @see org.eclipse.jface.action.Action#run()
+			 */
+			@Override
+			public void run()
+			{
+				showCount = isChecked();
+				if (showCount)
+				{
+					viewer.refresh();
+				}
+			}
+		};
+		showCountAct.setChecked(showCount);
+		manager.add(showCountAct);
+
+		manager.add(new Action("Refresh") {
+			/*
+			 * (non-Javadoc)
+			 * @see org.eclipse.jface.action.Action#run()
+			 */
+			@Override
+			public void run()
+			{
+				viewer.refresh();
 			}
 		});
 		manager.add(new Separator());

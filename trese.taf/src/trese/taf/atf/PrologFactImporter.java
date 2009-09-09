@@ -269,7 +269,7 @@ public class PrologFactImporter implements ILogListener
 
 			IProgressMonitor submon = new SubProgressMonitor(monitor, 2);
 			monitor.subTask(String.format("Commiting %d changes", queue.size()));
-			submon.beginTask("", queue.size() + 1);
+			submon.beginTask("", queue.size() * 2);
 			if (!hasErrors)
 			{
 				PersistenceManager perman = repository.getPersistenceManager();
@@ -295,7 +295,7 @@ public class PrologFactImporter implements ILogListener
 					submon.worked(1);
 				}
 				perman.commit();
-				submon.worked(1);
+				submon.worked(queue.size() / 2);
 			}
 			submon.done();
 		}
