@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Fragment-Host: gnuprologjava;bundle-version="0.2.4"
+Bundle-ManifestVersion: 2
+Bundle-Name: GNU Prolog for Java Eclipse Extensions
+Bundle-SymbolicName: gnuprologjava.eclipse;singleton:=true
+Bundle-Version: 0.1.0.qualifier
+Bundle-Vendor: University of Twente
+Require-Bundle: org.eclipse.core.runtime
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: gnuprolog.eclipse.jar

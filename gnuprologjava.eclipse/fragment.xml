@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
-<plugin>
+<fragment>
+   <extension-point id="gnuprologjava.environment.initialization" name="GNU Prolog Evironment Initialization" schema="schema/gnuprologjava.environment.initialization.exsd"/>
    <extension
          point="org.eclipse.core.contenttype.contentTypes">
       <content-type
@@ -12,4 +13,4 @@
       </content-type>
    </extension>
 
-</plugin>
+</fragment>

@@ -1,5 +1,6 @@
-/* GNU Prolog for Java
- * Copyright (C) 1997-1999  Constantine Plotnikov
+/* GNU Prolog for Java Eclipse Extensions
+ * Copyright (C) 2009  Michiel Hendriks; University of Twente
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
  * License as published by the Free Software Foundation; either
@@ -12,32 +13,19 @@
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA  02111-1307, USA. The text ol license can be also found
+ * Boston, MA  02111-1307, USA. The text ol license can be also found 
  * at http://www.gnu.org/copyleft/lgpl.html
  */
-package gnu.prolog.gui;
+package gnu.prolog.eclipse;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JTextArea;
+import gnu.prolog.vm.Environment;
 
-@Deprecated
-public class Runner extends JFrame
+/**
+ * 
+ * 
+ * @author Michiel Hendriks
+ */
+public interface IEnvironmentInitializer
 {
-
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = 4536135999079155652L;
-	JButton prepareButton = new JButton("Prepare");
-	JButton executeButton = new JButton("Execute");
-	JButton stopButton = new JButton("Stop");
-	JTextArea goalTextArea = new JTextArea();
-	JTextArea resultTextArea = new JTextArea();
-
-	public Runner()
-	{
-		super("PVM Test Runner");
-
-	}
+	void initialize(Environment environment);
 }
