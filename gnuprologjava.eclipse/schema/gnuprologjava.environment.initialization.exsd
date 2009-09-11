@@ -60,7 +60,7 @@
                   Implementation which will be called when a new GNU Prolog Environment is created.
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":gnuprologjava.eclipse.IEnvironmentInitializer"/>
+                  <meta.attribute kind="java" basedOn=":gnu.prolog.eclipse.IEnvironmentInitializer"/>
                </appinfo>
             </annotation>
          </attribute>
