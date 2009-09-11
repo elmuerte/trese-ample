@@ -85,5 +85,11 @@
          </viewShortcut>
       </perspectiveExtension>
    </extension>
+   <extension
+         point="gnuprologjava.environment.initialization">
+      <initializer
+            class="trese.taf.TafPrologEnvInitializer">
+      </initializer>
+   </extension>
 
 </plugin>
