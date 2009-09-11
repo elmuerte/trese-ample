@@ -18,6 +18,9 @@
  */
 package gnu.prolog.eclipse;
 
+import gnu.prolog.term.AtomTerm;
+import gnu.prolog.term.CompoundTerm;
+import gnu.prolog.term.Term;
 import gnu.prolog.vm.EnvInitializer;
 import gnu.prolog.vm.Environment;
 
@@ -48,6 +51,8 @@ public class EclipseEnvInitializer extends EnvInitializer
 	@Override
 	public void initialize(Environment environment)
 	{
+		environment.ensureLoaded(new CompoundTerm(AtomTerm.get("resource"), new Term[] { AtomTerm
+				.get("/gnu/prolog/eclipse/eclipse.pro") }));
 		IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(ENV_INIT_EXT_ID);
 		for (IConfigurationElement e : config)
 		{

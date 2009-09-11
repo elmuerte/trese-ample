@@ -20,9 +20,9 @@ package groove.prolog.builtin.graph;
 
 import gnu.prolog.term.Term;
 import gnu.prolog.vm.Interpreter;
+import gnu.prolog.vm.PrologCollectionIterator;
 import gnu.prolog.vm.PrologException;
 import groove.graph.GraphShape;
-import groove.prolog.builtin.PrologCollectionIterator;
 
 /**
  * Get a node from the graph. <code>graph_node(Graph,Node)</code>

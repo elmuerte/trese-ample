@@ -20,9 +20,9 @@ package groove.prolog.builtin.lts;
 
 import gnu.prolog.term.Term;
 import gnu.prolog.vm.Interpreter;
+import gnu.prolog.vm.PrologCollectionIterator;
 import gnu.prolog.vm.PrologException;
 import groove.lts.GraphState;
-import groove.prolog.builtin.PrologCollectionIterator;
 
 /**
  * <code>graphstate_transition(GraphState,Transition)</code>

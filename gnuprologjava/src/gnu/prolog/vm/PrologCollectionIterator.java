@@ -16,14 +16,10 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package groove.prolog.builtin;
+package gnu.prolog.vm;
 
 import gnu.prolog.term.JavaObjectTerm;
 import gnu.prolog.term.Term;
-import gnu.prolog.vm.BacktrackInfo;
-import gnu.prolog.vm.Interpreter;
-import gnu.prolog.vm.PrologCode;
-import gnu.prolog.vm.PrologException;
 
 import java.util.Iterator;
 
@@ -51,16 +47,29 @@ public class PrologCollectionIterator extends BacktrackInfo
 
 	/**
 	 * @param iterable
-	 *            The collection to iterate over
+	 *          The collection to iterate over
 	 * @param destination
-	 *            The destination term
+	 *          The destination term
 	 * @param undoPosition
-	 *            the value of interpreter.getUndoPosition();
+	 *          the value of interpreter.getUndoPosition();
 	 */
 	public PrologCollectionIterator(Iterable<?> iterable, Term destination, int undoPosition)
 	{
+		this(iterable.iterator(), destination, undoPosition);
+	}
+
+	/**
+	 * @param iterable
+	 *          The collection to iterate over
+	 * @param destination
+	 *          The destination term
+	 * @param undoPosition
+	 *          the value of interpreter.getUndoPosition();
+	 */
+	public PrologCollectionIterator(Iterator<?> it, Term destination, int undoPosition)
+	{
 		super(-1, -1);
-		iterator = iterable.iterator();
+		iterator = it;
 		destTerm = destination;
 		startUndoPosition = undoPosition;
 	}

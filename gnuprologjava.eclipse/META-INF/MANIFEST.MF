@@ -5,7 +5,8 @@ Bundle-Name: GNU Prolog for Java Eclipse Extensions
 Bundle-SymbolicName: gnuprologjava.eclipse;singleton:=true
 Bundle-Version: 0.1.0.qualifier
 Bundle-Vendor: University of Twente
-Require-Bundle: org.eclipse.core.runtime
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.core.resources
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: gnuprolog.eclipse.jar

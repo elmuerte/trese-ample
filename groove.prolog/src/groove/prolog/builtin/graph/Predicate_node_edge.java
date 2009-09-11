@@ -20,10 +20,10 @@ package groove.prolog.builtin.graph;
 
 import gnu.prolog.term.Term;
 import gnu.prolog.vm.Interpreter;
+import gnu.prolog.vm.PrologCollectionIterator;
 import gnu.prolog.vm.PrologException;
 import groove.graph.GraphShape;
 import groove.graph.Node;
-import groove.prolog.builtin.PrologCollectionIterator;
 
 /**
  * A single edge for a node <code>node_edge(Graph,Node,Edge)</code>

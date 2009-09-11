@@ -20,8 +20,8 @@ package groove.prolog.builtin.trans;
 
 import gnu.prolog.term.Term;
 import gnu.prolog.vm.Interpreter;
+import gnu.prolog.vm.PrologCollectionIterator;
 import gnu.prolog.vm.PrologException;
-import groove.prolog.builtin.PrologCollectionIterator;
 import groove.trans.RuleEvent;
 
 /**

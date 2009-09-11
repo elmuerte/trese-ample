@@ -21,13 +21,13 @@ package groove.prolog.builtin.graph;
 import gnu.prolog.term.AtomTerm;
 import gnu.prolog.term.Term;
 import gnu.prolog.vm.Interpreter;
+import gnu.prolog.vm.PrologCollectionIterator;
 import gnu.prolog.vm.PrologException;
 import gnu.prolog.vm.TermConstants;
 import groove.graph.DefaultLabel;
 import groove.graph.GraphShape;
 import groove.graph.Label;
 import groove.lts.GTS;
-import groove.prolog.builtin.PrologCollectionIterator;
 import groove.trans.NameLabel;
 
 /**
