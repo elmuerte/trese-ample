@@ -16,24 +16,35 @@
  * Boston, MA  02111-1307, USA. The text ol license can be also found 
  * at http://www.gnu.org/copyleft/lgpl.html
  */
- 
-%
-% Debugging extensions
-%
+package gnu.prolog.eclipse.predicates;
 
-% Retrieve all open eclipse projects in the current workspace. This returns
-% an eclipse Project instance, not an atom.
-% eclipse_project(?Project)
-:-build_in(eclipse_project/1,'gnu.prolog.eclipse.predicates.Predicate_project'). 
+import gnu.prolog.term.AtomTerm;
+import gnu.prolog.term.Term;
+import gnu.prolog.vm.Interpreter;
+import gnu.prolog.vm.PrologException;
 
-% Get the name of an eclipse project
-% eclipse_project(+Project, ?Name)
-:-build_in(eclipse_project_name/2,'gnu.prolog.eclipse.predicates.Predicate_resource_name').
+import org.eclipse.core.resources.IResource;
 
-% Get the location of an eclipse project
-% eclipse_project(+Project, ?Location)
-:-build_in(eclipse_project_location/2,'gnu.prolog.eclipse.predicates.Predicate_resource_location').
+/**
+ * 
+ * 
+ * @author Michiel Hendriks
+ */
+public class Predicate_resource_name extends EclipsePrologCode
+{
+	public Predicate_resource_name()
+	{}
 
-% Enumerate the natures associated with the project.
-% eclipse_project(+Project, ?NatureId)
-:-build_in(eclipse_project_nature/2,'gnu.prolog.eclipse.predicates.Predicate_project_nature').
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see gnu.prolog.vm.PrologCode#execute(gnu.prolog.vm.Interpreter, boolean,
+	 * gnu.prolog.term.Term[])
+	 */
+	public int execute(Interpreter interpreter, boolean backtrackMode, Term[] args) throws PrologException
+	{
+		IResource resc = getResource(args[0]);
+		return interpreter.unify(args[1], AtomTerm.get(resc.getName()));
+	}
+
+}

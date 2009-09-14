@@ -40,6 +40,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -67,9 +68,11 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 import trese.taf.Activator;
 
@@ -87,6 +90,10 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 	protected Label message;
 	protected Composite mainPanel;
 	protected boolean showCount = true;
+
+	protected Action refreshAction;
+	protected Action sortAction;
+	protected Action showCountAction;
 
 	/**
 	 * @author Michiel Hendriks
@@ -139,6 +146,8 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 	@Override
 	public void createPartControl(Composite parent)
 	{
+		createActions();
+
 		mainPanel = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout(2, false);
 		layout.marginHeight = 0;
@@ -216,6 +225,8 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 		layoutData = new GridData(GridData.VERTICAL_ALIGN_END);
 		importBtn.setLayoutData(layoutData);
 
+		fillLocalToolBar();
+
 		updateMessage();
 		getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(RepositoryBrowser.ID, this);
 	}
@@ -233,6 +244,66 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 		}
 		getSite().getWorkbenchWindow().getSelectionService().removeSelectionListener(RepositoryBrowser.ID, this);
 		super.dispose();
+	}
+
+	protected void createActions()
+	{
+		refreshAction = new Action("Refresh") {
+			/*
+			 * (non-Javadoc)
+			 * @see org.eclipse.jface.action.Action #run()
+			 */
+			@Override
+			public void run()
+			{
+				viewer.refresh();
+			}
+		};
+		refreshAction.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(Activator.PLUGIN_ID,
+				"$nl$/icons/elcl16/refresh.gif"));
+
+		sortAction = new Action("Sort", IAction.AS_CHECK_BOX) {
+			/*
+			 * (non-Javadoc)
+			 * @see org.eclipse.jface.action.Action#run()
+			 */
+			@Override
+			public void run()
+			{
+				if (isChecked())
+				{
+					viewer.setComparator(new ViewerSorter());
+				}
+				else
+				{
+					viewer.setComparator(null);
+				}
+			}
+		};
+		sortAction.setChecked(true);
+		sortAction.setDescription("Sort the entries alphabetical");
+		sortAction.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(Activator.PLUGIN_ID,
+				"$nl$/icons/elcl16/alpha_mode.gif"));
+
+		showCountAction = new Action("Show element count", IAction.AS_CHECK_BOX) {
+			/*
+			 * (non-Javadoc)
+			 * @see org.eclipse.jface.action.Action#run()
+			 */
+			@Override
+			public void run()
+			{
+				showCount = isChecked();
+				if (showCount)
+				{
+					viewer.refresh();
+				}
+			}
+		};
+		showCountAction.setChecked(showCount);
+		showCountAction.setDescription("Show the number of elements of a given type in the repository.");
+		showCountAction.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(Activator.PLUGIN_ID,
+				"$nl$/icons/elcl16/elements.gif"));
 	}
 
 	protected void setMessage(String msg)
@@ -488,37 +559,20 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 			}
 		});
 		manager.add(new Separator());
-		final Action showCountAct = new Action("Show element count", IAction.AS_CHECK_BOX) {
-			/*
-			 * (non-Javadoc)
-			 * @see org.eclipse.jface.action.Action#run()
-			 */
-			@Override
-			public void run()
-			{
-				showCount = isChecked();
-				if (showCount)
-				{
-					viewer.refresh();
-				}
-			}
-		};
-		showCountAct.setChecked(showCount);
-		manager.add(showCountAct);
-
-		manager.add(new Action("Refresh") {
-			/*
-			 * (non-Javadoc)
-			 * @see org.eclipse.jface.action.Action#run()
-			 */
-			@Override
-			public void run()
-			{
-				viewer.refresh();
-			}
-		});
+		manager.add(showCountAction);
+		manager.add(refreshAction);
 		manager.add(new Separator());
 		manager.add(new Separator("additions"));
+	}
+
+	protected void fillLocalToolBar()
+	{
+		IActionBars bars = getViewSite().getActionBars();
+		IToolBarManager manager = bars.getToolBarManager();
+		manager.add(sortAction);
+		manager.add(showCountAction);
+		manager.add(new Separator());
+		manager.add(refreshAction);
 	}
 
 	/*

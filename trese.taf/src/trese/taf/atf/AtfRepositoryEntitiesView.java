@@ -9,8 +9,10 @@ import net.ample.tracing.ui.properties.RepositoryPropertySourceProvider;
 import net.ample.tracing.ui.views.RepositoryBrowser;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ISelection;
@@ -20,11 +22,15 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheetPage;
+
+import trese.taf.Activator;
 
 /**
  * This view shows artfecats, links and their references elements based on the
@@ -36,6 +42,9 @@ public class AtfRepositoryEntitiesView extends ViewPart implements ISelectionLis
 {
 	protected TreeViewer items;
 	protected PropertySheetPage properties;
+
+	protected Action sortAction;
+	protected Action refreshAction;
 
 	public AtfRepositoryEntitiesView()
 	{}
@@ -49,6 +58,8 @@ public class AtfRepositoryEntitiesView extends ViewPart implements ISelectionLis
 	@Override
 	public void createPartControl(Composite parent)
 	{
+		createActions();
+
 		items = new TreeViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL);
 		items.setLabelProvider(new RepositoryLabelProviderEx());
 		items.setContentProvider(new RepositoryItemsProvider());
@@ -59,7 +70,48 @@ public class AtfRepositoryEntitiesView extends ViewPart implements ISelectionLis
 		properties.setPropertySourceProvider(new RepositoryPropertySourceProvider());
 
 		hookViewerContextMenu();
+		fillLocalToolBar();
 		getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(RepositoryBrowser.ID, this);
+	}
+
+	protected void createActions()
+	{
+		refreshAction = new Action("Refresh") {
+			/*
+			 * (non-Javadoc)
+			 * @see org.eclipse.jface.action.Action #run()
+			 */
+			@Override
+			public void run()
+			{
+				items.refresh();
+			}
+		};
+		refreshAction.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(Activator.PLUGIN_ID,
+				"$nl$/icons/elcl16/refresh.gif"));
+
+		sortAction = new Action("Sort", IAction.AS_CHECK_BOX) {
+			/*
+			 * (non-Javadoc)
+			 * @see org.eclipse.jface.action.Action#run()
+			 */
+			@Override
+			public void run()
+			{
+				if (isChecked())
+				{
+					items.setComparator(new ViewerSorter());
+				}
+				else
+				{
+					items.setComparator(null);
+				}
+			}
+		};
+		sortAction.setChecked(true);
+		sortAction.setDescription("Sort the entries alphabetical");
+		sortAction.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(Activator.PLUGIN_ID,
+				"$nl$/icons/elcl16/alpha_mode.gif"));
 	}
 
 	/*
@@ -93,19 +145,17 @@ public class AtfRepositoryEntitiesView extends ViewPart implements ISelectionLis
 
 	protected void fillViewerContextMenu(IMenuManager manager)
 	{
-		manager.add(new Action("Refresh") {
-			/*
-			 * (non-Javadoc)
-			 * @see org.eclipse.jface.action.Action #run()
-			 */
-			@Override
-			public void run()
-			{
-				items.refresh();
-			}
-		});
+		manager.add(refreshAction);
 		manager.add(new Separator());
 		manager.add(new Separator("additions"));
+	}
+
+	protected void fillLocalToolBar()
+	{
+		IActionBars bars = getViewSite().getActionBars();
+		IToolBarManager manager = bars.getToolBarManager();
+		manager.add(sortAction);
+		manager.add(refreshAction);
 	}
 
 	/*
