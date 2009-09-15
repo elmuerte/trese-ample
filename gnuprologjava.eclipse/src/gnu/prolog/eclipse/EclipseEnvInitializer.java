@@ -51,6 +51,10 @@ public class EclipseEnvInitializer extends EnvInitializer
 	@Override
 	public void initialize(Environment environment)
 	{
+		if (Platform.getExtensionRegistry() == null)
+		{
+			return;
+		}
 		environment.ensureLoaded(new CompoundTerm(AtomTerm.get("resource"), new Term[] { AtomTerm
 				.get("/gnu/prolog/eclipse/eclipse.pro") }));
 		IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(ENV_INIT_EXT_ID);
