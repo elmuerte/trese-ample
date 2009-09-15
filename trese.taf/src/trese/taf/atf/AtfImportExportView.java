@@ -83,13 +83,17 @@ import trese.taf.Activator;
  */
 public class AtfImportExportView extends ViewPart implements Adapter, ISelectionListener
 {
+	public static final String PREF_ALPHASORT = "trese.taf.atf.importexport.view.alphasort";
+	public static final String PREF_COUNTITEMS = "trese.taf.atf.importexport.view.countitems";
+	public static final String PREF_EXPORT_PROPS = "trese.taf.atf.importexport.view.exportprops";
+
 	protected CheckboxTreeViewer viewer;
 	protected Notifier target;
 	protected RepositoryViewModel currentModel;
 	protected Button exportBtn, importBtn, exportProps;
 	protected Label message;
 	protected Composite mainPanel;
-	protected boolean showCount = true;
+	protected boolean showCount;
 
 	protected Action refreshAction;
 	protected Action sortAction;
@@ -146,7 +150,7 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 	@Override
 	public void createPartControl(Composite parent)
 	{
-		createActions();
+		showCount = Activator.getDefault().getPluginPreferences().getBoolean(PREF_COUNTITEMS);
 
 		mainPanel = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout(2, false);
@@ -159,10 +163,15 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 		layoutData.horizontalSpan = 2;
 		message.setLayoutData(layoutData);
 
-		viewer = new CheckboxTreeViewer(mainPanel, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
+		viewer = new CheckboxTreeViewer(mainPanel, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION
+				| SWT.VIRTUAL);
+		viewer.setUseHashlookup(true);
 		viewer.setContentProvider(new RepositoryManagerContentProvider());
 		viewer.setLabelProvider(new RepositoryLabelProvider());
-		viewer.setComparator(new ViewerSorter());
+		if (Activator.getDefault().getPluginPreferences().getBoolean(PREF_ALPHASORT))
+		{
+			viewer.setComparator(new ViewerSorter());
+		}
 		viewer.getTree().setHeaderVisible(true);
 
 		TreeViewerColumn col1 = new TreeViewerColumn(viewer, SWT.LEFT);
@@ -180,7 +189,6 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 		layoutData.grabExcessVerticalSpace = true;
 		layoutData.verticalSpan = 3;
 		viewer.getControl().setLayoutData(layoutData);
-		hookViewerContextMenu();
 
 		exportBtn = new Button(mainPanel, SWT.PUSH);
 		exportBtn.setText("Export Prolog Facts");
@@ -202,10 +210,25 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 
 		exportProps = new Button(mainPanel, SWT.CHECK);
 		exportProps.setText("Export Properties");
-		exportProps.setSelection(true);
+		exportProps.setSelection(Activator.getDefault().getPluginPreferences().getBoolean(PREF_EXPORT_PROPS));
 		exportProps.setToolTipText("Also export all properties associated with each element.");
 		layoutData = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
 		exportProps.setLayoutData(layoutData);
+		exportProps.addSelectionListener(new SelectionAdapter() {
+			/*
+			 * (non-Javadoc)
+			 * @see
+			 * org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse
+			 * .swt.events.SelectionEvent)
+			 */
+			@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+				super.widgetSelected(e);
+				Activator.getDefault().getPluginPreferences().setValue(PREF_EXPORT_PROPS, exportProps.getSelection());
+				Activator.getDefault().savePluginPreferences();
+			}
+		});
 
 		importBtn = new Button(mainPanel, SWT.PUSH);
 		importBtn.setText("Import Prolog Facts");
@@ -225,6 +248,8 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 		layoutData = new GridData(GridData.VERTICAL_ALIGN_END);
 		importBtn.setLayoutData(layoutData);
 
+		createActions();
+		hookViewerContextMenu();
 		fillLocalToolBar();
 
 		updateMessage();
@@ -278,9 +303,11 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 				{
 					viewer.setComparator(null);
 				}
+				Activator.getDefault().getPluginPreferences().setValue(PREF_ALPHASORT, isChecked());
+				Activator.getDefault().savePluginPreferences();
 			}
 		};
-		sortAction.setChecked(true);
+		sortAction.setChecked(viewer.getComparator() instanceof ViewerSorter);
 		sortAction.setDescription("Sort the entries alphabetical");
 		sortAction.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(Activator.PLUGIN_ID,
 				"$nl$/icons/elcl16/alpha_mode.gif"));
@@ -298,6 +325,8 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 				{
 					viewer.refresh();
 				}
+				Activator.getDefault().getPluginPreferences().setValue(PREF_COUNTITEMS, showCount);
+				Activator.getDefault().savePluginPreferences();
 			}
 		};
 		showCountAction.setChecked(showCount);

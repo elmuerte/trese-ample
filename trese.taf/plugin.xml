@@ -91,5 +91,11 @@
             class="trese.taf.TafPrologEnvInitializer">
       </initializer>
    </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="trese.taf.PreferenceInitializer">
+      </initializer>
+   </extension>
 
 </plugin>

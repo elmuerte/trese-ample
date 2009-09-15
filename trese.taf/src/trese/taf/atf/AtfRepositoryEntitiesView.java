@@ -40,6 +40,8 @@ import trese.taf.Activator;
  */
 public class AtfRepositoryEntitiesView extends ViewPart implements ISelectionListener
 {
+	public static final String PREF_ALPHASORT = "trese.taf.atf.repositoryentities.alphasort";
+
 	protected TreeViewer items;
 	protected PropertySheetPage properties;
 
@@ -58,17 +60,20 @@ public class AtfRepositoryEntitiesView extends ViewPart implements ISelectionLis
 	@Override
 	public void createPartControl(Composite parent)
 	{
-		createActions();
-
-		items = new TreeViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL);
+		items = new TreeViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.VIRTUAL);
+		items.setUseHashlookup(true);
 		items.setLabelProvider(new RepositoryLabelProviderEx());
 		items.setContentProvider(new RepositoryItemsProvider());
-		items.setComparator(new ViewerSorter());
+		if (Activator.getDefault().getPluginPreferences().getBoolean(PREF_ALPHASORT))
+		{
+			items.setComparator(new ViewerSorter());
+		}
 		getSite().setSelectionProvider(items);
 
 		properties = new PropertySheetPage();
 		properties.setPropertySourceProvider(new RepositoryPropertySourceProvider());
 
+		createActions();
 		hookViewerContextMenu();
 		fillLocalToolBar();
 		getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(RepositoryBrowser.ID, this);
@@ -106,9 +111,11 @@ public class AtfRepositoryEntitiesView extends ViewPart implements ISelectionLis
 				{
 					items.setComparator(null);
 				}
+				Activator.getDefault().getPluginPreferences().setValue(PREF_ALPHASORT, isChecked());
+				Activator.getDefault().savePluginPreferences();
 			}
 		};
-		sortAction.setChecked(true);
+		sortAction.setChecked(items.getComparator() instanceof ViewerSorter);
 		sortAction.setDescription("Sort the entries alphabetical");
 		sortAction.setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(Activator.PLUGIN_ID,
 				"$nl$/icons/elcl16/alpha_mode.gif"));
