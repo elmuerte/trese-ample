@@ -77,7 +77,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import trese.taf.Activator;
 
 /**
- * 
+ * The view that shows the import and export controls.
  * 
  * @author Michiel Hendriks
  */

@@ -23,6 +23,9 @@ public class Activator extends AbstractUIPlugin
 
 	private static Activator plugin;
 
+	/**
+	 * @return
+	 */
 	public static Activator getDefault()
 	{
 		return plugin;
@@ -54,11 +57,19 @@ public class Activator extends AbstractUIPlugin
 		super.stop(context);
 	}
 
+	/**
+	 * @param path
+	 * @return
+	 */
 	public ImageDescriptor getImageDescriptor(String path)
 	{
 		return imageDescriptorFromPlugin("trese.taf", path);
 	}
 
+	/**
+	 * @param key
+	 * @return
+	 */
 	public Image getImage(String key)
 	{
 		ImageRegistry registry = getImageRegistry();
