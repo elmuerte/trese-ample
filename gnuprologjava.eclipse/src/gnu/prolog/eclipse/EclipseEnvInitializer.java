@@ -51,6 +51,10 @@ public class EclipseEnvInitializer extends EnvInitializer
 	@Override
 	public void initialize(Environment environment)
 	{
+		if (environment == null)
+		{
+			throw new NullPointerException("Environment cannot be null");
+		}
 		if (Platform.getExtensionRegistry() == null)
 		{
 			return;
