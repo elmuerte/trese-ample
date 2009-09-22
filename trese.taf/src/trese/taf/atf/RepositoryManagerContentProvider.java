@@ -13,6 +13,11 @@ import net.ample.tracing.ui.views.RepositoryContentProvider;
 
 import org.eclipse.jface.viewers.Viewer;
 
+/**
+ * A content provider that uses a single repository as root element.
+ * 
+ * @author Michiel Hendriks
+ */
 public class RepositoryManagerContentProvider extends RepositoryContentProvider
 {
 	public static final Object[] EMPTY_ARRAY = new Object[0];

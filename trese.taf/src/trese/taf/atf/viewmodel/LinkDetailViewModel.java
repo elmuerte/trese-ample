@@ -10,15 +10,29 @@ import net.ample.tracing.ui.models.LinkViewModel;
 import net.ample.tracing.ui.models.ViewModel;
 
 /**
- * 
+ * A ViewModel node to group certain child nodes based on their relation to a
+ * TraceLinkViewModel node. This is purely a visual addition, it doesn't relate
+ * to any specific element in the model.
  * 
  * @author Michiel Hendriks
  */
 public class LinkDetailViewModel extends ViewModel<TraceLink>
 {
+	/**
+	 * Defines the type of LinkDetailViewModel node
+	 * 
+	 * @author Michiel Hendriks
+	 */
 	public enum LinkDetail
 	{
-		TARGETS, SOURCES,
+		/**
+		 * Base ViewModel node for the target
+		 */
+		TARGETS,
+		/**
+		 * Base ViewModel node for the sources
+		 */
+		SOURCES,
 	}
 
 	protected LinkDetail detail;
@@ -30,6 +44,10 @@ public class LinkDetailViewModel extends ViewModel<TraceLink>
 	public LinkDetailViewModel(LinkViewModel parent, TraceLink element, LinkDetail detailmode)
 	{
 		super(parent, element);
+		if (detailmode == null)
+		{
+			throw new NullPointerException("LinkDetail cannot be null");
+		}
 		detail = detailmode;
 	}
 

@@ -10,15 +10,37 @@ import net.ample.tracing.ui.models.ArtefactViewModel;
 import net.ample.tracing.ui.models.ViewModel;
 
 /**
- * 
+ * A ViewModel node to group certain child nodes based on their relation to a
+ * TraceableArtefactViewModel node. This is purely a visual addition, it doesn't
+ * relate to any specific element in the model.
  * 
  * @author Michiel Hendriks
  */
 public class ArtefactDetailViewModel extends ViewModel<TraceableArtefact>
 {
+	/**
+	 * Defines the type of ArtefactDetailViewModel node
+	 * 
+	 * @author Michiel Hendriks
+	 */
 	public enum ArtefactDetail
 	{
-		INCOMING_LINKS, OUTGOING_LINKS, ANCESTORS, DESCENDANTS
+		/**
+		 * Base ViewModel node for all incoming links
+		 */
+		INCOMING_LINKS,
+		/**
+		 * Base ViewModel node for all outgoing links
+		 */
+		OUTGOING_LINKS,
+		/**
+		 * Base ViewModel node for ancestors
+		 */
+		ANCESTORS,
+		/**
+		 * Base ViewModel node for artefact descendants
+		 */
+		DESCENDANTS
 	}
 
 	protected ArtefactDetail detail;
@@ -30,6 +52,10 @@ public class ArtefactDetailViewModel extends ViewModel<TraceableArtefact>
 	public ArtefactDetailViewModel(ArtefactViewModel parent, TraceableArtefact element, ArtefactDetail detailmode)
 	{
 		super(parent, element);
+		if (detailmode == null)
+		{
+			throw new NullPointerException("ArtefactDetail cannot be null");
+		}
 		detail = detailmode;
 	}
 

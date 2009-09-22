@@ -12,9 +12,12 @@ import java.util.Map;
 import java.util.Queue;
 
 import net.ample.tracing.core.Persistable;
+import net.ample.tracing.core.PersistenceManager;
 
 /**
- * 
+ * A queue of ATF operations, this is managed externally due to the fact that
+ * the queue in the {@link PersistenceManager} can not be used when read
+ * operations are performed.
  * 
  * @author Michiel Hendriks
  */
@@ -44,6 +47,10 @@ public class AtfQueue implements Iterable<AtfQueueEntry>
 	 */
 	protected void registerAction(String uuid, AtfQueueAction action)
 	{
+		if (action == null)
+		{
+			return;
+		}
 		LinkedList<AtfQueueAction> act = actions.get(uuid);
 		if (act == null)
 		{
@@ -60,6 +67,10 @@ public class AtfQueue implements Iterable<AtfQueueEntry>
 	 */
 	public void add(Persistable obj)
 	{
+		if (obj == null)
+		{
+			return;
+		}
 		AtfQueueAction act = getLastAction(obj.getUuid());
 		if (act == AtfQueueAction.ADD || act == AtfQueueAction.UPDATE)
 		{
@@ -76,6 +87,10 @@ public class AtfQueue implements Iterable<AtfQueueEntry>
 	 */
 	public void remove(Persistable obj)
 	{
+		if (obj == null)
+		{
+			return;
+		}
 		AtfQueueAction act = getLastAction(obj.getUuid());
 		if (act == AtfQueueAction.REMOVE)
 		{
@@ -92,6 +107,10 @@ public class AtfQueue implements Iterable<AtfQueueEntry>
 	 */
 	public void update(Persistable obj)
 	{
+		if (obj == null)
+		{
+			return;
+		}
 		AtfQueueAction act = getLastAction(obj.getUuid());
 		if (act == AtfQueueAction.ADD || act == AtfQueueAction.UPDATE)
 		{
@@ -140,7 +159,7 @@ public class AtfQueue implements Iterable<AtfQueueEntry>
 	}
 
 	/**
-	 * @return
+	 * @return Number of elements in the queue
 	 */
 	public int size()
 	{

@@ -32,6 +32,10 @@ import trese.taf.atf.viewmodel.ArtefactDetailViewModel.ArtefactDetail;
 import trese.taf.atf.viewmodel.LinkDetailViewModel.LinkDetail;
 
 /**
+ * A IContentProvider that should details for certain ViewModel elements. For
+ * the artefact and link types it will show all elements of that type. For
+ * artefacts it will add items for incoming and outgoing links, and add items
+ * for ancestors and descendants. For links it shows the sources and targets.
  * 
  * @author Michiel Hendriks
  */

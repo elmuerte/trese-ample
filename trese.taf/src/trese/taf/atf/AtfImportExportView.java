@@ -100,6 +100,8 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 	protected Action showCountAction;
 
 	/**
+	 * Calculates the number of elements of a given artefact/link type.
+	 * 
 	 * @author Michiel Hendriks
 	 */
 	public class RepositoryItemCounterLabelProvider extends CellLabelProvider
@@ -335,6 +337,11 @@ public class AtfImportExportView extends ViewPart implements Adapter, ISelection
 				"$nl$/icons/elcl16/elements.gif"));
 	}
 
+	/**
+	 * Set or unset the status message in the view
+	 * 
+	 * @param msg
+	 */
 	protected void setMessage(String msg)
 	{
 		if (msg != null && msg.length() == 0)

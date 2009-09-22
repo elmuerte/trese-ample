@@ -26,6 +26,7 @@ import net.ample.tracing.core.query.Constraint;
 import net.ample.tracing.core.query.Query;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 
 /**
@@ -155,6 +156,10 @@ public class PrologFactGenerator
 	 */
 	public void generate(IProgressMonitor monitor) throws IOException
 	{
+		if (monitor == null)
+		{
+			monitor = new NullProgressMonitor();
+		}
 		monitor.beginTask("Exporting artefacts", 10);
 		monitor.subTask("Generating header");
 		writeHeader();
@@ -163,7 +168,8 @@ public class PrologFactGenerator
 		monitor.subTask("Writing type declarations");
 		if (true)
 		{
-			// TODO: make configurable
+			// write all type declarations of the profile
+			// TODO: make configurable?
 			writeTypes();
 		}
 		monitor.worked(1);

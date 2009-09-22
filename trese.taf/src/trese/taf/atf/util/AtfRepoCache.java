@@ -19,7 +19,8 @@ import net.ample.tracing.core.query.Constraints;
 import net.ample.tracing.core.query.Query;
 
 /**
- * 
+ * A caching mechanism to reduce searches in the ATF. Also keeps track of new
+ * elements which do not exist in the repository yet.
  * 
  * @author Michiel Hendriks
  */
@@ -27,16 +28,38 @@ public class AtfRepoCache
 {
 	protected Map<String, Augmentable> cache;
 
+	/**
+	 * The current queue, used to determine if the object is scheduled to be
+	 * removed
+	 */
 	protected AtfQueue queue;
+
 	protected QueryManager queryManager;
 
 	public AtfRepoCache(RepositoryManager repo, AtfQueue repoQueue)
 	{
+		if (repoQueue == null)
+		{
+			throw new NullPointerException("AtfQueue can not be null");
+		}
+		if (repo == null)
+		{
+			throw new NullPointerException("Repository manager can not be null");
+		}
 		cache = new HashMap<String, Augmentable>();
 		queue = repoQueue;
 		queryManager = repo.getQueryManager();
+		if (queryManager == null)
+		{
+			throw new NullPointerException("Repository manager did not return a query manager");
+		}
 	}
 
+	/**
+	 * Register a element to the cache
+	 * 
+	 * @param obj
+	 */
 	public void register(Augmentable obj)
 	{
 		if (obj == null)
@@ -46,13 +69,15 @@ public class AtfRepoCache
 		Augmentable old = cache.put(obj.getUuid(), obj);
 		if (old != null)
 		{
-			// ...
+			// this shouldn't happen
 			System.err.println(String.format("[AtfRepoCache] Replaced %s (%s) with %s (%s)", old.getClass().getName(),
 					old.getName(), obj.getClass().getName(), obj.getName()));
 		}
 	}
 
 	/**
+	 * Get an element using the uuid. The returned element could be anything.
+	 * 
 	 * @param uuid
 	 * @return
 	 */
@@ -81,6 +106,9 @@ public class AtfRepoCache
 	}
 
 	/**
+	 * Get a traceable artefact type. Returns null when the element has been
+	 * removed, does not exist, or is not a artefact type.
+	 * 
 	 * @param uuid
 	 * @return
 	 */
@@ -106,6 +134,9 @@ public class AtfRepoCache
 	}
 
 	/**
+	 * Get a trace link type. Returns null when the element has been removed,
+	 * does not exist, or is not a trace link type.
+	 * 
 	 * @param uuid
 	 * @return
 	 */
@@ -131,6 +162,9 @@ public class AtfRepoCache
 	}
 
 	/**
+	 * Get a artefact. Returns null when the element has been removed, does not
+	 * exist, or is not a artefact.
+	 * 
 	 * @param uuid
 	 * @return
 	 */
@@ -160,6 +194,9 @@ public class AtfRepoCache
 	}
 
 	/**
+	 * Get a trace link. Returns null when the element has been removed, does
+	 * not exist, or is not a trace link.
+	 * 
 	 * @param uuid
 	 * @return
 	 */

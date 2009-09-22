@@ -14,7 +14,8 @@ import trese.taf.atf.viewmodel.ArtefactDetailViewModel;
 import trese.taf.atf.viewmodel.LinkDetailViewModel;
 
 /**
- * 
+ * An extended RepositoryLabelProvider which also provides labels for the
+ * ArtefactDetailViewModel and LinkDetailViewModel nodes.
  * 
  * @author Michiel Hendriks
  */

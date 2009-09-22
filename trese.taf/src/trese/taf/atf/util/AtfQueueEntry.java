@@ -14,7 +14,14 @@ import net.ample.tracing.core.Persistable;
  */
 public class AtfQueueEntry
 {
+	/**
+	 * The kind of action to perform
+	 */
 	protected AtfQueueAction action;
+
+	/**
+	 * The element to perform the action on
+	 */
 	protected Persistable obj;
 
 	/**
@@ -23,6 +30,14 @@ public class AtfQueueEntry
 	 */
 	public AtfQueueEntry(AtfQueueAction action, Persistable obj)
 	{
+		if (action == null || action == AtfQueueAction.NONE)
+		{
+			throw new NullPointerException("Action cannot be null or NONE");
+		}
+		if (obj == null)
+		{
+			throw new NullPointerException("Persistable cannot be null");
+		}
 		this.action = action;
 		this.obj = obj;
 	}

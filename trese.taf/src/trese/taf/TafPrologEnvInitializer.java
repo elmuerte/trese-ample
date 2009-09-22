@@ -14,7 +14,8 @@ import gnu.prolog.vm.Environment;
 import trese.taf.atf.PrologFactImporter;
 
 /**
- * 
+ * This initializer makes sure the TAF predicates are always properly defined
+ * before a file is loaded.
  * 
  * @author Michiel Hendriks
  */
@@ -30,6 +31,10 @@ public class TafPrologEnvInitializer extends AbstractPrologTextLoaderListener im
 	 */
 	public void initialize(Environment environment)
 	{
+		if (environment == null)
+		{
+			throw new NullPointerException("Environment cannot be null");
+		}
 		environment.getTextLoaderState().addPrologTextLoaderListener(this);
 	}
 
@@ -42,6 +47,10 @@ public class TafPrologEnvInitializer extends AbstractPrologTextLoaderListener im
 	@Override
 	public void beforeProcessFile(PrologTextLoader loader)
 	{
+		if (loader == null)
+		{
+			throw new NullPointerException("PrologTextLoader cannot be null");
+		}
 		PrologTextLoaderState state = loader.getPrologTextLoaderState();
 		// Make sure these predicates are always delcared like this
 		for (CompoundTermTag tag : PrologFactImporter.TAGS)

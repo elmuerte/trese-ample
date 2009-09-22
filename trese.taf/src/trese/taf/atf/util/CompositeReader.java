@@ -11,7 +11,8 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 /**
- * 
+ * A reader implementation that reads from a list of readers in sequence. When
+ * readerN reaches the EOF it will continue reading from readerN+1.
  * 
  * @author Michiel Hendriks
  */
@@ -24,6 +25,10 @@ public class CompositeReader extends Reader
 	 */
 	public CompositeReader(Reader... rds)
 	{
+		if (rds == null || rds.length == 0)
+		{
+			throw new NullPointerException("Reader list cannot be null or empty");
+		}
 		readers = new LinkedList<Reader>();
 		for (Reader reader : rds)
 		{

@@ -12,5 +12,21 @@ package trese.taf.atf.util;
  */
 public enum AtfQueueAction
 {
-	ADD, UPDATE, REMOVE, NONE
+	/**
+	 * Add an element
+	 */
+	ADD,
+	/**
+	 * Update the element
+	 */
+	UPDATE,
+	/**
+	 * Remove the element
+	 */
+	REMOVE,
+	/**
+	 * No action at all, should only be used as the return value of functions
+	 * when no real action exists.
+	 */
+	NONE
 }

@@ -39,6 +39,7 @@ import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.ILogListener;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 
@@ -139,6 +140,10 @@ public class PrologFactImporter implements ILogListener
 		if (data == null)
 		{
 			throw new NullPointerException("Reader cannot be null");
+		}
+		if (monitor == null)
+		{
+			monitor = new NullProgressMonitor();
 		}
 		monitor.beginTask("Importing prolog facts to ATF", 10);
 		hasErrors = false;
@@ -755,6 +760,12 @@ public class PrologFactImporter implements ILogListener
 		return result.toArray(new TraceableArtefact[result.size()]);
 	}
 
+	/**
+	 * @param uuidTerm
+	 * @param keyTerm
+	 * @param valueTerm
+	 * @throws PrologException
+	 */
 	protected void processProperties(Term uuidTerm, Term keyTerm, Term valueTerm) throws PrologException
 	{
 		String uuid = getUUID(uuidTerm);
