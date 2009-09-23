@@ -17,16 +17,28 @@ import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.widgets.Display;
 
 /**
- * 
+ * Adds decorations to .gpr resources.
  * 
  * @author Michiel Hendriks
  */
 public class GprDecorator extends LabelProvider implements ILightweightLabelDecorator
 {
+	protected Color disabledColor;
+
 	public GprDecorator()
-	{}
+	{
+		Display.getDefault().syncExec(new Runnable() {
+			public void run()
+			{
+				disabledColor = Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW);
+			}
+		});
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -55,6 +67,7 @@ public class GprDecorator extends LabelProvider implements ILightweightLabelDeco
 			}
 			if (!isenabled)
 			{
+				decoration.setForegroundColor(disabledColor);
 				decoration.addSuffix(" [disabled]");
 			}
 		}
@@ -76,7 +89,9 @@ public class GprDecorator extends LabelProvider implements ILightweightLabelDeco
 	 * @see org.eclipse.jface.viewers.BaseLabelProvider#dispose()
 	 */
 	public void dispose()
-	{}
+	{
+		disabledColor = null;
+	}
 
 	/*
 	 * (non-Javadoc)

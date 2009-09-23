@@ -13,6 +13,8 @@ import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
+ * Provides an icon to the directory which is a groove production system.
+ * 
  * @author Michiel Hendriks
  * 
  */
