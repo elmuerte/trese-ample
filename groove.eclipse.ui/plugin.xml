@@ -131,7 +131,18 @@
       <filter
             pattern="*.gp?.gl"
             selected="true">
+         <description>
+            Graph layout configuration
+         </description>
       </filter>
+   </extension>
+   <extension
+         point="org.eclipse.jdt.ui.javaElementFilters">
+      <filter
+            description="Hide the graph layout configuration created by the Groove graph editor"
+            enabled="true"
+            name="Graph layout configuration"
+            pattern="*.gp?.gl"></filter>
    </extension>
 
 </plugin>
