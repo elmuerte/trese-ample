@@ -34,7 +34,7 @@ import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 
 /**
- * 
+ * A panel that captures the data from the System.out and System.err.
  * 
  * @author Michiel Hendriks
  */
@@ -97,6 +97,11 @@ public class SystemOutput extends JPanel
 		add(splitPane, BorderLayout.CENTER);
 	}
 
+	/**
+	 * An output stream which appends the data to a {@link JTextArea}
+	 * 
+	 * @author Michiel Hendriks
+	 */
 	class UIOutputStream extends OutputStream
 	{
 		JTextArea dest;

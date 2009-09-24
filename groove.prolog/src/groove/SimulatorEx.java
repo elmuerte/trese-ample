@@ -19,7 +19,7 @@
 package groove;
 
 /**
- * 
+ * Starts the extended simulator (contains the Prolog tab)
  * 
  * @author Michiel Hendriks
  */

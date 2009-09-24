@@ -21,7 +21,7 @@ package groove.prolog;
 import gnu.prolog.vm.PrologCode;
 
 /**
- * 
+ * The status of the current query result
  * 
  * @author Michiel Hendriks
  */

@@ -19,16 +19,14 @@
 package groove.gui;
 
 import java.awt.Component;
-import java.awt.Container;
 import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 
 /**
- * 
+ * An extended Simulator window. It will add the "Prolog" tab
  * 
  * @author Michiel Hendriks
  */
@@ -79,29 +77,8 @@ public class SimulatorEx extends Simulator
 	}
 
 	/**
-	 * @param result
-	 * @return
-	 */
-	private JTabbedPane findGraphViewsPanel(JFrame result)
-	{
-		Container cont = result.getContentPane();
-		for (Component c1 : cont.getComponents())
-		{
-			if (c1 instanceof JSplitPane)
-			{
-				for (Component c2 : ((JSplitPane) c1).getComponents())
-				{
-					if (c2 instanceof JTabbedPane)
-					{
-						return (JTabbedPane) c2;
-					}
-				}
-			}
-		}
-		return null;
-	}
-
-	/**
+	 * Create the prolog editor panel
+	 * 
 	 * @return
 	 */
 	protected Component getPrologEditor()
@@ -110,6 +87,9 @@ public class SimulatorEx extends Simulator
 		return pe;
 	}
 
+	/**
+	 * @param args
+	 */
 	public static void main(String[] args)
 	{
 		Simulator simulator;

@@ -103,7 +103,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
 /**
- * 
+ * The Prolog editor tab for the improved simulator
  * 
  * @author Michiel Hendriks
  */
@@ -117,24 +117,70 @@ public class PrologEditor extends JPanel
 
 	public enum QueryMode
 	{
-		GRAPH_STATE, LTS
+		/**
+		 * Query the current graph state
+		 */
+		GRAPH_STATE,
+		/**
+		 * Query the current LTS
+		 */
+		LTS
 	}
 
+	/**
+	 * Data structure to keep track of the open/loaded prolog files
+	 * 
+	 * @author Michiel Hendriks
+	 */
 	public class PrologFile
 	{
+		/**
+		 * Editor contents has changed
+		 */
 		boolean dirty;
+		/**
+		 * The origin file, can be null when it is a new file
+		 */
 		File file;
+		/**
+		 * The associated editor
+		 */
 		RSyntaxTextArea editor;
+		/**
+		 * The panel the editor is in. This is needed in order to remove the
+		 * editor from the tab when a file is closed
+		 */
 		RTextScrollPane pane;
 	}
 
+	/**
+	 * Counter used to show the number of found solutions (so far)
+	 */
 	protected int solutionCount;
+	/**
+	 * The Simulator UI
+	 */
 	protected Simulator sim;
+	/**
+	 * The current instance of the prolog interpreter. Will be recreated every
+	 * time "reconsult" action is performed.
+	 */
 	protected PrologQuery prolog;
+	/**
+	 * Selected query mode
+	 */
 	protected QueryMode mode = QueryMode.GRAPH_STATE;
+	/**
+	 * If true the user code should also be consulted. Otherwise only the
+	 * standard prolog files are consulted.
+	 */
 	protected boolean doConsultUserCode = false;
+	/**
+	 * Used for the "graphstate accepting" exploration method
+	 */
 	protected PrologCondition prologCondition;
 
+	// UI components
 	protected JComboBox query;
 	protected JTextComponent queryEdit;
 	protected JTextArea results;
@@ -506,11 +552,12 @@ public class PrologEditor extends JPanel
 		predicateTree.setRootVisible(false);
 		predicateTree.setShowsRootHandles(true);
 		predicateTree.addMouseListener(new MouseListener() {
-
 			public void mouseClicked(MouseEvent e)
 			{
 				if (e.getClickCount() > 1 && e.getButton() == MouseEvent.BUTTON1)
 				{
+					// when double clicked add the selected predicate (with
+					// template) to the current query
 					TreePath sel = predicateTree.getSelectionPath();
 					if (sel != null)
 					{
@@ -578,11 +625,24 @@ public class PrologEditor extends JPanel
 		add(statusBar, BorderLayout.SOUTH);
 	}
 
+	/**
+	 * Create a prolog editor tab for the given file
+	 * 
+	 * @param file
+	 */
 	protected void createEditor(File file)
 	{
 		createEditor(file, false);
 	}
 
+	/**
+	 * Create a new prolog editor tab
+	 * 
+	 * @param file
+	 * @param delayLoading
+	 *            if false then do not consule the file, used in case of new
+	 *            files
+	 */
 	protected void createEditor(File file, boolean delayLoading)
 	{
 		if (file != null && prologFileMap.containsKey(file))
@@ -635,6 +695,9 @@ public class PrologEditor extends JPanel
 
 		proFile.editor.getDocument().addDocumentListener(new DocumentListener() {
 
+			/**
+			 * Update the tab title
+			 */
 			protected void updateTab()
 			{
 				if (proFile.dirty)
@@ -672,6 +735,8 @@ public class PrologEditor extends JPanel
 	}
 
 	/**
+	 * Create the Action for exploring based on filtering of rule events
+	 * 
 	 * @return
 	 */
 	protected Action createExploreRuleEventsAction()
@@ -755,6 +820,8 @@ public class PrologEditor extends JPanel
 	}
 
 	/**
+	 * Create the Action for simulating using the graph state acceptor method
+	 * 
 	 * @return
 	 */
 	protected Action createExploreGraphStateAction()
@@ -821,9 +888,9 @@ public class PrologEditor extends JPanel
 	}
 
 	/**
-	 * 
+	 * Return a file chooser for prolog files
 	 */
-	JFileChooser getPrologFileChooser()
+	protected JFileChooser getPrologFileChooser()
 	{
 		if (prologFileChooser == null)
 		{
@@ -836,11 +903,20 @@ public class PrologEditor extends JPanel
 		return prologFileChooser;
 	}
 
+	/**
+	 * Execute the current query
+	 */
 	protected void executeQuery()
 	{
 		executeQuery(queryEdit.getText());
 	}
 
+	/**
+	 * Make sure the prolog environment is initialized and clean up previous
+	 * results.
+	 * 
+	 * @return
+	 */
 	protected boolean ensureProlog()
 	{
 		statusBar.setText(" ");
@@ -897,6 +973,8 @@ public class PrologEditor extends JPanel
 	}
 
 	/**
+	 * Update the tree with all known predicates
+	 * 
 	 * @param module
 	 */
 	protected void updatePredicateTree(Module module)
@@ -940,6 +1018,11 @@ public class PrologEditor extends JPanel
 		predicateTree.expandPath(new TreePath(predRootNode.getPath()));
 	}
 
+	/**
+	 * Execute the gven prolog query
+	 * 
+	 * @param queryString
+	 */
 	public void executeQuery(String queryString)
 	{
 		if (queryString == null)
@@ -1031,6 +1114,11 @@ public class PrologEditor extends JPanel
 		PREFS.put("queryHistory", sb.toString());
 	}
 
+	/**
+	 * Handler for the exceptions thrown by the prolog environment
+	 * 
+	 * @param e
+	 */
 	protected void handelPrologException(Throwable e)
 	{
 		try
@@ -1057,6 +1145,10 @@ public class PrologEditor extends JPanel
 		results.append(sw.toString());
 	}
 
+	/**
+	 * Get the next set of results. Only works after a successful
+	 * {@link #executeQuery(String)}
+	 */
 	public void nextResults()
 	{
 		if (prolog == null || !prolog.hasNext())
@@ -1075,6 +1167,8 @@ public class PrologEditor extends JPanel
 	}
 
 	/**
+	 * Pretty print the results of the query in the output panel
+	 * 
 	 * @param newQuery
 	 */
 	protected void processResults(QueryResult queryResult)
@@ -1132,6 +1226,9 @@ public class PrologEditor extends JPanel
 				.getExecutionTime() / 1000000.0));
 	}
 
+	/**
+	 * (re)consult the user code. This doesn't execute any queries
+	 */
 	protected void consultUserCode()
 	{
 		prolog = null;
@@ -1142,7 +1239,7 @@ public class PrologEditor extends JPanel
 	}
 
 	/**
-	 * 
+	 * Prompt the user when there are dirty editors
 	 */
 	protected boolean confirmDirty()
 	{
@@ -1168,6 +1265,12 @@ public class PrologEditor extends JPanel
 		return true;
 	}
 
+	/**
+	 * Class used to redirect the standard output stream used by prolog to the
+	 * output panel
+	 * 
+	 * @author Michiel Hendriks
+	 */
 	static class JTextAreaOutputStream extends OutputStream
 	{
 		JTextArea dest;

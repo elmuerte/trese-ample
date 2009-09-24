@@ -19,7 +19,7 @@
 package groove.prolog;
 
 /**
- * 
+ * A wrapper exception thrown by the {@link PrologQuery}
  * 
  * @author Michiel Hendriks
  */
@@ -31,9 +31,7 @@ public class GroovePrologException extends Exception
 	 * 
 	 */
 	public GroovePrologException()
-	{
-	// TODO Auto-generated constructor stub
-	}
+	{}
 
 	/**
 	 * @param arg0
@@ -41,7 +39,6 @@ public class GroovePrologException extends Exception
 	public GroovePrologException(String arg0)
 	{
 		super(arg0);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -50,7 +47,6 @@ public class GroovePrologException extends Exception
 	public GroovePrologException(Throwable arg0)
 	{
 		super(arg0);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -60,7 +56,5 @@ public class GroovePrologException extends Exception
 	public GroovePrologException(String arg0, Throwable arg1)
 	{
 		super(arg0, arg1);
-		// TODO Auto-generated constructor stub
 	}
-
 }

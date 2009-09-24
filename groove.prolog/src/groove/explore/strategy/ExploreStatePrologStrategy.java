@@ -43,10 +43,19 @@ import java.util.Set;
  */
 public class ExploreStatePrologStrategy extends AbstractStrategy implements PrologStrategy
 {
+	/**
+	 * The name of the term that will contain the result, defaults to Result
+	 */
 	protected String resultTerm;
 
+	/**
+	 * The query to execute
+	 */
 	protected String query;
 
+	/**
+	 * Additional prolog code to load befor executing the query
+	 */
 	protected String usercode;
 
 	protected PrologQuery prolog;

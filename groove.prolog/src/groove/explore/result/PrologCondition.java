@@ -100,6 +100,7 @@ public class PrologCondition extends ExploreCondition<String>
 			}
 			query.setGrooveState(new GrooveState(value));
 			query.newQuery(condition);
+			// the graphstate is accepted when the prolog query succeeds
 			return query.lastReturnValue() == QueryReturnValue.SUCCESS
 					|| query.lastReturnValue() == QueryReturnValue.SUCCESS_LAST;
 		}

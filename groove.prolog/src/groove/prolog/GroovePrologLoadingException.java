@@ -25,7 +25,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * 
+ * An exception thrown when there was an error loading the prolog files
  * 
  * @author Michiel Hendriks
  */

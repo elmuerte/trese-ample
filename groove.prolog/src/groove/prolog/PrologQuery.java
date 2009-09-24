@@ -47,6 +47,9 @@ import java.util.Map;
  */
 public class PrologQuery
 {
+	/**
+	 * The groove prolog library, will always be included
+	 */
 	public static final String GROOVE_PRO = "/groove/prolog/builtin/groove.pro";
 
 	/**
@@ -79,8 +82,14 @@ public class PrologQuery
 	 */
 	protected InternalQueryResult currentResult;
 
+	/**
+	 * The current "groove" state to work with
+	 */
 	protected GrooveState grooveState;
 
+	/**
+	 * The stream to use as default output stream
+	 */
 	protected OutputStream userOutput;
 
 	public PrologQuery()
@@ -138,9 +147,11 @@ public class PrologQuery
 	 * Initialize the environment
 	 * 
 	 * @param initStream
-	 *            TODO
+	 *            Additional code to process during the loading of the
+	 *            environment. Typically used to load user code
 	 * @param streamName
-	 *            TODO
+	 *            The name to use for the provided stream, is used when creating
+	 *            errors. It's best to use the name of a file.
 	 * @throws GroovePrologLoadingException
 	 */
 	public void init(Reader initStream, String streamName) throws GroovePrologLoadingException
@@ -178,10 +189,6 @@ public class PrologQuery
 		{
 			init();
 		}
-		if (env.getGrooveState() == null)
-		{
-			// throw new GroovePrologException("No Groove state");
-		}
 		if (currentResult != null)
 		{
 			// terminate the previous goal
@@ -211,11 +218,20 @@ public class PrologQuery
 		}
 	}
 
+	/**
+	 * @return The current result of the prolog engine
+	 */
 	public QueryResult current()
 	{
 		return currentResult;
 	}
 
+	/**
+	 * Get the next results
+	 * 
+	 * @return Null if there is no next result
+	 * @throws GroovePrologException
+	 */
 	public QueryResult next() throws GroovePrologException
 	{
 		if (currentResult == null)
@@ -410,6 +426,14 @@ public class PrologQuery
 		}
 	}
 
+	/**
+	 * Create the prolog environment. This will initialize the environment in
+	 * the standard groove environment. It can be used when you need to make
+	 * changes to the environment before loading user code.
+	 * 
+	 * @return
+	 * @throws GroovePrologLoadingException
+	 */
 	public Environment getEnvironment() throws GroovePrologLoadingException
 	{
 		if (env == null)
