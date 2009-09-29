@@ -145,7 +145,7 @@ public class PrologFactImporter implements ILogListener
 		{
 			monitor = new NullProgressMonitor();
 		}
-		monitor.beginTask("Importing prolog facts to ATF", 10);
+		monitor.beginTask("Importing prolog facts to ATF", 17);
 		hasErrors = false;
 		monitor.subTask("Parsing");
 		PrologTextLoaderState state = new PrologTextLoaderState();
@@ -169,8 +169,74 @@ public class PrologFactImporter implements ILogListener
 		{
 			logger.addLogListener(this);
 
+			// Load all used element into the cache priod to making changes, we
+			// need to do this because we can not query the system any more when
+			// elements have been changed
+			// XXX: note that this is actually not a very elegant hack to make
+			// things work
+			monitor.subTask("Loading elements (1 of 7)");
+			processPredicates(new SubProgressMonitor(monitor, 1), state.getModule(), TRACEABLE_ARTEFACT_TYPE_TAG,
+					new FactImporter() {
+						public void processFact(Term[] args) throws PrologException
+						{
+							cache.getTraceableArtefactType(getUUID(args[0]));
+						}
+					});
+			monitor.subTask("Loading elements (2 of 7)");
+			processPredicates(new SubProgressMonitor(monitor, 1), state.getModule(), TRACE_LINK_TYPE_TAG,
+					new FactImporter() {
+						public void processFact(Term[] args) throws PrologException
+						{
+							cache.getTraceLinkType(getUUID(args[0]));
+						}
+					});
+			monitor.subTask("Loading elements (3 of 7)");
+			processPredicates(new SubProgressMonitor(monitor, 1), state.getModule(), REMOVE_TRACEABLE_ARTEFACT_TAG,
+					new FactImporter() {
+						public void processFact(Term[] args) throws PrologException
+						{
+							cache.getTraceableArtefactType(getUUID(args[0]));
+						}
+					});
+			monitor.subTask("Loading elements (4 of 7)");
+			processPredicates(new SubProgressMonitor(monitor, 1), state.getModule(), REMOVE_TRACE_LINK_TAG,
+					new FactImporter() {
+						public void processFact(Term[] args) throws PrologException
+						{
+							cache.getLink(getUUID(args[0]));
+						}
+					});
+			monitor.subTask("Loading elements (5 of 7)");
+			processPredicates(new SubProgressMonitor(monitor, 1), state.getModule(), TRACEABLE_ARTEFACT_TAG,
+					new FactImporter() {
+						public void processFact(Term[] args) throws PrologException
+						{
+							cache.getArtefact(getUUID(args[0]));
+							cache.getTraceableArtefactType(getUUID(args[2]));
+						}
+					});
+			monitor.subTask("Loading elements (6 of 7)");
+			processPredicates(new SubProgressMonitor(monitor, 1), state.getModule(), TRACE_LINK_TAG,
+					new FactImporter() {
+						public void processFact(Term[] args) throws PrologException
+						{
+							cache.getLink(getUUID(args[0]));
+							cache.getTraceLinkType(getUUID(args[2]));
+							loadUuidList(args[3]);
+							loadUuidList(args[4]);
+						}
+					});
+			monitor.subTask("Loading elements (7 of 7)");
+			processPredicates(new SubProgressMonitor(monitor, 1), state.getModule(), ATF_ELEMENT_PROPERTY_TAG,
+					new FactImporter() {
+						public void processFact(Term[] args) throws PrologException
+						{
+							cache.get(getUUID(args[0]));
+						}
+					});
+
 			// First process types
-			monitor.subTask("Processing artefact removals");
+			monitor.subTask("Processing artefact types");
 			processPredicates(new SubProgressMonitor(monitor, 1), state.getModule(), TRACEABLE_ARTEFACT_TYPE_TAG,
 					new FactImporter() {
 						public void processFact(Term[] args) throws PrologException
@@ -182,6 +248,8 @@ public class PrologFactImporter implements ILogListener
 			{
 				return false;
 			}
+			cache.setCanQuery(false);
+			// END OF QUERYING
 
 			monitor.subTask("Processing link types");
 			processPredicates(new SubProgressMonitor(monitor, 1), state.getModule(), TRACE_LINK_TYPE_TAG,
@@ -758,6 +826,21 @@ public class PrologFactImporter implements ILogListener
 			}
 		}
 		return result.toArray(new TraceableArtefact[result.size()]);
+	}
+
+	protected void loadUuidList(Term term) throws PrologException
+	{
+		if (!CompoundTerm.isListPair(term))
+		{
+			PrologException.typeError(TermConstants.listAtom, term);
+		}
+		List<Term> termCollection = new ArrayList<Term>();
+		CompoundTerm.toCollection(term, termCollection);
+		for (Term item : termCollection)
+		{
+			String uuid = getUUID(item);
+			cache.getArtefact(uuid);
+		}
 	}
 
 	/**

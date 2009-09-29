@@ -19,28 +19,6 @@
       </content-type>
    </extension>
    <extension
-         point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            adaptable="false"
-            id="trese.taf.atf.RepositoryViewModel"
-            objectClass="net.ample.tracing.ui.models.RepositoryViewModel">
-         <action
-               class="trese.taf.atf.PrologExportAction"
-               enablesFor="1"
-               id="trese.taf.atf.prologExport"
-               label="Export prolog facts"
-               menubarPath="contextAdditions"
-               style="push">
-         </action>
-         <visibility>
-            <objectState
-                  name="false"
-                  value="false">
-            </objectState>
-         </visibility>
-      </objectContribution>
-   </extension>
-   <extension
          point="org.eclipse.ui.views">
       <category
             id="trese.taf"

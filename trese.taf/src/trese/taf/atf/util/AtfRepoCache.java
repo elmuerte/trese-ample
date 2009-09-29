@@ -36,6 +36,8 @@ public class AtfRepoCache
 
 	protected QueryManager queryManager;
 
+	protected boolean canQuery = true;
+
 	public AtfRepoCache(RepositoryManager repo, AtfQueue repoQueue)
 	{
 		if (repoQueue == null)
@@ -53,6 +55,16 @@ public class AtfRepoCache
 		{
 			throw new NullPointerException("Repository manager did not return a query manager");
 		}
+	}
+
+	/**
+	 * Enable/disable the functionality to query the system
+	 * 
+	 * @param value
+	 */
+	public void setCanQuery(boolean value)
+	{
+		canQuery = value;
 	}
 
 	/**
@@ -122,7 +134,7 @@ public class AtfRepoCache
 				return (TraceableArtefactType) aug;
 			}
 		}
-		if (uuid == null)
+		if (uuid == null || !canQuery)
 		{
 			return null;
 		}
@@ -150,7 +162,7 @@ public class AtfRepoCache
 				return (TraceLinkType) aug;
 			}
 		}
-		if (uuid == null)
+		if (uuid == null || !canQuery)
 		{
 			return null;
 		}
@@ -182,7 +194,7 @@ public class AtfRepoCache
 				return (TraceableArtefact) aug;
 			}
 		}
-		if (uuid == null)
+		if (uuid == null || !canQuery)
 		{
 			return null;
 		}
@@ -214,7 +226,7 @@ public class AtfRepoCache
 				return (TraceLink) aug;
 			}
 		}
-		if (uuid == null)
+		if (uuid == null || !canQuery)
 		{
 			return null;
 		}
